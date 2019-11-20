@@ -8,9 +8,9 @@ import java.util.*;
 
 
 public class TourTest {
-    List<DeliveryProcess> TEST_DELIVERY_PROCESSES = new ArrayList<DeliveryProcess>();
-    Point TEST_BASE = new Point(5);
-    int TEST_START_TIME = 0;
+    private List<DeliveryProcess> TEST_DELIVERY_PROCESSES = new ArrayList<DeliveryProcess>();
+    private Point TEST_BASE = new Point(5);
+    private int TEST_START_TIME = 0;
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
