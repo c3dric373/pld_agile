@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>fr.delivelo</groupId>
+    <artifactId>DeliVelo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <config.plugin.spotbugs.version>3.1.0</config.plugin.spotbugs.version>
+        <config.plugin.spotbugs.maven.version>3.1.0-RC8</config.plugin.spotbugs.maven.version>
+        <config.dependency.junit.version>4.12</config.dependency.junit.version>
+        <config.dependency.lombok.version>1.18.10</config.dependency.lombok.version>
+        <config.dependency.guava.version>23.4-jre</config.dependency.guava.version>
+        <config.dependency.mockito.version>2.12.0</config.dependency.mockito.version>
+        <config.dependency.checkstyle.version>2.17</config.dependency.checkstyle.version>
+    </properties>
+    <build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>1.6</source>
+                <target>1.6</target>
+            </configuration>
+        </plugin>
+    </plugins>
+    </build>
+
+
+    <dependencies>
+    <dependency>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs</artifactId>
+        <version>${config.plugin.spotbugs.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/junit/junit -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${config.dependency.junit.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${config.dependency.lombok.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    <!-- Mockito, as mocking framework for tests -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${config.dependency.mockito.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier -->
+    <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>2.4</version>
+        <scope>test</scope>
+    </dependency>
+    </dependencies>
+
+</project>
