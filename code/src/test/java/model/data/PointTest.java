@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class PointTest {
 
-    private final int ID_NULL = null;
+    private final int ID_NEG = -1;
     private final int ID_TEST = 20;
     private final double LAT_SMALL = -91;
     private final double LAT_BIG = 91;
@@ -29,14 +29,14 @@ public class PointTest {
 
 
     @Test
-    public void testCTOR_idNull_throwsIllegalArgumentException() {
+    public void testCTOR_idNegative_throwsIllegalArgumentException() {
 
         // Arrange
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("id is null");
+        thrown.expectMessage("id is negative");
 
         // Act
-        new Point(ID_NULL,LAT_TEST,LNG_TEST,SEGMENTS_TEST);
+        new Point(ID_NEG,LAT_TEST,LNG_TEST,SEGMENTS_TEST);
 
         // Assert via annotation
     }
