@@ -1,4 +1,4 @@
-image: maven:3-jdk-8
+image: maven:3-jdk-13
 
 variables:
   MAVEN_OPTS: -Dmaven.repo.local=/cache/maven.repository
@@ -12,19 +12,19 @@ variables:
 
  checkstyle:
    stage: checkstyle
-   image: maven:3-jdk-8
+   image: maven:3-jdk-13
    script:
      - mvn -f code/pom.xml clean validate -B
 
  compile_code:
    stage: compile
-   image: maven:3-jdk-8
+   image: maven:3-jdk-13
    script:
    - mvn -f code/pom.xml clean compile test-compile -B
  
  unit_test:
    stage: test
-   image: maven:3-jdk-8
+   image: maven:3-jdk-13
    script:
    - mvn -f code/pom.xml clean test -B
    artifacts:
