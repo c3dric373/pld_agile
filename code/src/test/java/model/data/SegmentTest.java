@@ -10,6 +10,7 @@ import org.junit.rules.ExpectedException;
 public class SegmentTest {
 
     private final  float NEGATIVE_LENGTH = -1;
+    private final  float ZERO_LENGTH = 0;
     private final String EMPTY_STRING = "";
     private final String NAME_TEST = "rue mermoz";
     private final int LENGTH_TEST = 4;
@@ -32,6 +33,19 @@ public class SegmentTest {
 
         // Act
         new Segment(ID_ORIGIN_TEST,ID_END_TEST,NEGATIVE_LENGTH,NAME_TEST);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_lengthZero_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("length is zero");
+
+        // Act
+        new Segment(ID_ORIGIN_TEST,ID_END_TEST,ZERO_LENGTH,NAME_TEST);
 
         // Assert via annotation
     }
