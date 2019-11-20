@@ -1,0 +1,34 @@
+image: maven:3-jdk-8
+
+variables:
+  MAVEN_OPTS: -Dmaven.repo.local=/cache/maven.repository
+  GIT_STRATEGY: fetch
+
+ stages:
+   - checkstyle
+   - compile
+   - test
+   - evaluate_coverage
+
+ checkstyle:
+   stage: checkstyle
+   image: maven:3-jdk-8
+   script:
+     - mvn -f code/pom.xml clean validate -B
+
+ compile_code:
+   stage: compile
+   image: maven:3-jdk-8
+   script:
+   - mvn -f code/pom.xml clean compile test-compile -B
+ 
+ unit_test:
+   stage: test
+   image: maven:3-jdk-8
+   script:
+   - mvn -f code/pom.xml clean test -B
+   artifacts:
+     paths:
+       - $CI_PROJECT_DIR/code/out/site/jacoco-ut/index.html
+     expire_in: 1 day
+
