@@ -1,6 +1,6 @@
 package model.data;
 
-
+import org.apache.commons.lang.Validate;
 import lombok.Getter;
 
 /**
@@ -36,6 +36,16 @@ public class Segment {
      */
     Segment(final int id_origin, final int id_end, final float length, final String name)
     {
+        Validate.notNull(name, "name is null");
+        if (name.equals("")) {
+            throw new IllegalArgumentException("name is empty");
+        }
+        if (length<0){
+            throw new IllegalArgumentException("length is negative");
+        }
+        if (length==0){
+            throw new IllegalArgumentException("length is zero");
+        }
         this.id_origin = id_origin;
         this.id_end = id_end;
         this.length = length;
