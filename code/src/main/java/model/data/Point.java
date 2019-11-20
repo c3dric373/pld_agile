@@ -12,14 +12,30 @@ public class Point {
     /**
      * Location of the point on the map
      */
-    private int location;
+    private int id;
+
+    /**
+     * Latitude of Point
+     */
+    private int latitude;
+
+    /**
+     * Longitude of Point
+     */
+
+    private int longitude;
 
     /**
      * Instantiates a Point
-     * @param location location of the point on the map type int.
+     * @param id id of point
+     * @param  latitude latitude of point
+     * @param longitude longitude of point
      */
-    Point(int location){
-        this.location=location;
+    Point(final int id, final int latitude, final int longitude)
+    {
+        this.id =id;
+        this.latitude=latitude;
+        this.longitude=longitude;
     }
 
 }
