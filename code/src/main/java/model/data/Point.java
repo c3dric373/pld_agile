@@ -52,11 +52,11 @@ public class Point {
         if (longitude<-180){
             throw new IllegalArgumentException("longitude is too small");
         }
-        if (latitude>180){
+        if (longitude>180){
             throw new IllegalArgumentException("longitude is too great");
         }
         if (id < 0){
-            throw new IllegalArgumentException("id is negtive");
+            throw new IllegalArgumentException("id is negative");
         }
         this.id =id;
         this.latitude=latitude;
