@@ -17,13 +17,13 @@ public class Point {
     /**
      * Latitude of Point
      */
-    private int latitude;
+    private float latitude;
 
     /**
      * Longitude of Point
      */
 
-    private int longitude;
+    private float longitude;
 
     /**
      * Instantiates a Point
