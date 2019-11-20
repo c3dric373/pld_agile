@@ -2,6 +2,7 @@ package model.data;
 
 
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 
 import java.util.List;
 
