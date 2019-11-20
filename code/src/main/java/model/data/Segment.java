@@ -34,7 +34,7 @@ public class Segment {
      * @param length Distance between the origin Point and the end Point
      * @param name Name of the Segment
      */
-    Segment(final int id_origin, final int id_end, final float length, final String name)
+    public Segment(final int id_origin, final int id_end, final float length, final String name)
     {
         Validate.notNull(name, "name is null");
         if (name.equals("")) {
