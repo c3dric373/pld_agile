@@ -17,51 +17,43 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XmlToGraph {
-
+    /*
+     * ArrayList that contains nodes that we'll send at the end of the reading
+     * Represents the graph
+     */
     static ArrayList<Point> nodes;
-    public static void main(final String[] args) {
-        /*
-         * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
-         */
-        nodes=new ArrayList<Point>();
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
+    public static void main(final String[] args) {
+        nodes=new ArrayList<Point>();
+        /*
+         * Step 1 : Recovery of an instance of class "DocumentBuilderFactory"
+         */
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             /*
-             * Etape 2 : création d'un parseur
+             * Step 2 : Creation of a parser
              */
             final DocumentBuilder builder = factory.newDocumentBuilder();
-
             /*
-             * Etape 3 : création d'un Document
+             * Step 3 : Creation of a document
              */
             final Document document = builder.parse(new File("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml"));
-
-
             /*
-             * Etape 4 : récupération de l'Element racine
+             * Step 4 : Recovery of the root Element
              */
-            final Element racine = document.getDocumentElement();
-
-            //Affichage de l'élément racine
-            System.out.println("\n*************RACINE************");
-            System.out.println(racine.getNodeName());
-
+            final Element root = document.getDocumentElement();
+            System.out.println("\n*************ROOT************");
+            System.out.println(root.getNodeName());
             /*
-             * Etape 5 : récupération des personnes
+             * Step 5 : Recovery of the nodes tag and display the number of nodes
              */
-            final NodeList racineNoeuds = racine.getChildNodes();
-            final int nbRacineNoeuds = racineNoeuds.getLength();
-            System.out.println(nbRacineNoeuds);
-
-
-            /*
-             * Etape 7 : récupération des numéros de téléphone
-             */
-            final NodeList nodeList = racine.getElementsByTagName("noeud");
+            final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
             System.out.println(nbNodeElements);
 
+            /*
+             * Step 6 : Reading of all nodes in the file and addition to the ArrayList
+             */
             for (int nodeIndex = 0; nodeIndex < nbNodeElements; nodeIndex++) {
                 final Element node = (Element) nodeList.item(nodeIndex);
                 int nodeId = Integer.parseInt(node.getAttribute("id"));
@@ -71,9 +63,16 @@ public class XmlToGraph {
                 nodes.add(point);
             }
 
-            final NodeList roadList = racine.getElementsByTagName("troncon");
+            /*
+             * Step 5 : Recovery of the segments tag and display the number of segments
+             */
+            final NodeList roadList = root.getElementsByTagName("troncon");
             final int nbRoadElements = roadList.getLength();
-            //System.out.println( "nbRoad :" + nbRoadElements);
+            System.out.println( "nbRoad :" + nbRoadElements);
+
+            /*
+             * Step 7 : Reading of all segments in the file
+             */
             for (int segmentIndex = 0; segmentIndex < nbRoadElements; segmentIndex++) {
                 final Element road = (Element) roadList.item(segmentIndex);
                 int roadArrival = Integer.parseInt(road.getAttribute("destination"));
@@ -81,7 +80,6 @@ public class XmlToGraph {
                 String roadName = road.getAttribute("nom");
                 int roadDeparture = Integer.parseInt(road.getAttribute("origine"));
                 Segment segment = new Segment(roadDeparture, roadArrival, roadLength, roadName);
-                //System.out.println("troncon : destination : " + road.getAttribute("destination") + "  longueur : "+ road.getAttribute("longueur") );
             }
 
         } catch (final ParserConfigurationException e) {

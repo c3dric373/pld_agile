@@ -31,19 +31,26 @@ public class Point {
      * List of neighbours
      */
 
-    private ArrayList<Segment> neighbourRoads;
+    private ArrayList<Segment> neighbourSegments;
 
     /**
      * Instantiates a Point
      * @param id id of point
-     * @param  latitude latitude of point
+     * @param latitude latitude of point
      * @param longitude longitude of point
+     * @param neighbourSegments List of neighbours of point
      */
     public Point(final int id, final float latitude, final float longitude)
     {
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
+        this.neighbourSegments=new ArrayList<Segment>();
+    }
+
+    public void AddNeighbour(Segment segment)
+    {
+        neighbourSegments.add(segment);
     }
 
 }
