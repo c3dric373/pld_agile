@@ -52,4 +52,39 @@ public class Segment {
         this.name = name;
     }
 
+    /**
+     * Get one of the point id of the segment
+     * @return one of the point id of the segment
+     */
+    int either() {
+        return id_origin;
+    }
+
+    /**
+     * Get the other point id of the segment
+     * @param id a point id of the segment
+     * @return the other point id of the segment
+     */
+    int other(int id){
+        if(id == id_origin){
+            return id_end;
+        }else if(id==id_end){
+            return id_origin;
+        }else{
+            throw new RuntimeException("no such segment");
+        }
+    }
+
+    public int getId_origin() {
+        return id_origin;
+    }
+    public int getId_end() {
+        return id_end;
+    }
+    public float getLength() {
+        return length;
+    }
+    public String getName() {
+        return name;
+    }
 }
