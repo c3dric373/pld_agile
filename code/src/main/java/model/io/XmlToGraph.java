@@ -24,10 +24,19 @@ public class XmlToGraph {
     static ArrayList<Point> nodes;
 
     public static void main(final String[] args) {
-        getGraphFromXml("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml");
+        ArrayList<Point> noeud = getGraphFromXml("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml");
+        for (Point n: noeud ){
+            System.out.println(n.getId());
+            ArrayList<Segment> g= n.getNeighbourSegments();
+            System.out.println("----------");
+            for ( Segment f :g){
+                System.out.println(f.getName());
+            }
+            System.out.println("----------");
+        }
     }
 
-    public static void getGraphFromXml(String url){
+    public static ArrayList<Point> getGraphFromXml(String url){
         nodes=new ArrayList<Point>();
         /*
          * Get an instance of class "DocumentBuilderFactory"
@@ -79,9 +88,15 @@ public class XmlToGraph {
                 final Element road = (Element) roadList.item(segmentIndex);
                 long roadArrival = Long.parseLong(road.getAttribute("destination"));
                 float roadLength = Float.parseFloat(road.getAttribute("longueur"));
-                String roadName = road.getAttribute("nom");
+                String roadName = road.getAttribute("nomRue");
                 long roadDeparture = Long.parseLong(road.getAttribute("origine"));
                 Segment segment = new Segment(roadDeparture, roadArrival, roadLength, roadName);
+
+                for (Point node : nodes){
+                    if(node.getId() == roadDeparture ){
+                        node.AddNeighbour(segment);
+                    }
+                }
             }
 
         } catch (final ParserConfigurationException e) {
@@ -90,6 +105,9 @@ public class XmlToGraph {
             e.printStackTrace();
         } catch (final IOException e) {
             e.printStackTrace();
+        } catch (NumberFormatException e){
+            System.err.println("NumberFormatException: " + e.getMessage());
         }
+        return nodes;
     }
 }
