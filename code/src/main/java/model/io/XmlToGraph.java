@@ -22,7 +22,7 @@ public class XmlToGraph {
      * Represents the graph
      */
     static ArrayList<Point> nodes;
-
+/*
     public static void main(final String[] args) {
         ArrayList<Point> noeud = getGraphFromXml("petitPlan.xml");
 
@@ -35,7 +35,7 @@ public class XmlToGraph {
             }
         }
     }
-
+*/
     public static ArrayList<Point> getGraphFromXml(String fileName){
         Validate.notNull(fileName, "fileName is null");
 
@@ -56,7 +56,7 @@ public class XmlToGraph {
             /**
              * Creation of a document
              */
-            final Document document = builder.parse(new File(".\\resource\\" + fileName));
+            final Document document = builder.parse(new File("resource" + File.separator + fileName));
             /**
              * Get the root Element
              */
@@ -105,13 +105,7 @@ public class XmlToGraph {
                 }
             }
 
-        } catch (final ParserConfigurationException e) {
-            System.err.println(e.getMessage());
-        } catch (final SAXException e) {
-            System.err.println(e.getMessage());
-        } catch (final IOException e) {
-            System.err.println(e.getMessage());
-        } catch (NumberFormatException e){
+        } catch (final ParserConfigurationException | SAXException | IOException | NumberFormatException e) {
             System.err.println(e.getMessage());
         }
         return nodes;

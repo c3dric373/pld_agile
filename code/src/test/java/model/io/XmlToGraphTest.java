@@ -1,5 +1,6 @@
-package model.data;
+package model.io;
 
+import model.data.Point;
 import model.io.XmlToGraph;
 import org.junit.Before;
 import org.junit.Rule;
