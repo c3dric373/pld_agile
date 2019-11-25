@@ -13,11 +13,11 @@ public class Segment {
     /**
      * Id of the origin Point on the map
      */
-    private int id_origin;
+    private long id_origin;
     /**
      * Id of the end Point on the map
      */
-    private int id_end;
+    private long id_end;
     /**
      * Distance between the origin Point and the end Point
      */
@@ -34,12 +34,12 @@ public class Segment {
      * @param length Distance between the origin Point and the end Point
      * @param name Name of the Segment
      */
-    public Segment(final int id_origin, final int id_end, final float length, final String name)
+    public Segment(final long id_origin, final long id_end, final float length, final String name)
     {
         Validate.notNull(name, "name is null");
-        if (name.equals("")) {
+       /* if (name.equals("")) {
             throw new IllegalArgumentException("name is empty");
-        }
+        }*/
         if (length<0){
             throw new IllegalArgumentException("length is negative");
         }

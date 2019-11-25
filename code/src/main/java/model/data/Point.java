@@ -14,7 +14,7 @@ public class Point {
     /**
      * Location of the point on the map
      */
-    private int id;
+    private long id;
 
     /**
      * Latitude of Point
@@ -40,7 +40,7 @@ public class Point {
      * @param longitude longitude of point
      * @param neighbourSegments List of neighbours of point
      */
-    public Point(final int id, final float latitude, final float longitude)
+    public Point(final long id, final float latitude, final float longitude)
     {
         this.id =id;
         this.latitude=latitude;

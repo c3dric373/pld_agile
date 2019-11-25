@@ -24,6 +24,10 @@ public class XmlToGraph {
     static ArrayList<Point> nodes;
 
     public static void main(final String[] args) {
+        getGraphFromXml("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml");
+    }
+
+    public static void getGraphFromXml(String url){
         nodes=new ArrayList<Point>();
         /*
          * Get an instance of class "DocumentBuilderFactory"
@@ -37,7 +41,7 @@ public class XmlToGraph {
             /*
              * Creation of a document
              */
-            final Document document = builder.parse(new File("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml"));
+            final Document document = builder.parse(new File(url));
             /*
              * Get the root Element
              */
@@ -54,7 +58,7 @@ public class XmlToGraph {
              */
             for (int nodeIndex = 0; nodeIndex < nbNodeElements; nodeIndex++) {
                 final Element node = (Element) nodeList.item(nodeIndex);
-                int nodeId = Integer.parseInt(node.getAttribute("id"));
+                Long nodeId = Long.parseLong(node.getAttribute("id"));
                 float nodeLat = Float.parseFloat(node.getAttribute("latitude"));
                 float nodeLong = Float.parseFloat(node.getAttribute("longitude"));
                 Point point = new Point (nodeId, nodeLat, nodeLong);
@@ -73,10 +77,10 @@ public class XmlToGraph {
              */
             for (int segmentIndex = 0; segmentIndex < nbRoadElements; segmentIndex++) {
                 final Element road = (Element) roadList.item(segmentIndex);
-                int roadArrival = Integer.parseInt(road.getAttribute("destination"));
+                long roadArrival = Long.parseLong(road.getAttribute("destination"));
                 float roadLength = Float.parseFloat(road.getAttribute("longueur"));
                 String roadName = road.getAttribute("nom");
-                int roadDeparture = Integer.parseInt(road.getAttribute("origine"));
+                long roadDeparture = Long.parseLong(road.getAttribute("origine"));
                 Segment segment = new Segment(roadDeparture, roadArrival, roadLength, roadName);
             }
 
