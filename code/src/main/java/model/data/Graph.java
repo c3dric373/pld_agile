@@ -42,7 +42,7 @@ public class Graph {
      * @param longitude longitude of the point
      * @param latitude latitude of the point
      */
-    void addPoint(int id, float longitude, float latitude) {
+    void addPoint(final int id, float longitude, float latitude) {
         list_points.add(new Point(id, longitude, latitude));
         map.put(id, nb_points++);
     }

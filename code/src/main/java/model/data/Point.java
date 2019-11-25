@@ -20,12 +20,12 @@ public class Point {
     /**
      * Latitude of Point
      */
-    private float latitude;
+    private double latitude;
 
     /**
      * Longitude of Point
      */
-    private float longitude;
+    private double longitude;
 
     /**
      * list of road segment which contains this point
@@ -38,7 +38,7 @@ public class Point {
      * @param latitude latitude of point
      * @param longitude longitude of point
      */
-    Point(final int id, final float latitude, final float longitude) {
+    Point(final int id, final double latitude, final double longitude) {
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
@@ -69,10 +69,10 @@ public class Point {
     public int getId() {
         return id;
     }
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
     public List<Segment> getList_segments() {
