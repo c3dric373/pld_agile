@@ -70,7 +70,7 @@ public class Point {
      * @param id the id of the other point
      * @return the distance from this point to another
      */
-    double getLengthTo(final long id) {
+    public double getLengthTo(final long id) {
         if (this.id == id) return 0;
         for (final Segment s : segments) {
             if (s.getId_end() == id) return s.getLength();
