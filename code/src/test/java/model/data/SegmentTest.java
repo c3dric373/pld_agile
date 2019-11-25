@@ -107,52 +107,6 @@ public class SegmentTest {
     }
 
     @Test
-    public void testCTOR_SegmentHasNoSuchPoint_throwsIllegalArgumentException() {
-
-        // Arrange
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("segment has no such point");
-
-        // Act
-        SEGMENT_TEST.other(ID_NOT_EXIST);
-
-        // Assert via annotation
-    }
-
-    @Test
-    public void testCTOR_OtherId_origin() {
-
-        // Arrange
-
-        // Act
-        SEGMENT_TEST.other(ID_ORIGIN_TEST);
-
-        // Assert via annotation
-    }
-
-    @Test
-    public void testCTOR_OtherId_end() {
-
-        // Arrange
-
-        // Act
-        SEGMENT_TEST.other(ID_END_TEST);
-
-        // Assert via annotation
-    }
-
-    @Test
-    public void testCTOR_Either() {
-
-        // Arrange
-
-        // Act
-        SEGMENT_TEST.either();
-
-        // Assert via annotation
-    }
-
-    @Test
     public void testCTOR_GetterId_origin() {
 
         // Arrange

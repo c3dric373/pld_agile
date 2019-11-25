@@ -96,10 +96,7 @@ public class Graph {
         for (int i = 0; i< nb_points; i++) {
             System.out.print(points.get(i).getId()+"     ");
             for (Segment s: points.get(i).getSegments()) {
-                if (points.get(i).getId() == s.either())
-                    System.out.print(s.other(s.either()) +" ");
-                else
-                    System.out.print(s.either() + " ");
+                System.out.print(s.getId_end() + " ");
             }
             System.out.println();
         }
@@ -162,7 +159,7 @@ public class Graph {
             flag[cur_index] = true;
             Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
-                long id_other = s.other(cur_point.getId());
+                long id_other = s.getId_end();
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;
                 double tmp = cur_point.getLengthTo(id_other);
