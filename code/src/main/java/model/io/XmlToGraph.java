@@ -107,13 +107,13 @@ public class XmlToGraph {
             }
 
         } catch (final ParserConfigurationException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         } catch (final SAXException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         } catch (final IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         } catch (NumberFormatException e){
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
         return nodes;
     }
