@@ -61,7 +61,7 @@ public class Point {
     float getLengthTo(int id) {
         if (this.id == id) return 0;
         for (Segment s : list_segments) {
-            if (s.either() == this.id && s.other(this.id) == id) return s.getLength();
+            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
         }
         return Float.POSITIVE_INFINITY;
     }

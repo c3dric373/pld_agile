@@ -1,5 +1,7 @@
 package model.data;
 
+import org.apache.commons.lang.Validate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,21 +54,35 @@ public class Graph {
      * @param length distance between the two points
      * @param name name of the segment
      */
-    void addSegment(int id_origin, int id_end, float length, String name) {
-        if (map.get(id_origin) == null || map.get(id_end) == null) {
-            System.err.println("Error segment: ");
-            System.err.println("id_origin :" + id_origin);
-            System.err.println("id_end :" + id_end);
-            System.err.println("length :" + length);
-            System.err.println("name :" + name);
-        } else {
-            int origin_index = map.get(id_origin);
-            int end_index = map.get(id_end);
-            Segment s = new Segment(id_origin, id_end, length, name);
-            list_points.get(origin_index).addSegment(s);
-            list_points.get(end_index).addSegment(s);
-            nb_segments++;
+    void addSegment(final int id_origin, final int id_end, final float length, final String name) {
+        Validate.notNull(name, "name is null");
+        if (name.equals("")) {
+            throw new IllegalArgumentException("name is empty");
         }
+        if (length<0){
+            throw new IllegalArgumentException("length is negative");
+        }
+        if (length==0){
+            throw new IllegalArgumentException("length is zero");
+        }
+        if (id_origin < 0) {
+            throw new IllegalArgumentException("id_origin is negative");
+        }
+        if (id_end < 0) {
+            throw new IllegalArgumentException("id_end is negative");
+        }
+        if (map.get(id_origin) == null) {
+            throw new IllegalArgumentException("point id_origin not included yet");
+        }
+        if (map.get(id_end) == null) {
+            throw new IllegalArgumentException("point id_end not included yet");
+        }
+        int origin_index = map.get(id_origin);
+        int end_index = map.get(id_end);
+        Segment s = new Segment(id_origin, id_end, length, name);
+        list_points.get(origin_index).addSegment(s);
+        list_points.get(end_index).addSegment(s);
+        nb_segments++;
     }
 
     /**
@@ -95,6 +111,12 @@ public class Graph {
      * @param dist a table which contains the shortest distance from start point to all the points in the map
      */
     void dijkstra(int start_index, float[] prev, float[] dist) {
+        if (start_index < 0) {
+            throw new IllegalArgumentException("start_index is too small");
+        }
+        if (start_index >= nb_points) {
+            throw new IllegalArgumentException("start_index is too great");
+        }
         boolean[] flag = new boolean[nb_points];
         for (int i = 0; i < nb_points; i++) {
             flag[i] = (i == start_index);
