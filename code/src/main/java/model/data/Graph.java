@@ -155,22 +155,38 @@ public class Graph {
         }
     }
 
-//    public static void main(String[] args) {
-//        Graph graph = new Graph();
-//        graph.addPoint(1,0,0);
-//        graph.addPoint(2,0,0);
-//        graph.addPoint(3,0,0);
-//        graph.addPoint(4,0,0);
-//        graph.addPoint(5,0,0);
-//        graph.addSegment(1, 2, 1, "street_AB");
-//        graph.addSegment(1, 3, 2, "street_AC");
-//        graph.addSegment(2, 3, 3, "street_BC");
-//        graph.addSegment(1, 4, 4, "street_AD");
-//        graph.addSegment(4, 5, 5, "street_DE");
-//        graph.addSegment(2, 5, 6, "street_BE");
-//        graph.show_map();
-//        float[] prev = new float[5];
-//        float[] dist = new float[5];
-//        graph.dijkstra(0, prev, dist);
-//    }
+    public static void main(String[] args) {
+        Graph graph = new Graph();
+        graph.addPoint(1,0,0);
+        graph.addPoint(2,0,0);
+        graph.addPoint(3,0,0);
+        graph.addPoint(4,0,0);
+        graph.addPoint(5,0,0);
+        graph.addSegment(1, 2, 1, "street_AB");
+        graph.addSegment(1, 3, 2, "street_AC");
+        graph.addSegment(2, 3, 3, "street_BC");
+        graph.addSegment(1, 4, 4, "street_AD");
+        graph.addSegment(4, 5, 5, "street_DE");
+        graph.addSegment(2, 5, 6, "street_BE");
+        graph.show_map();
+        float[] prev = new float[5];
+        float[] dist = new float[5];
+        graph.dijkstra(0, prev, dist);
+    }
+
+    public int getNbPoints() {
+        return this.nb_points;
+    }
+
+    public int getNb_segments() {
+        return this.nb_segments;
+    }
+
+    public List<Point> getList_points() {
+        return this.list_points;
+    }
+
+    public Map<Integer, Integer> getMap() {
+        return this.map;
+    }
 }
