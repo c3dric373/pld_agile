@@ -16,7 +16,7 @@ public class Point {
     /**
      * Location of the point on the map
      */
-    private int id;
+    private long id;
 
     /**
      * Latitude of Point
@@ -40,7 +40,7 @@ public class Point {
      * @param longitude longitude of point
      * @param segments list of adjacent segments to point
      */
-    Point(final int id, final double latitude, final double longitude, final List<Segment> segments)
+    Point(final long id, final double latitude, final double longitude, final List<Segment> segments)
     {
         Validate.notNull(id, "id is null");
         if (latitude<-90){
@@ -64,20 +64,13 @@ public class Point {
         this.segments = segments;
     }
 
-    /**
-     * Add a road segment to the point
-     * @param s road segment to add
-     */
-    void addSegment(Segment s) {
-        segments.add(s);
-    }
 
     /**
      * Get the distance from this point to another if it's reachable via one segments
      * @param id the id of the other point
      * @return the distance from this point to another
      */
-    double getLengthTo(final int id) {
+    double getLengthTo(final long id) {
         if (this.id == id) return 0;
         for (final Segment s : segments) {
             if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
@@ -85,7 +78,7 @@ public class Point {
         throw new IllegalArgumentException("point not reachable via one segment");
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
     public double getLatitude() {

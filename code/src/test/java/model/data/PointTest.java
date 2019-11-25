@@ -24,16 +24,20 @@ public class PointTest {
     private final double LNG_SMALL = -181;
     private final double LNG_BIG = 181;
     private final double LNG_TEST = 45;
-    private List<Segment> SEGMENTS_TEST;
+    private List<Segment> TEST_SEGMENTS;
+    private long TEST_ID = 25175791L;
+    private double TEST_LATITUDE = 45.75406;
+    private double TEST_LONGITUDE = 4.857418;
 
-    private Point TEST_POINT;
+
+    private Point subject;
 
     @Before
-    private void setUp() {
-        SEGMENTS_TEST = new ArrayList<Segment>();
-        SEGMENTS_TEST.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
-        SEGMENTS_TEST.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
-        TEST_POINT = new Point(25175791, 45.75406, 4.857418, SEGMENTS_TEST);
+    public void setUp() {
+        TEST_SEGMENTS = new ArrayList<Segment>();
+        TEST_SEGMENTS.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
+        TEST_SEGMENTS.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
+        subject = new Point(TEST_ID, TEST_LATITUDE, TEST_LONGITUDE, TEST_SEGMENTS);
 
 
     }
@@ -48,12 +52,28 @@ public class PointTest {
         final double CORRECT_LENGTH = 69.979805;
 
         // Act
-        final double test_length = TEST_POINT.getLengthTo(25175778);
+        final double test_length = subject.getLengthTo(25175778);
 
         // Assert
-        assertEquals("wrong length", CORRECT_LENGTH, test_length,0);
+        assertEquals("wrong length", CORRECT_LENGTH, test_length, 0);
 
     }
+
+    @Test
+    public void testGetLengthTo_pointNotReachable_IllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("point not reachable via one segment");
+        final long  wrong_id = 2365376415L;
+
+        // Act
+        final double test_length = subject.getLengthTo(wrong_id);
+
+        // Assert -> via annotation
+
+    }
+
 
     @Test
     public void testCTOR_idNegative_throwsIllegalArgumentException() {
@@ -63,7 +83,7 @@ public class PointTest {
         thrown.expectMessage("id is negative");
 
         // Act
-        new Point(ID_NEG, LAT_TEST, LNG_TEST, SEGMENTS_TEST);
+        new Point(ID_NEG, LAT_TEST, LNG_TEST, TEST_SEGMENTS);
 
         // Assert via annotation
     }
@@ -76,7 +96,7 @@ public class PointTest {
         thrown.expectMessage("latitude is too small");
 
         // Act
-        new Point(ID_TEST, LAT_SMALL, LNG_TEST, SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_SMALL, LNG_TEST, TEST_SEGMENTS);
 
         // Assert via annotation
     }
@@ -89,7 +109,7 @@ public class PointTest {
         thrown.expectMessage("latitude is too great");
 
         // Act
-        new Point(ID_TEST, LAT_BIG, LNG_TEST, SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_BIG, LNG_TEST, TEST_SEGMENTS);
 
         // Assert via annotation
     }
@@ -102,7 +122,7 @@ public class PointTest {
         thrown.expectMessage("longitude is too small");
 
         // Act
-        new Point(ID_TEST, LAT_TEST, LNG_SMALL, SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_TEST, LNG_SMALL, TEST_SEGMENTS);
 
         // Assert via annotation
     }
@@ -115,8 +135,57 @@ public class PointTest {
         thrown.expectMessage("longitude is too great");
 
         // Act
-        new Point(ID_TEST, LAT_TEST, LNG_BIG, SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_TEST, LNG_BIG, TEST_SEGMENTS);
 
         // Assert via annotation
     }
+
+    @Test
+    public void testGetId_validCall_correctId() {
+
+        // Arrange
+
+        // Act
+        final long id = subject.getId();
+
+        // Assert
+        assertEquals("Wrong id", id, TEST_ID);
+    }
+    @Test
+    public void testGetLatitude_validCall_correctId() {
+
+        // Arrange
+
+        // Act
+        final double latitude = subject.getLatitude();
+
+        // Assert
+        assertEquals("Wrong id", latitude, TEST_LATITUDE,0);
+    }
+
+    @Test
+    public void testGetLongitude_validCall_correctId() {
+
+        // Arrange
+
+        // Act
+        final double longitude = subject.getLongitude();
+
+        // Assert
+        assertEquals("Wrong id", longitude, TEST_LONGITUDE,0);
+    }
+
+    @Test
+    public void testGetSegments_validCall_correctId() {
+
+        // Arrange
+
+        // Act
+        final List segments = subject.getSegments();
+
+        // Assert
+        assertEquals("Wrong segments", segments, TEST_SEGMENTS);
+    }
+
+
 }
