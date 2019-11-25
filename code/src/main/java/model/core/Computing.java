@@ -14,10 +14,16 @@ public class Computing {
     /**
      * this class contains the previous point index and the distance in the shortest path from the start point to each point
      */
-    class tuple {
+    static class tuple {
         private int prev;
         private double dist;
         tuple(int prev, double dist) {
+            if (prev < 0) {
+                throw new IllegalArgumentException("prev is negative");
+            }
+            if (dist < 0) {
+                throw new IllegalArgumentException("dist is negative");
+            }
             this.prev = prev;
             this.dist = dist;
         }
@@ -29,9 +35,15 @@ public class Computing {
             return dist;
         }
         public void setPrev(int prev) {
+            if (prev < 0) {
+                throw new IllegalArgumentException("prev is negative");
+            }
             this.prev = prev;
         }
         public void setDist(double dist) {
+            if (dist < 0) {
+                throw new IllegalArgumentException("dist is negative");
+            }
             this.dist = dist;
         }
     }

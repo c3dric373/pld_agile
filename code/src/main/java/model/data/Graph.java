@@ -56,7 +56,6 @@ public class Graph {
      * @param length distance between the two points
      * @param name name of the segment
      */
-
      /*
     void addSegment(final int id_origin, final int id_end, final float length, final String name) {
         Validate.notNull(name, "name is null");
@@ -127,15 +126,12 @@ public class Graph {
     public int getNbPoints() {
         return this.nb_points;
     }
-
     public int getNbSegments() {
         return this.nb_segments;
     }
-
     public List<Point> getPoints() {
         return this.points;
     }
-
     public Map<Long, Integer> getMap() {
         return this.map;
     }
