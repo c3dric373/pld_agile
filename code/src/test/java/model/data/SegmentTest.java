@@ -19,6 +19,7 @@ public class SegmentTest {
     private final int NEGATIVE_ID_ORIGIN = -1;
     private final int NEGATIVE_ID_END = -1;
     private final int ID_NOT_EXIST = -1;
+    private Segment SEGMENT_TEST = new Segment(ID_ORIGIN_TEST,ID_END_TEST,LENGTH_TEST,NAME_TEST);
 
 
     @Rule
@@ -113,13 +114,86 @@ public class SegmentTest {
         thrown.expectMessage("segment has no such point");
 
         // Act
-        Segment s = new Segment(ID_ORIGIN_TEST,ID_END_TEST,LENGTH_TEST,NAME_TEST);
-        s.other(ID_NOT_EXIST);
+        SEGMENT_TEST.other(ID_NOT_EXIST);
 
         // Assert via annotation
     }
 
+    @Test
+    public void testCTOR_OtherId_origin() {
 
+        // Arrange
 
+        // Act
+        SEGMENT_TEST.other(ID_ORIGIN_TEST);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_OtherId_end() {
+
+        // Arrange
+
+        // Act
+        SEGMENT_TEST.other(ID_END_TEST);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_Either() {
+
+        // Arrange
+
+        // Act
+        SEGMENT_TEST.either();
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_GetterId_origin() {
+
+        // Arrange
+
+        // Act
+        SEGMENT_TEST.getId_origin();
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_GetterId_end() {
+
+        // Arrange
+
+        // Act
+        SEGMENT_TEST.getId_end();
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_GetterLength() {
+
+        // Arrange
+
+        // Act
+        SEGMENT_TEST.getLength();
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_GetterName() {
+
+        // Arrange
+
+        // Act
+        SEGMENT_TEST.getName();
+
+        // Assert via annotation
+    }
 
 }
