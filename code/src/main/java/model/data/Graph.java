@@ -1,7 +1,6 @@
 package model.data;
 
 import lombok.Getter;
-import org.apache.commons.lang.Validate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public class Graph {
     /**
      * List of points in the map
      */
-    private List<Point> list_points;
+    private List<Point> points;
     /**
      * Key: id point
      * Value: index in 'list_point'
@@ -34,7 +33,7 @@ public class Graph {
     Graph() {
         nb_points = 0;
         nb_segments = 0;
-        list_points = new ArrayList<Point>();
+        points = new ArrayList<Point>();
         map = new HashMap<Integer, Integer>();
     }
 
@@ -49,6 +48,7 @@ public class Graph {
 //        map.put(id, nb_points++);
 //    }
 
+
     /**
      * Add a segment to the map
      * @param id_origin id of the origin point
@@ -56,6 +56,8 @@ public class Graph {
      * @param length distance between the two points
      * @param name name of the segment
      */
+
+     /*
     void addSegment(final int id_origin, final int id_end, final float length, final String name) {
         Validate.notNull(name, "name is null");
         if (name.equals("")) {
@@ -86,15 +88,15 @@ public class Graph {
         list_points.get(end_index).addSegment(s);
         nb_segments++;
     }
-
+*/
     /**
      * Show the map
      */
     void show_map() {
         for (int i = 0; i< nb_points; i++) {
-            System.out.print(list_points.get(i).getId()+"     ");
-            for (Segment s:list_points.get(i).getSegments()) {
-                if (list_points.get(i).getId() == s.either())
+            System.out.print(points.get(i).getId()+"     ");
+            for (Segment s: points.get(i).getSegments()) {
+                if (points.get(i).getId() == s.either())
                     System.out.print(s.other(s.either()) +" ");
                 else
                     System.out.print(s.either() + " ");
@@ -112,7 +114,7 @@ public class Graph {
      * @param prev a table which contains the previous point index in the shortest path for each point in the map
      * @param dist a table which contains the shortest distance from start point to all the points in the map
      */
-    void dijkstra(int start_index, float[] prev, float[] dist) {
+    void dijkstra(final int start_index, int[] prev, float[] dist) {
         if (start_index < 0) {
             throw new IllegalArgumentException("start_index is too small");
         }
@@ -123,7 +125,7 @@ public class Graph {
         for (int i = 0; i < nb_points; i++) {
             flag[i] = (i == start_index);
             prev[i] = 0;
-            dist[i] = list_points.get(start_index).getLengthTo(list_points.get(i).getId());
+            dist[i] = points.get(start_index).getLengthTo(points.get(i).getId());
         }
         int cur_index = start_index;
         for (int i = 1; i < nb_points; i++) {
@@ -135,7 +137,7 @@ public class Graph {
                 }
             }
             flag[cur_index] = true;
-            Point cur_point = list_points.get(cur_index);
+            Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
                 int id_other = s.other(cur_point.getId());
                 int index_other = map.get(id_other);
@@ -148,14 +150,15 @@ public class Graph {
                 }
             }
         }
-        int start_id = list_points.get(start_index).getId();
+        int start_id = points.get(start_index).getId();
         System.out.printf("dijkstra(%d)\n", start_id);
         for (int i = 0; i < nb_points; i++) {
-            System.out.printf("  shortest(%d, %d)=%f\n", start_id, list_points.get(i).getId(), dist[i]);
+            System.out.printf("  shortest(%d, %d)=%f\n", start_id, points.get(i).getId(), dist[i]);
         }
     }
 
     public static void main(String[] args) {
+      /*
         Graph graph = new Graph();
         graph.addPoint(1,0,0);
         graph.addPoint(2,0,0);
@@ -171,7 +174,7 @@ public class Graph {
         graph.show_map();
         float[] prev = new float[5];
         float[] dist = new float[5];
-        graph.dijkstra(0, prev, dist);
+        graph.dijkstra(0, prev, dist);*/
     }
 
     public int getNbPoints() {
@@ -182,8 +185,8 @@ public class Graph {
         return this.nb_segments;
     }
 
-    public List<Point> getList_points() {
-        return this.list_points;
+    public List<Point> getPoints() {
+        return this.points;
     }
 
     public Map<Integer, Integer> getMap() {
