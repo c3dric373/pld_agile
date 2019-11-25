@@ -42,10 +42,10 @@ public class Graph {
      * @param longitude longitude of the point
      * @param latitude latitude of the point
      */
-    void addPoint(final int id, float longitude, float latitude) {
-        list_points.add(new Point(id, longitude, latitude));
-        map.put(id, nb_points++);
-    }
+//    void addPoint(final int id, double longitude, double latitude) {
+//        list_points.add(new Point(id, longitude, latitude));
+//        map.put(id, nb_points++);
+//    }
 
     /**
      * Add a segment to the map
@@ -91,7 +91,7 @@ public class Graph {
     void show_map() {
         for (int i = 0; i< nb_points; i++) {
             System.out.print(list_points.get(i).getId()+"     ");
-            for (Segment s:list_points.get(i).getList_segments()) {
+            for (Segment s:list_points.get(i).getSegments()) {
                 if (list_points.get(i).getId() == s.either())
                     System.out.print(s.other(s.either()) +" ");
                 else
@@ -134,7 +134,7 @@ public class Graph {
             }
             flag[cur_index] = true;
             Point cur_point = list_points.get(cur_index);
-            for (Segment s : cur_point.getList_segments()) {
+            for (Segment s : cur_point.getSegments()) {
                 int id_other = s.other(cur_point.getId());
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;
@@ -153,22 +153,22 @@ public class Graph {
         }
     }
 
-    public static void main(String[] args) {
-        Graph graph = new Graph();
-        graph.addPoint(1,0,0);
-        graph.addPoint(2,0,0);
-        graph.addPoint(3,0,0);
-        graph.addPoint(4,0,0);
-        graph.addPoint(5,0,0);
-        graph.addSegment(1, 2, 1, "street_AB");
-        graph.addSegment(1, 3, 2, "street_AC");
-        graph.addSegment(2, 3, 3, "street_BC");
-        graph.addSegment(1, 4, 4, "street_AD");
-        graph.addSegment(4, 5, 5, "street_DE");
-        graph.addSegment(2, 5, 6, "street_BE");
-        graph.show_map();
-        float[] prev = new float[5];
-        float[] dist = new float[5];
-        graph.dijkstra(0, prev, dist);
-    }
+//    public static void main(String[] args) {
+//        Graph graph = new Graph();
+//        graph.addPoint(1,0,0);
+//        graph.addPoint(2,0,0);
+//        graph.addPoint(3,0,0);
+//        graph.addPoint(4,0,0);
+//        graph.addPoint(5,0,0);
+//        graph.addSegment(1, 2, 1, "street_AB");
+//        graph.addSegment(1, 3, 2, "street_AC");
+//        graph.addSegment(2, 3, 3, "street_BC");
+//        graph.addSegment(1, 4, 4, "street_AD");
+//        graph.addSegment(4, 5, 5, "street_DE");
+//        graph.addSegment(2, 5, 6, "street_BE");
+//        graph.show_map();
+//        float[] prev = new float[5];
+//        float[] dist = new float[5];
+//        graph.dijkstra(0, prev, dist);
+//    }
 }

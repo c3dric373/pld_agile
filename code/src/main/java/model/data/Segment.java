@@ -40,11 +40,17 @@ public class Segment {
         if (name.equals("")) {
             throw new IllegalArgumentException("name is empty");
         }
-        if (length<0){
+        if (length < 0) {
             throw new IllegalArgumentException("length is negative");
         }
-        if (length==0){
+        if (length == 0) {
             throw new IllegalArgumentException("length is zero");
+        }
+        if (id_origin < 0) {
+            throw new IllegalArgumentException("id_origin is negative");
+        }
+        if (id_end < 0) {
+            throw new IllegalArgumentException("id_end is negative");
         }
         this.id_origin = id_origin;
         this.id_end = id_end;
@@ -68,10 +74,10 @@ public class Segment {
     int other(int id){
         if(id == id_origin){
             return id_end;
-        }else if(id==id_end){
+        }else if(id == id_end){
             return id_origin;
         }else{
-            throw new RuntimeException("no such segment");
+            throw new IllegalArgumentException("segment has no such point");
         }
     }
 

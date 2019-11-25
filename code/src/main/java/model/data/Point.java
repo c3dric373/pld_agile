@@ -28,8 +28,6 @@ public class Point {
      */
     private double longitude;
 
-    private float longitude;
-
     /**
      * List of Adjacent Segments to point
      */
@@ -71,7 +69,7 @@ public class Point {
      * @param s road segment to add
      */
     void addSegment(Segment s) {
-        list_segments.add(s);
+        segments.add(s);
     }
 
     /**
@@ -81,7 +79,7 @@ public class Point {
      */
     float getLengthTo(int id) {
         if (this.id == id) return 0;
-        for (Segment s : list_segments) {
+        for (Segment s : segments) {
             if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
         }
         return Float.POSITIVE_INFINITY;
@@ -96,7 +94,7 @@ public class Point {
     public double getLongitude() {
         return longitude;
     }
-    public List<Segment> getList_segments() {
-        return list_segments;
+    public List<Segment> getSegments() {
+        return segments;
     }
 }

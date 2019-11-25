@@ -16,7 +16,9 @@ public class SegmentTest {
     private final int LENGTH_TEST = 4;
     private final int ID_ORIGIN_TEST = 25175778;
     private final int ID_END_TEST = 25175791;
-
+    private final int NEGATIVE_ID_ORIGIN = -1;
+    private final int NEGATIVE_ID_END = -1;
+    private final int ID_NOT_EXIST = -1;
 
 
     @Rule
@@ -77,8 +79,45 @@ public class SegmentTest {
         // Assert via annotation
     }
 
+    @Test
+    public void testCTOR_Id_originNegative_throwsIllegalArgumentException() {
 
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("id_origin is negative");
 
+        // Act
+        new Segment(NEGATIVE_ID_ORIGIN,ID_END_TEST,LENGTH_TEST,NAME_TEST);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_Id_endNegative_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("id_end is negative");
+
+        // Act
+        new Segment(ID_ORIGIN_TEST,NEGATIVE_ID_END,LENGTH_TEST,NAME_TEST);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_SegmentHasNoSuchPoint_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("segment has no such point");
+
+        // Act
+        Segment s = new Segment(ID_ORIGIN_TEST,ID_END_TEST,LENGTH_TEST,NAME_TEST);
+        s.other(ID_NOT_EXIST);
+
+        // Assert via annotation
+    }
 
 
 
