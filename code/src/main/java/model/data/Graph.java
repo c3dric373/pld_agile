@@ -1,5 +1,6 @@
 package model.data;
 
+import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class Graph {
     /**
      * List of points in the map
