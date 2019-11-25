@@ -9,7 +9,7 @@ import java.util.*;
 
 public class TourTest {
     private List<DeliveryProcess> TEST_DELIVERY_PROCESSES = new ArrayList<DeliveryProcess>();
-    private Point TEST_BASE = new Point(5,3,3, new ArrayList<>());
+    private Point TEST_BASE = new Point(5,3,3);
     private int TEST_START_TIME = 0;
     @Rule
     public ExpectedException thrown = ExpectedException.none();

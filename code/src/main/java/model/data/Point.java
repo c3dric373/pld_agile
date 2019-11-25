@@ -4,6 +4,7 @@ package model.data;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class Point {
      * @param longitude longitude of point
      * @param neighbourSegments List of neighbours of point
      */
-    Point(final int id, final double latitude, final double longitude, final List<Segment> segments)
+    public Point(final long id, final double latitude, final double longitude)
     {
         Validate.notNull(id, "id is null");
         if (latitude<-90){

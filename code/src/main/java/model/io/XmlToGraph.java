@@ -12,7 +12,6 @@ import model.data.Point;
 import model.data.Segment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -24,7 +23,14 @@ public class XmlToGraph {
     static ArrayList<Point> nodes;
 
     public static void main(final String[] args) {
-        ArrayList<Point> noeud = getGraphFromXml("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml");
+        ArrayList<Point> noeud = getGraphFromXml("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\grandPlan.xml");
+        //Check that the informations are correctly instancied
+        for ( Point n : noeud){
+            System.out.println(n.getId());
+            for (Segment s : n.getNeighbourSegments() ){
+                System.out.println(s.getName());
+            }
+        }
     }
 
     public static ArrayList<Point> getGraphFromXml(String url){
@@ -59,8 +65,8 @@ public class XmlToGraph {
             for (int nodeIndex = 0; nodeIndex < nbNodeElements; nodeIndex++) {
                 final Element node = (Element) nodeList.item(nodeIndex);
                 Long nodeId = Long.parseLong(node.getAttribute("id"));
-                float nodeLat = Float.parseFloat(node.getAttribute("latitude"));
-                float nodeLong = Float.parseFloat(node.getAttribute("longitude"));
+                double nodeLat = Double.parseDouble(node.getAttribute("latitude"));
+                double nodeLong = Double.parseDouble(node.getAttribute("longitude"));
                 Point point = new Point (nodeId, nodeLat, nodeLong);
                 nodes.add(point);
             }
