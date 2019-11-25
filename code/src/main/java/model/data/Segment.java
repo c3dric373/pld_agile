@@ -13,11 +13,11 @@ public class Segment {
     /**
      * Id of the origin Point on the map
      */
-    private int id_origin;
+    private long id_origin;
     /**
      * Id of the end Point on the map
      */
-    private int id_end;
+    private long id_end;
     /**
      * Distance between the origin Point and the end Point
      */
@@ -34,7 +34,7 @@ public class Segment {
      * @param length Distance between the origin Point and the end Point
      * @param name Name of the Segment
      */
-    Segment(final int id_origin, final int id_end, final double length, final String name)
+    Segment(final long id_origin, final long id_end, final double length, final String name)
     {
         Validate.notNull(name, "name is null");
         if (name.equals("")) {
@@ -62,7 +62,7 @@ public class Segment {
      * Get one of the point id of the segment
      * @return one of the point id of the segment
      */
-    int either() {
+    long either() {
         return id_origin;
     }
 
@@ -71,7 +71,7 @@ public class Segment {
      * @param id a point id of the segment
      * @return the other point id of the segment
      */
-    int other(int id){
+    long other(long id){
         if(id == id_origin){
             return id_end;
         }else if(id == id_end){
@@ -81,10 +81,10 @@ public class Segment {
         }
     }
 
-    public int getId_origin() {
+    public long getId_origin() {
         return id_origin;
     }
-    public int getId_end() {
+    public long getId_end() {
         return id_end;
     }
     public double getLength() {

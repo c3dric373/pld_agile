@@ -162,7 +162,7 @@ public class Graph {
             flag[cur_index] = true;
             Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
-                int id_other = s.other(cur_point.getId());
+                long id_other = s.other(cur_point.getId());
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;
                 double tmp = cur_point.getLengthTo(id_other);
@@ -173,7 +173,7 @@ public class Graph {
                 }
             }
         }
-        int start_id = points.get(start_index).getId();
+        long start_id = points.get(start_index).getId();
         System.out.printf("dijkstra(%d)\n", start_id);
         for (int i = 0; i < nb_points; i++) {
             System.out.printf("  shortest(%d, %d)=%f\n", start_id, points.get(i).getId(), res.get(i).getDist());
