@@ -107,32 +107,55 @@ public class Graph {
         System.out.println("nb_segments: "+nb_segments);
     }
 
+    class tuple {
+        private int prev = 0;
+        private double dist = Float.POSITIVE_INFINITY;
+        tuple(int prev, double dist) {
+            this.prev = prev;
+            this.dist = dist;
+        }
+
+        public int getPrev() {
+            return prev;
+        }
+        public double getDist() {
+            return dist;
+        }
+        public void setPrev(int prev) {
+            this.prev = prev;
+        }
+        public void setDist(double dist) {
+            this.dist = dist;
+        }
+    }
+
     /**
      * Dijkstra shortest path
      * the shortest path from start point to other points
      * @param start_index the index of start point
-     * @param prev a table which contains the previous point index in the shortest path for each point in the map
-     * @param dist a table which contains the shortest distance from start point to all the points in the map
+     * @return list of tuple which contains the previous point index and the distance in the shortest path from the start point to each point
      */
-    void dijkstra(final int start_index, int[] prev, double[] dist) {
+    List<tuple> dijkstra(int start_index) {
         if (start_index < 0) {
             throw new IllegalArgumentException("start_index is too small");
         }
         if (start_index >= nb_points) {
             throw new IllegalArgumentException("start_index is too great");
         }
+        List<tuple> res = new ArrayList<>();
+
         boolean[] flag = new boolean[nb_points];
+        Point start_point = points.get(start_index);
         for (int i = 0; i < nb_points; i++) {
             flag[i] = (i == start_index);
-            prev[i] = 0;
-            dist[i] = points.get(start_index).getLengthTo(points.get(i).getId());
+            res.add(new tuple(0, start_point.getLengthTo(points.get(i).getId())));
         }
         int cur_index = start_index;
         for (int i = 1; i < nb_points; i++) {
             double min = Float.POSITIVE_INFINITY;
             for (int j = 0; j < nb_points; j++) {
-                if (!flag[j] && dist[j] < min) {
-                    min = dist[j];
+                if (!flag[j] && res.get(j).getDist() < min) {
+                    min = res.get(j).getDist();
                     cur_index = j;
                 }
             }
@@ -144,17 +167,18 @@ public class Graph {
                 if (flag[index_other]) continue;
                 double tmp = cur_point.getLengthTo(id_other);
                 tmp = (tmp == Float.POSITIVE_INFINITY) ? tmp : tmp + min;
-                if (tmp < dist[index_other]) {
-                    prev[index_other] = cur_index;
-                    dist[index_other] = tmp;
+                if (tmp < res.get(index_other).getDist()) {
+                    res.get(index_other).setPrev(cur_index);
+                    res.get(index_other).setDist(tmp);
                 }
             }
         }
         int start_id = points.get(start_index).getId();
         System.out.printf("dijkstra(%d)\n", start_id);
         for (int i = 0; i < nb_points; i++) {
-            System.out.printf("  shortest(%d, %d)=%f\n", start_id, points.get(i).getId(), dist[i]);
+            System.out.printf("  shortest(%d, %d)=%f\n", start_id, points.get(i).getId(), res.get(i).getDist());
         }
+        return res;
     }
 
     public static void main(String[] args) {
