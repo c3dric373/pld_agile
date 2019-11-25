@@ -4,6 +4,7 @@ package model.data;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class Point {
     /**
      * Location of the point on the map
      */
-    private int id;
+    private long id;
 
     /**
      * Latitude of Point
@@ -25,7 +26,6 @@ public class Point {
     /**
      * Longitude of Point
      */
-
     private double longitude;
 
     /**
@@ -36,11 +36,11 @@ public class Point {
     /**
      * Instantiates a Point
      * @param id id of point
-     * @param  latitude latitude of point
+     * @param latitude latitude of point
      * @param longitude longitude of point
      * @param segments list of adjacent segments to point
      */
-    Point(final int id, final double latitude, final double longitude, final List<Segment> segments)
+    Point(final long id, final double latitude, final double longitude, final List<Segment> segments)
     {
         Validate.notNull(id, "id is null");
         if (latitude<-90){
@@ -64,4 +64,30 @@ public class Point {
         this.segments = segments;
     }
 
+
+    /**
+     * Get the distance from this point to another if it's reachable via one segments
+     * @param id the id of the other point
+     * @return the distance from this point to another
+     */
+    double getLengthTo(final long id) {
+        if (this.id == id) return 0;
+        for (final Segment s : segments) {
+            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
+        }
+        throw new IllegalArgumentException("point not reachable via one segment");
+    }
+
+    public long getId() {
+        return id;
+    }
+    public double getLatitude() {
+        return latitude;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
+    public List<Segment> getSegments() {
+        return segments;
+    }
 }
