@@ -4,7 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class TestPoint {
+public class PointTest {
 
 
     @Rule
@@ -72,7 +72,7 @@ public class TestPoint {
     public void testCTOR_longitudeTooBig_throwsIllegalArgumentException() {
 
         // Arrange
-        int NEGATIVE_LONGITUDE = -1;
+        int MAX_LONGITUDE = -1;
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("longitude is negative");
 
