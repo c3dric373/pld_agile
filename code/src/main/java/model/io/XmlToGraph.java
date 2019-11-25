@@ -10,6 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import model.data.Point;
 import model.data.Segment;
+import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,7 +24,7 @@ public class XmlToGraph {
     static ArrayList<Point> nodes;
 
     public static void main(final String[] args) {
-        ArrayList<Point> noeud = getGraphFromXml("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\grandPlan.xml");
+        ArrayList<Point> noeud = getGraphFromXml("grandPlan.xml");
         //Check that the informations are correctly instancied
         for ( Point n : noeud){
             System.out.println(n.getId());
@@ -33,7 +34,9 @@ public class XmlToGraph {
         }
     }
 
-    public static ArrayList<Point> getGraphFromXml(String url){
+    public static ArrayList<Point> getGraphFromXml(String fileName){
+        Validate.notNull(fileName, "fileName is null");
+
         nodes=new ArrayList<Point>();
         /**
          * Get an instance of class "DocumentBuilderFactory"
@@ -47,7 +50,7 @@ public class XmlToGraph {
             /**
              * Creation of a document
              */
-            final Document document = builder.parse(new File(url));
+            final Document document = builder.parse(new File(".\\resource\\" + fileName));
             /**
              * Get the root Element
              */
