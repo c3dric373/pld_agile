@@ -26,7 +26,6 @@ public class Point {
     /**
      * Longitude of Point
      */
-
     private double longitude;
 
     /**
@@ -71,4 +70,30 @@ public class Point {
         neighbourSegments.add(segment);
     }
 
+
+    /**
+     * Get the distance from this point to another if it's reachable via one segments
+     * @param id the id of the other point
+     * @return the distance from this point to another
+     */
+    double getLengthTo(final long id) {
+        if (this.id == id) return 0;
+        for (final Segment s : segments) {
+            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
+        }
+        throw new IllegalArgumentException("point not reachable via one segment");
+    }
+
+    public long getId() {
+        return id;
+    }
+    public double getLatitude() {
+        return latitude;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
+    public List<Segment> getSegments() {
+        return segments;
+    }
 }

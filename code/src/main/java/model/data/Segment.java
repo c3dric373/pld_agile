@@ -21,7 +21,7 @@ public class Segment {
     /**
      * Distance between the origin Point and the end Point
      */
-    private float length;
+    private double length;
     /**
      * Name of the Segment
      */
@@ -43,8 +43,14 @@ public class Segment {
         if (length<0){
             throw new IllegalArgumentException("length is negative");
         }
-        if (length==0){
+        if (length == 0) {
             throw new IllegalArgumentException("length is zero");
+        }
+        if (id_origin < 0) {
+            throw new IllegalArgumentException("id_origin is negative");
+        }
+        if (id_end < 0) {
+            throw new IllegalArgumentException("id_end is negative");
         }
         this.id_origin = id_origin;
         this.id_end = id_end;
@@ -52,4 +58,39 @@ public class Segment {
         this.name = name;
     }
 
+    /**
+     * Get one of the point id of the segment
+     * @return one of the point id of the segment
+     */
+    long either() {
+        return id_origin;
+    }
+
+    /**
+     * Get the other point id of the segment
+     * @param id a point id of the segment
+     * @return the other point id of the segment
+     */
+    long other(long id){
+        if(id == id_origin){
+            return id_end;
+        }else if(id == id_end){
+            return id_origin;
+        }else{
+            throw new IllegalArgumentException("segment has no such point");
+        }
+    }
+
+    public long getId_origin() {
+        return id_origin;
+    }
+    public long getId_end() {
+        return id_end;
+    }
+    public double getLength() {
+        return length;
+    }
+    public String getName() {
+        return name;
+    }
 }
