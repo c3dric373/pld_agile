@@ -39,7 +39,6 @@ public class Point {
      * @param id id of point
      * @param latitude latitude of point
      * @param longitude longitude of point
-     * @param neighbourSegments List of neighbours of point
      */
     public Point(final long id, final double latitude, final double longitude)
     {
@@ -78,7 +77,7 @@ public class Point {
      */
     double getLengthTo(final long id) {
         if (this.id == id) return 0;
-        for (final Segment s : segments) {
+        for (final Segment s : neighbourSegments) {
             if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
         }
         throw new IllegalArgumentException("point not reachable via one segment");
@@ -93,7 +92,7 @@ public class Point {
     public double getLongitude() {
         return longitude;
     }
-    public List<Segment> getSegments() {
-        return segments;
+    public List<Segment> getNeighbourSegments() {
+        return neighbourSegments;
     }
 }

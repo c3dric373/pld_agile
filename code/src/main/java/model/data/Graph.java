@@ -95,7 +95,7 @@ public class Graph {
     void show_map() {
         for (int i = 0; i< nb_points; i++) {
             System.out.print(points.get(i).getId()+"     ");
-            for (Segment s: points.get(i).getSegments()) {
+            for (Segment s: points.get(i).getNeighbourSegments()) {
                 if (points.get(i).getId() == s.either())
                     System.out.print(s.other(s.either()) +" ");
                 else
@@ -142,7 +142,7 @@ public class Graph {
         if (start_index >= nb_points) {
             throw new IllegalArgumentException("start_index is too great");
         }
-        List<tuple> res = new ArrayList<>();
+        List<tuple> res = new ArrayList<tuple>();
 
         boolean[] flag = new boolean[nb_points];
         Point start_point = points.get(start_index);
@@ -161,7 +161,7 @@ public class Graph {
             }
             flag[cur_index] = true;
             Point cur_point = points.get(cur_index);
-            for (Segment s : cur_point.getSegments()) {
+            for (Segment s : cur_point.getNeighbourSegments()) {
                 long id_other = s.other(cur_point.getId());
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;

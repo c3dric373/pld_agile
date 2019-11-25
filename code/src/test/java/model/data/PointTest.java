@@ -24,14 +24,14 @@ public class PointTest {
     private final double LNG_SMALL = -181;
     private final double LNG_BIG = 181;
     private final double LNG_TEST = 45;
-    //private List<Segment> SEGMENTS_TEST = new ArrayList<Segment>();
+    private List<Segment> TEST_SEGMENTS = new ArrayList<Segment>();
 
     @Before
     public void setUp() {
         TEST_SEGMENTS = new ArrayList<Segment>();
         TEST_SEGMENTS.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
         TEST_SEGMENTS.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
-        subject = new Point(TEST_ID, TEST_LATITUDE, TEST_LONGITUDE, TEST_SEGMENTS);
+        //subject = new Point(TEST_ID, TEST_LATITUDE, TEST_LONGITUDE);//, TEST_SEGMENTS);
 
 
     }

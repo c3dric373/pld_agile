@@ -1,7 +1,6 @@
 package model.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class XmlToGraph {
     static ArrayList<Point> nodes;
 
     public static void main(final String[] args) {
-        ArrayList<Point> noeud = getGraphFromXml("grandPlan.xml");
+        ArrayList<Point> noeud = getGraphFromXml("petitPlan.xml");
 
         // WILL BE DELETED --
         //Check that the informations are correctly instancied
@@ -67,7 +66,7 @@ public class XmlToGraph {
              */
             final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
-            System.out.println(nbNodeElements);
+            System.out.println("nbNodes :"+nbNodeElements);
 
             /**
              * Reading of all nodes in the file and addition to the ArrayList
@@ -94,7 +93,7 @@ public class XmlToGraph {
             for (int segmentIndex = 0; segmentIndex < nbRoadElements; segmentIndex++) {
                 final Element road = (Element) roadList.item(segmentIndex);
                 long roadArrival = Long.parseLong(road.getAttribute("destination"));
-                float roadLength = Float.parseFloat(road.getAttribute("longueur"));
+                double roadLength = Double.parseDouble(road.getAttribute("longueur"));
                 String roadName = road.getAttribute("nomRue");
                 long roadDeparture = Long.parseLong(road.getAttribute("origine"));
                 Segment segment = new Segment(roadDeparture, roadArrival, roadLength, roadName);
