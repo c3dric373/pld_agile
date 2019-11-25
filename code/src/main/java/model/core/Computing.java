@@ -115,7 +115,7 @@ public class Computing {
         int cur_index = arrive_index;
         while (true) {
             ids.add(0,points.get(cur_index).getId());
-            if (cur_index == start_index) break;;
+            if (cur_index == start_index) break;
             cur_index = res_dijkstra.get(cur_index).getPrev();
         }
         double min_length = res_dijkstra.get(arrive_index).getDist();
