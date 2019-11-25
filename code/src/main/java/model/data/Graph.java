@@ -15,7 +15,7 @@ public class Graph {
     private List<Point> points;
     /**
      * Key: id point
-     * Value: index in 'list_point'
+     * Value: index in 'points'
      */
     private Map<Long, Integer> map;
     /**
