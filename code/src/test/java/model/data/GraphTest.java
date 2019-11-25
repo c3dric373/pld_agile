@@ -41,7 +41,7 @@ public class GraphTest {
         final Map CORRECT_MAP = new HashMap<Integer, Integer>();
 
         // Act
-        final int nb_segments = test_Graph.getNb_segments();
+        final int nb_segments = test_Graph.getNbSegments();
 
         //Assert
         assertEquals("wrong nb_segments",CORRECT_NB_SEGMENTS,nb_segments);
@@ -66,7 +66,7 @@ public class GraphTest {
     public void testCTOR_validInput_correctMap(){
         // Arrange
         final boolean isEmpty = true;
-        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
+        final Map CORRECT_MAP = new HashMap<Long, Integer>();
 
         // Act
         final boolean test_empty = test_Graph.getMap().isEmpty();
