@@ -112,13 +112,15 @@ public class Graph {
             }
             flag[cur_index] = true;
             Point cur_point = list_points.get(cur_index);
-            for (int j = 0; j < nb_points; j++) {
-                if (flag[j]) continue;
-                float tmp = cur_point.getLengthTo(list_points.get(j).getId());
+            for (Segment s : cur_point.getList_segments()) {
+                int id_other = s.other(cur_point.getId());
+                int index_other = map.get(id_other);
+                if (flag[index_other]) continue;
+                float tmp = cur_point.getLengthTo(id_other);
                 tmp = (tmp == Float.POSITIVE_INFINITY) ? tmp : tmp + min;
-                if (tmp < dist[j]) {
-                    prev[j] = cur_index;
-                    dist[j] = tmp;
+                if (tmp < dist[index_other]) {
+                    prev[index_other] = cur_index;
+                    dist[index_other] = tmp;
                 }
             }
         }
