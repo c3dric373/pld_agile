@@ -26,33 +26,31 @@ public class XmlToGraph {
     public static void main(final String[] args) {
         nodes=new ArrayList<Point>();
         /*
-         * Step 1 : Recovery of an instance of class "DocumentBuilderFactory"
+         * Get an instance of class "DocumentBuilderFactory"
          */
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             /*
-             * Step 2 : Creation of a parser
+             * Creation of a parser
              */
             final DocumentBuilder builder = factory.newDocumentBuilder();
             /*
-             * Step 3 : Creation of a document
+             * Creation of a document
              */
             final Document document = builder.parse(new File("C:\\Users\\colap\\Documents\\4IF\\pld_agile\\fichiersXML2019\\petitPlan.xml"));
             /*
-             * Step 4 : Recovery of the root Element
+             * Get the root Element
              */
             final Element root = document.getDocumentElement();
-            System.out.println("\n*************ROOT************");
-            System.out.println(root.getNodeName());
             /*
-             * Step 5 : Recovery of the nodes tag and display the number of nodes
+             * Get the nodes tag and display the number of nodes
              */
             final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
             System.out.println(nbNodeElements);
 
             /*
-             * Step 6 : Reading of all nodes in the file and addition to the ArrayList
+             * Reading of all nodes in the file and addition to the ArrayList
              */
             for (int nodeIndex = 0; nodeIndex < nbNodeElements; nodeIndex++) {
                 final Element node = (Element) nodeList.item(nodeIndex);
@@ -64,14 +62,14 @@ public class XmlToGraph {
             }
 
             /*
-             * Step 5 : Recovery of the segments tag and display the number of segments
+             * Get the segments tag and display the number of segments
              */
             final NodeList roadList = root.getElementsByTagName("troncon");
             final int nbRoadElements = roadList.getLength();
             System.out.println( "nbRoad :" + nbRoadElements);
 
             /*
-             * Step 7 : Reading of all segments in the file
+             * Reading of all segments in the file
              */
             for (int segmentIndex = 0; segmentIndex < nbRoadElements; segmentIndex++) {
                 final Element road = (Element) roadList.item(segmentIndex);
