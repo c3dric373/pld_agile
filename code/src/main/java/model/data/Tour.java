@@ -36,7 +36,7 @@ public class Tour {
         if (startTime<0){
             throw new IllegalArgumentException("startTime is negative");
         }
-        if (startTime>2359){
+        if (startTime>235959){
             throw new IllegalArgumentException("startTime is too great");
         }
         this.deliveryProcesses=deliveryProcesses;
