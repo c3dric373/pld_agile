@@ -1,6 +1,7 @@
 package model.io;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ public class XmlToGraph {
 
     public static void main(final String[] args) {
         ArrayList<Point> noeud = getGraphFromXml("grandPlan.xml");
+
+        // WILL BE DELETED --
         //Check that the informations are correctly instancied
         for ( Point n : noeud){
             System.out.println(n.getId());
@@ -36,6 +39,10 @@ public class XmlToGraph {
 
     public static ArrayList<Point> getGraphFromXml(String fileName){
         Validate.notNull(fileName, "fileName is null");
+
+        if (fileName.equals("")) {
+            throw new IllegalArgumentException("fileName is empty");
+        }
 
         nodes=new ArrayList<Point>();
         /**
@@ -67,7 +74,7 @@ public class XmlToGraph {
              */
             for (int nodeIndex = 0; nodeIndex < nbNodeElements; nodeIndex++) {
                 final Element node = (Element) nodeList.item(nodeIndex);
-                Long nodeId = Long.parseLong(node.getAttribute("id"));
+                long nodeId = Long.parseLong(node.getAttribute("id"));
                 double nodeLat = Double.parseDouble(node.getAttribute("latitude"));
                 double nodeLong = Double.parseDouble(node.getAttribute("longitude"));
                 Point point = new Point (nodeId, nodeLat, nodeLong);
@@ -106,7 +113,7 @@ public class XmlToGraph {
         } catch (final IOException e) {
             e.printStackTrace();
         } catch (NumberFormatException e){
-            System.err.println("NumberFormatException: " + e.getMessage());
+            e.printStackTrace();
         }
         return nodes;
     }
