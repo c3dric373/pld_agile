@@ -2,8 +2,9 @@ package model.data;
 
 
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents a specific point on the loaded map. Each intersection has an id. This id is stored in this class.
@@ -19,13 +20,13 @@ public class Point {
     /**
      * Latitude of Point
      */
-    private float latitude;
+    private double latitude;
 
     /**
      * Longitude of Point
      */
 
-    private float longitude;
+    private double longitude;
 
     /**
      * List of neighbours
@@ -40,8 +41,24 @@ public class Point {
      * @param longitude longitude of point
      * @param neighbourSegments List of neighbours of point
      */
-    public Point(final long id, final float latitude, final float longitude)
+    Point(final int id, final double latitude, final double longitude, final List<Segment> segments)
     {
+        Validate.notNull(id, "id is null");
+        if (latitude<-90){
+            throw new IllegalArgumentException("latitude is too small");
+        }
+        if (latitude>90){
+            throw new IllegalArgumentException("latitude is too great");
+        }
+        if (longitude<-180){
+            throw new IllegalArgumentException("longitude is too small");
+        }
+        if (longitude>180){
+            throw new IllegalArgumentException("longitude is too great");
+        }
+        if (id < 0){
+            throw new IllegalArgumentException("id is negative");
+        }
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
