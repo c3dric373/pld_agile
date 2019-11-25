@@ -114,7 +114,7 @@ public class Graph {
      * @param prev a table which contains the previous point index in the shortest path for each point in the map
      * @param dist a table which contains the shortest distance from start point to all the points in the map
      */
-    void dijkstra(final int start_index, int[] prev, float[] dist) {
+    void dijkstra(final int start_index, int[] prev, double[] dist) {
         if (start_index < 0) {
             throw new IllegalArgumentException("start_index is too small");
         }
@@ -129,7 +129,7 @@ public class Graph {
         }
         int cur_index = start_index;
         for (int i = 1; i < nb_points; i++) {
-            float min = Float.POSITIVE_INFINITY;
+            double min = Float.POSITIVE_INFINITY;
             for (int j = 0; j < nb_points; j++) {
                 if (!flag[j] && dist[j] < min) {
                     min = dist[j];
@@ -142,7 +142,7 @@ public class Graph {
                 int id_other = s.other(cur_point.getId());
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;
-                float tmp = cur_point.getLengthTo(id_other);
+                double tmp = cur_point.getLengthTo(id_other);
                 tmp = (tmp == Float.POSITIVE_INFINITY) ? tmp : tmp + min;
                 if (tmp < dist[index_other]) {
                     prev[index_other] = cur_index;

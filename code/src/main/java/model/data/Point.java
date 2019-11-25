@@ -73,16 +73,16 @@ public class Point {
     }
 
     /**
-     * Get the distance from this point to another
+     * Get the distance from this point to another if it's reachable via one segments
      * @param id the id of the other point
      * @return the distance from this point to another
      */
-    float getLengthTo(int id) {
+    double getLengthTo(final int id) {
         if (this.id == id) return 0;
-        for (Segment s : segments) {
+        for (final Segment s : segments) {
             if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
         }
-        return Float.POSITIVE_INFINITY;
+        throw new IllegalArgumentException("point not reachable via one segment");
     }
 
     public int getId() {
