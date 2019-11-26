@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane prefHeight="530.0" prefWidth="1000.0" styleClass="background" stylesheets="@autre/Theme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashBoardController">
+<AnchorPane prefHeight="530.0" prefWidth="1000.0" styleClass="background" stylesheets="@../styleSetting/Theme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashBoardController">
    <children>
       <SplitPane dividerPositions="0.4" prefHeight="530.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -33,12 +33,12 @@
                   <Label id="base" styleClass="label-bright" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="60.0" />
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="60.0">
                      <image>
-                        <Image url="@autre/home-icon-silhouette.png" />
+                        <Image url="@../styleSetting/home-icon-silhouette.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="95.0">
                      <image>
-                        <Image url="@autre/clock-circular-outline.png" />
+                        <Image url="@../styleSetting/clock-circular-outline.png" />
                      </image>
                   </ImageView>
                   <Label styleClass="label-bright" text="Start Time :" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="95.0" />
@@ -80,7 +80,7 @@
                <children>
                   <ImageView fitHeight="530.0" fitWidth="745.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-170.0" AnchorPane.topAnchor="0.0">
                      <image>
-                        <Image url="view/autre/Capture d’écran 2019-11-26 à 16.46.36.png" />
+                        <Image url="resources/styleSetting/Capture d’écran 2019-11-26 à 16.46.36.png" />
                      </image>
                   </ImageView>
                </children></AnchorPane>
