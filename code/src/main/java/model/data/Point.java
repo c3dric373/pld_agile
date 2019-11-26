@@ -38,9 +38,8 @@ public class Point {
      * @param id id of point
      * @param latitude latitude of point
      * @param longitude longitude of point
-     * @param segments list of adjacent segments to point
      */
-    Point(final long id, final double latitude, final double longitude, final List<Segment> segments)
+    Point(final long id, final double latitude, final double longitude)
     {
         Validate.notNull(id, "id is null");
         if (latitude<-90){
@@ -61,9 +60,13 @@ public class Point {
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.segments = segments;
+        this.segments = new ArrayList<>();
     }
 
+    public void AddNeighbour(Segment segment)
+    {
+        segments.add(segment);
+    }
 
     /**
      * Get the distance from this point to another if it's reachable via one segments
