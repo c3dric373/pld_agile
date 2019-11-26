@@ -69,6 +69,16 @@ public class TourTest {
         // Assert via annotation
     }
 
+    @Test
+    public void testCTOR_TourCorrect() {
+
+        // Arrange
+
+        // Act
+        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, TEST_START_TIME);
+
+        // Assert via annotation
+    }
 
 
 }
