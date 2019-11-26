@@ -34,13 +34,13 @@ public class Segment {
      * @param length Distance between the origin Point and the end Point
      * @param name Name of the Segment
      */
-    Segment(final long id_origin, final long id_end, final double length, final String name)
+    public Segment(final long id_origin, final long id_end, final double length, final String name)
     {
         Validate.notNull(name, "name is null");
-        if (name.equals("")) {
+       /* if (name.equals("")) {
             throw new IllegalArgumentException("name is empty");
-        }
-        if (length < 0) {
+        }*/
+        if (length<0){
             throw new IllegalArgumentException("length is negative");
         }
         if (length == 0) {
