@@ -9,8 +9,8 @@ import java.util.*;
 
 public class ActionPointTest {
     private int TEST_TIME = 0;
-    private Point TEST_LOCATION = new Point(5,3,3);
-    private ActionType TEST_ACTION_TYPE = new ActionType();
+    private Point TEST_LOCATION = new Point(1,0,3, null);
+    private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 

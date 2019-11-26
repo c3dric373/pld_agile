@@ -8,8 +8,12 @@ import java.util.*;
 
 
 public class DeliveryProcessTest {
-    private ActionPoint TEST_PICK_UP = new ActionPoint();
-    private ActionPoint TEST_DELIVERY = new ActionPoint();
+    private int TEST_TIME = 0;
+    private Point TEST_LOCATION = new Point(1, 0, 0, null);
+    private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
+    private ActionType TEST_ACTION_TYPE2 = ActionType.DELIVERY;
+    private ActionPoint TEST_PICK_UP = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE );
+    private ActionPoint TEST_DELIVERY = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE2);
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -24,6 +28,7 @@ public class DeliveryProcessTest {
         new DeliveryProcess(null, TEST_DELIVERY);
 
         // Assert via annotation
+
     }
 
     @Test
@@ -43,10 +48,7 @@ public class DeliveryProcessTest {
     public void testCTOR_pickupIsDelivery_throwsIllegalArgumentException() {
 
         // Arrange
-        Point TEST_LOCATION = new Point(5,3,3);
-        int TEST_TIME = 10;
-        ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
-        ActionPoint TEST_PICKUP_IS_DELIVERY = new ActionPoint(TEST_LOCATION, TEST_TIME, TEST_ACTION_TYPE);
+        ActionPoint TEST_PICKUP_IS_DELIVERY = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("delivery is pickup");
 
