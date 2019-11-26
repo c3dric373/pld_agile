@@ -17,7 +17,7 @@ public class Journey {
      */
     private long id_arrive;
     /**
-     * List of Ids of each point in the shortest path from the start point to the arrival point in the right order
+     * List of Ids of each point in the shortest path from the start point to the arrival point in the REVERSE order
      */
     private List<Long> ids;
     /**
@@ -29,7 +29,7 @@ public class Journey {
      * Instantiates a Journey
      * @param id_start Id of the start point of the journey
      * @param id_arrive Id of the arrival point of the journey
-     * @param ids the List of Ids of each point in the shortest path from the start point to the arrival point in the right order
+     * @param ids the List of Ids of each point in the shortest path from the start point to the arrival point in the REVERSE order
      * @param min_length The shortest length from the start point to the arrival point
      */
     public Journey(final long id_start, final long id_arrive, final List<Long> ids, final double min_length) {
