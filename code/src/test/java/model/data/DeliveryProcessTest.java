@@ -1,15 +1,18 @@
 package model.data;
 
+import lombok.EqualsAndHashCode;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import static org.junit.Assert.assertEquals;
 
+import javax.swing.*;
 import java.util.*;
 
 
 public class DeliveryProcessTest {
     private int TEST_TIME = 0;
-    private Point TEST_LOCATION = new Point(1, 0, 0, null);
+    private Point TEST_LOCATION = new Point(1, 0, 0);
     private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
     private ActionType TEST_ACTION_TYPE2 = ActionType.DELIVERY;
     private ActionPoint TEST_PICK_UP = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE );
@@ -58,4 +61,20 @@ public class DeliveryProcessTest {
         // Assert via annotation
     }
 
+    @Test
+    public void testCTOR_correctCall_validCall(){
+        // Arrange
+
+        // Act
+        DeliveryProcess deliveryProcess = new DeliveryProcess(TEST_PICK_UP, TEST_DELIVERY);
+        ActionPoint delivery =  deliveryProcess.getDelivery();
+        ActionPoint pickUp = deliveryProcess.getPickUP();
+
+
+
+        // Assert
+        assertEquals(TEST_DELIVERY, delivery);
+        assertEquals(TEST_PICK_UP, pickUp);
+
+    }
 }

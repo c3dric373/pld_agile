@@ -20,7 +20,7 @@ public class ActionPointTest {
     public void setUp() {
         TEST_SEGMENTS.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
         TEST_SEGMENTS.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
-        TEST_LOCATION = new Point(1,0,3, TEST_SEGMENTS);
+        TEST_LOCATION = new Point(1,0,3);
         subject = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
     }
 
