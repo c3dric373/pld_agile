@@ -38,7 +38,7 @@ public class XmlToGraph {
     static ArrayList<DeliveryProcess> Deliveries;
 
     public static void main(final String[] args) {
- /*       ArrayList<Point> noeud = getGraphFromXml("petitPlan.xml");
+ /*       ArrayList<Point> noeud = getGraphFromXml("resource/petitPlan.xml");
 
         // WILL BE DELETED --
         //Check that the informations are correctly instancied
