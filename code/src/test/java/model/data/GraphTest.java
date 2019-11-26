@@ -16,7 +16,8 @@ public class GraphTest {
 
     @Before
     public void setUp() {
-      test_Graph = new Graph();
+
+        test_Graph = new Graph(new ArrayList<Point>());
     }
 
     @Test
@@ -25,28 +26,13 @@ public class GraphTest {
         final int CORRECT_NB_POINTS = 0;
 
         // Act
-        final int nb_points = test_Graph.getNbPoints();
+        final int nb_points = test_Graph.getNb_points();
 
         //Assert
         assertEquals("wrong nb_Points",CORRECT_NB_POINTS,nb_points);
 
     }
 
-    @Test
-    public void testCTOR_validInput_correctNbSegments(){
-        // Arrange
-
-        final int CORRECT_NB_SEGMENTS = 0;
-        final List<Point> CORRECT_LIST_POINTS = new ArrayList<Point>();
-        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
-
-        // Act
-        final int nb_segments = test_Graph.getNbSegments();
-
-        //Assert
-        assertEquals("wrong nb_segments",CORRECT_NB_SEGMENTS,nb_segments);
-
-    }
 
     @Test
     public void testCTOR_validInput_correctList_Points(){

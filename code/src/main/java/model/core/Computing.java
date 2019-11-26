@@ -62,7 +62,7 @@ public class Computing {
         }
         List<tuple> res = new ArrayList<>();
 
-        int nb_points = graph.getNbPoints();
+        int nb_points = graph.getNb_points();
         int start_index = map.get(id_start);
         // flag[i] represents whether we've already got the shortest path from start point to the i-th point
         boolean[] flag = new boolean[nb_points];
@@ -143,19 +143,19 @@ public class Computing {
     public static void main(String[] args) {
         List<Point> points = new ArrayList<>();
         Point p1 = new Point(1,0,0);
-        p1.AddNeighbour(new Segment(1,2,1,"s12"));
-        p1.AddNeighbour(new Segment(1,4,1,"s14"));
+        p1.addNeighbour(new Segment(1,2,1,"s12"));
+        p1.addNeighbour(new Segment(1,4,1,"s14"));
         Point p2 = new Point(2,0,0);
-        p2.AddNeighbour(new Segment(2,5,1,"s25"));
+        p2.addNeighbour(new Segment(2,5,1,"s25"));
         Point p3 = new Point(3,0,0);
-        p3.AddNeighbour(new Segment(3,1,1,"s31"));
-        p3.AddNeighbour(new Segment(3,6,1,"s36"));
+        p3.addNeighbour(new Segment(3,1,1,"s31"));
+        p3.addNeighbour(new Segment(3,6,1,"s36"));
         Point p4 = new Point(4,0,0);
-        p4.AddNeighbour(new Segment(4,2,1,"s42"));
-        p4.AddNeighbour(new Segment(4,6,1,"s46"));
+        p4.addNeighbour(new Segment(4,2,1,"s42"));
+        p4.addNeighbour(new Segment(4,6,1,"s46"));
         Point p5 = new Point(5,0,0);
         Point p6 = new Point(6,0,0);
-        p6.AddNeighbour(new Segment(6,5,1,"s65"));
+        p6.addNeighbour(new Segment(6,5,1,"s65"));
         points.add(p1);
         points.add(p2);
         points.add(p3);

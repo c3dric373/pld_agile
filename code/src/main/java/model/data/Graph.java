@@ -26,7 +26,7 @@ public class Graph {
     /**
      * Instantiates a Graph
      */
-    public Graph(List<Point> points) {
+    public Graph(final List<Point> points) {
         this.nb_points = points.size();
         this.points = points;
         map = new HashMap<>();
@@ -120,13 +120,5 @@ public class Graph {
         graph.dijkstra(0, prev, dist);*/
     }
 
-    public int getNbPoints() {
-        return this.nb_points;
-    }
-    public List<Point> getPoints() {
-        return this.points;
-    }
-    public Map<Long, Integer> getMap() {
-        return this.map;
-    }
+
 }
