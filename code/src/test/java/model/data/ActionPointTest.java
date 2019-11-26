@@ -1,5 +1,6 @@
 package model.data;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -9,8 +10,20 @@ import java.util.*;
 
 public class ActionPointTest {
     private int TEST_TIME = 0;
-    private Point TEST_LOCATION = new Point(1,0,3, null);
+    private List<Segment> TEST_SEGMENTS = new ArrayList<Segment>();
+    private Point TEST_LOCATION;
     private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
+
+    private ActionPoint subject;
+
+    @Before
+    public void setUp() {
+        TEST_SEGMENTS.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
+        TEST_SEGMENTS.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
+        TEST_LOCATION = new Point(1,0,3, TEST_SEGMENTS);
+        subject = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
+    }
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 

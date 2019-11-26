@@ -1,6 +1,7 @@
 package model.data;
 
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 
 @Getter
 public class ActionPoint {
@@ -27,6 +28,14 @@ public class ActionPoint {
      * @param actionType type of action
      */
     ActionPoint(int time, Point location, ActionType actionType){
+        Validate.notNull(location, "location is null");
+        Validate.notNull(actionType, "actionType is null");
+        if (time<0){
+            throw new IllegalArgumentException("time is negative");
+        }
+        if (time>=2400){
+            throw new IllegalArgumentException("time is too great");
+        }
         this.time = time;
         this.location = location;
         this.actionType=actionType;
