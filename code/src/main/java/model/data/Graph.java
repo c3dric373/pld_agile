@@ -120,5 +120,15 @@ public class Graph {
         graph.dijkstra(0, prev, dist);*/
     }
 
+    public List<Point> getPoints() {
+        return points;
+    }
 
+    public Map<Long, Integer> getMap() {
+        return map;
+    }
+
+    public int getNb_points() {
+        return nb_points;
+    }
 }
