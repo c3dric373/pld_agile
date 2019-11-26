@@ -39,7 +39,7 @@ public class Point {
      * @param latitude latitude of point
      * @param longitude longitude of point
      */
-    Point(final long id, final double latitude, final double longitude)
+    public Point(final long id, final double latitude, final double longitude)
     {
         Validate.notNull(id, "id is null");
         if (latitude<-90){
@@ -78,7 +78,7 @@ public class Point {
         for (final Segment s : segments) {
             if (s.getId_end() == id) return s.getLength();
         }
-        throw new IllegalArgumentException("point not reachable via one segment");
+        return Double.POSITIVE_INFINITY;
     }
 
     public long getId() {

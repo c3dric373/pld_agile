@@ -48,4 +48,17 @@ public class Journey {
         this.ids = ids;
         this.min_length = min_length;
     }
+
+    public long getId_start() {
+        return id_start;
+    }
+    public long getId_arrive() {
+        return id_arrive;
+    }
+    public List<Long> getIds() {
+        return ids;
+    }
+    public double getMin_length() {
+        return min_length;
+    }
 }

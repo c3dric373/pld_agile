@@ -19,10 +19,6 @@ public class Graph {
      */
     private Map<Long, Integer> map;
     /**
-     * Number of segments in the map
-     */
-    private int nb_segments;
-    /**
      * Number of points in the map
      */
     private int nb_points;
@@ -30,11 +26,13 @@ public class Graph {
     /**
      * Instantiates a Graph
      */
-    Graph() {
-        nb_points = 0;
-        nb_segments = 0;
-        points = new ArrayList<Point>();
-        map = new HashMap<Long, Integer>();
+    public Graph(List<Point> points) {
+        this.nb_points = points.size();
+        this.points = points;
+        map = new HashMap<>();
+        for (int i = 0; i < this.nb_points; i++) {
+            map.put(points.get(i).getId(),i);
+        }
     }
 
     /**
@@ -91,7 +89,7 @@ public class Graph {
     /**
      * Show the map
      */
-    void show_map() {
+    public void show_map() {
         for (int i = 0; i< nb_points; i++) {
             System.out.print(points.get(i).getId()+"     ");
             for (Segment s: points.get(i).getSegments()) {
@@ -100,7 +98,6 @@ public class Graph {
             System.out.println();
         }
         System.out.println("nb_nodes: "+ nb_points);
-        System.out.println("nb_segments: "+nb_segments);
     }
 
     public static void main(String[] args) {
@@ -125,9 +122,6 @@ public class Graph {
 
     public int getNbPoints() {
         return this.nb_points;
-    }
-    public int getNbSegments() {
-        return this.nb_segments;
     }
     public List<Point> getPoints() {
         return this.points;
