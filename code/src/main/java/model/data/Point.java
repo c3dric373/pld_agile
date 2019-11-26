@@ -63,7 +63,7 @@ public class Point {
         this.segments =new ArrayList<>();
     }
 
-    public void AddNeighbour(Segment segment)
+    public void addNeighbour(Segment segment)
     {
         segments.add(segment);
     }
@@ -76,9 +76,8 @@ public class Point {
      */
     double getLengthTo(final long id) {
         if (this.id == id) return 0;
-        for (final Segment s : segments) {
-            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
-        }
+        for (final Segment s : neighbourSegments) {
+            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength(); }
         throw new IllegalArgumentException("point not reachable via one segment");
     }
 

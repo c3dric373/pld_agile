@@ -142,7 +142,7 @@ public class Graph {
         if (start_index >= nb_points) {
             throw new IllegalArgumentException("start_index is too great");
         }
-        List<tuple> res = new ArrayList<tuple>();
+        List<tuple> res = new ArrayList<>();
 
         boolean[] flag = new boolean[nb_points];
         Point start_point = points.get(start_index);

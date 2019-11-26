@@ -25,15 +25,14 @@ public class PointTest {
     private final double LNG_BIG = 181;
     private final double LNG_TEST = 45;
     private List<Segment> TEST_SEGMENTS = new ArrayList<Segment>();
+    private final int TEST_ID = 25175791;
+    private final double TEST_LATITUDE = 2.2;
+    private final double TEST_LONGITUDE = 48.1;
+    private Point subject = null;
 
     @Before
     public void setUp() {
-        TEST_SEGMENTS = new ArrayList<Segment>();
-        TEST_SEGMENTS.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
-        TEST_SEGMENTS.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
-        //subject = new Point(TEST_ID, TEST_LATITUDE, TEST_LONGITUDE);//, TEST_SEGMENTS);
-
-
+        subject = new Point(TEST_ID, TEST_LATITUDE, TEST_LONGITUDE);
     }
 
     @Rule
@@ -44,6 +43,8 @@ public class PointTest {
 
         // Arrange
         final double CORRECT_LENGTH = 69.979805;
+        subject.addNeighbour(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
+        subject.addNeighbour(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
 
         // Act
         final double test_length = subject.getLengthTo(25175778);
@@ -59,7 +60,7 @@ public class PointTest {
         // Arrange
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("point not reachable via one segment");
-        final long  wrong_id = 2365376415L;
+        final long wrong_id = 2365376415L;
 
         // Act
         final double test_length = subject.getLengthTo(wrong_id);
@@ -77,7 +78,7 @@ public class PointTest {
         thrown.expectMessage("id is negative");
 
         // Act
-        new Point(ID_NEG,LAT_TEST,LNG_TEST);//,SEGMENTS_TEST);
+        new Point(ID_NEG, LAT_TEST, LNG_TEST);//,SEGMENTS_TEST);
 
         // Assert via annotation
     }
@@ -90,7 +91,7 @@ public class PointTest {
         thrown.expectMessage("latitude is too small");
 
         // Act
-        new Point(ID_TEST,LAT_SMALL,LNG_TEST);//,SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_SMALL, LNG_TEST);//,SEGMENTS_TEST);
 
         // Assert via annotation
     }
@@ -103,7 +104,7 @@ public class PointTest {
         thrown.expectMessage("latitude is too great");
 
         // Act
-        new Point(ID_TEST,LAT_BIG,LNG_TEST);//,SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_BIG, LNG_TEST);//,SEGMENTS_TEST);
 
         // Assert via annotation
     }
@@ -116,7 +117,7 @@ public class PointTest {
         thrown.expectMessage("longitude is too small");
 
         // Act
-        new Point(ID_TEST,LAT_TEST,LNG_SMALL);//,SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_TEST, LNG_SMALL);//,SEGMENTS_TEST);
 
         // Assert via annotation
     }
@@ -129,7 +130,7 @@ public class PointTest {
         thrown.expectMessage("longitude is too great");
 
         // Act
-        new Point(ID_TEST,LAT_TEST,LNG_BIG);//,SEGMENTS_TEST);
+        new Point(ID_TEST, LAT_TEST, LNG_BIG);//,SEGMENTS_TEST);
 
         // Assert via annotation
     }
@@ -145,6 +146,7 @@ public class PointTest {
         // Assert
         assertEquals("Wrong id", id, TEST_ID);
     }
+
     @Test
     public void testGetLatitude_validCall_correctId() {
 
@@ -154,7 +156,7 @@ public class PointTest {
         final double latitude = subject.getLatitude();
 
         // Assert
-        assertEquals("Wrong id", latitude, TEST_LATITUDE,0);
+        assertEquals("Wrong id", latitude, TEST_LATITUDE, 0);
     }
 
     @Test
@@ -166,19 +168,26 @@ public class PointTest {
         final double longitude = subject.getLongitude();
 
         // Assert
-        assertEquals("Wrong id", longitude, TEST_LONGITUDE,0);
+        assertEquals("Wrong id", longitude, TEST_LONGITUDE, 0);
     }
 
     @Test
-    public void testGetSegments_validCall_correctId() {
+    public void testGetNeighbourSegments_validCall_correctId() {
 
         // Arrange
+        final Segment segment1 = new Segment(25175791, 25175778, 69.979805, "Rue Danton");
+        final Segment segment2 = new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\"");
+        TEST_SEGMENTS.add(segment1);
+        TEST_SEGMENTS.add(segment2);
+        subject.addNeighbour(segment1);
+        subject.addNeighbour(segment2);
 
         // Act
-        final List segments = subject.getSegments();
+        final List neighbourSegments = subject.getNeighbourSegments();
 
         // Assert
-        assertEquals("Wrong segments", segments, TEST_SEGMENTS);
+        System.out.println(TEST_SEGMENTS);
+        assertEquals("Wrong segments", neighbourSegments, TEST_SEGMENTS);
     }
 
 

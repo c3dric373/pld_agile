@@ -100,7 +100,7 @@ public class XmlToGraph {
 
                 for (Point node : nodes){
                     if(node.getId() == roadDeparture ){
-                        node.AddNeighbour(segment);
+                        node.addNeighbour(segment);
                     }
                 }
             }
