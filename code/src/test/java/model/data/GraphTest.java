@@ -26,7 +26,7 @@ public class GraphTest {
         final int CORRECT_NB_POINTS = 0;
 
         // Act
-        final int nb_points = test_Graph.getNbPoints();
+        final int nb_points = test_Graph.getNb_points();
 
         //Assert
         assertEquals("wrong nb_Points",CORRECT_NB_POINTS,nb_points);

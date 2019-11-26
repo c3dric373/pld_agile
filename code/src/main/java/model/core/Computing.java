@@ -61,7 +61,7 @@ public class Computing {
         }
         List<tuple> res = new ArrayList<>();
 
-        int nb_points = graph.getNbPoints();
+        int nb_points = graph.getNb_points();
         int start_index = map.get(id_start);
         // flag[i] represents whether we've already got the shortest path from start point to the i-th point
         boolean[] flag = new boolean[nb_points];
