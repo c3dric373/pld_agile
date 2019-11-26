@@ -76,7 +76,7 @@ public class Point {
      */
     double getLengthTo(final long id) {
         if (this.id == id) return 0;
-        for (final Segment s : neighbourSegments) {
+        for (final Segment s : segments) {
             if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength(); }
         throw new IllegalArgumentException("point not reachable via one segment");
     }
