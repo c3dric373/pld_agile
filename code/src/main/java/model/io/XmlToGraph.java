@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,16 +47,23 @@ public class XmlToGraph {
             for (Segment s : n.getSegments() ){
                 System.out.println(s.getName());
             }
-        }*/
-        ArrayList<Point> noeud = getGraphFromXml("moyenPlan.xml");
-        Tour Deliver = getDeliveriesFromXml("demandeMoyen5.xml");
+        }
+        ArrayList<Point> noeud = getGraphFromXml("resource/moyenPlan.xml");
+        Tour Deliver = getDeliveriesFromXml("resource/demandeMoyen5.xml");
+        List<DeliveryProcess> Dp = Deliver.getDeliveryProcesses();
+        System.out.println( "------------------------");
+        for (DeliveryProcess p : Dp){
+            System.out.println( "id "+p.getDelivery().getPoint().getId());
+            System.out.println( "lat "+p.getDelivery().getPoint().getLatitude());
+        }
+    */
     }
 
-    public static ArrayList<Point> getGraphFromXml(String fileName){
-        Validate.notNull(fileName, "fileName is null");
+    public static ArrayList<Point> getGraphFromXml(String path){
+        Validate.notNull(path, "path is null");
 
-        if (fileName.equals("")) {
-            throw new IllegalArgumentException("fileName is empty");
+        if (path.equals("")) {
+            throw new IllegalArgumentException("path is empty");
         }
 
         nodes=new ArrayList<Point>();
@@ -71,7 +79,7 @@ public class XmlToGraph {
             /**
              * Creation of a document
              */
-            final Document document = builder.parse(new File("resource" + File.separator + fileName));
+            final Document document = builder.parse(new File(path));
             /**
              * Get the root Element
              */
@@ -126,7 +134,13 @@ public class XmlToGraph {
         return nodes;
     }
 
-    public static Tour getDeliveriesFromXml(String fileName){
+    public static Tour getDeliveriesFromXml(String path){
+        Validate.notNull(path, "path is null");
+
+        if (path.equals("")) {
+            throw new IllegalArgumentException("path is empty");
+        }
+
         Deliveries = new ArrayList<DeliveryProcess>();
         /**
          * Get an instance of class "DocumentBuilderFactory"
@@ -140,7 +154,7 @@ public class XmlToGraph {
             /**
              * Creation of a document
              */
-            final Document document = builder.parse(new File("resource" + File.separator + fileName));
+            final Document document = builder.parse(new File(path));
             /**
              * Get the root Element
              */
@@ -183,7 +197,7 @@ public class XmlToGraph {
                 DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint,deliveryActionpoint);
                 Deliveries.add(deliv);
             }
-        Tour tour = new Tour(Deliveries, base, startTime);
+        tour = new Tour(Deliveries, base, startTime);
 
         } catch (final ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
             System.err.println(e.getMessage());

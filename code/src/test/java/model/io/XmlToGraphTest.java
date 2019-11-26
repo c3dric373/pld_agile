@@ -29,11 +29,11 @@ public class XmlToGraphTest {
     }
 
     @Test
-    public void test_fileNameNull_throwsIllegalArgumentException() {
+    public void test_filePathNull_throwsIllegalArgumentException() {
 
         // Arrange
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("fileName is null");
+        thrown.expectMessage("path is null");
 
         // Act
         reader.getGraphFromXml(null);
@@ -42,11 +42,11 @@ public class XmlToGraphTest {
     }
 
     @Test
-    public void test_fileNameEmpty_throwsIllegalArgumentException() {
+    public void test_filePathEmpty_throwsIllegalArgumentException() {
 
         // Arrange
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("fileName is empty");
+        thrown.expectMessage("path is empty");
 
         // Act
         reader.getGraphFromXml("");
@@ -71,7 +71,7 @@ public class XmlToGraphTest {
         // Arrange
 
         // Act
-        ArrayList<Point> result = reader.getGraphFromXml("petitPlan.xml");
+        ArrayList<Point> result = reader.getGraphFromXml("resource/petitPlan.xml");
 
         // Assert via annotation
         assertThat(outContent.toString(), containsString("nbNodes :308"));
@@ -84,11 +84,38 @@ public class XmlToGraphTest {
         // Arrange
 
         // Act
-        ArrayList<Point> result = reader.getGraphFromXml("petitPlan.xml");
+        ArrayList<Point> result = reader.getGraphFromXml("resource/petitPlan.xml");
 
         // Assert via annotation
         assertEquals(25175791l, result.get(0).getId());
         assertEquals(45.75406, result.get(0).getLatitude(),0);
         assertEquals(4.857418, result.get(0).getLongitude(),0);
     }
+
+    @Test
+    public void test_filePathNullDeliveries_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("path is null");
+
+        // Act
+        reader.getDeliveriesFromXml(null);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void test_filePathEmptyDeliveries_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("path is empty");
+
+        // Act
+        reader.getDeliveriesFromXml("");
+
+        // Assert via annotation
+    }
+
 }

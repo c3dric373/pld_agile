@@ -45,7 +45,9 @@ public class Tour {
         this.startTime = startTime;
     }
 
-
+ public List<DeliveryProcess> getDeliveryProcesses(){
+        return deliveryProcesses;
+ }
 
 
 
