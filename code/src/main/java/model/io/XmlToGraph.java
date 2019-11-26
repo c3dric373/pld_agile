@@ -26,6 +26,10 @@ public class XmlToGraph {
      * Represents the graph
      */
     static ArrayList<Point> nodes;
+    /**
+     * Tour that contains deliveryProcess
+     */
+    static Tour tour;
 
     /**
      * ArrayList that contains DeliveryProcess that we'll send at the end of the reading
@@ -44,7 +48,7 @@ public class XmlToGraph {
             }
         }*/
         ArrayList<Point> noeud = getGraphFromXml("moyenPlan.xml");
-        /*Tour Deliver = */getDeliveriesFromXml("demandeMoyen5.xml");
+        Tour Deliver = getDeliveriesFromXml("demandeMoyen5.xml");
     }
 
     public static ArrayList<Point> getGraphFromXml(String fileName){
@@ -122,7 +126,7 @@ public class XmlToGraph {
         return nodes;
     }
 
-    public static void getDeliveriesFromXml(String fileName){
+    public static Tour getDeliveriesFromXml(String fileName){
         Deliveries = new ArrayList<DeliveryProcess>();
         /**
          * Get an instance of class "DocumentBuilderFactory"
@@ -179,23 +183,33 @@ public class XmlToGraph {
                 DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint,deliveryActionpoint);
                 Deliveries.add(deliv);
             }
-        //Tour tour = new Tour(Deliveries, base, startTime);
+        Tour tour = new Tour(Deliveries, base, startTime);
 
         } catch (final ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }
-        //return new Tour();
+        return tour;
     }
 
+    /**
+     * Get the point with the provided id
+     * @param idPoint
+     * @return the Point
+     */
      public static Point GetPointById(long idPoint){
         for (Point p : nodes){
             if(p.getId() == idPoint) {
                 return p;
             }
         }
-        return new Point (120l,0.000,0.000);
+        return new Point();
     }
 
+    /**
+     * transform a duration in a time
+     * @param durationSec
+     * @return
+     */
     public static Time DurationToTime (int durationSec){
         String durationString = String.format("%d:%02d:%02d", durationSec / 3600, (durationSec % 3600) / 60, (durationSec % 60));
         Time duration = Time.valueOf(durationString);
