@@ -60,13 +60,14 @@ public class Point {
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.segments = new ArrayList<>();
+        this.segments =new ArrayList<>();
     }
 
-    public void AddNeighbour(Segment segment)
+    public void addNeighbour(Segment segment)
     {
         segments.add(segment);
     }
+
 
     /**
      * Get the distance from this point to another if it's reachable via one segments
