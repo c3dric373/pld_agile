@@ -38,9 +38,8 @@ public class Point {
      * @param id id of point
      * @param latitude latitude of point
      * @param longitude longitude of point
-     * @param segments list of adjacent segments to point
      */
-    Point(final long id, final double latitude, final double longitude, final List<Segment> segments)
+    public Point(final long id, final double latitude, final double longitude)
     {
         Validate.notNull(id, "id is null");
         if (latitude<-90){
@@ -61,7 +60,12 @@ public class Point {
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.segments = segments;
+        this.segments =new ArrayList<>();
+    }
+
+    public void addNeighbour(Segment segment)
+    {
+        segments.add(segment);
     }
 
 
@@ -73,8 +77,7 @@ public class Point {
     double getLengthTo(final long id) {
         if (this.id == id) return 0;
         for (final Segment s : segments) {
-            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
-        }
+            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength(); }
         throw new IllegalArgumentException("point not reachable via one segment");
     }
 
