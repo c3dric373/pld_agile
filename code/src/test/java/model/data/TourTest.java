@@ -11,7 +11,7 @@ import java.util.*;
 public class TourTest {
     private List<DeliveryProcess> TEST_DELIVERY_PROCESSES = new ArrayList<DeliveryProcess>();
     private Point TEST_BASE = new Point(5,3,3);
-    private Time TEST_START_TIME = Time.valueOf("0");
+    private Time TEST_START_TIME = Time.valueOf("0:0:0");
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
