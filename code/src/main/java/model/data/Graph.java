@@ -95,7 +95,7 @@ public class Graph {
     void show_map() {
         for (int i = 0; i< nb_points; i++) {
             System.out.print(points.get(i).getId()+"     ");
-            for (Segment s: points.get(i).getNeighbourSegments()) {
+            for (Segment s: points.get(i).getSegments()) {
                 if (points.get(i).getId() == s.either())
                     System.out.print(s.other(s.either()) +" ");
                 else
@@ -161,7 +161,7 @@ public class Graph {
             }
             flag[cur_index] = true;
             Point cur_point = points.get(cur_index);
-            for (Segment s : cur_point.getNeighbourSegments()) {
+            for (Segment s : cur_point.getSegments()) {
                 long id_other = s.other(cur_point.getId());
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;

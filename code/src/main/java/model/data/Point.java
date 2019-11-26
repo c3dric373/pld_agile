@@ -29,10 +29,9 @@ public class Point {
     private double longitude;
 
     /**
-     * List of neighbours
+     * List of Adjacent Segments to point
      */
-
-    private ArrayList<Segment> neighbourSegments;
+    private List<Segment> segments;
 
     /**
      * Instantiates a Point
@@ -61,12 +60,12 @@ public class Point {
         this.id =id;
         this.latitude=latitude;
         this.longitude=longitude;
-        this.neighbourSegments=new ArrayList<Segment>();
+        this.segments =new ArrayList<>();
     }
 
     public void AddNeighbour(Segment segment)
     {
-        neighbourSegments.add(segment);
+        segments.add(segment);
     }
 
 
@@ -77,7 +76,7 @@ public class Point {
      */
     double getLengthTo(final long id) {
         if (this.id == id) return 0;
-        for (final Segment s : neighbourSegments) {
+        for (final Segment s : segments) {
             if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength();
         }
         throw new IllegalArgumentException("point not reachable via one segment");
@@ -92,7 +91,7 @@ public class Point {
     public double getLongitude() {
         return longitude;
     }
-    public List<Segment> getNeighbourSegments() {
-        return neighbourSegments;
+    public List<Segment> getSegments() {
+        return segments;
     }
 }
