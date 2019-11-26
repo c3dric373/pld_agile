@@ -26,9 +26,21 @@ public class ActionPoint {
      * @param location location of action
      * @param actionType type of action
      */
-    ActionPoint(int time, Point location, ActionType actionType){
+    public ActionPoint(int time, Point location, ActionType actionType){
         this.time = time;
         this.location = location;
         this.actionType=actionType;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public ActionType getActionType() {
+        return actionType;
     }
 }

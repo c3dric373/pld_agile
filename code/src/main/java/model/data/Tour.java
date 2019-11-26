@@ -30,7 +30,7 @@ public class Tour {
      * @param base start point
      * @param startTime start tim
      */
-    Tour(List<DeliveryProcess> deliveryProcesses, Point base, int startTime){
+    public Tour(List<DeliveryProcess> deliveryProcesses, Point base, int startTime){
         Validate.notNull(deliveryProcesses, "deliveryProcess is null");
         Validate.notNull(base,"base is null");
         if (startTime<0){
@@ -44,8 +44,15 @@ public class Tour {
         this.startTime = startTime;
     }
 
+    public List<DeliveryProcess> getDeliveryProcesses() {
+        return deliveryProcesses;
+    }
 
+    public Point getBase() {
+        return base;
+    }
 
-
-
+    public int getStartTime() {
+        return startTime;
+    }
 }
