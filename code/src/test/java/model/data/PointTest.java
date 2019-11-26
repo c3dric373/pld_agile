@@ -183,7 +183,7 @@ public class PointTest {
         subject.addNeighbour(segment2);
 
         // Act
-        final List neighbourSegments = subject.getNeighbourSegments();
+        final List neighbourSegments = subject.getSegments();
 
         // Assert
         System.out.println(TEST_SEGMENTS);

@@ -30,7 +30,7 @@ public class XmlToGraph {
         //Check that the informations are correctly instancied
         for ( Point n : noeud){
             System.out.println(n.getId());
-            for (Segment s : n.getNeighbourSegments() ){
+            for (Segment s : n.getSegments() ){
                 System.out.println(s.getName());
             }
         }
