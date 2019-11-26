@@ -2,13 +2,15 @@ package model.data;
 
 import lombok.Getter;
 
+import java.sql.Time;
+
 @Getter
 public class ActionPoint {
 
     /**
      * Time it takes to complete the action
      */
-    private int time;
+    private Time time;
 
     /**
      * Location of the action
@@ -26,7 +28,7 @@ public class ActionPoint {
      * @param location location of action
      * @param actionType type of action
      */
-    ActionPoint(int time, Point location, ActionType actionType){
+    public ActionPoint(Time time, Point location, ActionType actionType){
         this.time = time;
         this.location = location;
         this.actionType=actionType;

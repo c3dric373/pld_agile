@@ -2,14 +2,18 @@ package model.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import model.data.Point;
-import model.data.Segment;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,9 +26,14 @@ public class XmlToGraph {
      * Represents the graph
      */
     static ArrayList<Point> nodes;
-/*
+
+    /**
+     * ArrayList that contains DeliveryProcess that we'll send at the end of the reading
+     */
+    static ArrayList<DeliveryProcess> Deliveries;
+
     public static void main(final String[] args) {
-        ArrayList<Point> noeud = getGraphFromXml("petitPlan.xml");
+ /*       ArrayList<Point> noeud = getGraphFromXml("petitPlan.xml");
 
         // WILL BE DELETED --
         //Check that the informations are correctly instancied
@@ -33,9 +42,11 @@ public class XmlToGraph {
             for (Segment s : n.getSegments() ){
                 System.out.println(s.getName());
             }
-        }
+        }*/
+        ArrayList<Point> noeud = getGraphFromXml("moyenPlan.xml");
+        /*Tour Deliver = */getDeliveriesFromXml("demandeMoyen5.xml");
     }
-*/
+
     public static ArrayList<Point> getGraphFromXml(String fileName){
         Validate.notNull(fileName, "fileName is null");
 
@@ -109,5 +120,86 @@ public class XmlToGraph {
             System.err.println(e.getMessage());
         }
         return nodes;
+    }
+
+    public static void getDeliveriesFromXml(String fileName){
+        Deliveries = new ArrayList<DeliveryProcess>();
+        /**
+         * Get an instance of class "DocumentBuilderFactory"
+         */
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            /**
+             * Creation of a parser
+             */
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            /**
+             * Creation of a document
+             */
+            final Document document = builder.parse(new File("resource" + File.separator + fileName));
+            /**
+             * Get the root Element
+             */
+            final Element root = document.getDocumentElement();
+            /**
+             * Get the DeliveryProcess tag and display the number of DeliveryProcess
+             */
+            final NodeList start = root.getElementsByTagName("entrepot");
+            final Element startPoint = (Element) start.item(0);
+            Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
+            Point base = GetPointById(idBase);
+            System.out.println("entrepot :"+idBase);
+            // Recup startTime
+            String startTimeString = startPoint.getAttribute("heureDepart");
+            Time startTime = Time.valueOf(startTimeString);
+            System.out.println("startTime = " + startTime);
+
+            // get list livraison
+            final NodeList deliveryList = root.getElementsByTagName("livraison");
+            final int nbDeliveryElements = deliveryList.getLength();
+            System.out.println("nbdeliveryelements :" +nbDeliveryElements);
+
+            /**
+             * Reading of all DeliveryProcess in the file and addition to the ArrayList
+             */
+            for (int deliveryIndex = 0; deliveryIndex < nbDeliveryElements; deliveryIndex++) {
+                final Element deliveryXml = (Element) deliveryList.item(deliveryIndex);
+                Long pickupPointId= Long.parseLong(deliveryXml.getAttribute("adresseEnlevement"));
+                System.out.println("idPick " + pickupPointId);
+                Point pickupPoint = GetPointById(pickupPointId);
+                Long deliveryPointId = Long.parseLong(deliveryXml.getAttribute("adresseLivraison"));
+                System.out.println("idDeliver " + deliveryPointId);
+                Point deliveryPoint = GetPointById(deliveryPointId);
+                int pickupTimeInt = Integer.parseInt(deliveryXml.getAttribute("dureeEnlevement"));
+                Time pickupTime = DurationToTime(pickupTimeInt);
+                int deliveryTimeString = Integer.parseInt(deliveryXml.getAttribute("dureeLivraison"));
+                Time deliveryTime = DurationToTime(deliveryTimeString);
+                ActionPoint pickupActionpoint = new ActionPoint(pickupTime, pickupPoint, ActionType.PICK_UP);
+                ActionPoint deliveryActionpoint = new ActionPoint(deliveryTime,deliveryPoint, ActionType.DELIVERY);
+                DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint,deliveryActionpoint);
+                Deliveries.add(deliv);
+            }
+        //Tour tour = new Tour(Deliveries, base, startTime);
+
+        } catch (final ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+        //return new Tour();
+    }
+
+     public static Point GetPointById(long idPoint){
+        for (Point p : nodes){
+            if(p.getId() == idPoint) {
+                return p;
+            }
+        }
+        return new Point (120l,0.000,0.000);
+    }
+
+    public static Time DurationToTime (int durationSec){
+        String durationString = String.format("%d:%02d:%02d", durationSec / 3600, (durationSec % 3600) / 60, (durationSec % 60));
+        Time duration = Time.valueOf(durationString);
+        System.out.println("duration = " + duration);
+        return duration;
     }
 }
