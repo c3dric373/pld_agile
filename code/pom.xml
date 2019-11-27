@@ -18,7 +18,7 @@
         <config.dependency.lombok.version>1.18.10</config.dependency.lombok.version>
         <config.dependency.guava.version>23.4-jre</config.dependency.guava.version>
         <config.dependency.mockito.version>2.12.0</config.dependency.mockito.version>
-        <config.dependency.checkstyle.version>2.17</config.dependency.checkstyle.version>
+        <config.dependency.checkstyle.version>3.1.0</config.dependency.checkstyle.version>
             <maven.compiler.release>11</maven.compiler.release>
     </properties>
     <build>
@@ -38,6 +38,33 @@
         <configuration>
             <mainClass>view.MainApp</mainClass>
         </configuration>
+    </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${config.dependency.checkstyle.version}</version>
+            <dependencies>
+                <dependency>
+                    <groupId>com.puppycrawl.tools</groupId>
+                    <artifactId>checkstyle</artifactId>
+                    <version>8.5</version>
+                </dependency>
+            </dependencies>
+            <executions>
+            <execution>
+                <id>validate</id>
+                <phase>validate</phase>
+                <configuration>
+                    <configLocation>.idea/checkstyle/style.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                </configuration>
+                <goals>
+                    <goal>check</goal>
+                </goals>
+            </execution>
+        </executions>
     </plugin>
     </plugins>
     </build>
@@ -111,14 +138,6 @@
             <artifactId>GMapsFX</artifactId>
             <version>2.10.0</version>
         </dependency>
-        <dependency>
-            <groupId>nl.jqno.equalsverifier</groupId>
-            <artifactId>equalsverifier</artifactId>
-            <version>2.4</version>
-            <scope>compile</scope>
-        </dependency>
-
-
     </dependencies>
 
 </project>
