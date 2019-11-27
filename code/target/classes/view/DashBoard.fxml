@@ -13,8 +13,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Line?>
+<?import com.lynden.gmapsfx.GoogleMapView?>
 
-<AnchorPane prefHeight="530.0" prefWidth="1000.0" styleClass="background" stylesheets="@../styleSetting/Theme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashBoardController">
+<AnchorPane prefHeight="530.0" prefWidth="1000.0" styleClass="background" stylesheets="@../styleSetting/Theme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlller.DashBoardController">
    <children>
       <SplitPane dividerPositions="0.4" prefHeight="530.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -76,14 +77,9 @@
                   <Line endX="100.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="153.5" />
                </children>
             </AnchorPane>
-            <AnchorPane id="mapPane" prefHeight="200.0" prefWidth="200.0" styleClass="background">
-               <children>
-                  <ImageView fitHeight="530.0" fitWidth="745.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-170.0" AnchorPane.topAnchor="0.0">
-                     <image>
-                        <Image url="@../styleSetting/Capture d’écran 2019-11-26 à 16.46.36.png" />
-                     </image>
-                  </ImageView>
-               </children></AnchorPane>
+             <AnchorPane id="mapPane" fx:id="anchorMap" prefHeight="200.0" prefWidth="200.0" styleClass="background">
+                 <GoogleMapView fx:id="mapView" prefHeight="750.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+             </AnchorPane>
          </items>
       </SplitPane>
    </children>
