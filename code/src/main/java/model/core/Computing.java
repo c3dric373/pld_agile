@@ -5,6 +5,7 @@ import model.io.XmlToGraph;
 import org.apache.commons.lang.Validate;
 
 import javax.swing.event.ListDataListener;
+import java.nio.file.LinkOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -210,6 +211,29 @@ public class Computing {
         return journeys;
     }
 
+    public List<List<Point>> getPointsFromJourneys(final Graph graph, final List<Journey> journeys) {
+        List<List<Point>> list_points = new ArrayList<>();
+        Map<Long,Integer> map = graph.getMap();
+        for (Journey journey : journeys) {
+            List<Point> points = new ArrayList<>();
+            for (Long id: journey.getIds()) {
+                int index_point = map.get(id);
+                Point point = graph.getPoints().get(index_point);
+                points.add(point);
+            }
+            list_points.add(points);
+        }
+        for (int i = 0; i < list_points.size(); i++) {
+            System.out.printf("Journey %d:\n", i+1);
+            List<Point> points = list_points.get(i);
+            for (int j = points.size()-1; j >= 0 ; j--) {
+                Point point = points.get(j);
+                System.out.printf("  id: %d, longitude: %f, latitude: %f\n", point.getId(), point.getLongitude(), point.getLatitude());
+            }
+        }
+        return list_points;
+    }
+
     public static void main(String[] args) {
         Computing computing = new Computing();
         XmlToGraph xmlToGraph = new XmlToGraph();
@@ -225,6 +249,7 @@ public class Computing {
         deliveryProcesses.add(new DeliveryProcess(new ActionPoint(1,new Point(27362899,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(505061101,0,0),ActionType.DELIVERY)));
 		Tour tour = new Tour(deliveryProcesses, new Point(1349383079,0,0),1);
 
-        computing.getListJourney(tour,graph,tsp1,tpsLimite);
+        List<Journey> journeys = computing.getListJourney(tour,graph,tsp1,tpsLimite);
+        List<List<Point>> list_points = computing.getPointsFromJourneys(graph,journeys);
     }
 }
