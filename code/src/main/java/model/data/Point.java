@@ -65,10 +65,8 @@ public class Point {
         this.segments =new ArrayList<>();
     }
 
-    public Point (){}
 
-    public void addNeighbour(Segment segment)
-    {
+    public void addNeighbour(final Segment segment) {
         segments.add(segment);
     }
 
@@ -85,16 +83,4 @@ public class Point {
         throw new IllegalArgumentException("point not reachable via one segment");
     }
 
-    public long getId() {
-        return id;
-    }
-    public double getLatitude() {
-        return latitude;
-    }
-    public double getLongitude() {
-        return longitude;
-    }
-    public List<Segment> getSegments() {
-        return segments;
-    }
 }
