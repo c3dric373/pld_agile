@@ -9,6 +9,8 @@ import org.junit.rules.ExpectedException;
 
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
+
 
 public class ActionPointTest {
     private int TEST_TIME = 0;
@@ -82,6 +84,25 @@ public class ActionPointTest {
         new ActionPoint(TEST_TIME, TEST_LOCATION, null);
 
         // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_correctCall_validCall(){
+        // Arrange
+
+
+        // Act
+        final ActionType subjectActionType = subject.getActionType();
+        final Point subjectLocation= subject.getLocation();
+        final int subjectTime = subject.getTime();
+
+
+
+        // Assert
+        assertEquals(TEST_TIME,subjectTime);
+        assertEquals(TEST_LOCATION, subjectLocation);
+        assertEquals(TEST_ACTION_TYPE, subjectActionType);
+
     }
 
 
