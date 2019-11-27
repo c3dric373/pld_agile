@@ -156,7 +156,7 @@ public class Computing {
         return res_dijkstra;
     }
 
-    public int[][] getCost(final Tour tour, final Graph graph, List<List<tuple>> res_dijkstra) {
+    public int[][] getCost(final Tour tour, final Graph graph, final List<List<tuple>> res_dijkstra) {
         Map<Long,Integer> map = graph.getMap();
         int nb = tour.getDeliveryProcesses().size();
         int[][] cost = new int[2*nb+1][2*nb+1];
@@ -177,7 +177,7 @@ public class Computing {
         return cost;
     }
 
-    public List<Journey> getListJourney(final Tour tour, final Graph graph, TSP tsp, int tpsLimite) {
+    public List<Journey> getListJourney(final Tour tour, final Graph graph, final TSP tsp, final int tpsLimite) {
         List<List<tuple>> res_dijkstra = applyDijkstraToTour(tour, graph);
         int[][] cout = getCost(tour, graph, res_dijkstra);
         int nbSommets = tour.getDeliveryProcesses().size()*2+1;
