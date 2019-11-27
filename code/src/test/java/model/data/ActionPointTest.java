@@ -7,13 +7,14 @@ import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import java.sql.Time;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 
 public class ActionPointTest {
-    private int TEST_TIME = 0;
+    private Time TEST_TIME = new Time(2243L);
     private List<Segment> TEST_SEGMENTS = new ArrayList<Segment>();
     private Point TEST_LOCATION;
     private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
@@ -31,34 +32,7 @@ public class ActionPointTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Test
-    public void testCTOR_timeNegative_throwsIllegalArgumentException() {
 
-        // Arrange
-        int NEGATIVE_TIME = -1;
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("time is negative");
-
-        // Act
-        new ActionPoint(NEGATIVE_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
-
-        // Assert via annotation
-    }
-
-
-    @Test
-    public void testCTOR_timeToGreat_throwsIllegalArgumentException() {
-
-        // Arrange
-        int BIG_TIME =2400;
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("time is too great");
-
-        // Act
-        new ActionPoint(BIG_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
-
-        // Assert via annotation
-    }
 
     @Test
     public void testCTOR_locationNull_throwsIllegalArgumentException() {
@@ -69,6 +43,19 @@ public class ActionPointTest {
 
         // Act
         new ActionPoint(TEST_TIME, null, TEST_ACTION_TYPE);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testCTOR_timeNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("time is null");
+
+        // Act
+        new ActionPoint(null, TEST_LOCATION, TEST_ACTION_TYPE);
 
         // Assert via annotation
     }
@@ -94,7 +81,7 @@ public class ActionPointTest {
         // Act
         final ActionType subjectActionType = subject.getActionType();
         final Point subjectLocation= subject.getLocation();
-        final int subjectTime = subject.getTime();
+        final Time subjectTime = subject.getTime();
 
 
 

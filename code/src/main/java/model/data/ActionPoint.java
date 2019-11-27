@@ -31,16 +31,12 @@ public class ActionPoint {
      * @param location location of action
      * @param actionType type of action
      */
-    public ActionPoint(Time time, Point location, ActionType actionType){
-    ActionPoint(int time, Point location, ActionType actionType){
+    public ActionPoint(final Time time, final Point location, final ActionType actionType){
         Validate.notNull(location, "location is null");
         Validate.notNull(actionType, "actionType is null");
-        if (time<0){
-            throw new IllegalArgumentException("time is negative");
-        }
-        if (time>=2400){
-            throw new IllegalArgumentException("time is too great");
-        }
+        Validate.notNull(time,"time is null");
+
+
         this.time = time;
         this.location = location;
         this.actionType=actionType;

@@ -27,7 +27,7 @@ public class DeliveryProcess {
      * @param pickUP   pickUp point of the delivery
      * @param delivery delivery point of the deliver
      */
-    DeliveryProcess(final ActionPoint pickUP, final ActionPoint delivery) {
+    public DeliveryProcess(final ActionPoint pickUP, final ActionPoint delivery) {
         Validate.notNull(pickUP, "pickUp is null");
         Validate.notNull(delivery, "delivery is null");
 

@@ -9,11 +9,12 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.assertEquals;
 
 import javax.swing.*;
+import java.sql.Time;
 import java.util.*;
 
 
 public class DeliveryProcessTest {
-    private int TEST_TIME = 0;
+    private Time TEST_TIME = new Time(2234);
     private Point TEST_LOCATION = new Point(1, 0, 0);
     private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
     private ActionType TEST_ACTION_TYPE2 = ActionType.DELIVERY;
