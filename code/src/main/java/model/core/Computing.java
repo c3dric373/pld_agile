@@ -234,6 +234,44 @@ public class Computing {
         return list_points;
     }
 
+    public List<List<Point>> getJourneysForDeliveryProcess(final List<Journey> journeys, final List<List<Point>> list_points, final DeliveryProcess deliveryProcess) {
+        long id1 = deliveryProcess.getPickUP().getLocation().getId();
+        long id2 = deliveryProcess.getDelivery().getLocation().getId();
+        int index_journey1 = -1;
+        int index_journey2 = -1;
+        for (int i = 0; i < journeys.size(); i++) {
+            if (index_journey1 !=-1 && index_journey2 != -1) break;
+            if (index_journey1 == -1 && index_journey2 ==-1) {
+                if (journeys.get(i).getId_start() == id1) {
+                    index_journey1 = i;
+                } else if (journeys.get(i).getId_start() == id2) {
+                    index_journey2 = i;
+                } else continue;
+            }
+            if (index_journey1 != -1 && index_journey2 == -1) {
+                if (journeys.get(i).getId_arrive() == id1) {
+                    index_journey1 = i;
+                } else if (journeys.get(i).getId_arrive() == id2) {
+                    index_journey2 = i;
+                }
+            }
+        }
+        List<List<Point>> res = new ArrayList<>();
+        for (int i = index_journey1; i <= index_journey2; i++) {
+            res.add(list_points.get(i));
+        }
+        System.out.printf("Delivery process(id point pick up: %d, id point delivery: %d):\n",id1,id2);
+        for (int i = 0; i < res.size(); i++) {
+            System.out.printf("Journey %d:\n", i+1);
+            List<Point> points = res.get(i);
+            for (int j = points.size()-1; j >= 0 ; j--) {
+                Point point = points.get(j);
+                System.out.printf("  id: %d, longitude: %f, latitude: %f\n", point.getId(), point.getLongitude(), point.getLatitude());
+            }
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         Computing computing = new Computing();
         XmlToGraph xmlToGraph = new XmlToGraph();
@@ -244,12 +282,16 @@ public class Computing {
         TSP tsp1 = new TSP1();
 		int tpsLimite = Integer.MAX_VALUE;
 		List<DeliveryProcess> deliveryProcesses = new ArrayList<>();
-        deliveryProcesses.add(new DeliveryProcess(new ActionPoint(1,new Point(26121686,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(191134392,0,0),ActionType.DELIVERY)));
-        deliveryProcesses.add(new DeliveryProcess(new ActionPoint(1,new Point(55444018,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(26470086,0,0),ActionType.DELIVERY)));
-        deliveryProcesses.add(new DeliveryProcess(new ActionPoint(1,new Point(27362899,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(505061101,0,0),ActionType.DELIVERY)));
+		DeliveryProcess deliveryProcess1 = new DeliveryProcess(new ActionPoint(1,new Point(26121686,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(191134392,0,0),ActionType.DELIVERY));
+        DeliveryProcess deliveryProcess2 = new DeliveryProcess(new ActionPoint(1,new Point(55444018,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(26470086,0,0),ActionType.DELIVERY));
+        DeliveryProcess deliveryProcess3 = new DeliveryProcess(new ActionPoint(1,new Point(27362899,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(505061101,0,0),ActionType.DELIVERY));
+		deliveryProcesses.add(deliveryProcess1);
+        deliveryProcesses.add(deliveryProcess2);
+        deliveryProcesses.add(deliveryProcess3);
 		Tour tour = new Tour(deliveryProcesses, new Point(1349383079,0,0),1);
 
         List<Journey> journeys = computing.getListJourney(tour,graph,tsp1,tpsLimite);
         List<List<Point>> list_points = computing.getPointsFromJourneys(graph,journeys);
+        List<List<Point>> part_list_points = computing.getJourneysForDeliveryProcess(journeys,list_points,deliveryProcess2);
     }
 }
