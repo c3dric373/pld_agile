@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <config.plugin.spotbugs.version>3.1.0</config.plugin.spotbugs.version>
-        <config.plugin.spotbugs.maven.version>3.1.0-RC8</config.plugin.spotbugs.maven.version>
+        <config.plugin.spotbugs.maven.version>3.1.12</config.plugin.spotbugs.maven.version>
         <config.dependency.junit.version>4.12</config.dependency.junit.version>
         <config.dependency.lombok.version>1.18.10</config.dependency.lombok.version>
         <config.dependency.guava.version>23.4-jre</config.dependency.guava.version>
