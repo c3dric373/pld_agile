@@ -4,6 +4,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
+import java.sql.Time;
+
 @Getter
 @EqualsAndHashCode
 public class ActionPoint {
@@ -11,7 +13,7 @@ public class ActionPoint {
     /**
      * Time it takes to complete the action
      */
-    private int time;
+    private Time time;
 
     /**
      * Location of the action
@@ -29,6 +31,7 @@ public class ActionPoint {
      * @param location location of action
      * @param actionType type of action
      */
+    public ActionPoint(Time time, Point location, ActionType actionType){
     ActionPoint(int time, Point location, ActionType actionType){
         Validate.notNull(location, "location is null");
         Validate.notNull(actionType, "actionType is null");

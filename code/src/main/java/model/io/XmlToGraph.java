@@ -2,14 +2,19 @@ package model.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import model.data.Point;
-import model.data.Segment;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,9 +27,17 @@ public class XmlToGraph {
      * Represents the graph
      */
     static ArrayList<Point> nodes;
-/*
+    /**
+     * Tour that contains deliveryProcess
+     */
+    static Tour tour;
+
+    /**
+     * ArrayList that contains DeliveryProcess that we'll send at the end of the reading
+     */
+    static ArrayList<DeliveryProcess> deliveries;
     public static void main(final String[] args) {
-        ArrayList<Point> noeud = getGraphFromXml("petitPlan.xml");
+ /*       ArrayList<Point> noeud = getGraphFromXml("resource/petitPlan.xml");
 
         // WILL BE DELETED --
         //Check that the informations are correctly instancied
@@ -34,13 +47,22 @@ public class XmlToGraph {
                 System.out.println(s.getName());
             }
         }
+        ArrayList<Point> noeud = getGraphFromXml("resource/moyenPlan.xml");
+        Tour Deliver = getDeliveriesFromXml("resource/demandeMoyen5.xml");
+        List<DeliveryProcess> Dp = Deliver.getDeliveryProcesses();
+        System.out.println( "------------------------");
+        for (DeliveryProcess p : Dp){
+            System.out.println( "id "+p.getDelivery().getPoint().getId());
+            System.out.println( "lat "+p.getDelivery().getPoint().getLatitude());
+        }
+    */
     }
-*/
-    public static ArrayList<Point> getGraphFromXml(String fileName){
-        Validate.notNull(fileName, "fileName is null");
 
-        if (fileName.equals("")) {
-            throw new IllegalArgumentException("fileName is empty");
+    public static ArrayList<Point> getGraphFromXml(String path){
+        Validate.notNull(path, "path is null");
+
+        if (path.equals("")) {
+            throw new IllegalArgumentException("path is empty");
         }
 
         nodes=new ArrayList<Point>();
@@ -56,7 +78,7 @@ public class XmlToGraph {
             /**
              * Creation of a document
              */
-            final Document document = builder.parse(new File("resource" + File.separator + fileName));
+            final Document document = builder.parse(new File(path));
             /**
              * Get the root Element
              */
@@ -109,5 +131,106 @@ public class XmlToGraph {
             System.err.println(e.getMessage());
         }
         return nodes;
+    }
+
+    public static Tour getDeliveriesFromXml(String path){
+        Validate.notNull(path, "path is null");
+
+        if (path.equals("")) {
+            throw new IllegalArgumentException("path is empty");
+        }
+
+        deliveries = new ArrayList<DeliveryProcess>();
+        /**
+         * Get an instance of class "DocumentBuilderFactory"
+         */
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            /**
+             * Creation of a parser
+             */
+            final DocumentBuilder builder = factory.newDocumentBuilder();
+            /**
+             * Creation of a document
+             */
+            final Document document = builder.parse(new File(path));
+            /**
+             * Get the root Element
+             */
+            final Element root = document.getDocumentElement();
+            /**
+             * Get the DeliveryProcess tag and display the number of DeliveryProcess
+             */
+            final NodeList start = root.getElementsByTagName("entrepot");
+            final Element startPoint = (Element) start.item(0);
+            Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
+            Point base = getPointById(idBase);
+            System.out.println("entrepot :"+idBase);
+            // Recup startTime
+            String startTimeString = startPoint.getAttribute("heureDepart");
+            Time startTime = Time.valueOf(startTimeString);
+            System.out.println("startTime = " + startTime);
+
+            // get list livraison
+            final NodeList deliveryList = root.getElementsByTagName("livraison");
+            final int nbDeliveryElements = deliveryList.getLength();
+            System.out.println("nbdeliveryelements :" +nbDeliveryElements);
+
+            /**
+             * Reading of all DeliveryProcess in the file and addition to the ArrayList
+             */
+            for (int deliveryIndex = 0; deliveryIndex < nbDeliveryElements; deliveryIndex++) {
+                final Element deliveryXml = (Element) deliveryList.item(deliveryIndex);
+                Long pickupPointId= Long.parseLong(deliveryXml.getAttribute("adresseEnlevement"));
+                System.out.println("idPick " + pickupPointId);
+                Point pickupPoint = getPointById(pickupPointId);
+                Long deliveryPointId = Long.parseLong(deliveryXml.getAttribute("adresseLivraison"));
+                System.out.println("idDeliver " + deliveryPointId);
+                Point deliveryPoint = getPointById(deliveryPointId);
+                int pickupTimeInt = Integer.parseInt(deliveryXml.getAttribute("dureeEnlevement"));
+                Time pickupTime = durationToTime(pickupTimeInt);
+                int deliveryTimeString = Integer.parseInt(deliveryXml.getAttribute("dureeLivraison"));
+                Time deliveryTime = durationToTime(deliveryTimeString);
+                ActionPoint pickupActionpoint = new ActionPoint(pickupTime, pickupPoint, ActionType.PICK_UP);
+                ActionPoint deliveryActionpoint = new ActionPoint(deliveryTime,deliveryPoint, ActionType.DELIVERY);
+                DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint,deliveryActionpoint);
+                deliveries.add(deliv);
+            }
+        tour = new Tour(deliveries, base, startTime);
+
+        } catch (final ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+        return tour;
+    }
+
+    /**
+     * Get the point with the provided id
+     * @param idPoint
+     * @return the Point
+     */
+     public static Point getPointById(long idPoint){
+         Point point =null;
+        for (Point p : nodes) {
+            if (p.getId() == idPoint) {
+                point = p;
+            }
+        }
+        if (point == null){
+            throw new IllegalArgumentException("Point doesn't exist");
+        }
+        return point;
+    }
+
+    /**
+     * transform a duration in a time
+     * @param durationSec
+     * @return
+     */
+    public static Time durationToTime (int durationSec){
+        String durationString = String.format("%d:%02d:%02d", durationSec / 3600, (durationSec % 3600) / 60, (durationSec % 60));
+        Time duration = Time.valueOf(durationString);
+        System.out.println("duration = " + duration);
+        return duration;
     }
 }
