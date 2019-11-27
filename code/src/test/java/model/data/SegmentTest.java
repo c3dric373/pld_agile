@@ -1,7 +1,5 @@
 package model.data;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -159,7 +157,7 @@ public class SegmentTest {
         // Arrange
 
         // Act
-        SEGMENT_TEST.getId_origin();
+        SEGMENT_TEST.getIdOrigin();
 
         // Assert via annotation
     }
@@ -170,7 +168,7 @@ public class SegmentTest {
         // Arrange
 
         // Act
-        SEGMENT_TEST.getId_end();
+        SEGMENT_TEST.getIdEnd();
 
         // Assert via annotation
     }
