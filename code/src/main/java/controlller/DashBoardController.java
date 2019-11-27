@@ -84,14 +84,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         Marker joeSmithMarker = new Marker(markerOptions1);
         Marker joshAndersonMarker = new Marker(markerOptions2);
         Marker bobUnderwoodMarker = new Marker(markerOptions3);
-        Marker tomChoiceMarker= new Marker(markerOptions4);
+        Marker tomChoiceMarker = new Marker(markerOptions4);
         Marker fredWilkieMarker = new Marker(markerOptions5);
 
-        map.addMarker( joeSmithMarker );
-        map.addMarker( joshAndersonMarker );
-        map.addMarker( bobUnderwoodMarker );
-        map.addMarker( tomChoiceMarker );
-        map.addMarker( fredWilkieMarker );
+        map.addMarker(joeSmithMarker);
+        map.addMarker(joshAndersonMarker);
+        map.addMarker(bobUnderwoodMarker);
+        map.addMarker(tomChoiceMarker);
+        map.addMarker(fredWilkieMarker);
     }
 
     /**
@@ -100,22 +100,19 @@ public class DashBoardController implements Initializable, MapComponentInitializ
      */
     //@FXML
     //private void initialize() {
-        // Initialize the person table with the two columns.
-        //firstNameColumn.setCellValueFactory(
-        //        cellData -> cellData.getValue().firstNameProperty());
-        //lastNameColumn.setCellValueFactory(
-        //        cellData -> cellData.getValue().lastNameProperty());
+    // Initialize the person table with the two columns.
+    //firstNameColumn.setCellValueFactory(
+    //        cellData -> cellData.getValue().firstNameProperty());
+    //lastNameColumn.setCellValueFactory(
+    //        cellData -> cellData.getValue().lastNameProperty());
 
-        // Clear person details.
-        //showPersonDetails(null);
+    // Clear person details.
+    //showPersonDetails(null);
 
-        // Listen for selection changes and show the person details when changed.
-        //personTable.getSelectionModel().selectedItemProperty().addListener(
-        //        (observable, oldValue, newValue) -> showPersonDetails(newValue));
+    // Listen for selection changes and show the person details when changed.
+    //personTable.getSelectionModel().selectedItemProperty().addListener(
+    //        (observable, oldValue, newValue) -> showPersonDetails(newValue));
     //}
-
-
-
     public void handleLoadMap() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Map XML");
@@ -125,16 +122,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            if(selectedFile.getName().contains("xml")) {
+            if (selectedFile.getName().contains("xml")) {
                 System.out.println("File selected: " + selectedFile.getName());
-            }else {
-                    System.out.println("Error Loading not xml File");
-                }
-        }
-        else {
+            } else {
+                System.out.println("Error Loading not xml File");
+            }
+        } else {
             System.out.println("File selection cancelled.");
         }
-
 
 
     }
@@ -148,16 +143,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            if(selectedFile.getName().contains("xml")) {
+            if (selectedFile.getName().contains("xml")) {
                 System.out.println("File selected: " + selectedFile.getName());
-            }else {
+            } else {
                 System.out.println("Error Loading not xml File");
             }
-        }
-        else {
+        } else {
             System.out.println("File selection cancelled.");
         }
     }
+
     /**
      * Is called by the main application to give a reference back to itself.
      *

@@ -25,13 +25,12 @@ public class ActionPointTest {
     public void setUp() {
         TEST_SEGMENTS.add(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
         TEST_SEGMENTS.add(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
-        TEST_LOCATION = new Point(1,0,3);
+        TEST_LOCATION = new Point(1, 0, 3);
         subject = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
     }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
 
 
     @Test
@@ -74,24 +73,22 @@ public class ActionPointTest {
     }
 
     @Test
-    public void testCTOR_correctCall_validCall(){
+    public void testCTOR_correctCall_validCall() {
         // Arrange
 
 
         // Act
         final ActionType subjectActionType = subject.getActionType();
-        final Point subjectLocation= subject.getLocation();
+        final Point subjectLocation = subject.getLocation();
         final Time subjectTime = subject.getTime();
 
 
-
         // Assert
-        assertEquals(TEST_TIME,subjectTime);
+        assertEquals(TEST_TIME, subjectTime);
         assertEquals(TEST_LOCATION, subjectLocation);
         assertEquals(TEST_ACTION_TYPE, subjectActionType);
 
     }
-
 
 
 }

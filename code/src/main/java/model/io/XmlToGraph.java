@@ -36,6 +36,7 @@ public class XmlToGraph {
      * ArrayList that contains DeliveryProcess that we'll send at the end of the reading
      */
     static ArrayList<DeliveryProcess> deliveries;
+
     public static void main(final String[] args) {
  /*       ArrayList<Point> noeud = getGraphFromXml("resource/petitPlan.xml");
 
@@ -58,14 +59,14 @@ public class XmlToGraph {
     */
     }
 
-    public static ArrayList<Point> getGraphFromXml(String path){
+    public static ArrayList<Point> getGraphFromXml(String path) {
         Validate.notNull(path, "path is null");
 
         if (path.equals("")) {
             throw new IllegalArgumentException("path is empty");
         }
 
-        nodes=new ArrayList<Point>();
+        nodes = new ArrayList<Point>();
         /**
          * Get an instance of class "DocumentBuilderFactory"
          */
@@ -88,7 +89,7 @@ public class XmlToGraph {
              */
             final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
-            System.out.println("nbNodes :"+nbNodeElements);
+            System.out.println("nbNodes :" + nbNodeElements);
 
             /**
              * Reading of all nodes in the file and addition to the ArrayList
@@ -98,7 +99,7 @@ public class XmlToGraph {
                 long nodeId = Long.parseLong(node.getAttribute("id"));
                 double nodeLat = Double.parseDouble(node.getAttribute("latitude"));
                 double nodeLong = Double.parseDouble(node.getAttribute("longitude"));
-                Point point = new Point (nodeId, nodeLat, nodeLong);
+                Point point = new Point(nodeId, nodeLat, nodeLong);
                 nodes.add(point);
             }
 
@@ -107,7 +108,7 @@ public class XmlToGraph {
              */
             final NodeList roadList = root.getElementsByTagName("troncon");
             final int nbRoadElements = roadList.getLength();
-            System.out.println( "nbRoad :" + nbRoadElements);
+            System.out.println("nbRoad :" + nbRoadElements);
 
             /**
              * Reading of all segments in the file
@@ -120,8 +121,8 @@ public class XmlToGraph {
                 long roadDeparture = Long.parseLong(road.getAttribute("origine"));
                 Segment segment = new Segment(roadDeparture, roadArrival, roadLength, roadName);
 
-                for (Point node : nodes){
-                    if(node.getId() == roadDeparture ){
+                for (Point node : nodes) {
+                    if (node.getId() == roadDeparture) {
                         node.addNeighbour(segment);
                     }
                 }
@@ -133,7 +134,7 @@ public class XmlToGraph {
         return nodes;
     }
 
-    public static Tour getDeliveriesFromXml(String path){
+    public static Tour getDeliveriesFromXml(String path) {
         Validate.notNull(path, "path is null");
 
         if (path.equals("")) {
@@ -165,7 +166,7 @@ public class XmlToGraph {
             final Element startPoint = (Element) start.item(0);
             Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
             Point base = getPointById(idBase);
-            System.out.println("entrepot :"+idBase);
+            System.out.println("entrepot :" + idBase);
             // Recup startTime
             String startTimeString = startPoint.getAttribute("heureDepart");
             Time startTime = Time.valueOf(startTimeString);
@@ -174,14 +175,14 @@ public class XmlToGraph {
             // get list livraison
             final NodeList deliveryList = root.getElementsByTagName("livraison");
             final int nbDeliveryElements = deliveryList.getLength();
-            System.out.println("nbdeliveryelements :" +nbDeliveryElements);
+            System.out.println("nbdeliveryelements :" + nbDeliveryElements);
 
             /**
              * Reading of all DeliveryProcess in the file and addition to the ArrayList
              */
             for (int deliveryIndex = 0; deliveryIndex < nbDeliveryElements; deliveryIndex++) {
                 final Element deliveryXml = (Element) deliveryList.item(deliveryIndex);
-                Long pickupPointId= Long.parseLong(deliveryXml.getAttribute("adresseEnlevement"));
+                Long pickupPointId = Long.parseLong(deliveryXml.getAttribute("adresseEnlevement"));
                 System.out.println("idPick " + pickupPointId);
                 Point pickupPoint = getPointById(pickupPointId);
                 Long deliveryPointId = Long.parseLong(deliveryXml.getAttribute("adresseLivraison"));
@@ -192,11 +193,11 @@ public class XmlToGraph {
                 int deliveryTimeString = Integer.parseInt(deliveryXml.getAttribute("dureeLivraison"));
                 Time deliveryTime = durationToTime(deliveryTimeString);
                 ActionPoint pickupActionpoint = new ActionPoint(pickupTime, pickupPoint, ActionType.PICK_UP);
-                ActionPoint deliveryActionpoint = new ActionPoint(deliveryTime,deliveryPoint, ActionType.DELIVERY);
-                DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint,deliveryActionpoint);
+                ActionPoint deliveryActionpoint = new ActionPoint(deliveryTime, deliveryPoint, ActionType.DELIVERY);
+                DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint, deliveryActionpoint);
                 deliveries.add(deliv);
             }
-        tour = new Tour(deliveries, base, startTime);
+            tour = new Tour(deliveries, base, startTime);
 
         } catch (final ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
             System.err.println(e.getMessage());
@@ -206,17 +207,18 @@ public class XmlToGraph {
 
     /**
      * Get the point with the provided id
+     *
      * @param idPoint
      * @return the Point
      */
-     public static Point getPointById(long idPoint){
-         Point point =null;
+    public static Point getPointById(long idPoint) {
+        Point point = null;
         for (Point p : nodes) {
             if (p.getId() == idPoint) {
                 point = p;
             }
         }
-        if (point == null){
+        if (point == null) {
             throw new IllegalArgumentException("Point doesn't exist");
         }
         return point;
@@ -224,10 +226,11 @@ public class XmlToGraph {
 
     /**
      * transform a duration in a time
+     *
      * @param durationSec
      * @return
      */
-    public static Time durationToTime (int durationSec){
+    public static Time durationToTime(int durationSec) {
         String durationString = String.format("%d:%02d:%02d", durationSec / 3600, (durationSec % 3600) / 60, (durationSec % 60));
         Time duration = Time.valueOf(durationString);
         System.out.println("duration = " + duration);

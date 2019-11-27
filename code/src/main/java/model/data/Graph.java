@@ -89,27 +89,29 @@ public class Graph {
         nb_segments++;
     }
 */
+
     /**
      * Show the map
      */
     void show_map() {
-        for (int i = 0; i< nb_points; i++) {
-            System.out.print(points.get(i).getId()+"     ");
-            for (Segment s: points.get(i).getSegments()) {
+        for (int i = 0; i < nb_points; i++) {
+            System.out.print(points.get(i).getId() + "     ");
+            for (Segment s : points.get(i).getSegments()) {
                 if (points.get(i).getId() == s.either())
-                    System.out.print(s.other(s.either()) +" ");
+                    System.out.print(s.other(s.either()) + " ");
                 else
                     System.out.print(s.either() + " ");
             }
             System.out.println();
         }
-        System.out.println("nb_nodes: "+ nb_points);
-        System.out.println("nb_segments: "+nb_segments);
+        System.out.println("nb_nodes: " + nb_points);
+        System.out.println("nb_segments: " + nb_segments);
     }
 
     class tuple {
         private int prev = 0;
         private double dist = Float.POSITIVE_INFINITY;
+
         tuple(int prev, double dist) {
             this.prev = prev;
             this.dist = dist;
@@ -118,12 +120,15 @@ public class Graph {
         public int getPrev() {
             return prev;
         }
+
         public double getDist() {
             return dist;
         }
+
         public void setPrev(int prev) {
             this.prev = prev;
         }
+
         public void setDist(double dist) {
             this.dist = dist;
         }
@@ -132,6 +137,7 @@ public class Graph {
     /**
      * Dijkstra shortest path
      * the shortest path from start point to other points
+     *
      * @param start_index the index of start point
      * @return list of tuple which contains the previous point index and the distance in the shortest path from the start point to each point
      */

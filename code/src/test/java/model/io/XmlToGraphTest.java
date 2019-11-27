@@ -91,8 +91,8 @@ public class XmlToGraphTest {
 
         // Assert via annotation
         assertEquals(25175791l, result.get(0).getId());
-        assertEquals(45.75406, result.get(0).getLatitude(),0);
-        assertEquals(4.857418, result.get(0).getLongitude(),0);
+        assertEquals(45.75406, result.get(0).getLatitude(), 0);
+        assertEquals(4.857418, result.get(0).getLongitude(), 0);
     }
 
     @Test
@@ -145,8 +145,8 @@ public class XmlToGraphTest {
         Point p = reader.getPointById(EXISTING_POINT);
 
         // Assert via annotation
-        assertEquals(p.getId(),EXISTING_POINT);
-        assertEquals(p.getLatitude(),45.750404 ,0);
-        assertEquals(p.getLongitude(),4.8744674,0);
+        assertEquals(p.getId(), EXISTING_POINT);
+        assertEquals(p.getLatitude(), 45.750404, 0);
+        assertEquals(p.getLongitude(), 4.8744674, 0);
     }
 }

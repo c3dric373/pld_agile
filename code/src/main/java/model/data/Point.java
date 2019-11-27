@@ -37,32 +37,32 @@ public class Point {
 
     /**
      * Instantiates a Point
-     * @param id id of point
-     * @param latitude latitude of point
+     *
+     * @param id        id of point
+     * @param latitude  latitude of point
      * @param longitude longitude of point
      */
-    public Point(final long id, final double latitude, final double longitude)
-    {
+    public Point(final long id, final double latitude, final double longitude) {
         Validate.notNull(id, "id is null");
-        if (latitude<-90){
+        if (latitude < -90) {
             throw new IllegalArgumentException("latitude is too small");
         }
-        if (latitude>90){
+        if (latitude > 90) {
             throw new IllegalArgumentException("latitude is too great");
         }
-        if (longitude<-180){
+        if (longitude < -180) {
             throw new IllegalArgumentException("longitude is too small");
         }
-        if (longitude>180){
+        if (longitude > 180) {
             throw new IllegalArgumentException("longitude is too great");
         }
-        if (id < 0){
+        if (id < 0) {
             throw new IllegalArgumentException("id is negative");
         }
-        this.id =id;
-        this.latitude=latitude;
-        this.longitude=longitude;
-        this.segments =new ArrayList<>();
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.segments = new ArrayList<>();
     }
 
 
@@ -73,13 +73,16 @@ public class Point {
 
     /**
      * Get the distance from this point to another if it's reachable via one segments
+     *
      * @param id the id of the other point
      * @return the distance from this point to another
      */
     double getLengthTo(final long id) {
         if (this.id == id) return 0;
         for (final Segment s : segments) {
-            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id) return s.getLength(); }
+            if ((s.either() == this.id && s.other(this.id) == id) || s.either() == id && s.other(id) == this.id)
+                return s.getLength();
+        }
         throw new IllegalArgumentException("point not reachable via one segment");
     }
 
