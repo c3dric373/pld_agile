@@ -20,7 +20,7 @@ public class DeliveryProcess {
      * @param pickUP pickUp point of the delivery
      * @param delivery delivery point of the deliver
      */
-    DeliveryProcess(ActionPoint pickUP, ActionPoint delivery){
+    public DeliveryProcess(ActionPoint pickUP, ActionPoint delivery){
         this.pickUP=pickUP;
         this.delivery=delivery;
     }
