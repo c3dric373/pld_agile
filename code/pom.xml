@@ -9,99 +9,98 @@
     <version>1.0-SNAPSHOT</version>
 
 
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <config.plugin.spotbugs.version>3.1.0</config.plugin.spotbugs.version>
-        <config.plugin.spotbugs.maven.version>3.1.0-RC8</config.plugin.spotbugs.maven.version>
+        <config.plugin.spotbugs.maven.version>3.1.12</config.plugin.spotbugs.maven.version>
         <config.dependency.junit.version>4.12</config.dependency.junit.version>
         <config.dependency.lombok.version>1.18.10</config.dependency.lombok.version>
         <config.dependency.guava.version>23.4-jre</config.dependency.guava.version>
         <config.dependency.mockito.version>2.12.0</config.dependency.mockito.version>
         <config.dependency.checkstyle.version>3.1.0</config.dependency.checkstyle.version>
-            <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>11</maven.compiler.release>
     </properties>
     <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.0</version>
-            <configuration>
-                <release>11</release>
-            </configuration>
-        </plugin>
-        <plugin>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-maven-plugin</artifactId>
-        <version>0.0.3</version>
-        <configuration>
-            <mainClass>view.MainApp</mainClass>
-        </configuration>
-    </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>${config.dependency.checkstyle.version}</version>
-            <dependencies>
-                <dependency>
-                    <groupId>com.puppycrawl.tools</groupId>
-                    <artifactId>checkstyle</artifactId>
-                    <version>8.26</version>
-                </dependency>
-            </dependencies>
-            <executions>
-            <execution>
-                <id>validate</id>
-                <phase>validate</phase>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.3</version>
+                <configuration>
+                    <mainClass>view.MainApp</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${config.dependency.checkstyle.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>8.26</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>checkstyle</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <configLocation>.idea/checkstyle/style.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError>
+                    <failsOnError>false</failsOnError>
                 </configuration>
-                <goals>
-                    <goal>check</goal>
-                </goals>
-            </execution>
-        </executions>
-    </plugin>
-    </plugins>
+            </plugin>
+        </plugins>
     </build>
 
 
     <dependencies>
-    <dependency>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs</artifactId>
-        <version>${config.plugin.spotbugs.version}</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/junit/junit -->
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${config.dependency.junit.version}</version>
-        <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>${config.plugin.spotbugs.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${config.dependency.junit.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${config.dependency.lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-    <!-- Mockito, as mocking framework for tests -->
-    <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${config.dependency.mockito.version}</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier -->
-    <dependency>
-        <groupId>nl.jqno.equalsverifier</groupId>
-        <artifactId>equalsverifier</artifactId>
-        <version>3.0.3</version>
-        <scope>test</scope>
-    </dependency>
+        <!-- Mockito, as mocking framework for tests -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${config.dependency.mockito.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/nl.jqno.equalsverifier/equalsverifier -->
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>3.0.3</version>
+            <scope>test</scope>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
         <dependency>
             <groupId>org.openjfx</groupId>
