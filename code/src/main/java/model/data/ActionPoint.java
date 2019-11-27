@@ -1,9 +1,11 @@
 package model.data;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
 @Getter
+@EqualsAndHashCode
 public class ActionPoint {
 
     /**

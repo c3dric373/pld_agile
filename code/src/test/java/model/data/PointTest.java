@@ -1,5 +1,7 @@
 package model.data;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -190,5 +192,14 @@ public class PointTest {
         assertEquals("Wrong segments", neighbourSegments, TEST_SEGMENTS);
     }
 
+    @Test
+    public void testEqualsAndHashCode_allCases_noErrors() {
 
+        // Arrange
+
+        // Act
+        EqualsVerifier.forClass(DeliveryProcess.class).suppress(Warning.STRICT_INHERITANCE).verify();
+
+        // Assert
+    }
 }

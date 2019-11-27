@@ -1,5 +1,7 @@
 package model.data;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Rule;
@@ -80,6 +82,17 @@ public class ActionPointTest {
         new ActionPoint(TEST_TIME, TEST_LOCATION, null);
 
         // Assert via annotation
+    }
+
+    @Test
+    public void testEqualsAndHashCode_allCases_noErrors() {
+
+        // Arrange
+
+        // Act
+        EqualsVerifier.forClass(DeliveryProcess.class).suppress(Warning.STRICT_INHERITANCE).verify();
+
+        // Assert
     }
 
 }

@@ -1,6 +1,8 @@
 package model.data;
 
 import lombok.EqualsAndHashCode;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -75,6 +77,16 @@ public class DeliveryProcessTest {
         // Assert
         assertEquals(TEST_DELIVERY, delivery);
         assertEquals(TEST_PICK_UP, pickUp);
+    }
 
+    @Test
+    public void testEqualsAndHashCode_allCases_noErrors() {
+
+        // Arrange
+
+        // Act
+        EqualsVerifier.forClass(DeliveryProcess.class).suppress(Warning.STRICT_INHERITANCE).verify();
+
+        // Assert
     }
 }

@@ -1,6 +1,7 @@
 package model.data;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * This class represents a specific point on the loaded map. Each intersection has an id. This id is stored in this class.
  */
 @Getter
+@EqualsAndHashCode
 public class Point {
 
     /**

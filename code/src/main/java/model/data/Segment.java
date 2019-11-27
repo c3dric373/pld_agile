@@ -1,5 +1,6 @@
 package model.data;
 
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang.Validate;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import lombok.Getter;
  * Each Segment has a origin point, a end point, the distance between them and the name of the segment.
  */
 @Getter
+@EqualsAndHashCode
 public class Segment {
 
     /**

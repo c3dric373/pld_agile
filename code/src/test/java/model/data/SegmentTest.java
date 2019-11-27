@@ -1,5 +1,7 @@
 package model.data;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -196,4 +198,14 @@ public class SegmentTest {
         // Assert via annotation
     }
 
+    @Test
+    public void testEqualsAndHashCode_allCases_noErrors() {
+
+        // Arrange
+
+        // Act
+        EqualsVerifier.forClass(DeliveryProcess.class).suppress(Warning.STRICT_INHERITANCE).verify();
+
+        // Assert
+    }
 }
