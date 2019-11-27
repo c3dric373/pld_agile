@@ -84,15 +84,6 @@ public class ActionPointTest {
         // Assert via annotation
     }
 
-    @Test
-    public void testEqualsAndHashCode_allCases_noErrors() {
 
-        // Arrange
-
-        // Act
-        EqualsVerifier.forClass(DeliveryProcess.class).suppress(Warning.STRICT_INHERITANCE).verify();
-
-        // Assert
-    }
 
 }
