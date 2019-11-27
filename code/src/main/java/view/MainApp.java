@@ -73,7 +73,7 @@ public class MainApp extends Application {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("DashBoard.fxml"));
-            AnchorPane dashboardOverview = (AnchorPane) loader.load();
+            AnchorPane dashboardOverview =  loader.load();
 
             // Set person overview into the center of root layout
             rootLayout.setCenter(dashboardOverview);
