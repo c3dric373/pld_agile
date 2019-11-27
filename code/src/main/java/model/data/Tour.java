@@ -8,29 +8,29 @@ import java.util.List;
 
 /**
  * A tour consists of a list of DeliveryProcesses, a base point and a start time. The list of deliveryProcesses are all
- * the deliverys that the cyclists should complete
+ * the deliveries that the cyclists should complete.
  */
 
 @EqualsAndHashCode
 public class Tour {
 
     /**
-     * List of all the deliveries the cyclist has to do
+     * List of all the deliveries the cyclist has to do.
      */
-    private List<DeliveryProcess> deliveryProcesses;
+    private final List<DeliveryProcess> deliveryProcesses;
 
     /**
-     * Start point of the delivery
+     * Start point of the delivery.
      */
     private Point base;
 
     /**
-     * Start time of the delivery
+     * Start time of the delivery.
      */
     private Time startTime;
 
     /**
-     * Instatiates a Tour
+     * Instatiates a Tour.
      *
      * @param deliveryProcesses list of deliveries
      * @param base              start point
