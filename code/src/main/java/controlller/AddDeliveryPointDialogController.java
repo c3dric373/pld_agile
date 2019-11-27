@@ -1,4 +1,4 @@
-package view;
+package controlller;
 
 public class AddDeliveryPointDialogController {
 }
