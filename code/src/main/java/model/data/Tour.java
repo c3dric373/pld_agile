@@ -34,7 +34,7 @@ public class Tour {
     public Tour(List<DeliveryProcess> deliveryProcesses, Point base, Time startTime){
         Validate.notNull(deliveryProcesses, "deliveryProcess is null");
         Validate.notNull(base,"base is null");
-        Validate.notNull(startTime,"time is null");
+        Validate.notNull(startTime,"startTime is null");
         /*if (startTime<0){
             throw new IllegalArgumentException("startTime is negative");
         }
