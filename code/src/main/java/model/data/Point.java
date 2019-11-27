@@ -63,6 +63,8 @@ public class Point {
         this.segments =new ArrayList<>();
     }
 
+    public Point (){}
+
     public void addNeighbour(Segment segment)
     {
         segments.add(segment);
