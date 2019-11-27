@@ -1,5 +1,6 @@
 package model.data;
 
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -8,6 +9,7 @@ import java.util.List;
 /** A tour consists of a list of DeliveryProcesses, a base point and a start time. The list of deliveryProcesses are all
  * the deliverys that the cyclists should complete
  */
+@EqualsAndHashCode
 public class Tour {
 
     /**

@@ -1,6 +1,7 @@
 package model.data;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * This class represents a specific point on the loaded map. Each intersection has an id. This id is stored in this class.
  */
 @Getter
+@EqualsAndHashCode
 public class Point {
 
     /**
@@ -63,10 +65,8 @@ public class Point {
         this.segments =new ArrayList<>();
     }
 
-    public Point (){}
 
-    public void addNeighbour(Segment segment)
-    {
+    public void addNeighbour(final Segment segment) {
         segments.add(segment);
     }
 
@@ -83,16 +83,4 @@ public class Point {
         throw new IllegalArgumentException("point not reachable via one segment");
     }
 
-    public long getId() {
-        return id;
-    }
-    public double getLatitude() {
-        return latitude;
-    }
-    public double getLongitude() {
-        return longitude;
-    }
-    public List<Segment> getSegments() {
-        return segments;
-    }
 }

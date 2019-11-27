@@ -1,5 +1,7 @@
 package model.data;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -80,5 +82,7 @@ public class TourTest {
         // Assert via annotation
     }
 */
+
+
 
 }

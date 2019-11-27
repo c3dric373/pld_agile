@@ -1,10 +1,13 @@
 package model.data;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
 
 @Getter
+@EqualsAndHashCode
 public class ActionPoint {
 
     /**
@@ -28,7 +31,12 @@ public class ActionPoint {
      * @param location location of action
      * @param actionType type of action
      */
-    public ActionPoint(Time time, Point location, ActionType actionType){
+    public ActionPoint(final Time time, final Point location, final ActionType actionType){
+        Validate.notNull(location, "location is null");
+        Validate.notNull(actionType, "actionType is null");
+        Validate.notNull(time,"time is null");
+
+
         this.time = time;
         this.location = location;
         this.actionType=actionType;
