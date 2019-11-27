@@ -60,16 +60,4 @@ public class Segment {
         this.name = name;
     }
 
-    public long getId_origin() {
-        return id_origin;
-    }
-    public long getId_end() {
-        return id_end;
-    }
-    public double getLength() {
-        return length;
-    }
-    public String getName() {
-        return name;
-    }
 }

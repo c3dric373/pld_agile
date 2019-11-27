@@ -6,6 +6,7 @@ import org.apache.commons.lang.Validate;
 
 import javax.swing.event.ListDataListener;
 import java.nio.file.LinkOption;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -275,23 +276,19 @@ public class Computing {
     public static void main(String[] args) {
         Computing computing = new Computing();
         XmlToGraph xmlToGraph = new XmlToGraph();
-        List<Point> points = xmlToGraph.getGraphFromXml("moyenPlan.xml");
+        String file_graph = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/moyenPlan.xml";
+        String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandeMoyen3.xml";
+        List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
+        Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
         graph.show_map();
 
         TSP tsp1 = new TSP1();
 		int tpsLimite = Integer.MAX_VALUE;
-		List<DeliveryProcess> deliveryProcesses = new ArrayList<>();
-		DeliveryProcess deliveryProcess1 = new DeliveryProcess(new ActionPoint(1,new Point(26121686,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(191134392,0,0),ActionType.DELIVERY));
-        DeliveryProcess deliveryProcess2 = new DeliveryProcess(new ActionPoint(1,new Point(55444018,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(26470086,0,0),ActionType.DELIVERY));
-        DeliveryProcess deliveryProcess3 = new DeliveryProcess(new ActionPoint(1,new Point(27362899,0,0), ActionType.PICK_UP), new ActionPoint(1,new Point(505061101,0,0),ActionType.DELIVERY));
-		deliveryProcesses.add(deliveryProcess1);
-        deliveryProcesses.add(deliveryProcess2);
-        deliveryProcesses.add(deliveryProcess3);
-		Tour tour = new Tour(deliveryProcesses, new Point(1349383079,0,0),1);
+
 
         List<Journey> journeys = computing.getListJourney(tour,graph,tsp1,tpsLimite);
         List<List<Point>> list_points = computing.getPointsFromJourneys(graph,journeys);
-        List<List<Point>> part_list_points = computing.getJourneysForDeliveryProcess(journeys,list_points,deliveryProcess2);
+        List<List<Point>> part_list_points = computing.getJourneysForDeliveryProcess(journeys,list_points,tour.getDeliveryProcesses().get(0));
     }
 }

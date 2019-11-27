@@ -39,11 +39,4 @@ public class DeliveryProcess {
         }
     }
 
-    public ActionPoint getPickUP() {
-        return pickUP;
-    }
-
-    public ActionPoint getDelivery() {
-        return delivery;
-    }
 }

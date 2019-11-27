@@ -1,5 +1,6 @@
 package model.data;
 
+import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * This class represent the shortest path from one point to another
  */
+@Getter
 public class Journey {
     /**
      * Id of the start point of the journey
@@ -49,16 +51,4 @@ public class Journey {
         this.min_length = min_length;
     }
 
-    public long getId_start() {
-        return id_start;
-    }
-    public long getId_arrive() {
-        return id_arrive;
-    }
-    public List<Long> getIds() {
-        return ids;
-    }
-    public double getMin_length() {
-        return min_length;
-    }
 }

@@ -42,15 +42,4 @@ public class ActionPoint {
         this.actionType=actionType;
     }
 
-    public int getTime() {
-        return time;
-    }
-
-    public Point getLocation() {
-        return location;
-    }
-
-    public ActionType getActionType() {
-        return actionType;
-    }
 }
