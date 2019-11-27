@@ -35,8 +35,7 @@ public class XmlToGraph {
     /**
      * ArrayList that contains DeliveryProcess that we'll send at the end of the reading
      */
-    static ArrayList<DeliveryProcess> Deliveries;
-
+    static ArrayList<DeliveryProcess> deliveries;
     public static void main(final String[] args) {
  /*       ArrayList<Point> noeud = getGraphFromXml("resource/petitPlan.xml");
 
@@ -141,7 +140,7 @@ public class XmlToGraph {
             throw new IllegalArgumentException("path is empty");
         }
 
-        Deliveries = new ArrayList<DeliveryProcess>();
+        deliveries = new ArrayList<DeliveryProcess>();
         /**
          * Get an instance of class "DocumentBuilderFactory"
          */
@@ -165,7 +164,7 @@ public class XmlToGraph {
             final NodeList start = root.getElementsByTagName("entrepot");
             final Element startPoint = (Element) start.item(0);
             Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
-            Point base = GetPointById(idBase);
+            Point base = getPointById(idBase);
             System.out.println("entrepot :"+idBase);
             // Recup startTime
             String startTimeString = startPoint.getAttribute("heureDepart");
@@ -184,20 +183,20 @@ public class XmlToGraph {
                 final Element deliveryXml = (Element) deliveryList.item(deliveryIndex);
                 Long pickupPointId= Long.parseLong(deliveryXml.getAttribute("adresseEnlevement"));
                 System.out.println("idPick " + pickupPointId);
-                Point pickupPoint = GetPointById(pickupPointId);
+                Point pickupPoint = getPointById(pickupPointId);
                 Long deliveryPointId = Long.parseLong(deliveryXml.getAttribute("adresseLivraison"));
                 System.out.println("idDeliver " + deliveryPointId);
-                Point deliveryPoint = GetPointById(deliveryPointId);
+                Point deliveryPoint = getPointById(deliveryPointId);
                 int pickupTimeInt = Integer.parseInt(deliveryXml.getAttribute("dureeEnlevement"));
-                Time pickupTime = DurationToTime(pickupTimeInt);
+                Time pickupTime = durationToTime(pickupTimeInt);
                 int deliveryTimeString = Integer.parseInt(deliveryXml.getAttribute("dureeLivraison"));
-                Time deliveryTime = DurationToTime(deliveryTimeString);
+                Time deliveryTime = durationToTime(deliveryTimeString);
                 ActionPoint pickupActionpoint = new ActionPoint(pickupTime, pickupPoint, ActionType.PICK_UP);
                 ActionPoint deliveryActionpoint = new ActionPoint(deliveryTime,deliveryPoint, ActionType.DELIVERY);
                 DeliveryProcess deliv = new DeliveryProcess(pickupActionpoint,deliveryActionpoint);
-                Deliveries.add(deliv);
+                deliveries.add(deliv);
             }
-        tour = new Tour(Deliveries, base, startTime);
+        tour = new Tour(deliveries, base, startTime);
 
         } catch (final ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
             System.err.println(e.getMessage());
@@ -210,13 +209,17 @@ public class XmlToGraph {
      * @param idPoint
      * @return the Point
      */
-     public static Point GetPointById(long idPoint){
-        for (Point p : nodes){
-            if(p.getId() == idPoint) {
-                return p;
+     public static Point getPointById(long idPoint){
+         Point point =null;
+        for (Point p : nodes) {
+            if (p.getId() == idPoint) {
+                point = p;
             }
         }
-        return new Point();
+        if (point == null){
+            throw new IllegalArgumentException("Point doesn't exist");
+        }
+        return point;
     }
 
     /**
@@ -224,7 +227,7 @@ public class XmlToGraph {
      * @param durationSec
      * @return
      */
-    public static Time DurationToTime (int durationSec){
+    public static Time durationToTime (int durationSec){
         String durationString = String.format("%d:%02d:%02d", durationSec / 3600, (durationSec % 3600) / 60, (durationSec % 60));
         Time duration = Time.valueOf(durationString);
         System.out.println("duration = " + duration);

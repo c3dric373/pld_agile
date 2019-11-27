@@ -1,6 +1,7 @@
 package model.io;
 
 import model.data.Point;
+import model.data.Tour;
 import model.io.XmlToGraph;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,7 +17,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class XmlToGraphTest {
-    private String wrongFile = "dddddddddd";
+    private String WRONG_FILE = "dddddddddd";
+    private long WRONG_POINT = 123l;
+    private long EXISTING_POINT = 2129259178l;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     XmlToGraph reader = new XmlToGraph();
 
@@ -60,7 +63,7 @@ public class XmlToGraphTest {
         // Arrange
 
         // Act
-        reader.getGraphFromXml(wrongFile);
+        reader.getGraphFromXml(WRONG_FILE);
 
         // Assert via annotation
     }
@@ -118,4 +121,32 @@ public class XmlToGraphTest {
         // Assert via annotation
     }
 
+    @Test
+    public void test_PointDoesntExist_GetPoint_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Point doesn't exist");
+
+        // Act
+        ArrayList<Point> noeud = reader.getGraphFromXml("resource/moyenPlan.xml");
+        Point p = reader.getPointById(WRONG_POINT);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void test_PointExist_GetPoint_throwsIllegalArgumentException() {
+
+        // Arrange
+
+        // Act
+        ArrayList<Point> noeud = reader.getGraphFromXml("resource/moyenPlan.xml");
+        Point p = reader.getPointById(EXISTING_POINT);
+
+        // Assert via annotation
+        assertEquals(p.getId(),EXISTING_POINT);
+        assertEquals(p.getLatitude(),45.750404 ,0);
+        assertEquals(p.getLongitude(),4.8744674,0);
+    }
 }

@@ -55,21 +55,20 @@ public class TourTest {
         // Assert via annotation
     }
 
-
+*/
     @Test
-    public void testCTOR_startTimeToGreat_throwsIllegalArgumentException() {
+    public void testCTOR_startTimeNull_throwsIllegalArgumentException() {
 
         // Arrange
-        int BIG_START_TIME =2400;
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("startTime is too great");
+        thrown.expectMessage("startTime is null");
 
         // Act
-        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, BIG_START_TIME);
+        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, null);
 
         // Assert via annotation
-    }*/
-
+    }
+/**
     @Test
     public void testCTOR_TourCorrect() {
 
@@ -80,6 +79,6 @@ public class TourTest {
 
         // Assert via annotation
     }
-
+*/
 
 }
