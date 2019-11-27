@@ -5,29 +5,31 @@ import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
 /**
- * This class represents one Deliveryprocess. For this it has two ActionPoints one Pick Up point and one Delivery Point
+ * This class represents one DeliveryProcess. For this it has two ActionPoints
+ * one Pick Up point and one Delivery Point
  */
 @Getter
 @EqualsAndHashCode
 public class DeliveryProcess {
 
     /**
-     * pickUp point
+     * pickUp point.
      */
-    final ActionPoint pickUP;
+    private final ActionPoint pickUP;
 
     /**
-     * Delivery point
+     * Delivery point.
      */
-    final ActionPoint delivery;
+    private final ActionPoint delivery;
 
     /**
-     * Instatiates a Delivery process
+     * Instantiates a Delivery process.
      *
-     * @param pickUP   pickUp point of the delivery
-     * @param delivery delivery point of the deliver
+     * @param pickUP   pickUp point of the delivery.
+     * @param delivery delivery point of the deliver.
      */
-    public DeliveryProcess(final ActionPoint pickUP, final ActionPoint delivery) {
+    public DeliveryProcess(final ActionPoint pickUP, final ActionPoint delivery)
+    {
         Validate.notNull(pickUP, "pickUp is null");
         Validate.notNull(delivery, "delivery is null");
 

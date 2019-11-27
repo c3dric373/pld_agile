@@ -11,26 +11,26 @@ import java.sql.Time;
 public class ActionPoint {
 
     /**
-     * Time it takes to complete the action
+     * Time it takes to complete the action.
      */
     private Time time;
 
     /**
-     * Location of the action
+     * Location of the action.
      */
     private Point location;
 
     /**
-     * Type of the action
+     * Type of the action.
      */
     private ActionType actionType;
 
     /**
-     * Instatiates an ActionPoint
+     * Instatiates an ActionPoint.
      *
-     * @param time       time of action
-     * @param location   location of action
-     * @param actionType type of action
+     * @param time       time of action.
+     * @param location   location of action.
+     * @param actionType type of action.
      */
     public ActionPoint(final Time time, final Point location, final ActionType actionType) {
         Validate.notNull(location, "location is null");
