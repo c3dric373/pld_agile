@@ -249,7 +249,7 @@ public class Computing {
                     index_journey2 = i;
                 } else continue;
             }
-            if (index_journey1 != -1 && index_journey2 == -1) {
+            if (index_journey1 != -1) {
                 if (journeys.get(i).getId_arrive() == id1) {
                     index_journey1 = i;
                 } else if (journeys.get(i).getId_arrive() == id2) {
