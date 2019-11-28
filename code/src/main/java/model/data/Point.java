@@ -39,56 +39,57 @@ public class Point {
     /**
      * Smallest possible latitude.
      */
-    private final int MIN_LATITUDE = -90;
+    static final int MIN_LATITUDE = -90;
 
     /**
      * Greatest possible latitude.
      */
-    private final int MAX_LATITUDE = 90;
+    static final int MAX_LATITUDE = 90;
 
     /**
      * Smallest possible latitude.
      */
-    private final int MIN_LONGITUDE = -180;
+    static final int MIN_LONGITUDE = -180;
 
     /**
      * Greatest possible latitude.
      */
-    private final int MAX_LONGITUDE = 180;
+    static final int MAX_LONGITUDE = 180;
 
     /**
      * Smallest possible id.
      */
-    private final int MIN_ID = 0;
+    static final int MIN_ID = 0;
 
 
     /**
      * Instantiates a Point.
      *
-     * @param id        id of point
-     * @param latitude  latitude of point
-     * @param longitude longitude of point
+     * @param pointId        id of point
+     * @param pointLatitude  latitude of point
+     * @param pointLongitude longitude of point
      */
-    public Point(final long id, final double latitude, final double longitude) {
-        Validate.notNull(id, "id is null");
-        if (latitude < MIN_LATITUDE) {
+    public Point(final long pointId, final double pointLatitude,
+                 final double pointLongitude) {
+        Validate.notNull(pointId, "id is null");
+        if (pointLatitude < MIN_LATITUDE) {
             throw new IllegalArgumentException("latitude is too small");
         }
-        if (latitude > MAX_LATITUDE) {
+        if (pointLatitude > MAX_LATITUDE) {
             throw new IllegalArgumentException("latitude is too great");
         }
-        if (longitude < MIN_LONGITUDE) {
+        if (pointLongitude < MIN_LONGITUDE) {
             throw new IllegalArgumentException("longitude is too small");
         }
-        if (longitude > MAX_LONGITUDE) {
+        if (pointLongitude > MAX_LONGITUDE) {
             throw new IllegalArgumentException("longitude is too great");
         }
-        if (id < MIN_ID) {
+        if (pointId < MIN_ID) {
             throw new IllegalArgumentException("id is negative");
         }
-        this.id = id;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.id = pointId;
+        this.latitude = pointLatitude;
+        this.longitude = pointLongitude;
         this.segments = new ArrayList<>();
     }
 
@@ -103,18 +104,20 @@ public class Point {
 
 
     /**
-     * Get the distance from this point to another if it's reachable via one segments
+     * Get the distance from this point to another
+     * if it's reachable via one segments.
      *
-     * @param id the id of the other point
+     * @param pointId the id of the other point
      * @return the distance from this point to another
      */
-    double getLengthTo(final long id) {
-        if (this.id == id) {
+    double getLengthTo(final long pointId) {
+        if (this.id == pointId) {
             return 0;
         }
         for (final Segment s : segments) {
-            if ((s.either() == this.id && s.other(this.id) == id) || s.either()
-                    == id && s.other(id) == this.id) {
+            if ((s.either() == this.id
+                    && s.other(this.id) == pointId) || s.either()
+                    == pointId && s.other(pointId) == this.id) {
                 return s.getLength();
             }
         }

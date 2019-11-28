@@ -113,7 +113,7 @@ public class Graph {
         private int prev = 0;
         private double dist = Float.POSITIVE_INFINITY;
 
-        tuple(int prev, double dist) {
+        tuple(final int prev, final double dist) {
             this.prev = prev;
             this.dist = dist;
         }
@@ -126,11 +126,11 @@ public class Graph {
             return dist;
         }
 
-        public void setPrev(int prev) {
+        public void setPrev(final int prev) {
             this.prev = prev;
         }
 
-        public void setDist(double dist) {
+        public void setDist(final double dist) {
             this.dist = dist;
         }
     }
@@ -142,7 +142,7 @@ public class Graph {
      * @param start_index the index of start point
      * @return list of tuple which contains the previous point index and the distance in the shortest path from the start point to each point
      */
-    List<tuple> dijkstra(int start_index) {
+    List<tuple> dijkstra(final int start_index) {
         if (start_index < 0) {
             throw new IllegalArgumentException("start_index is too small");
         }

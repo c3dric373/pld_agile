@@ -136,7 +136,7 @@ public class XmlToGraphTest {
     }
 
     @Test
-    public void test_PointExist_GetPoint_throwsIllegalArgumentException() {
+    public void test_PointExist_GetPoint() {
 
         // Arrange
 
@@ -148,5 +148,17 @@ public class XmlToGraphTest {
         assertEquals(p.getId(), EXISTING_POINT);
         assertEquals(p.getLatitude(), 45.750404, 0);
         assertEquals(p.getLongitude(), 4.8744674, 0);
+    }
+
+    @Test
+    public void test_PointExist_GetDeliveries() {
+
+        // Arrange
+
+        // Act
+        ArrayList<Point> noeud = reader.getGraphFromXml("resource/moyenPlan.xml");
+        Tour Deliver = reader.getDeliveriesFromXml("resource/demandeMoyen5.xml");
+
+        // Assert via annotation
     }
 }

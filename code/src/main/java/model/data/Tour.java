@@ -33,24 +33,24 @@ public class Tour {
     /**
      * Instantiates a Tour.
      *
-     * @param deliveryProcesses list of deliveries
-     * @param base              start point
-     * @param startTime         start tim
+     * @param deliveryProcessesList list of deliveries
+     * @param basePoint              start point
+     * @param time         start time
      */
-    public Tour(final List<DeliveryProcess> deliveryProcesses, final Point base,
-                final Time startTime) {
-        Validate.notNull(deliveryProcesses, "deliveryProcess is null");
-        Validate.notNull(base, "base is null");
-        Validate.notNull(startTime, "startTime is null");
+    public Tour(final List<DeliveryProcess> deliveryProcessesList, final Point basePoint,
+                final Time time) {
+        Validate.notNull(deliveryProcessesList, "deliveryProcess is null");
+        Validate.notNull(basePoint, "base is null");
+        Validate.notNull(time, "startTime is null");
         /*if (startTime<0){
             throw new IllegalArgumentException("startTime is negative");
         }
         if (startTime>235959){
             throw new IllegalArgumentException("startTime is too great");
         }*/
-        this.deliveryProcesses = deliveryProcesses;
-        this.base = base;
-        this.startTime = startTime;
+        this.deliveryProcesses = deliveryProcessesList;
+        this.base = basePoint;
+        this.startTime = time;
     }
 
 

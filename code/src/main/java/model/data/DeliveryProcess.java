@@ -25,19 +25,19 @@ public class DeliveryProcess {
     /**
      * Instantiates a Delivery process.
      *
-     * @param pickUP   pickUp point of the delivery.
-     * @param delivery delivery point of the deliver.
+     * @param pickUpPoint   pickUp point of the delivery.
+     * @param deliveryPoint delivery point of the deliver.
      */
-    public DeliveryProcess(final ActionPoint pickUP, final ActionPoint delivery)
-    {
-        Validate.notNull(pickUP, "pickUp is null");
-        Validate.notNull(delivery, "delivery is null");
+    public DeliveryProcess(final ActionPoint pickUpPoint,
+                           final ActionPoint deliveryPoint) {
+        Validate.notNull(pickUpPoint, "pickUp is null");
+        Validate.notNull(deliveryPoint, "delivery is null");
 
-        if (pickUP == delivery) {
+        if (pickUpPoint == deliveryPoint) {
             throw new IllegalArgumentException("delivery is pickup");
         } else {
-            this.pickUP = pickUP;
-            this.delivery = delivery;
+            this.pickUP = pickUpPoint;
+            this.delivery = deliveryPoint;
         }
     }
 

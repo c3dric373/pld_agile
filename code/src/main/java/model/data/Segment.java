@@ -33,43 +33,43 @@ public class Segment {
     /**
      * Smallest possible id.
      */
-    private final int MIN_ID = 0;
+    static final int MIN_ID = 0;
 
     /**
      * Biggest not allowed length.
      */
-    private final int MAX_NOT_ALLOWED_LENGTH = 0;
+    static final int MAX_NOT_ALLOWED_LENGTH = 0;
 
     /**
      * Instantiates a Segment.
      *
-     * @param idOrigin Id of origin Point.
-     * @param idEnd    Id of end Point.
-     * @param length   Distance between the origin Point and the end Point.
-     * @param name     Name of the Segment.
+     * @param idOriginPoint Id of origin Point.
+     * @param idEndPoint    Id of end Point.
+     * @param segmentLength   Distance between the origin Point and the end Point.
+     * @param segmentName     Name of the Segment.
      */
-    public Segment(final long idOrigin, final long idEnd, final double length,
-                   final String name) {
-        Validate.notNull(name, "name is null");
+    public Segment(final long idOriginPoint, final long idEndPoint,
+                   final double segmentLength, final String segmentName) {
+        Validate.notNull(segmentName, "name is null");
        /* if (name.equals("")) {
             throw new IllegalArgumentException("name is empty");
         }*/
-        if (length < MAX_NOT_ALLOWED_LENGTH) {
+        if (segmentLength < MAX_NOT_ALLOWED_LENGTH) {
             throw new IllegalArgumentException("length is negative");
         }
-        if (length == MAX_NOT_ALLOWED_LENGTH) {
+        if (segmentLength == MAX_NOT_ALLOWED_LENGTH) {
             throw new IllegalArgumentException("length is zero");
         }
-        if (idOrigin < MIN_ID) {
+        if (idOriginPoint < MIN_ID) {
             throw new IllegalArgumentException("id_origin is negative");
         }
-        if (idEnd < MIN_ID) {
+        if (idEndPoint < MIN_ID) {
             throw new IllegalArgumentException("id_end is negative");
         }
-        this.idOrigin = idOrigin;
-        this.idEnd = idEnd;
-        this.length = length;
-        this.name = name;
+        this.idOrigin = idOriginPoint;
+        this.idEnd = idEndPoint;
+        this.length = segmentLength;
+        this.name = segmentName;
     }
 
     /**
