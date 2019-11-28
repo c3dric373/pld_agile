@@ -6,4 +6,14 @@ package model.data;
  */
 public interface ProjectData {
 
+    Tour getTour();
+
+    void setTour();
+
+    void setGraph();
+
+    void getGraph();
+
+    
+
 }
