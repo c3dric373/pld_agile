@@ -1,6 +1,6 @@
 package model.core.management;
 
-import view.MainApp;
+import view.UserInterface;
 /**
  * Class responsible for starting the application.
  */
@@ -12,6 +12,8 @@ public class Starter {
      * @param args Command line arguments that should be empty.
      */
     public static void main(String[] args) {
-        MainApp.main(args);
+        ApplicationManager model = new ApplicationManagerImpl();
+        UserInterface view = new UserInterface(model);
+
     }
 }

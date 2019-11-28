@@ -6,21 +6,18 @@ import com.lynden.gmapsfx.javascript.object.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import view.MainApp;
+import view.UserInterface;
 
-import javax.swing.*;
 import java.io.File;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
 
     // Reference to the main application
-    private MainApp mainApp;
+    private UserInterface mainApp;
 
     @FXML
     private Label latitudeLabel;
@@ -163,7 +160,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
      *
      * @param mainApp
      */
-    public void setMainApp(MainApp mainApp) {
+    public void setMainApp(UserInterface mainApp) {
         this.mainApp = mainApp;
 
         // Add observable list data to the table
