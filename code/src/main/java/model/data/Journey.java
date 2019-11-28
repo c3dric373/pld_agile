@@ -11,44 +11,34 @@ import java.util.List;
 @Getter
 public class Journey {
     /**
-     * Id of the start point of the journey
+     * Start point of the journey
      */
-    private long id_start;
+    private Point startPoint;
     /**
-     * Id of the arrival point of the journey
+     * Arrival point of the journey
      */
-    private long id_arrive;
+    private Point arrivePoint;
     /**
-     * List of Ids of each point in the shortest path from the start point to the arrival point in the REVERSE order
+     * List of points in the shortest path from the start point to the arrival point in the REVERSE order
      */
-    private List<Long> ids;
+    private List<Point> points;
     /**
      * The shortest length from the start point to the arrival point
      */
-    private double min_length;
+    private double minLength;
 
     /**
      * Instantiates a Journey
-     * @param id_start Id of the start point of the journey
-     * @param id_arrive Id of the arrival point of the journey
-     * @param ids the List of Ids of each point in the shortest path from the start point to the arrival point in the REVERSE order
-     * @param min_length The shortest length from the start point to the arrival point
+     * @param startPoint Start point of the journey
+     * @param arrivePoint Arrival point of the journey
+     * @param points the List of points in the shortest path from the start point to the arrival point in the REVERSE order
+     * @param minLength The shortest length from the start point to the arrival point
      */
-    public Journey(final long id_start, final long id_arrive, final List<Long> ids, final double min_length) {
-        if (id_start < 0){
-            throw new IllegalArgumentException("id_start is negative");
-        }
-        if (id_arrive < 0){
-            throw new IllegalArgumentException("id_arrive is negative");
-        }
-        Validate.notNull(ids, "ids is null");
-        if (min_length < 0){
-            throw new IllegalArgumentException("min_length is negative");
-        }
-        this.id_start = id_start;
-        this.id_arrive = id_arrive;
-        this.ids = ids;
-        this.min_length = min_length;
+    public Journey(final Point startPoint, final Point arrivePoint, final List<Point> points, final double minLength) {
+        this.startPoint = startPoint;
+        this.arrivePoint = arrivePoint;
+        this.points = points;
+        this.minLength = minLength;
     }
 
 }
