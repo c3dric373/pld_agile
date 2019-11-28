@@ -44,7 +44,7 @@ public class Point {
     /**
      * Greatest possible latitude.
      */
-    private final int MAX_LATITUDE = -90;
+    private final int MAX_LATITUDE = 90;
 
     /**
      * Smallest possible latitude.

@@ -6,14 +6,11 @@ import com.lynden.gmapsfx.javascript.object.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import view.MainApp;
 
-import javax.swing.*;
 import java.io.File;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {

@@ -3,18 +3,19 @@ package model.io;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import model.data.*;
+import model.data.Tour;
+import model.data.Point;
+import model.data.DeliveryProcess;
+import model.data.ActionPoint;
+import model.data.Segment;
+import model.data.ActionType;
+
 import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,21 +24,22 @@ import org.xml.sax.SAXException;
 
 public class XmlToGraph {
     /**
-     * ArrayList that contains nodes that we'll send at the end of the reading
+     * ArrayList that contains nodes that we'll send at the end of the reading.
      * Represents the graph
      */
-    static ArrayList<Point> nodes;
+    private static ArrayList<Point> nodes;
     /**
-     * Tour that contains deliveryProcess
+     * Tour that contains deliveryProcess.
      */
-    static Tour tour;
+    private static Tour tour;
 
     /**
-     * ArrayList that contains DeliveryProcess that we'll send at the end of the reading
+     * ArrayList that contains DeliveryProcess that we'll send
+     * at the end of the reading.
      */
-    static ArrayList<DeliveryProcess> deliveries;
+    private static ArrayList<DeliveryProcess> deliveries;
 
-    public static void main(final String[] args) {
+   // public static void main(final String[] args) {
  /*       ArrayList<Point> noeud = getGraphFromXml("resource/petitPlan.xml");
 
         // WILL BE DELETED --
@@ -57,9 +59,14 @@ public class XmlToGraph {
             System.out.println( "lat "+p.getDelivery().getPoint().getLatitude());
         }
     */
-    }
+   // }
 
-    public static ArrayList<Point> getGraphFromXml(String path) {
+    /**
+     * Create the list of nodes from the Xml file.
+     * @param path
+     * @return List of Point
+     */
+    public static ArrayList<Point> getGraphFromXml(final String path) {
         Validate.notNull(path, "path is null");
 
         if (path.equals("")) {
@@ -68,31 +75,31 @@ public class XmlToGraph {
 
         nodes = new ArrayList<Point>();
         /**
-         * Get an instance of class "DocumentBuilderFactory"
+         * Get an instance of class "DocumentBuilderFactory".
          */
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             /**
-             * Creation of a parser
+             * Creation of a parser.
              */
             final DocumentBuilder builder = factory.newDocumentBuilder();
             /**
-             * Creation of a document
+             * Creation of a document.
              */
             final Document document = builder.parse(new File(path));
             /**
-             * Get the root Element
+             * Get the root Element.
              */
             final Element root = document.getDocumentElement();
             /**
-             * Get the nodes tag and display the number of nodes
+             * Get the nodes tag and display the number of nodes.
              */
             final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
             System.out.println("nbNodes :" + nbNodeElements);
 
             /**
-             * Reading of all nodes in the file and addition to the ArrayList
+             * Reading of all nodes in the fil and addition to the ArrayList.
              */
             for (int nodeIndex = 0; nodeIndex < nbNodeElements; nodeIndex++) {
                 final Element node = (Element) nodeList.item(nodeIndex);
@@ -104,14 +111,14 @@ public class XmlToGraph {
             }
 
             /**
-             * Get the segments tag and display the number of segments
+             * Get the segments tag and display the number of segments.
              */
             final NodeList roadList = root.getElementsByTagName("troncon");
             final int nbRoadElements = roadList.getLength();
             System.out.println("nbRoad :" + nbRoadElements);
 
             /**
-             * Reading of all segments in the file
+             * Reading of all segments in the file.
              */
             for (int segmentIndex = 0; segmentIndex < nbRoadElements; segmentIndex++) {
                 final Element road = (Element) roadList.item(segmentIndex);
@@ -134,7 +141,12 @@ public class XmlToGraph {
         return nodes;
     }
 
-    public static Tour getDeliveriesFromXml(String path) {
+    /**
+     * Create the list of deliveries from the provided file.
+     * @param path
+     * @return List of deliveries
+     */
+    public static Tour getDeliveriesFromXml(final String path) {
         Validate.notNull(path, "path is null");
 
         if (path.equals("")) {
@@ -143,24 +155,24 @@ public class XmlToGraph {
 
         deliveries = new ArrayList<DeliveryProcess>();
         /**
-         * Get an instance of class "DocumentBuilderFactory"
+         * Get an instance of class "DocumentBuilderFactory".
          */
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
             /**
-             * Creation of a parser
+             * Creation of a parser.
              */
             final DocumentBuilder builder = factory.newDocumentBuilder();
             /**
-             * Creation of a document
+             * Creation of a document.
              */
             final Document document = builder.parse(new File(path));
             /**
-             * Get the root Element
+             * Get the root Element.
              */
             final Element root = document.getDocumentElement();
             /**
-             * Get the DeliveryProcess tag and display the number of DeliveryProcess
+             * Get the DeliveryProcess tag and display the number of DeliveryProcess.
              */
             final NodeList start = root.getElementsByTagName("entrepot");
             final Element startPoint = (Element) start.item(0);
@@ -178,7 +190,7 @@ public class XmlToGraph {
             System.out.println("nbdeliveryelements :" + nbDeliveryElements);
 
             /**
-             * Reading of all DeliveryProcess in the file and addition to the ArrayList
+             * Reading of all DeliveryProcess in the file and addition to the ArrayList.
              */
             for (int deliveryIndex = 0; deliveryIndex < nbDeliveryElements; deliveryIndex++) {
                 final Element deliveryXml = (Element) deliveryList.item(deliveryIndex);
@@ -206,7 +218,7 @@ public class XmlToGraph {
     }
 
     /**
-     * Get the point with the provided id
+     * Get the point with the provided id.
      *
      * @param idPoint
      * @return the Point
@@ -225,15 +237,39 @@ public class XmlToGraph {
     }
 
     /**
-     * transform a duration in a time
+     * transform a duration in a time.
      *
      * @param durationSec
-     * @return
+     * @return time object corresponding to durationSec
      */
     public static Time durationToTime(int durationSec) {
         String durationString = String.format("%d:%02d:%02d", durationSec / 3600, (durationSec % 3600) / 60, (durationSec % 60));
         Time duration = Time.valueOf(durationString);
         System.out.println("duration = " + duration);
         return duration;
+    }
+
+    /**
+     * get the nodes parameter.
+     * @return nodes object
+     */
+    public static ArrayList<Point> getNodes() {
+        return nodes;
+    }
+
+    /**
+     * get the tour parameter.
+     * @return tour
+     */
+    public static Tour getTour() {
+        return tour;
+    }
+
+    /**
+     * get the List of DeliveryProcess.
+     * @return List of DeliveryProcess
+     */
+    public static ArrayList<DeliveryProcess> getDeliveries() {
+        return deliveries;
     }
 }
