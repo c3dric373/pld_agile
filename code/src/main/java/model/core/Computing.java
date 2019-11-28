@@ -110,7 +110,7 @@ public class Computing {
             System.out.printf("  %d", point.getId());
         }
         System.out.println();
-        return new Journey(points.get(start_index), points.get(arrive_index), journey_points, min_length);
+        return new Journey(journey_points, min_length);
     }
 
     /**
