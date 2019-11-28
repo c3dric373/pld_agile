@@ -13,7 +13,7 @@ import model.core.management.ApplicationManager;
 
 import java.io.IOException;
 
-public class UserInterface extends Application {
+public class UserInterface extends Application implements Observer {
     private Stage primaryStage;
     private BorderPane rootLayout;
 
@@ -104,4 +104,8 @@ public class UserInterface extends Application {
         launch(args);
     }
 
+    @Override
+    public void update() {
+
+    }
 }
