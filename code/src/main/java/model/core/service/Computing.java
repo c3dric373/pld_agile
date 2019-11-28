@@ -1,4 +1,4 @@
-package model.core;
+package model.core.service;
 
 public class Computing {
 }
