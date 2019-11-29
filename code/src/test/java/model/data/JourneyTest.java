@@ -1,8 +1,9 @@
 package model.data;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JourneyTest {
 
     private Point startPoint;
@@ -18,7 +20,7 @@ class JourneyTest {
     private double minLength;
     private Journey journey;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         startPoint = new Point(12345, 40.5, 40.5);
         arrivePoint = new Point(54321, 50.4, 50.4);

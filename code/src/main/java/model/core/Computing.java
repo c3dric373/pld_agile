@@ -15,11 +15,9 @@ public class Computing {
         List<Point> points = XmlToGraph.getGraphFromXml(file_graph);
         Tour tour = XmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
-        graph.show_map();
 
         TSP tsp1 = new TSP1();
         int tpsLimite = Integer.MAX_VALUE;
-
 
         List<Journey> journeys = computing.getListJourney(tour, graph, tsp1, tpsLimite);
         List<Journey> journeysForDeliveryProcess = computing.getJourneysForDeliveryProcess(journeys, tour.getDeliveryProcesses().get(0));
