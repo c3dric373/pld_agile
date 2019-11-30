@@ -1,16 +1,19 @@
 package model.data;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+import java.sql.Time;
 import java.util.*;
 
 
 public class TourTest {
     private List<DeliveryProcess> TEST_DELIVERY_PROCESSES = new ArrayList<DeliveryProcess>();
-    private Point TEST_BASE = new Point(5,3,3, new ArrayList<Segment>());
-    private int TEST_START_TIME = 0;
+    private Point TEST_BASE = new Point(5,3,3);
+    private Time TEST_START_TIME = Time.valueOf("0:0:0");
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -39,7 +42,7 @@ public class TourTest {
 
         // Assert via annotation
     }
-
+/**
     @Test
     public void testCTOR_startTimeNegative_throwsIllegalArgumentException() {
 
@@ -54,21 +57,20 @@ public class TourTest {
         // Assert via annotation
     }
 
-
+*/
     @Test
-    public void testCTOR_startTimeToGreat_throwsIllegalArgumentException() {
+    public void testCTOR_startTimeNull_throwsIllegalArgumentException() {
 
         // Arrange
-        int BIG_START_TIME =2400;
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("startTime is too great");
+        thrown.expectMessage("startTime is null");
 
         // Act
-        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, BIG_START_TIME);
+        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, null);
 
         // Assert via annotation
     }
-
+/**
     @Test
     public void testCTOR_TourCorrect() {
 
@@ -79,6 +81,8 @@ public class TourTest {
 
         // Assert via annotation
     }
+*/
+
 
 
 }

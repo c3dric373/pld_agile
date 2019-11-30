@@ -81,6 +81,30 @@ L'utilisateur pourra afficher la liste des adresses où le livreur doit enlever 
 \subsection{Modifier tournée}
 L'utilisateur peut faire des modifications (supprimer les livraisons, ajouter de nouvelles livraisons, ou changer l'ordre de passage). Le système recalcule le passage et le met à jour. L'utilisateur a le droit d'annuler ses modifications à tout moment.
 
+\section{Glossaire}
+
+\begin{itemize}
+\item \textbf{Cyclist} : le coursier réalisant les livraisons
+\item \textbf{Parcel} : colis à livrer
+\item \textbf{Pick Up }: action de ramasser le colis (Point + Action Time)
+\item \textbf{Delivery} : action de livrer le colis (Point + Action Time)
+\item \textbf{Action Point} : action réaliser par le coursier (Point + Action Time + ActionType)
+\item \textbf{Action Time} : type d'action réalisé (PickUp ou Delivery)
+\item \textbf{Point} : adresse sur le plan
+\item \textbf{Journey} : trajet entre un point A et un point B effectué par le coursier
+\item \textbf{Delivery Process }: le processus de livraison (Pick Up + Delivery)
+\item \textbf{Tour} : tournée du coursier
+\item \textbf{Distance} : distance entre les points
+\item \textbf{Base} : le point départ du coursier (et donc le point d'arriver également)
+\item \textbf{Start Time} : l'heure du départ de la tournée
+\item \textbf{Map} : le plan de la ville
+\item \textbf{Action Time }: durée d'une action (PickUp ou Delivery)
+\item \textbf{Arrival Time }: l'heure d'arriver sur un lieu
+\item \textbf{Departure Time} : l'heure de départ d'un lieu
+\item \textbf{Delivery Demand} : la demande de livraison (information pour faire tout un processus de livraison)
+\item \textbf{Update }: mise à jour de la tournée en cas de changement
+
+\end{itemize}
 
 \newpage
 \section{Fonctionnalités détaillées}
