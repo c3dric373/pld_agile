@@ -1,6 +1,7 @@
 package model.data;
 
 import lombok.Getter;
+import model.io.XmlToGraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class Graph {
     /**
      * List of points in the map
      */
-    private List<Point> points;
+    static private List<Point> points;
     /**
      * Key: id point
      * Value: index in 'list_point'
@@ -182,7 +183,13 @@ public class Graph {
     }
 
     public static void main(String[] args) {
-      /*
+        /*
+        XmlToGraph xml = new XmlToGraph();
+        points=xml.getGraphFromXml("resource/grandPlan.xml");
+        double longitude = 4.8456244, latitude = 45.7485631;
+        System.out.println("InputLong : " +longitude+ " InputLat : "+latitude);
+        findNearestPoint(longitude,latitude);
+
         Graph graph = new Graph();
         graph.addPoint(1,0,0);
         graph.addPoint(2,0,0);
@@ -199,6 +206,41 @@ public class Graph {
         float[] prev = new float[5];
         float[] dist = new float[5];
         graph.dijkstra(0, prev, dist);*/
+    }
+
+    /**
+     * Find the nearest Point in the graph from a longitude and a latitude
+     * @param longitude
+     * @param latitude
+     * @return
+     */
+    public Point findNearestPoint(final double longitude,
+                                    final double latitude)
+    {
+        Point nearestPoint;
+        long nearestId=0;
+        long nearestLatId=0,nearestLongId=0;
+        double nearestLong=0.0,nearestLat=0.0;
+        double differenceLong=100.0,differenceLat=100.0;
+        for(Point p : points){
+            if((Math.abs(p.getLatitude()-latitude)<differenceLat) &&
+                    (Math.abs(p.getLongitude()-longitude)<differenceLong)){
+                differenceLat=Math.abs(p.getLatitude()-latitude);
+                differenceLong=Math.abs(p.getLongitude()-longitude);
+                nearestLat=p.getLatitude();
+                nearestLong=p.getLongitude();
+                nearestId=p.getId();
+            }
+        }
+        /*
+        System.out.println("nearestLong : " + nearestLong + " nearestLat : "
+        + nearestLat);
+        System.out.println("nearestID : " + nearestId);
+        System.out.println("differenceLong : "+differenceLong+" differenceLat"
+        +differenceLat);
+        */
+        nearestPoint=new Point(nearestId,nearestLat,nearestLong);
+        return nearestPoint;
     }
 
     public int getNbPoints() {

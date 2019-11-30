@@ -48,9 +48,22 @@ public class Tour {
         this.startTime = startTime;
     }
 
- public List<DeliveryProcess> getDeliveryProcesses(){
+    /**
+     * Adds a DeliveryProcess to the current Tour
+     * @param nearestPUPoint
+     * @param nearestDPoint
+     */
+    public void addDeliveryProcess(final ActionPoint nearestPUPoint,
+                                   final ActionPoint nearestDPoint){
+    deliveryProcesses.add(new DeliveryProcess(nearestPUPoint,nearestDPoint));
+    }
+
+
+
+
+    public List<DeliveryProcess> getDeliveryProcesses(){
         return deliveryProcesses;
- }
+    }
 
 
 

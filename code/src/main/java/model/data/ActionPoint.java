@@ -41,4 +41,6 @@ public class ActionPoint {
         this.location = location;
         this.actionType=actionType;
     }
+
+
 }
