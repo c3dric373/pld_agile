@@ -1,6 +1,7 @@
 package model.core.management;
 
 import model.data.DeliveryProcess;
+import view.UserInterface;
 
 import java.io.File;
 
@@ -17,7 +18,7 @@ public interface ApplicationManager {
      */
     void loadMap(final File file);
 
-    void setObserver();
+    void setObserver(final UserInterface userInterface);
 
     /**
      * Loads a tour and creates all necessary components for the project.

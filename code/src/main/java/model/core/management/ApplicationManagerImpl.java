@@ -1,23 +1,25 @@
 package model.core.management;
 
 import model.data.DeliveryProcess;
+import view.UserInterface;
 
 import java.io.File;
 
-public class ApplicationManagerImpl implements  ApplicationManager {
+public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
-    public void loadMap(File file) {
+    public void loadMap(final File file) {
+
 
     }
 
     @Override
-    public void setObserver() {
+    public void setObserver(final UserInterface userInterface) {
 
     }
 
     @Override
-    public void loadTour(File file) {
+    public void loadTour(final File file) {
 
     }
 
@@ -27,12 +29,12 @@ public class ApplicationManagerImpl implements  ApplicationManager {
     }
 
     @Override
-    public void addDeliveryProcess(DeliveryProcess deliveryProcess) {
+    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
 
     }
 
     @Override
-    public void deleteDeliveryProcess(DeliveryProcess deliveryProcess) {
+    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
 
     }
 
