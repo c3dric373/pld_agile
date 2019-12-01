@@ -11,7 +11,10 @@ package model.data;
  */
 public interface ProjectDataWrapper {
 
-
+    /**
+     * Loads a map to the view.
+     */
+    void loadMap(final Graph graph);
 
 
 }

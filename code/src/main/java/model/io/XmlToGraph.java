@@ -58,7 +58,7 @@ public class XmlToGraph {
     */
     }
 
-    public static ArrayList<Point> getGraphFromXml(String path){
+    public  ArrayList<Point> getGraphFromXml(String path){
         Validate.notNull(path, "path is null");
 
         if (path.equals("")) {
