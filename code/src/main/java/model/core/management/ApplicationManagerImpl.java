@@ -1,7 +1,11 @@
 package model.core.management;
 
+import model.core.service.GraphService;
+import model.core.service.JourneyService;
+import model.core.service.TourService;
 import model.data.*;
 import model.io.XmlToGraph;
+import org.apache.commons.lang.Validate;
 import view.Observer;
 import view.UserInterface;
 
@@ -13,15 +17,41 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Xml Converter for Project.
      */
-    XmlToGraph xmlToGraph;
+    private XmlToGraph xmlToGraph;
 
     /**
      * Project Data wrapper for project.
      */
-    ProjectDataWrapper projectDataWrapper;
+    private ProjectDataWrapper projectDataWrapper;
+
+    /**
+     * State of the Project.
+     */
+    private ProjectState projectState;
+
+    /**
+     * Graph Service of the Project.
+     */
+    private GraphService graphService;
+
+    /**
+     * JourneyService of the Project.
+     */
+    private JourneyService journeyService;
+
+    /**
+     * TourService of the Project.
+     */
+
+    private TourService tourService;
+
 
     ApplicationManagerImpl(){
     xmlToGraph = new XmlToGraph();
+    projectState = ProjectState.INITIALIZED;
+    journeyService = new JourneyService();
+    graphService = new GraphService();
+    tourService = new TourService();
     //projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
 
     }
@@ -61,6 +91,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
+        if (projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Tour not calculated");
+        }
+        Validate.notNull(actionPoints,"actionPoints null");
+        Validate.notEmpty(actionPoints,"actionPointsEmpty");
+
 
     }
 

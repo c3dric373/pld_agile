@@ -229,4 +229,7 @@ public class Graph  implements GenData{
     public Map<Integer, Integer> getMap() {
         return this.map;
     }
+
+    public enum ProjectState {
+    }
 }
