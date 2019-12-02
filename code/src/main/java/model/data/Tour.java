@@ -1,6 +1,7 @@
 package model.data;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 
 @EqualsAndHashCode
+@Getter
 public class Tour implements GenData{
 
     /**

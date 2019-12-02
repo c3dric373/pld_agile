@@ -2,6 +2,8 @@ package model.core.service;
 import model.data.Point;
 import java.util.List;
 
+import model.data.Graph;
+import model.data.Journey;
 public class GraphService
 {
     /**
@@ -47,5 +49,11 @@ public class GraphService {
     public static boolean isInMap(final Point newPoint) {
         //todo
         return false;
+    }
+
+
+    public static Journey shortestPath(final Graph graph,final Point point1, final Point point2){
+        //todo
+        return null;
     }
 }
