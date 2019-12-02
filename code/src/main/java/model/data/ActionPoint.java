@@ -38,9 +38,8 @@ public class ActionPoint {
         Validate.notNull(type, "actionType is null");
         Validate.notNull(actionTime, "time is null");
 
-
-        this.time = actionTime;
-        this.location = actionLocation;
-        this.actionType = type;
+        this.time = time;
+        this.location = location;
+        this.actionType=actionType;
     }
 }
