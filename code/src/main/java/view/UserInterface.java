@@ -10,14 +10,21 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.core.management.ApplicationManager;
+import model.data.GenData;
 
+import javax.swing.text.View;
 import java.io.IOException;
 
 public class UserInterface extends Application implements Observer {
     private Stage primaryStage;
     private BorderPane rootLayout;
 
-     /**
+    /**
+     * ViewVisitor to handle changes from the model
+     */
+    private ViewVisitor viewVisitor;
+
+    /**
      * Interface to the model.
      */
     private ApplicationManager model;
@@ -36,6 +43,7 @@ public class UserInterface extends Application implements Observer {
         // Add some sample data List
         // tourData.addAll();
         this.model = model;
+        this.viewVisitor = new ViewVisitor();
     }
 
     /**
@@ -105,7 +113,7 @@ public class UserInterface extends Application implements Observer {
     }
 
     @Override
-    public void update() {
-
+    public void update(final GenData genData) {
+        genData.accept(viewVisitor);
     }
 }

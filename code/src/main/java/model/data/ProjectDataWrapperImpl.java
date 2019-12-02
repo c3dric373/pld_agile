@@ -21,7 +21,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
     }
 
     @Override
-    public void modifyTour(Tour tour) {
+    public void modifyTour(final Tour tour) {
 
     }
 
