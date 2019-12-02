@@ -144,6 +144,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void findNearestPoint(final double latitude, final double longitude) {
+        Validate.notNull(latitude, "latitude is null");
+        Validate.notNull(longitude, "longitude is null");
+        final List<Point> pointList =
+                projectDataWrapper.getProject().getPointList();
+        Point nearestPoint = graphService.findNearestPoint(longitude,latitude);
 
     }
 

@@ -40,4 +40,12 @@ public interface ProjectDataWrapper {
      */
     void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
 
+    /**
+     * Return the nearestPoint from the param.
+     * @param newPoint
+     */
+    void findNearestPoint(final Point newPoint);
+
+
+
 }

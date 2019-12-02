@@ -1,6 +1,8 @@
 package model.data;
 
 
+import java.util.List;
+
 /**
  * Defines what data has to be implemented for a project.
  *
@@ -14,13 +16,22 @@ public class ProjectDataImpl implements ProjectData{
     private Tour tour;
 
     /**
+     *
+     */
+    private List<Point> pointList;
+
+    /**
      * Graph for ProjectDataWrapper.
      */
     private Graph graph;
 
     @Override
     public Tour getTour() {
-        return null;
+        return tour;
+    }
+
+    public List<Point> getPointList(){
+        return pointList;
     }
 
     @Override
