@@ -16,5 +16,9 @@ public interface ProjectDataWrapper {
      */
     void loadMap(final Graph graph);
 
+    /**
+     * Sends a modified Tour to the view
+     */
+    void modifyTour(final Tour tour);
 
 }

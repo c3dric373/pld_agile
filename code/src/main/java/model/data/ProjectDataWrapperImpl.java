@@ -20,7 +20,14 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
 
     }
 
-    private void notify(final Graph graph){
-        observer.update();
+    @Override
+    public void modifyTour(Tour tour) {
+
+    }
+
+
+    private void notify(final GenData genData){
+
+        observer.update(genData);
     }
 }
