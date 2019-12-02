@@ -78,7 +78,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             throw new IllegalStateException("Map not loaded");
         }
         Validate.notNull(file, "file is null");
-        Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
+        final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
         projectDataWrapper.loadTour(tour);
         projectState = ProjectState.TOUR_LOADED;
     }
