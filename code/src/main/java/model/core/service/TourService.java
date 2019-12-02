@@ -33,7 +33,14 @@ public class TourService {
         final Journey newJourney = GraphService.shortestPath(graph,
                 predecessorPoint.getLocation(), newPoint);
 
-        // Add new Journey to tour and delete old information
+        // Modify Location in DeliveryProcesses List
+        final ActionPoint oldActionPoint = actionPoints.get(oldPointIndex);
+        //final int indexOldAP = tour.getDeliveryProcesses().set()
+
+        // Add new Journey to tour
+        final List<Journey> journeys = tour.getJourneys();
+
+
 
 
         return null;

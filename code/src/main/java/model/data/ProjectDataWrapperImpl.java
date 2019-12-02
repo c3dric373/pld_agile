@@ -28,7 +28,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
     }
 
     @Override
-    public void loadTour(Tour tour) {
+    public void loadTour(final Tour tour) {
         projectData.setTour(tour);
         notify(tour);
     }

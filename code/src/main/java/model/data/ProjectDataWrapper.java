@@ -15,7 +15,11 @@ public interface ProjectDataWrapper {
      * Loads a map to the view.
      */
     void loadMap(final Graph graph);
-    
+
+    /**
+     * Loads a Tour to the view
+     */
+    void loadTour(final Tour tour);
 
     /**
      * Sends a modified Tour to the view.
