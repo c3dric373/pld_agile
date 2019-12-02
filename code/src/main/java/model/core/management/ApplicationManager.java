@@ -23,7 +23,10 @@ public interface ApplicationManager {
     void loadMap(final File file);
 
     void setObserver(final UserInterface userInterface);
-
+ is
+    a
+         fads'fj'
+    this
     /**
      * Loads a tour and creates all necessary components for the project.
      *
