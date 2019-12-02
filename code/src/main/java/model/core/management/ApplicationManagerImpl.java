@@ -81,12 +81,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
-
+        projectDataWrapper.addDeliveryProcess(deliveryProcess);
     }
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-
+        projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
     }
 
     @Override

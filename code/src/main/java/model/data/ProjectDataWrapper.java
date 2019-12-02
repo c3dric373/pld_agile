@@ -17,7 +17,7 @@ public interface ProjectDataWrapper {
     void loadMap(final Graph graph);
 
     /**
-     * Sends a modified Tour to the view
+     * Sends a modified Tour to the view.
      */
     void modifyTour(final Tour tour);
 
@@ -27,5 +27,17 @@ public interface ProjectDataWrapper {
      * @return the {@link ProjectData} object that is stored inside the wrapper.
      */
     ProjectData getProject();
+
+    /**
+     * Add a DeliveryProcess to the current Tour.
+     * @param deliveryProcess
+     */
+    void addDeliveryProcess(final DeliveryProcess deliveryProcess);
+
+    /**
+     * Delete a DeliveryProcess to the current Tour.
+     * @param deliveryProcess
+     */
+    void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
 
 }

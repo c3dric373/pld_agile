@@ -36,6 +36,19 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
     public ProjectData getProject() {
         return projectData;
     }
+    public void addDeliveryProcess(final DeliveryProcess deliveryProcess){
+        Tour tour = projectData.getTour();
+        tour.addDeliveryProcess(deliveryProcess);
+        projectData.setTour(tour);
+        notify(tour);
+    }
+
+    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess){
+        Tour tour = projectData.getTour();
+        tour.deleteDeliveryProcess(deliveryProcess);
+        projectData.setTour(tour);
+        notify(tour);
+    }
 
 
     private void notify(final GenData genData){
