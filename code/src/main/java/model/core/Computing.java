@@ -11,8 +11,8 @@ import java.util.Map;
 public class Computing {
     public static void main(String[] args) {
         Computing computing = new Computing();
-        String file_graph = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/grandPlan.xml";
-        String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandeGrand7.xml";
+        String file_graph = "resource/grandPlan.xml";
+        String file_tour = "resource/demandeGrand9.xml";
         List<Point> points = XmlToGraph.getGraphFromXml(file_graph);
         Tour tour = XmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);

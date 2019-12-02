@@ -7,18 +7,23 @@ public class TSP2 extends TemplateTSP {
 
     @Override
     protected Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-        int nb = duree.length / 2;
-        return new IteratorSeq2(nonVus, sommetCrt, nb);
+        return new IteratorSeq2(nonVus, sommetCrt, cout);
     }
 
     @Override
     protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-        int min = Integer.MAX_VALUE;
+        int min1 = Integer.MAX_VALUE;
+        int min2 = Integer.MAX_VALUE;
         for (Integer sommet : nonVus) {
-            if (cout[sommetCourant][sommet] + duree[sommet] < min)
-                min = cout[sommetCourant][sommet] + duree[sommet];
+            if (min1 == Integer.MAX_VALUE && min2 == Integer.MAX_VALUE) {
+                min1 = cout[sommetCourant][sommet] + duree[sommet];
+                min2 = min1;
+            } else if (cout[sommetCourant][sommet] + duree[sommet] < min1) {
+                min2 = min1;
+                min1 = cout[sommetCourant][sommet] + duree[sommet];
+            }
         }
-        return min;
+        return (min2 == Integer.MAX_VALUE) ? min1 : (min1 + min2) / 2;
     }
 
     public static void main(String[] args) {

@@ -78,6 +78,11 @@ public abstract class TemplateTSP implements TSP {
             coutVus += cout[sommetCrt][0];
             if (coutVus < coutMeilleureSolution) { // on a trouve une solution meilleure que meilleureSolution
                 vus.toArray(meilleureSolution);
+                for (Integer i :
+                        meilleureSolution) {
+                    System.out.print(i + " ");
+                }
+                System.out.println();
                 coutMeilleureSolution = coutVus;
             }
         } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution) {

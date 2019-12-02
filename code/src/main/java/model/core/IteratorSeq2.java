@@ -13,13 +13,13 @@ public class IteratorSeq2 implements Iterator<Integer> {
      * @param nonVus
      * @param sommetCrt
      */
-    public IteratorSeq2(Collection<Integer> nonVus, int sommetCrt, int nb) {
-        int sommetPickUp = sommetCrt - nb;
-        boolean pickUp = (sommetPickUp < 0);
-        if (!pickUp) {
+    public IteratorSeq2(Collection<Integer> nonVus, int sommetCrt, int[][] cout) {
+        int nb = cout.length / 2;
+        boolean pickUp = true;
+        if (sommetCrt > nb) {
             for (Integer i : nonVus) {
-                if (i == sommetPickUp) {
-                    pickUp = true;
+                if (i == sommetCrt - nb) {
+                    pickUp = false;
                     break;
                 }
             }
