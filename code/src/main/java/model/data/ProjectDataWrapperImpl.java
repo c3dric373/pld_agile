@@ -12,12 +12,19 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
      */
     Observer observer;
 
+    /**
+     * Project Data for Project.
+     */
+    ProjectData projectData;
+
     public ProjectDataWrapperImpl(final Observer newObserver){
         this.observer = newObserver;
+        projectData = new ProjectDataImpl();
     }
     @Override
     public void loadMap(final Graph graph) {
-
+        projectData.setGraph(graph);
+        notify(graph);
     }
 
     @Override

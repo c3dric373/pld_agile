@@ -20,7 +20,7 @@ public class ProjectDataImpl implements ProjectData{
     }
 
     @Override
-    public void setGraph() {
+    public void setGraph( final Graph graph) {
 
     }
 

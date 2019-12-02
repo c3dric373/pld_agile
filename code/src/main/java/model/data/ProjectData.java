@@ -10,7 +10,7 @@ public interface ProjectData {
 
     void setTour();
 
-    void setGraph();
+    void setGraph( final Graph graph);
 
     void getGraph();
 

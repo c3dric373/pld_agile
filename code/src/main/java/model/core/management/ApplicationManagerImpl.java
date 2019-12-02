@@ -16,18 +16,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
     XmlToGraph xmlToGraph;
 
     /**
-     * Project Data for Project.
-     */
-    ProjectData projectData;
-
-    /**
      * Project Data wrapper for project.
      */
     ProjectDataWrapper projectDataWrapper;
 
     ApplicationManagerImpl(){
     xmlToGraph = new XmlToGraph();
-    projectData = new ProjectDataImpl();
     //projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
 
     }
@@ -35,12 +29,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
     @Override
     public void loadMap(final File file) {
         // TODO when graph takes nodes as input
-        // List<Point> nodes =  xmlToGraph.getGraphFromXml(file.getPath());
+        // List<Point> graph =  xmlToGraph.getGraphFromXml(file.getPath());
         final Graph graph = new Graph();
-        projectData.setGraph();
         projectDataWrapper.loadMap(graph);
-
-
     }
 
     @Override
