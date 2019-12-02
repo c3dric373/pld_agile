@@ -9,19 +9,15 @@ import model.data.Point;
 import model.data.Tour;
 
 public class GraphService {
-    /**
-     * List of points in the graph
-     */
-    private List<Point> pointList;
 
 
-    public Point findNearestPoint(final double longitude,
+    public Point findNearestPoint(List<Point> pointList, final double longitude,
                                   final double latitude) {
         Point nearestPoint;
         long nearestId = 0;
         double nearestLong = 0.0, nearestLat = 0.0;
         double differenceLong = 100.0, differenceLat = 100.0;
-        for (Point p : pointList) {
+        for (final Point p : pointList) {
             if ((Math.abs(p.getLatitude() - latitude) < differenceLat) &&
                     (Math.abs(p.getLongitude() - longitude) < differenceLong)) {
                 differenceLat = Math.abs(p.getLatitude() - latitude);

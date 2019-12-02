@@ -149,7 +149,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         Validate.notNull(longitude, "longitude is null");
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
-        Point nearestPoint = graphService.findNearestPoint(longitude, latitude);
+        Point nearestPoint = graphService.findNearestPoint(pointList, longitude, latitude);
 
     }
 
