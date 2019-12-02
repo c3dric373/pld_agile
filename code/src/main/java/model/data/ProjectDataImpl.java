@@ -9,9 +9,13 @@ package model.data;
 public class ProjectDataImpl implements ProjectData{
 
     /**
-     * Tour for ProjectDataWrapper
+     * Tour for ProjectDataWrapper.
      */
     private Tour tour;
+
+    /**
+     * Graph for ProjectDataWrapper.
+     */
     private Graph graph;
 
     @Override
@@ -30,7 +34,7 @@ public class ProjectDataImpl implements ProjectData{
     }
 
     @Override
-    public void getGraph() {
-
+    public Graph getGraph() {
+        return graph;
     }
 }

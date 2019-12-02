@@ -41,26 +41,30 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * TourService of the Project.
      */
-
     private TourService tourService;
 
 
-    ApplicationManagerImpl(){
-    xmlToGraph = new XmlToGraph();
-    projectState = ProjectState.INITIALIZED;
-    journeyService = new JourneyService();
-    graphService = new GraphService();
-    tourService = new TourService();
-    //projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
+    ApplicationManagerImpl() {
+        xmlToGraph = new XmlToGraph();
+        projectState = ProjectState.INITIALIZED;
+        journeyService = new JourneyService();
+        graphService = new GraphService();
+        tourService = new TourService();
+        //projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
 
     }
 
     @Override
     public void loadMap(final File file) {
+        if (projectState != ProjectState.INITIALIZED) {
+            throw new IllegalStateException("Application not opened");
+        }
+        Validate.notNull(file, "file is null");
         // TODO when graph takes nodes as input
         // List<Point> graph =  xmlToGraph.getGraphFromXml(file.getPath());
         final Graph graph = new Graph();
         projectDataWrapper.loadMap(graph);
+        projectState = ProjectState.MAP_LOADED;
     }
 
     @Override
@@ -70,40 +74,54 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadTour(final File file) {
-        // TODO when graph takes nodes as input
+        if (projectState != ProjectState.MAP_LOADED) {
+            throw new IllegalStateException("Map not loaded");
+        }
+        Validate.notNull(file, "file is null");
         Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
         projectDataWrapper.loadTour(tour);
+        projectState = ProjectState.TOUR_LOADED;
     }
 
     @Override
     public void calculateTour() {
+        if (projectState != ProjectState.TOUR_LOADED) {
+            throw new IllegalStateException("tour not loaded");
+        }
         final Tour tour = projectDataWrapper.getProject().getTour();
-        projectDataWrapper.modifyTour(tour);
+        final Tour newTour = graphService.calculateTour(tour);
+        projectDataWrapper.modifyTour(newTour);
+        projectState = ProjectState.TOUR_CALCULATED;
     }
 
     @Override
     public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        if (projectState != ProjectState.TOUR_LOADED) {
+            throw new IllegalStateException("Tour not calculated");
+        }
+        Validate.notNull(deliveryProcess, "deliveryProcess null");
         projectDataWrapper.addDeliveryProcess(deliveryProcess);
     }
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        if (projectState != ProjectState.TOUR_LOADED) {
+            throw new IllegalStateException("Tour not calculated");
+        }
+        Validate.notNull(deliveryProcess, "deliveryProcess null");
         projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
     }
 
     @Override
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
-        if (projectState != ProjectState.TOUR_CALCULATED){
+        if (projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Tour not calculated");
         }
-        Validate.notNull(actionPoints,"actionPoints null");
-        Validate.notEmpty(actionPoints,"actionPointsEmpty");
-
+        Validate.notNull(actionPoints, "actionPoints null");
+        Validate.notEmpty(actionPoints, "actionPointsEmpty");
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Tour newTour = tourService.changeDeliveryOrder(tour, actionPoints);
         projectDataWrapper.modifyTour(newTour);
-
-
     }
 
     @Override
