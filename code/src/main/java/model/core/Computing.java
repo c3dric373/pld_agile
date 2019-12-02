@@ -2,6 +2,7 @@ package model.core;
 
 import model.data.*;
 import model.io.XmlToGraph;
+import org.apache.commons.lang.Validate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +12,23 @@ public class Computing {
     public static void main(String[] args) {
         Computing computing = new Computing();
         String file_graph = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/moyenPlan.xml";
-        String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandeMoyen3.xml";
+        String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandeMoyen5.xml";
         List<Point> points = XmlToGraph.getGraphFromXml(file_graph);
         Tour tour = XmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
 
-        TSP tsp1 = new TSP1();
+        TSP tsp2 = new TSP2();
+        TSP1 tsp1 = new TSP1();
         int tpsLimite = Integer.MAX_VALUE;
 
-        List<Journey> journeys = computing.getListJourney(tour, graph, tsp1, tpsLimite);
-        List<Journey> journeysForDeliveryProcess = computing.getJourneysForDeliveryProcess(journeys, tour.getDeliveryProcesses().get(0));
+        long start_time = System.currentTimeMillis();
+        List<Journey> journeys = computing.getListJourney(tour, graph, tsp2, tpsLimite);
+        long tsp2_time = System.currentTimeMillis() - start_time;
+        start_time = System.currentTimeMillis();
+        List<Journey> journeys2 = computing.getListJourney(tour, graph, tsp1, tpsLimite);
+        long tsp1_time = System.currentTimeMillis() - start_time;
+
+        System.out.printf("tsp1: %d\ntsp2: %d\n", tsp1_time, tsp2_time);
     }
 
     /**
@@ -33,10 +41,10 @@ public class Computing {
      * from the start point to each point
      */
     public List<tuple> dijkstra(final Graph graph, final long id_start) {
+        Validate.notNull(graph, "graph can't be null");
         Map<Long, Integer> map = graph.getMap();
-        if (map.get(id_start) == null) {
-            throw new IllegalArgumentException("id_start not in graph");
-        }
+        Validate.notNull(map.get(id_start), "id_start not in graph");
+
         List<tuple> res = new ArrayList<>();
 
         int nb_points = graph.getNb_points();
