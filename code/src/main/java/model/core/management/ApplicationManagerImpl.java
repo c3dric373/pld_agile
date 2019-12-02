@@ -150,7 +150,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
         Point nearestPoint = graphService.findNearestPoint(pointList, longitude, latitude);
-
+        projectDataWrapper.findNearestPoint(nearestPoint);
     }
 
 
