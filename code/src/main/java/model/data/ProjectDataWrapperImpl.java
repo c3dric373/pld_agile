@@ -10,12 +10,12 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
     /**
      * Observer to notify when changes occur.
      */
-    Observer observer;
+    private Observer observer;
 
     /**
      * Project Data for Project.
      */
-    ProjectData projectData;
+    private ProjectData projectData;
 
     public ProjectDataWrapperImpl(final Observer newObserver){
         this.observer = newObserver;

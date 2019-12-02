@@ -6,7 +6,6 @@ import model.core.service.TourService;
 import model.data.*;
 import model.io.XmlToGraph;
 import org.apache.commons.lang.Validate;
-import view.Observer;
 import view.UserInterface;
 
 import java.io.File;
@@ -99,8 +98,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         Validate.notNull(actionPoints,"actionPoints null");
         Validate.notEmpty(actionPoints,"actionPointsEmpty");
+
         final Tour tour = projectDataWrapper.getProject().getTour();
-        final Tour newTour = tourService.changeDeliverOrder(tour, actionPoints);
+        final Tour newTour = tourService.changeDeliveryOrder(tour, actionPoints);
         projectDataWrapper.modifyTour(newTour);
 
 
@@ -108,6 +108,19 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void changePointPosition(final Point oldPoint, final Point newPoint) {
+        if (projectState != ProjectState.TOUR_LOADED){
+            throw new IllegalStateException("Tour not loaded");
+        }
+        Validate.notNull(oldPoint, "oldPoint is null");
+        Validate.notNull(newPoint,"newPoint is null");
+        if(!GraphService.isInMap(newPoint)){
+            throw new IllegalArgumentException("newPoint not on map");
+        }
+
+        final Tour tour = projectDataWrapper.getProject().getTour();
+        final Tour newTour = tourService.changePointPosition
+                (tour, oldPoint,newPoint);
+        projectDataWrapper.modifyTour(newTour);
 
     }
 
