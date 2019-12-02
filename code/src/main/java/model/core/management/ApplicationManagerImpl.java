@@ -69,7 +69,19 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void modifyTour() {
+    public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
 
     }
+
+    @Override
+    public void changePointPosition(final Point oldPoint, final Point newPoint) {
+
+    }
+
+    @Override
+    public void findNearestPoint(final double latitude, final double longitude) {
+
+    }
+
+
 }
