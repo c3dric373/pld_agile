@@ -17,6 +17,17 @@ public class Tour {
 
     /**
      * List of all the deliveries the cyclist has to do.
+     * List of all the action points delivered in this journey
+     */
+    private List<ActionPoint> actionPoints;
+
+    /**
+     * List of all Journeys.
+     */
+    private List<Journey> journeys;
+
+    /**
+     * List of all the deliveries the cyclist has to do
      */
     private final List<DeliveryProcess> deliveryProcesses;
 
