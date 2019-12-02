@@ -25,10 +25,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
      */
     ProjectDataWrapper projectDataWrapper;
 
-    ApplicationManagerImpl(final Observer newObserver){
+    ApplicationManagerImpl(){
     xmlToGraph = new XmlToGraph();
     projectData = new ProjectDataImpl();
-    projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
+    //projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
 
     }
 
