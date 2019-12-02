@@ -21,4 +21,11 @@ public interface ProjectDataWrapper {
      */
     void modifyTour(final Tour tour);
 
+    /**
+     * Returns the {@link ProjectData} object that is stored inside the wrapper.
+     *
+     * @return the {@link ProjectData} object that is stored inside the wrapper.
+     */
+    ProjectData getProject();
+
 }

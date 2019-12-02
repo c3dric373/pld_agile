@@ -32,6 +32,11 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
 
     }
 
+    @Override
+    public ProjectData getProject() {
+        return projectData;
+    }
+
 
     private void notify(final GenData genData){
 
