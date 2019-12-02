@@ -4,17 +4,16 @@ import java.util.List;
 
 import model.data.Graph;
 import model.data.Journey;
-public class GraphService
-{
-    /**
-     * List of points in the graph
-     */
-    private List<Point> pointList;
 import model.data.Point;
 
 import model.data.Tour;
 
 public class GraphService {
+    /**
+     * List of points in the graph
+     */
+    private List<Point> pointList;
+
 
     public Point findNearestPoint(final double longitude,
                                   final double latitude) {
