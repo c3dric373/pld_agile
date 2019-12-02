@@ -71,12 +71,15 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadTour(final File file) {
-
+        // TODO when graph takes nodes as input
+        Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
+        projectDataWrapper.loadTour(tour);
     }
 
     @Override
     public void calculateTour() {
-
+        Tour tour = projectData.getProject().getTour();
+        projectDataWrapper.modifyTour(tour);
     }
 
     @Override

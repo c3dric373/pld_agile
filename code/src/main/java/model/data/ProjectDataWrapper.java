@@ -18,6 +18,12 @@ public interface ProjectDataWrapper {
 
     /**
      * Sends a modified Tour to the view.
+     * Loads a Tour.
+     */
+    void loadTour(final Tour tour);
+
+    /**
+     * Sends a modified Tour to the view
      */
     void modifyTour(final Tour tour);
 

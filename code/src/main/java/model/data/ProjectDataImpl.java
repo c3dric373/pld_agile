@@ -12,6 +12,7 @@ public class ProjectDataImpl implements ProjectData{
      * Tour for ProjectDataWrapper
      */
     private Tour tour;
+    private Graph graph;
 
     @Override
     public Tour getTour() {
@@ -24,8 +25,8 @@ public class ProjectDataImpl implements ProjectData{
     }
 
     @Override
-    public void setGraph( final Graph graph) {
-
+    public void setGraph( final Graph newGraph) {
+        graph = newGraph;
     }
 
     @Override
