@@ -8,6 +8,10 @@ package model.data;
  */
 public class ProjectDataImpl implements ProjectData{
 
+    /**
+     * Tour for ProjectDataWrapper
+     */
+    private Tour tour;
 
     @Override
     public Tour getTour() {
@@ -15,8 +19,8 @@ public class ProjectDataImpl implements ProjectData{
     }
 
     @Override
-    public void setTour() {
-
+    public void setTour(final Tour newTour) {
+        tour = newTour;
     }
 
     @Override

@@ -70,4 +70,12 @@ public class Tour implements GenData{
         genDataVisitor.visit(this);
 
     }
+
+    public void addDeliveryProcess(final DeliveryProcess deliveryProcess){
+        deliveryProcesses.add(deliveryProcess);
+    }
+
+    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess){
+        deliveryProcesses.remove(deliveryProcess);
+    }
 }
