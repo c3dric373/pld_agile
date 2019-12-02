@@ -1,8 +1,10 @@
 package model.data;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
 
+import java.sql.Time;
 import java.util.List;
 
 /**
@@ -10,6 +12,12 @@ import java.util.List;
  */
 @Getter
 public class Journey {
+
+    /**
+     * Start time of journey
+     */
+    @Setter
+    private Time startTime;
     /**
      * Start point of the journey
      */
@@ -44,5 +52,10 @@ public class Journey {
         this.points = points;
         this.minLength = minLength;
     }
+
+    //TODO caluclate time it takes to complete journey
+    private void calculateTime() {
+    }
+
 
 }
