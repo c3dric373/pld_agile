@@ -9,9 +9,14 @@ package model.data;
 public class ProjectDataImpl implements ProjectData{
 
     /**
-     * Tour for ProjectDataWrapper
+     * Tour for ProjectDataWrapper.
      */
     private Tour tour;
+
+    /**
+     * Graph for ProjectDataWrapper.
+     */
+    private Graph graph;
 
     @Override
     public Tour getTour() {
@@ -24,12 +29,12 @@ public class ProjectDataImpl implements ProjectData{
     }
 
     @Override
-    public void setGraph( final Graph graph) {
-
+    public void setGraph( final Graph newGraph) {
+        graph = newGraph;
     }
 
     @Override
-    public void getGraph() {
-
+    public Graph getGraph() {
+        return graph;
     }
 }

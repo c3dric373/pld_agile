@@ -12,7 +12,7 @@ public interface ProjectData {
 
     void setGraph( final Graph graph);
 
-    void getGraph();
+    Graph getGraph();
 
     
 

@@ -10,12 +10,12 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
     /**
      * Observer to notify when changes occur.
      */
-    Observer observer;
+    private Observer observer;
 
     /**
      * Project Data for Project.
      */
-    ProjectData projectData;
+    private ProjectData projectData;
 
     public ProjectDataWrapperImpl(final Observer newObserver){
         this.observer = newObserver;
@@ -28,8 +28,15 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
     }
 
     @Override
-    public void modifyTour(final Tour tour) {
+    public void loadTour(Tour tour) {
+        projectData.setTour(tour);
+        notify(tour);
+    }
 
+    @Override
+    public void modifyTour(final Tour tour) {
+        projectData.setTour(tour);
+        notify(tour);
     }
 
     @Override
