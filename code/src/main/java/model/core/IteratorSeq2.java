@@ -13,7 +13,8 @@ public class IteratorSeq2 implements Iterator<Integer> {
      * @param nonVus
      * @param sommetCrt
      */
-    public IteratorSeq2(Collection<Integer> nonVus, int sommetCrt, int nb){
+    public IteratorSeq2(Collection<Integer> nonVus, int sommetCrt) {
+        int nb = nonVus.size()/2;
         int sommetPickUp = sommetCrt - nb;
         boolean pickUp = (sommetPickUp < 0);
         if (!pickUp) {

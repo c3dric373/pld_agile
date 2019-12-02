@@ -11,8 +11,8 @@ import java.util.Map;
 public class Computing {
     public static void main(String[] args) {
         Computing computing = new Computing();
-        String file_graph = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/moyenPlan.xml";
-        String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandeMoyen5.xml";
+        String file_graph = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/grandPlan.xml";
+        String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandeGrand7.xml";
         List<Point> points = XmlToGraph.getGraphFromXml(file_graph);
         Tour tour = XmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
@@ -25,7 +25,7 @@ public class Computing {
         List<Journey> journeys = computing.getListJourney(tour, graph, tsp2, tpsLimite);
         long tsp2_time = System.currentTimeMillis() - start_time;
         start_time = System.currentTimeMillis();
-        List<Journey> journeys2 = computing.getListJourney(tour, graph, tsp1, tpsLimite);
+//        List<Journey> journeys2 = computing.getListJourney(tour, graph, tsp1, tpsLimite);
         long tsp1_time = System.currentTimeMillis() - start_time;
 
         System.out.printf("tsp1: %d\ntsp2: %d\n", tsp1_time, tsp2_time);

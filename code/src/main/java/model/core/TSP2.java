@@ -7,8 +7,7 @@ public class TSP2 extends TemplateTSP {
 
     @Override
     protected Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-        int nb = duree.length/2;
-        return new IteratorSeq2(nonVus, sommetCrt, nb);
+        return new IteratorSeq2(nonVus, sommetCrt);
     }
 
     @Override
