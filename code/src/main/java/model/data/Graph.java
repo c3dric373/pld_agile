@@ -10,35 +10,35 @@ import java.util.Map;
 @Getter
 public class Graph {
     /**
-     * List of points in the map
+     * List of points in the map.
      */
     private List<Point> points;
     /**
-     * Key: id point
+     * Key: id point.
      * Value: index in 'list_point'
      */
     private Map<Integer, Integer> map;
     /**
-     * Number of segments in the map
+     * Number of segments in the map.
      */
-    private int nb_segments;
+    private int nbSegments;
     /**
-     * Number of points in the map
+     * Number of points in the map.
      */
-    private int nb_points;
+    private int nbPoints;
 
     /**
-     * Instantiates a Graph
+     * Instantiates a Graph.
      */
-    public Graph() {
-        nb_points = 0;
-        nb_segments = 0;
+    Graph() {
+        nbPoints = 0;
+        nbSegments = 0;
         points = new ArrayList<Point>();
         map = new HashMap<Integer, Integer>();
     }
 
     /**
-     * Add a point to the map
+     * Add a point to the map.
      * @param id id of the point
      * @param longitude longitude of the point
      * @param latitude latitude of the point
@@ -50,7 +50,7 @@ public class Graph {
 
 
     /**
-     * Add a segment to the map
+     * Add a segment to the map.
      * @param id_origin id of the origin point
      * @param id_end id of the end point
      * @param length distance between the two points
@@ -58,7 +58,8 @@ public class Graph {
      */
 
      /*
-    void addSegment(final int id_origin, final int id_end, final float length, final String name) {
+    void addSegment(final int id_origin, final int id_end,
+                    final float length, final String name){
         Validate.notNull(name, "name is null");
         if (name.equals("")) {
             throw new IllegalArgumentException("name is empty");
@@ -89,28 +90,30 @@ public class Graph {
         nb_segments++;
     }
 */
+
     /**
-     * Show the map
+     * Show the map.
      */
-    void show_map() {
-        for (int i = 0; i< nb_points; i++) {
-            System.out.print(points.get(i).getId()+"     ");
-            for (Segment s: points.get(i).getSegments()) {
+    void showMap() {
+        for (int i = 0; i < nbPoints; i++) {
+            System.out.print(points.get(i).getId() + "     ");
+            for (Segment s : points.get(i).getSegments()) {
                 if (points.get(i).getId() == s.either())
-                    System.out.print(s.other(s.either()) +" ");
+                    System.out.print(s.other(s.either()) + " ");
                 else
                     System.out.print(s.either() + " ");
             }
             System.out.println();
         }
-        System.out.println("nb_nodes: "+ nb_points);
-        System.out.println("nb_segments: "+nb_segments);
+        System.out.println("nb_nodes: " + nbPoints);
+        System.out.println("nb_segments: " + nbSegments);
     }
 
     class tuple {
         private int prev = 0;
         private double dist = Float.POSITIVE_INFINITY;
-        tuple(int prev, double dist) {
+
+        tuple(final int prev, final double dist) {
             this.prev = prev;
             this.dist = dist;
         }
@@ -118,42 +121,46 @@ public class Graph {
         public int getPrev() {
             return prev;
         }
+
         public double getDist() {
             return dist;
         }
-        public void setPrev(int prev) {
+
+        public void setPrev(final int prev) {
             this.prev = prev;
         }
-        public void setDist(double dist) {
+
+        public void setDist(final double dist) {
             this.dist = dist;
         }
     }
 
     /**
-     * Dijkstra shortest path
+     * Dijkstra shortest path.
      * the shortest path from start point to other points
+     *
      * @param start_index the index of start point
      * @return list of tuple which contains the previous point index and the distance in the shortest path from the start point to each point
      */
-    List<tuple> dijkstra(int start_index) {
+    List<tuple> dijkstra(final int start_index) {
         if (start_index < 0) {
             throw new IllegalArgumentException("start_index is too small");
         }
-        if (start_index >= nb_points) {
+        if (start_index >= nbPoints) {
             throw new IllegalArgumentException("start_index is too great");
         }
         List<tuple> res = new ArrayList<>();
 
-        boolean[] flag = new boolean[nb_points];
+        boolean[] flag = new boolean[nbPoints];
         Point start_point = points.get(start_index);
-        for (int i = 0; i < nb_points; i++) {
+        for (int i = 0; i < nbPoints; i++) {
             flag[i] = (i == start_index);
             res.add(new tuple(0, start_point.getLengthTo(points.get(i).getId())));
         }
         int cur_index = start_index;
-        for (int i = 1; i < nb_points; i++) {
+        for (int i = 1; i < nbPoints; i++) {
             double min = Float.POSITIVE_INFINITY;
-            for (int j = 0; j < nb_points; j++) {
+            for (int j = 0; j < nbPoints; j++) {
                 if (!flag[j] && res.get(j).getDist() < min) {
                     min = res.get(j).getDist();
                     cur_index = j;
@@ -175,7 +182,7 @@ public class Graph {
         }
         long start_id = points.get(start_index).getId();
         System.out.printf("dijkstra(%d)\n", start_id);
-        for (int i = 0; i < nb_points; i++) {
+        for (int i = 0; i < nbPoints; i++) {
             System.out.printf("  shortest(%d, %d)=%f\n", start_id, points.get(i).getId(), res.get(i).getDist());
         }
         return res;
@@ -202,11 +209,11 @@ public class Graph {
     }
 
     public int getNbPoints() {
-        return this.nb_points;
+        return this.nbPoints;
     }
 
     public int getNb_segments() {
-        return this.nb_segments;
+        return this.nbSegments;
     }
 
     public List<Point> getPoints() {
