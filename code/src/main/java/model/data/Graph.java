@@ -30,7 +30,7 @@ public class Graph {
     /**
      * Instantiates a Graph.
      */
-    Graph() {
+    public Graph() {
         nbPoints = 0;
         nbSegments = 0;
         points = new ArrayList<Point>();
