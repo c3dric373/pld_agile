@@ -1,9 +1,13 @@
 package model.core.management;
 
+import model.data.ActionPoint;
 import model.data.DeliveryProcess;
+import model.data.Point;
 import view.UserInterface;
 
+import javax.swing.*;
 import java.io.File;
+import java.util.List;
 
 /**
  * Represents the application from the perspective of the view. It provides a
@@ -43,7 +47,25 @@ public interface ApplicationManager {
      */
     void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
 
-    void modifyTour();
+    /**
+     * Changes the delivery order of the actionPoints.
+     * @param actionPoints the whole list of actionPoints of the tour stored in
+     *                     the {@link model.data.ProjectData}
+     */
+    void changeDeliveryOrder(final List<ActionPoint> actionPoints);
 
+    /**
+     * Changes the position of a point in a tour showed in the map.
+     * @param oldPoint the old position
+     * @param newPoint the new position
+     */
+    void changePointPosition(final Point oldPoint, final Point newPoint);
+
+    /**
+     * Finds nearest point of a given point with lat and long.
+     * @param latitude latitude of the point
+     * @param longitude longitude of the point
+     */
+    void findNearestPoint(final double latitude, final double longitude);
 
 }
