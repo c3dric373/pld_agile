@@ -77,7 +77,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void calculateTour() {
-        Tour tour = projectData.getProject().getTour();
+        final Tour tour = projectDataWrapper.getProject().getTour();
         projectDataWrapper.modifyTour(tour);
     }
 

@@ -15,12 +15,14 @@ public class TourService {
 
     }
 
-    public Tour changeDeliveryOrder(final Tour tour, final List<ActionPoint> actionPoints) {
+    public Tour changeDeliveryOrder(final Tour tour,
+                                    final List<ActionPoint> actionPoints) {
         //TODO
         return null;
     }
 
-    public Tour changePointPosition(Tour tour, Point oldPoint, Point newPoint) {
+    public Tour changePointPosition(final Tour tour, final Point oldPoint,
+                                    final Point newPoint) {
         //TODO
         return null;
     }

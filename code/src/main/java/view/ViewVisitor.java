@@ -6,12 +6,12 @@ import model.data.Tour;
 
 public class ViewVisitor implements GenDataVisitor {
     @Override
-    public void visit(Tour tour) {
+    public void visit(final Tour tour) {
         //TODO
     }
 
     @Override
-    public void visit(Graph graph) {
+    public void visit(final Graph graph) {
         //TODO
 
     }
