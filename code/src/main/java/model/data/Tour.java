@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 @EqualsAndHashCode
-public class Tour {
+public class Tour implements GenData{
 
     /**
      * List of all the deliveries the cyclist has to do.
@@ -65,4 +65,8 @@ public class Tour {
     }
 
 
+    @Override
+    public void accept(GenDataVisitor genDataVisitor) {
+
+    }
 }

@@ -24,8 +24,6 @@ public interface ApplicationManager {
 
     void setObserver(final UserInterface userInterface);
 
-
-    
     /**
      * Loads a tour and creates all necessary components for the project.
      *
