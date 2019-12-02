@@ -13,7 +13,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApp extends Application {
+    /**
+     *
+     */
     private Stage primaryStage;
+
+    /**
+     *
+     */
     private BorderPane rootLayout;
 
     /**
@@ -23,7 +30,7 @@ public class MainApp extends Application {
     private ObservableList<String> tourData = FXCollections.observableArrayList();
 
     /**
-     * Constructor
+     * Constructor.
      */
     public MainApp() {
         // Add some sample data List
@@ -32,14 +39,14 @@ public class MainApp extends Application {
 
     /**
      * Returns the data as an observable list of Delivery from Tour.
-     * @return
+     * @return tourData
      */
     public ObservableList<String> getTour() {
         return tourData;
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Déli'Vélo");
 
@@ -67,7 +74,7 @@ public class MainApp extends Application {
         }
     }
 
-    // Initialize show person
+    // Initialize show person.
     private void showDashboard() {
         try {
             // Load root Layout from fxml file.
@@ -87,7 +94,10 @@ public class MainApp extends Application {
         }
     }
 
-
+    /**
+     * getPrimaryStage.
+     * @return primaryStage
+     */
     public Stage getPrimaryStage() {
         return primaryStage;
     }

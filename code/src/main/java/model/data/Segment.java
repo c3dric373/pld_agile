@@ -6,93 +6,94 @@ import lombok.Getter;
 
 /**
  * This class represents a specific road segment on the loaded map.
- * Each Segment has a origin point, a end point, the distance between them and the name of the segment.
+ * Each Segment has a origin point, a end point, the distance between them and
+ * the name of the segment.
  */
 @Getter
 @EqualsAndHashCode
 public class Segment {
 
     /**
-     * Id of the origin Point on the map
+     * Id of the origin Point on the map.
      */
-    private long id_origin;
+    private long idOrigin;
     /**
-     * Id of the end Point on the map
+     * Id of the end Point on the map.
      */
-    private long id_end;
+    private long idEnd;
     /**
-     * Distance between the origin Point and the end Point
+     * Distance between the origin Point and the end Point.
      */
     private double length;
     /**
-     * Name of the Segment
+     * Name of the Segment.
      */
     private String name;
 
     /**
-     * Instantiates a Segment
-     * @param id_origin Id of origin Point
-     * @param id_end Id of end Point
-     * @param length Distance between the origin Point and the end Point
-     * @param name Name of the Segment
+     * Smallest possible id.
      */
-    public Segment(final long id_origin, final long id_end, final double length, final String name)
-    {
-        Validate.notNull(name, "name is null");
+    static final int MIN_ID = 0;
+
+    /**
+     * Biggest not allowed length.
+     */
+    static final int MAX_NOT_ALLOWED_LENGTH = 0;
+
+    /**
+     * Instantiates a Segment.
+     *
+     * @param idOriginPoint Id of origin Point.
+     * @param idEndPoint    Id of end Point.
+     * @param segmentLength   Distance between the origin Point and the end Point.
+     * @param segmentName     Name of the Segment.
+     */
+    public Segment(final long idOriginPoint, final long idEndPoint,
+                   final double segmentLength, final String segmentName) {
+        Validate.notNull(segmentName, "name is null");
        /* if (name.equals("")) {
             throw new IllegalArgumentException("name is empty");
         }*/
-        if (length<0){
+        if (segmentLength < MAX_NOT_ALLOWED_LENGTH) {
             throw new IllegalArgumentException("length is negative");
         }
-        if (length == 0) {
+        if (segmentLength == MAX_NOT_ALLOWED_LENGTH) {
             throw new IllegalArgumentException("length is zero");
         }
-        if (id_origin < 0) {
+        if (idOriginPoint < MIN_ID) {
             throw new IllegalArgumentException("id_origin is negative");
         }
-        if (id_end < 0) {
+        if (idEndPoint < MIN_ID) {
             throw new IllegalArgumentException("id_end is negative");
         }
-        this.id_origin = id_origin;
-        this.id_end = id_end;
-        this.length = length;
-        this.name = name;
+        this.idOrigin = idOriginPoint;
+        this.idEnd = idEndPoint;
+        this.length = segmentLength;
+        this.name = segmentName;
     }
 
     /**
-     * Get one of the point id of the segment
-     * @return one of the point id of the segment
+     * Get one of the point id of the segment.
+     *
+     * @return one of the point id of the segment.
      */
     long either() {
-        return id_origin;
+        return idOrigin;
     }
 
     /**
-     * Get the other point id of the segment
-     * @param id a point id of the segment
-     * @return the other point id of the segment
+     * Get the other point id of the segment.
+     *
+     * @param id a point id of the segment.
+     * @return the other point id of the segment.
      */
-    long other(long id){
-        if(id == id_origin){
-            return id_end;
-        }else if(id == id_end){
-            return id_origin;
-        }else{
+    long other(final long id) {
+        if (id == idOrigin) {
+            return idEnd;
+        } else if (id == idEnd) {
+            return idOrigin;
+        } else {
             throw new IllegalArgumentException("segment has no such point");
         }
-    }
-
-    public long getId_origin() {
-        return id_origin;
-    }
-    public long getId_end() {
-        return id_end;
-    }
-    public double getLength() {
-        return length;
-    }
-    public String getName() {
-        return name;
     }
 }
