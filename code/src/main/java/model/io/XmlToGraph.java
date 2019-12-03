@@ -1,26 +1,19 @@
 package model.io;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Time;
-import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import model.data.Tour;
-import model.data.Point;
-import model.data.DeliveryProcess;
-import model.data.ActionPoint;
-import model.data.Segment;
-import model.data.ActionType;
-
+import model.data.*;
 import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Time;
+import java.util.ArrayList;
 
 public class XmlToGraph {
     /**
@@ -167,7 +160,7 @@ public class XmlToGraph {
 
             // Reading of all segments in the file.
             for (int segmentIndex = 0; segmentIndex < nbRoadElements;
-                    segmentIndex++) {
+                 segmentIndex++) {
                 final Element road = (Element) roadList.item(segmentIndex);
                 String arrivalString = road.getAttribute("destination");
                 long roadArrival = Long.parseLong(arrivalString);
@@ -177,7 +170,7 @@ public class XmlToGraph {
                 String departureString = road.getAttribute("origine");
                 long roadDeparture = Long.parseLong(departureString);
                 Segment segment = new Segment(roadDeparture, roadArrival,
-                                                    roadLength, roadName);
+                        roadLength, roadName);
 
                 for (Point node : nodes) {
                     if (node.getId() == roadDeparture) {
@@ -242,7 +235,7 @@ public class XmlToGraph {
             // Reading of all DeliveryProcess in the file
             // and addition to the ArrayList.
             for (int deliveryIndex = 0; deliveryIndex < nbDeliveryElements;
-                    deliveryIndex++) {
+                 deliveryIndex++) {
                 final Element deliveryXml;
                 deliveryXml = (Element) deliveryList.item(deliveryIndex);
                 String pickupIdString;
@@ -254,7 +247,7 @@ public class XmlToGraph {
                 deliveryIdString = deliveryXml.getAttribute("adresseLivraison");
                 Long deliveryPointId = Long.parseLong(deliveryIdString);
                 System.out.println("idDeliver "
-                                    + deliveryPointId);
+                        + deliveryPointId);
                 Point deliveryPoint = getPointById(deliveryPointId);
                 String pickupTimeString;
                 pickupTimeString = deliveryXml.getAttribute("dureeEnlevement");

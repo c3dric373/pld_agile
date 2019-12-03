@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public class Graph {
+public class Graph implements GenData {
     /**
      * List of points in the map.
      */
@@ -30,7 +30,7 @@ public class Graph {
     /**
      * Instantiates a Graph.
      */
-    Graph() {
+    public Graph() {
         nbPoints = 0;
         nbSegments = 0;
         points = new ArrayList<Point>();
@@ -107,6 +107,12 @@ public class Graph {
         }
         System.out.println("nb_nodes: " + nbPoints);
         System.out.println("nb_segments: " + nbSegments);
+    }
+
+    @Override
+    public void accept(final GenDataVisitor genDataVisitor) {
+        genDataVisitor.visit(this);
+
     }
 
     class tuple {
@@ -222,5 +228,8 @@ public class Graph {
 
     public Map<Integer, Integer> getMap() {
         return this.map;
+    }
+
+    public enum ProjectState {
     }
 }

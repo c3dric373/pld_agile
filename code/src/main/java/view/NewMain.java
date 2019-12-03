@@ -5,12 +5,7 @@ package view;
  */
 public class NewMain {
 
-    /**
-     * Main app to start the program.
-     *
-     * @param args Command line args.
-     */
-    public static void main(final String[] args) {
-        MainApp.main(args);
+    public static void main(String[] args) {
+        UserInterface.main(args);
     }
 }

@@ -1,8 +1,8 @@
 package model.data;
 
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang.Validate;
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 
 /**
  * This class represents a specific road segment on the loaded map.
@@ -45,8 +45,8 @@ public class Segment {
      *
      * @param idOriginPoint Id of origin Point.
      * @param idEndPoint    Id of end Point.
-     * @param segmentLength   Distance between the origin Point and the end Point.
-     * @param segmentName     Name of the Segment.
+     * @param segmentLength Distance between the origin Point and the end Point.
+     * @param segmentName   Name of the Segment.
      */
     public Segment(final long idOriginPoint, final long idEndPoint,
                    final double segmentLength, final String segmentName) {

@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
-import view.MainApp;
+import view.UserInterface;
 
 import java.io.File;
 import java.net.URL;
@@ -17,7 +17,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
 
     // Reference to the main application
-    private MainApp mainApp;
+    private UserInterface mainApp;
 
     @FXML
     private Label latitudeLabel;
@@ -155,7 +155,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
      *
      * @param mainApp
      */
-    public void setMainApp(MainApp mainApp) {
+    public void setMainApp(UserInterface mainApp) {
         this.mainApp = mainApp;
 
         // Add observable list data to the table

@@ -1,6 +1,7 @@
 package model.data;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -13,10 +14,22 @@ import java.util.List;
  */
 
 @EqualsAndHashCode
-public class Tour {
+@Getter
+public class Tour implements GenData {
 
     /**
      * List of all the deliveries the cyclist has to do.
+     * List of all the action points delivered in this journey
+     */
+    private List<ActionPoint> actionPoints;
+
+    /**
+     * List of all Journeys.
+     */
+    private List<Journey> journeys;
+
+    /**
+     * List of all the deliveries the cyclist has to do
      */
     private final List<DeliveryProcess> deliveryProcesses;
 
@@ -34,11 +47,11 @@ public class Tour {
      * Instantiates a Tour.
      *
      * @param deliveryProcessesList list of deliveries
-     * @param basePoint              start point
-     * @param time         start time
+     * @param basePoint             start point
+     * @param time                  start time
      */
-    public Tour(final List<DeliveryProcess> deliveryProcessesList, final Point basePoint,
-                final Time time) {
+    public Tour(final List<DeliveryProcess> deliveryProcessesList,
+                final Point basePoint, final Time time) {
         Validate.notNull(deliveryProcessesList, "deliveryProcess is null");
         Validate.notNull(basePoint, "base is null");
         Validate.notNull(time, "startTime is null");
@@ -54,4 +67,26 @@ public class Tour {
     }
 
 
+    @Override
+    public void accept(final GenDataVisitor genDataVisitor) {
+        genDataVisitor.visit(this);
+    }
+
+    /**
+     * Adds a deliverProcess to the list of existing delivery processes
+     *
+     * @param deliveryProcess the delivery process to add
+     */
+    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        deliveryProcesses.add(deliveryProcess);
+    }
+
+    /**
+     * Deletes a deliverProcess to the list of existing delivery processes
+     *
+     * @param deliveryProcess the delivery process to delete
+     */
+    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        deliveryProcesses.remove(deliveryProcess);
+    }
 }
