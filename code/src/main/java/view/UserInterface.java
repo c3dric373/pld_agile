@@ -109,6 +109,8 @@ public class UserInterface extends Application implements Observer {
         return primaryStage;
     }
 
+    public UserInterface(){};
+
     public static void main(String[] args) {
         launch(args);
     }
