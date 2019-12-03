@@ -37,6 +37,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mapView.addMapInializedListener(this);
+        mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
     }
 
     @Override
