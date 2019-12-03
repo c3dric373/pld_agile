@@ -52,7 +52,8 @@ public class Tour implements GenData {
      */
     public Tour(final List<DeliveryProcess> deliveryProcessesList,
                 final Point basePoint, final Time time) {
-        Validate.notNull(deliveryProcessesList, "deliveryProcess is null");
+        Validate.notNull(deliveryProcessesList, "deliveryProcess"
+                + " is null");
         Validate.notNull(basePoint, "base is null");
         Validate.notNull(time, "startTime is null");
         /*if (startTime<0){
@@ -73,7 +74,7 @@ public class Tour implements GenData {
     }
 
     /**
-     * Adds a deliverProcess to the list of existing delivery processes
+     * Adds a deliverProcess to the list of existing delivery processes.
      *
      * @param deliveryProcess the delivery process to add
      */
@@ -82,7 +83,7 @@ public class Tour implements GenData {
     }
 
     /**
-     * Deletes a deliverProcess to the list of existing delivery processes
+     * Deletes a deliverProcess to the list of existing delivery processes.
      *
      * @param deliveryProcess the delivery process to delete
      */
