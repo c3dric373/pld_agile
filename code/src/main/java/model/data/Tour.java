@@ -19,6 +19,7 @@ public class Tour implements GenData {
 
     /**
      * List of all the action points delivered in this journey
+     * IN ORDER OF DELIVERY!!!
      */
     private List<ActionPoint> actionPoints;
 

@@ -3,7 +3,7 @@ package model.core.service;
 import model.data.*;
 
 import java.util.List;
-import java.util.ListIterator;
+import java.util.OptionalInt;
 
 public class TourService {
 
@@ -20,20 +20,45 @@ public class TourService {
     }
 
     /**
-     * Changes the position of an Action point on a Tour. 
-     * @param graph the map on which the tour takes place.
-     * @param tour the tour.
+     * Changes the position of an Action point on a Tour.
+     *
+     * @param graph    the map on which the tour takes place.
+     * @param tour     the tour.
      * @param oldPoint the old point.
-     * @param newPoint the new Point. 
-     * @return a tour with the old point being replaced by the new one. 
+     * @param newPoint the new Point.
+     * @return a tour with the old point being replaced by the new one.
      */
     public Tour changePointPosition(final Graph graph, final Tour tour,
                                     final ActionPoint oldPoint,
                                     final Point newPoint) {
-        // Get the Point just before oldPoint in the tour
+        // If point not in delivery processes throw exception 
+        // else get index of point in list of delivery processes and update the
+        // new delivery process
+        List<DeliveryProcess> oldDeliveryProcesses = tour.
+                getDeliveryProcesses();
+        final OptionalInt optionalOldIndexDP = DeliveryProcessService.
+                findActionPoint(oldDeliveryProcesses, oldPoint);
+        if (optionalOldIndexDP.isEmpty()) {
+            throw new IllegalArgumentException("oldPoint not in "
+                    + "delivery Processes");
+        }
+        int oldIndexDP = optionalOldIndexDP.getAsInt();
+        final DeliveryProcess oldDeliveryProcess = oldDeliveryProcesses.
+                get(oldIndexDP);
+        final ActionPoint newActionPoint = new ActionPoint(oldPoint.getTime(),
+                newPoint,oldPoint.getActionType());
+        final DeliveryProcess newDeliveryProcess = DeliveryProcessService.
+                replacePoint(oldDeliveryProcess,newActionPoint);
+        // Replacing
+        oldDeliveryProcesses.set(oldIndexDP, newDeliveryProcess);
+        //
+
+        // Find the actionPoints before and after
 
         final List<ActionPoint> actionPoints = tour.getActionPoints();
-        final int oldPointIndex = getIndexOfPoint(oldPoint.getLocation(), actionPoints);
+        final int oldPointIndex = ActionPointService.
+                getIndexOfPointInActionPoints(oldPoint.getLocation(),
+                        actionPoints);
         final ActionPoint predecessorPoint = actionPoints.
                 get(oldPointIndex - 1);
 
@@ -46,54 +71,23 @@ public class TourService {
                 predecessorPoint.getLocation(), newPoint);
 
         // Modify Location in DeliveryProcesses List
+        final ActionType oldActionType = oldPoint.getActionType();
 
 
-        final ActionPoint oldActionPoint = actionPoints.get(oldPointIndex);
-        DeliveryProcess oldDeliveryProcess;
-        List<DeliveryProcess> oldDeliveryProcesses = tour.
-                getDeliveryProcesses();
-        int oldIndexDP = -1;
-        DeliveryProcess newDeliveryProcess = null;
+        final ActionPoint newActionPoint = new ActionPoint(
+                oldPoint.getTime(), newPoint, oldActionType);
+        // Find the correct
 
-        for (final DeliveryProcess deliveryProcess : oldDeliveryProcesses) {
-            if (deliveryProcess.getDelivery() == oldActionPoint
-                    || deliveryProcess.getPickUP() == oldActionPoint) {
-                oldDeliveryProcess = deliveryProcess;
-                oldIndexDP = oldDeliveryProcesses.indexOf(oldDeliveryProcess);
-                final ActionType oldActionType = oldActionPoint.getActionType();
-                final ActionPoint newActionPoint = new ActionPoint(
-                        oldActionPoint.getTime(), newPoint, oldActionType);
-                if (oldActionType == ActionType.DELIVERY) {
-                    newDeliveryProcess = new DeliveryProcess(
-                            deliveryProcess.getPickUP(), newActionPoint);
-                } else {
-                    newDeliveryProcess = new DeliveryProcess(
-                            newActionPoint, deliveryProcess.getDelivery());
-                }
-            }
-        }
-        tour.getDeliveryProcesses().set(oldIndexDP, newDeliveryProcess);
+        newDeliveryProcess = DeliveryProcessService.replacePoint(
+                oldDeliveryProcess, newActionPoint);
 
-        // Add new Journey to tour
-        final List<Journey> journeys = tour.getJourneys();
+
+    // Add new Journey to tour
+    final List<Journey> journeys = tour.getJourneys();
 
 
         return null;
-    }
+}
 
-    /**
-     * Gets the index of an Action Point that is at the same location than a
-     * given point.
-     *
-     * @param oldPoint     the given point.
-     * @param actionPoints the list of action Points/
-     * @return the specific index.
-     */
-    private int getIndexOfPoint(final Point oldPoint,
-                                final List<ActionPoint> actionPoints) {
-        ListIterator<ActionPoint> it = actionPoints.listIterator();
-        while (it.hasNext() && oldPoint == it.next().getLocation()) {
-        }
-        return it.nextIndex();
-    }
+
 }
