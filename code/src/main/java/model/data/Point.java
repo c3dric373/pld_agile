@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Getter
 @EqualsAndHashCode
-public class Point implements GenData{
+public class Point implements GenData {
 
     /**
      * Location of the point on the map.
@@ -126,7 +126,7 @@ public class Point implements GenData{
     }
 
     @Override
-    public void accept(GenDataVisitor genDataVisitor) {
+    public void accept(final GenDataVisitor genDataVisitor) {
         genDataVisitor.visit(this);
     }
 }

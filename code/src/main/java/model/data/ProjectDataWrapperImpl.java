@@ -5,7 +5,7 @@ import view.Observer;
 /**
  * Implementation of {@link ProjectDataWrapper}.
  */
-public class ProjectDataWrapperImpl implements ProjectDataWrapper{
+public class ProjectDataWrapperImpl implements ProjectDataWrapper {
 
     /**
      * Observer to notify when changes occur.
@@ -17,10 +17,13 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
      */
     private ProjectData projectData;
 
-    public ProjectDataWrapperImpl(final Observer newObserver){
-        this.observer = newObserver;
+    /**
+     * Instantiates a new Project Data Wrapper.
+     */
+    public ProjectDataWrapperImpl() {
         projectData = new ProjectDataImpl();
     }
+
     @Override
     public void loadMap(final Graph graph) {
         projectData.setGraph(graph);
@@ -44,27 +47,34 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper{
         return projectData;
     }
 
-    public void addDeliveryProcess(final DeliveryProcess deliveryProcess){
+    @Override
+    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
         Tour tour = projectData.getTour();
         tour.addDeliveryProcess(deliveryProcess);
         projectData.setTour(tour);
         notify(tour);
     }
 
-    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess){
+    @Override
+    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
         Tour tour = projectData.getTour();
         tour.deleteDeliveryProcess(deliveryProcess);
         projectData.setTour(tour);
         notify(tour);
     }
 
-    public void findNearestPoint(final Point newPoint){
+    @Override
+    public void findNearestPoint(final Point newPoint) {
         notify(newPoint);
     }
 
 
-    private void notify(final GenData genData){
-
+    /**
+     * Notifies the view of changes.
+     *
+     * @param genData the changed data to be updated to the view.
+     */
+    private void notify(final GenData genData) {
         observer.update(genData);
     }
 }

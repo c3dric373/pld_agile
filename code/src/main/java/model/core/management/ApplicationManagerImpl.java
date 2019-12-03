@@ -43,14 +43,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
      */
     private TourService tourService;
 
-
+    /**
+     * Instantiates an Application Manager.
+     */
     ApplicationManagerImpl() {
         xmlToGraph = new XmlToGraph();
         projectState = ProjectState.INITIALIZED;
         journeyService = new JourneyService();
         graphService = new GraphService();
         tourService = new TourService();
-        //projectDataWrapper = new ProjectDataWrapperImpl(newObserver);
+        projectDataWrapper = new ProjectDataWrapperImpl();
 
     }
 
@@ -120,7 +122,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         Validate.notNull(actionPoints, "actionPoints null");
         Validate.notEmpty(actionPoints, "actionPointsEmpty");
         final Tour tour = projectDataWrapper.getProject().getTour();
-        final Tour newTour = tourService.changeDeliveryOrder(tour, actionPoints);
+        final Tour newTour = tourService.changeDeliveryOrder(tour,
+                actionPoints);
         projectDataWrapper.modifyTour(newTour);
     }
 
@@ -149,7 +152,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         Validate.notNull(longitude, "longitude is null");
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
-        Point nearestPoint = graphService.findNearestPoint(pointList, longitude, latitude);
+        final Point nearestPoint = graphService.findNearestPoint(pointList,
+                longitude, latitude);
         projectDataWrapper.findNearestPoint(nearestPoint);
     }
 

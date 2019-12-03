@@ -35,22 +35,24 @@ public interface ProjectDataWrapper {
 
     /**
      * Add a DeliveryProcess to the current Tour.
-     * @param deliveryProcess
+     *
+     * @param deliveryProcess the delivery process to add
      */
     void addDeliveryProcess(final DeliveryProcess deliveryProcess);
 
     /**
      * Delete a DeliveryProcess to the current Tour.
-     * @param deliveryProcess
+     *
+     * @param deliveryProcess the delivery process to delete
      */
     void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
 
     /**
      * Return the nearestPoint from the param.
-     * @param newPoint
+     *
+     * @param newPoint the point from which to find the nearest point.
      */
     void findNearestPoint(final Point newPoint);
-
 
 
 }

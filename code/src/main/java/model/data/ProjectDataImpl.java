@@ -5,10 +5,8 @@ import java.util.List;
 
 /**
  * Defines what data has to be implemented for a project.
- *
- * @author Klara
  */
-public class ProjectDataImpl implements ProjectData{
+public class ProjectDataImpl implements ProjectData {
 
     /**
      * Tour for ProjectDataWrapper.
@@ -30,7 +28,7 @@ public class ProjectDataImpl implements ProjectData{
         return tour;
     }
 
-    public List<Point> getPointList(){
+    public List<Point> getPointList() {
         return pointList;
     }
 
@@ -40,7 +38,7 @@ public class ProjectDataImpl implements ProjectData{
     }
 
     @Override
-    public void setGraph( final Graph newGraph) {
+    public void setGraph(final Graph newGraph) {
         graph = newGraph;
     }
 

@@ -2,7 +2,6 @@ package model.core.service;
 
 import model.data.*;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -20,13 +19,15 @@ public class TourService {
         return null;
     }
 
-    public Tour changePointPosition(final Graph graph, final Tour tour, final Point oldPoint,
+    public Tour changePointPosition(final Graph graph, final Tour tour,
+                                    final Point oldPoint,
                                     final Point newPoint) {
         // Get the Point just before oldPoint in the tour
 
         final List<ActionPoint> actionPoints = tour.getActionPoints();
         final int oldPointIndex = getIndexOfPoint(oldPoint, actionPoints);
-        final ActionPoint predecessorPoint = actionPoints.get(oldPointIndex - 1);
+        final ActionPoint predecessorPoint = actionPoints.
+                get(oldPointIndex - 1);
 
         // Calculate shortest path between predecessor and new Point
 
@@ -37,7 +38,8 @@ public class TourService {
 
         final ActionPoint oldActionPoint = actionPoints.get(oldPointIndex);
         DeliveryProcess oldDeliveryProcess;
-        List<DeliveryProcess> oldDeliveryProcesses = tour.getDeliveryProcesses();
+        List<DeliveryProcess> oldDeliveryProcesses = tour.
+                getDeliveryProcesses();
         int oldIndexDP = -1;
         DeliveryProcess newDeliveryProcess = null;
 
@@ -67,7 +69,8 @@ public class TourService {
         return null;
     }
 
-    private int getIndexOfPoint(final Point oldPoint, final List<ActionPoint> actionPoints) {
+    private int getIndexOfPoint(final Point oldPoint,
+                                final List<ActionPoint> actionPoints) {
         ListIterator<ActionPoint> it = actionPoints.listIterator();
         while (it.hasNext() && oldPoint == it.next().getLocation()) {
         }

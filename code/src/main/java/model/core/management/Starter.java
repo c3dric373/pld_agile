@@ -1,6 +1,7 @@
 package model.core.management;
 
 import view.UserInterface;
+
 /**
  * Class responsible for starting the application.
  */
@@ -15,7 +16,5 @@ public class Starter {
         ApplicationManager model = new ApplicationManagerImpl();
         UserInterface view = new UserInterface(model);
         model.setObserver(view);
-
-
     }
 }

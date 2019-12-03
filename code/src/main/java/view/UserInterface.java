@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
 
-import javax.swing.text.View;
 import java.io.IOException;
 
 public class UserInterface extends Application implements Observer {
@@ -37,6 +36,7 @@ public class UserInterface extends Application implements Observer {
 
     /**
      * Constructor
+     *
      * @param model
      */
     public UserInterface(final ApplicationManager model) {
@@ -48,6 +48,7 @@ public class UserInterface extends Application implements Observer {
 
     /**
      * Returns the data as an observable list of Delivery from Tour.
+     *
      * @return
      */
     public ObservableList<String> getTour() {
@@ -89,7 +90,7 @@ public class UserInterface extends Application implements Observer {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(UserInterface.class.getResource("DashBoard.fxml"));
-            AnchorPane dashboardOverview =  loader.load();
+            AnchorPane dashboardOverview = loader.load();
 
             // Set person overview into the center of root layout
             rootLayout.setCenter(dashboardOverview);

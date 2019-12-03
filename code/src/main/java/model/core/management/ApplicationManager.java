@@ -5,7 +5,6 @@ import model.data.DeliveryProcess;
 import model.data.Point;
 import view.UserInterface;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
@@ -49,6 +48,7 @@ public interface ApplicationManager {
 
     /**
      * Changes the delivery order of the actionPoints.
+     *
      * @param actionPoints the whole list of actionPoints of the tour stored in
      *                     the {@link model.data.ProjectData}
      */
@@ -56,6 +56,7 @@ public interface ApplicationManager {
 
     /**
      * Changes the position of a point in a tour showed in the map.
+     *
      * @param oldPoint the old position
      * @param newPoint the new position
      */
@@ -63,7 +64,8 @@ public interface ApplicationManager {
 
     /**
      * Finds nearest point of a given point with lat and long.
-     * @param latitude latitude of the point
+     *
+     * @param latitude  latitude of the point
      * @param longitude longitude of the point
      */
     void findNearestPoint(final double latitude, final double longitude);

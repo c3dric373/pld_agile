@@ -7,5 +7,10 @@ package model.data;
  */
 public interface GenData {
 
+    /**
+     * Method to call the {@link GenDataVisitor} on this data.
+     *
+     * @param genDataVisitor The visitor instance to be called.
+     */
     void accept(final GenDataVisitor genDataVisitor);
 }

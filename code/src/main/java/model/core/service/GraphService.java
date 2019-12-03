@@ -1,19 +1,18 @@
 package model.core.service;
-import model.data.Point;
-import java.util.List;
 
 import model.data.Graph;
 import model.data.Journey;
 import model.data.Point;
-
 import model.data.Tour;
+
+import java.util.List;
 
 public class GraphService {
 
 
-    public Point findNearestPoint(List<Point> pointList, final double longitude,
+    public Point findNearestPoint(final List<Point> pointList, final double longitude,
                                   final double latitude) {
-        Point nearestPoint;
+        final Point nearestPoint;
         long nearestId = 0;
         double nearestLong = 0.0, nearestLat = 0.0;
         double differenceLong = 100.0, differenceLat = 100.0;
@@ -37,7 +36,8 @@ public class GraphService {
         nearestPoint = new Point(nearestId, nearestLat, nearestLong);
         return nearestPoint;
     }
-    public static Tour calculateTour(final Tour tour){
+
+    public static Tour calculateTour(final Tour tour) {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class GraphService {
     }
 
 
-    public static Journey shortestPath(final Graph graph,final Point point1, final Point point2){
+    public static Journey shortestPath(final Graph graph, final Point point1, final Point point2) {
         //todo
         return null;
     }

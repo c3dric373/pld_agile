@@ -28,9 +28,9 @@ public class ActionPoint {
     /**
      * Instatiates an ActionPoint.
      *
-     * @param actionTime       time of action.
-     * @param actionLocation   location of action.
-     * @param type type of action.
+     * @param actionTime     time of action.
+     * @param actionLocation location of action.
+     * @param type           type of action.
      */
     public ActionPoint(final Time actionTime, final Point actionLocation,
                        final ActionType type) {
@@ -38,8 +38,8 @@ public class ActionPoint {
         Validate.notNull(type, "actionType is null");
         Validate.notNull(actionTime, "time is null");
 
-        this.time = time;
-        this.location = location;
-        this.actionType=actionType;
+        this.time = actionTime;
+        this.location = actionLocation;
+        this.actionType = type;
     }
 }

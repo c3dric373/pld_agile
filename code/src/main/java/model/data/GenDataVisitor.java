@@ -5,6 +5,7 @@ package model.data;
  * Every data type will be handled according to it's own type.
  */
 public interface GenDataVisitor {
+
     /**
      * Calls the right methods to process a {@link Tour}.
      *
@@ -17,10 +18,11 @@ public interface GenDataVisitor {
      *
      * @param graph the  {@code graph} to process
      */
-    void visit (final Graph graph);
+    void visit(final Graph graph);
 
     /**
      * Calls the right methods to process a {@link Point}.
+     *
      * @param point the  {@code graph} to process
      */
     void visit(final Point point);

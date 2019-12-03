@@ -4,7 +4,7 @@ import model.data.Journey;
 
 public class JourneyService {
 
-    void calculateTime(Journey journey){
+    void calculateTime(Journey journey) {
     }
 
 
