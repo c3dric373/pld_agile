@@ -71,10 +71,26 @@ public class TourService {
 
         // Finding the journeys from and to the old point replacing them with
         // the newly calculated journeys.
+        final boolean IS_ENDPOINT = true;
         final List<Journey> oldJourneys = tour.getJourneys();
-
-
-        return null;
+        final OptionalInt optOldPredecessorJ = JourneyService.
+                findIndexPointInJourneys(oldJourneys,oldPoint.getLocation(),
+                        IS_ENDPOINT);
+        final OptionalInt optOldSuccessorJ = JourneyService.
+                findIndexPointInJourneys(oldJourneys,oldPoint.getLocation(),
+                        !IS_ENDPOINT);
+        if(optOldPredecessorJ.isEmpty()){
+            throw new IllegalArgumentException("Point isn't endPoint of any " 
+                    + "Journey");
+        }
+        if(optOldSuccessorJ.isEmpty()){
+            throw new IllegalArgumentException("Point isn't startPoint of any "
+                    + "Journey");
+        }
+        tour.getJourneys().set(optOldPredecessorJ.getAsInt(),
+                newPredecessorJourney);
+        tour.getJourneys().set(optOldSuccessorJ.getAsInt(),newSuccessorJourney);
+        return tour;
 }
 
 
