@@ -128,7 +128,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void changePointPosition(final Point oldPoint, final Point newPoint) {
+    public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
         if (projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Tour not loaded");
         }

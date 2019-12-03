@@ -18,7 +18,6 @@ import java.util.List;
 public class Tour implements GenData {
 
     /**
-     * List of all the deliveries the cyclist has to do.
      * List of all the action points delivered in this journey
      */
     private List<ActionPoint> actionPoints;
