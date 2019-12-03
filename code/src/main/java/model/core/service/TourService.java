@@ -53,37 +53,27 @@ public class TourService {
         oldDeliveryProcesses.set(oldIndexDP, newDeliveryProcess);
         //
 
-        // Find the actionPoints before and after
-
+        // Find the actionPoints before and after the point to be moved
         final List<ActionPoint> actionPoints = tour.getActionPoints();
-        final int oldPointIndex = ActionPointService.
-                getIndexOfPointInActionPoints(oldPoint.getLocation(),
-                        actionPoints);
+        final int oldPointIndex = actionPoints.indexOf(oldPoint);
+        if (oldPointIndex == -1){
+            throw new IllegalArgumentException("oldPoint not in list");
+        }
         final ActionPoint predecessorPoint = actionPoints.
+                get(oldPointIndex - 1);
+        final ActionPoint successorPoint = actionPoints.
                 get(oldPointIndex - 1);
 
         // Calculate shortest path between predecessor and new Point and between
-        // and the successor and the new Point
+        // the successor and the new Point
 
         final Journey newPredecessorJourney = GraphService.shortestPath(graph,
                 predecessorPoint.getLocation(), newPoint);
         final Journey newSuccessorJourney = GraphService.shortestPath(graph,
                 predecessorPoint.getLocation(), newPoint);
 
-        // Modify Location in DeliveryProcesses List
-        final ActionType oldActionType = oldPoint.getActionType();
-
-
-        final ActionPoint newActionPoint = new ActionPoint(
-                oldPoint.getTime(), newPoint, oldActionType);
-        // Find the correct
-
-        newDeliveryProcess = DeliveryProcessService.replacePoint(
-                oldDeliveryProcess, newActionPoint);
-
-
-    // Add new Journey to tour
-    final List<Journey> journeys = tour.getJourneys();
+        // Add new Journey to tour
+        final List<Journey> journeys = tour.getJourneys();
 
 
         return null;
