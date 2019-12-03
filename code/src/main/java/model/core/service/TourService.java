@@ -8,10 +8,7 @@ import java.util.OptionalInt;
 public class TourService {
 
 
-    //TODO
-    void createActionPointList(List<Journey> journeys) {
-
-    }
+  
 
     public Tour changeDeliveryOrder(final Tour tour,
                                     final List<ActionPoint> actionPoints) {
@@ -72,8 +69,9 @@ public class TourService {
         final Journey newSuccessorJourney = GraphService.shortestPath(graph,
                 predecessorPoint.getLocation(), newPoint);
 
-        // Add new Journey to tour
-        final List<Journey> journeys = tour.getJourneys();
+        // Finding the journeys from and to the old point replacing them with
+        // the newly calculated journeys.
+        final List<Journey> oldJourneys = tour.getJourneys();
 
 
         return null;
