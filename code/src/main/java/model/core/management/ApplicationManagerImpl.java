@@ -71,7 +71,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void setObserver(final UserInterface userInterface) {
-
+        projectDataWrapper.addObserver(userInterface);
     }
 
     @Override

@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import lombok.Setter;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
 import org.apache.commons.lang.Validate;
@@ -22,18 +23,19 @@ public class UserInterface extends Application implements Observer {
     /**
      * ViewVisitor to handle changes from the model
      */
-    private ViewVisitor viewVisitor;
+    private ViewVisitor viewVisitor = new ViewVisitor();
 
     /**
      * Interface to the model.
      */
-    private ApplicationManager model;
+    @Setter private ApplicationManager model;
 
     /**
      * The data as an observable list of Persons.
      */
     // TODO Modifier ca en autre chose que string genre en liste de livraison
     private ObservableList<String> tourData = FXCollections.observableArrayList();
+    private DashBoardController controller;
 
     /**
      * Constructor
@@ -44,7 +46,6 @@ public class UserInterface extends Application implements Observer {
         // Add some sample data List
         // tourData.addAll();
         this.model = model;
-        this.viewVisitor = new ViewVisitor(new DashBoardController());
         launch();
     }
 
@@ -100,10 +101,17 @@ public class UserInterface extends Application implements Observer {
             // Give the controller access to the main app.
             DashBoardController controller = loader.getController();
             controller.setMainApp(this);
+            setController(controller);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void setController(DashBoardController controller) {
+        Validate.notNull(controller, "controller ist not null");
+        this.controller = controller;
+        this.viewVisitor.addController(controller,this);
     }
 
 
@@ -111,7 +119,10 @@ public class UserInterface extends Application implements Observer {
         return primaryStage;
     }
 
-    public UserInterface(){};
+    public UserInterface() {
+    }
+
+
 
     @Override
     public void update(final GenData genData) {
@@ -119,7 +130,11 @@ public class UserInterface extends Application implements Observer {
     }
 
     public void loadMap(final File selectedFile) {
-        Validate.notNull(selectedFile);
-        model.loadMap(selectedFile);
+        Validate.notNull(selectedFile, "selected file null");
+        if(this.model!=null){
+            System.out.println("test");
+            this.model.loadMap(selectedFile);
+        }
+
     }
 }

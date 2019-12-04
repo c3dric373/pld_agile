@@ -68,6 +68,10 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         notify(newPoint);
     }
 
+    public void addObserver(final Observer observer){
+        this.observer = observer;
+    }
+
 
     /**
      * Notifies the view of changes.

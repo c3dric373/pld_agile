@@ -36,9 +36,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private GoogleMap map;
 
-    public DashBoardController() {
-
-    }
+    public DashBoardController() {}
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -384,7 +382,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (selectedFile != null) {
             if (selectedFile.getName().contains("xml")) {
                 System.out.println("File selected: " + selectedFile.getName());
-                mainApp.loadMap(selectedFile);
+                this.mainApp.loadMap(selectedFile);
             } else {
                 System.out.println("Error Loading not xml File");
             }
@@ -419,7 +417,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
      *
      * @param mainApp
      */
-    public void setMainApp(UserInterface mainApp) {
+    public void setMainApp(final UserInterface mainApp) {
         Validate.notNull(mainApp);
         this.mainApp = mainApp;
 

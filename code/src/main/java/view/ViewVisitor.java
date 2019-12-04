@@ -8,10 +8,7 @@ import model.data.Tour;
 public class ViewVisitor implements GenDataVisitor {
 
     DashBoardController dashBoardController;
-
-    public ViewVisitor(DashBoardController dashBoardController) {
-        this.dashBoardController = dashBoardController;
-    }
+    private UserInterface userInterface;
 
     @Override
     public void visit(final Tour tour) {
@@ -27,5 +24,10 @@ public class ViewVisitor implements GenDataVisitor {
     @Override
     public void visit(final Point point) {
         //TODO
+    }
+
+    public void addController(DashBoardController controller,UserInterface userInterface) {
+        this.dashBoardController = controller;
+        this.userInterface = userInterface;
     }
 }
