@@ -8,6 +8,7 @@ import model.data.Tour;
 
 import javax.swing.*;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class JourneyService {
                                 final List<ActionPoint> actionPoints,
                                 Time startTime) {
         ArrayList<Journey> newJourneyList = new ArrayList<Journey>();
+        Time referenceTime =Time.valueOf("0:0:0");
         for(Journey journey:journeys){
 
             List<Point> points = journey.getPoints();
@@ -36,35 +38,23 @@ public class JourneyService {
                     actionPoints);
             Time actionTime = arrivalActionPoint.getTime();
             double length = journey.getMinLength();
-            int timeInSec = (int)(length/TRAVEL_SPEED);
-            Time travellingTime = durationToTime(timeInSec);
-            Time arrivalTime=null;
-            arrivalTime.setTime(startTime.getTime() + actionTime.getTime() +
-                    travellingTime.getTime());
+            int travelTimeInSec = (int)(length/TRAVEL_SPEED);
+            System.out.println("-----------------");
+            System.out.println("startTime "+ startTime);
+            System.out.println ("travelTime " +travelTimeInSec+ " in hhmm " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
+            LocalTime localTime = startTime.toLocalTime();
+            System.out.println("action time " +actionTime);
+            LocalTime StartPlusTravelTime = localTime.plusSeconds(travelTimeInSec);
+            long actionTimeInSec = (actionTime.getTime() - referenceTime.getTime())/1000l;
+            LocalTime StartPlusTravelPlusActionTime = StartPlusTravelTime.plusSeconds(actionTimeInSec);
+            Time arrivalTime = Time.valueOf(StartPlusTravelPlusActionTime);
             startTime = arrivalTime;
-            System.out.println(arrivalTime);
+            System.out.println("arrival time "+arrivalTime);
             journey.setFinishTime(arrivalTime);
 
             newJourneyList.add(journey);
         }
         return newJourneyList;
-    }
-
-    /**
-     * transform a duration in a time.
-     *
-     * @param durationSec duration in Seconds
-     * @return time object corresponding to durationSec
-     */
-    private Time durationToTime(final int durationSec) {
-        int nbHour = durationSec / NB_SEC_IN_HOUR;
-        int nbMin = (durationSec % NB_SEC_IN_HOUR) / NB_SEC_IN_MIN;
-        int nbSec = (durationSec % NB_SEC_IN_MIN);
-        String durationString;
-        durationString = String.format("%d:%02d:%02d", nbHour, nbMin, nbSec);
-        Time duration = Time.valueOf(durationString);
-        System.out.println("duration = " + duration);
-        return duration;
     }
 
     private ActionPoint findActionPoint(Point point,

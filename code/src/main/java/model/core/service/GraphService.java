@@ -41,6 +41,14 @@ public class GraphService {
         return nearestPoint;
     }
 
+    public static void main(String[] args) {
+        XmlToGraph xml =new XmlToGraph();
+        List <Point> points = xml.getGraphFromXml("resource/petitPlan.xml");
+        Tour tour = xml.getDeliveriesFromXml("resource/demandePetit2.xml");
+        Graph graph =new Graph(points);
+        calculateTour( tour, graph);
+    }
+
     public static Tour calculateTour(final Tour tour, final Graph graph) {
         Computing computing = new Computing();
         Tour res = tour;
