@@ -17,9 +17,7 @@ import picocli.CommandLine;
 import java.io.File;
 import java.io.IOException;
 
-public class UserInterface extends Application implements Observer {
-    private Stage primaryStage;
-    private BorderPane rootLayout;
+public class UserInterface implements Observer {
 
     /**
      * ViewVisitor to handle changes from the model
@@ -43,12 +41,11 @@ public class UserInterface extends Application implements Observer {
      *
      * @param model
      */
-    //public UserInterface(final ApplicationManager model) {
+    public UserInterface(final ApplicationManager model) {
         // Add some sample data List
         // tourData.addAll();
-        //this.model = model;
-        //launch();
-    //}
+        this.model = model;
+    }
 
     /**
      * Returns the data as an observable list of Delivery from Tour.
@@ -59,80 +56,22 @@ public class UserInterface extends Application implements Observer {
         return tourData;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Déli'Vélo");
-
-        initRootLayout();
-        showDashboard();
-    }
-
-    // Initialize main layout aka root layout
-    private void initRootLayout() {
-        try {
-            // Load root Layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            System.out.println();
-            loader.setLocation(UserInterface.class.getResource("RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
-
-            // Show the scene containing the root layout
-
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Initialize show person
-    private void showDashboard() {
-        try {
-            // Load root Layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(UserInterface.class.getResource("DashBoard.fxml"));
-            AnchorPane dashboardOverview = loader.load();
-
-            // Set person overview into the center of root layout
-            rootLayout.setCenter(dashboardOverview);
-
-            // Give the controller access to the main app.
-            controller = loader.getController();
-            controller.setMainApp(this);
-            setController(controller);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setController(DashBoardController controller) {
+    public void setController(DashBoardController controller) {
         Validate.notNull(controller, "controller ist not null");
         this.controller = controller;
         this.viewVisitor.addController(controller);
     }
 
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public UserInterface() {
-        launch();
-    }
-
     @Override
     public void update(final GenData genData) {
+        System.out.println("Visitor User interface");
         genData.accept(viewVisitor);
     }
 
     public void loadMap(final File selectedFile) {
         Validate.notNull(selectedFile, "selected file null");
         if(this.model!=null){
-            System.out.println("test");
+            System.out.println("testmodel");
             this.model.loadMap(selectedFile);
         }
     }

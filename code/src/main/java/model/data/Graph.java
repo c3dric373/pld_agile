@@ -39,6 +39,6 @@ public class Graph implements GenData {
 
     @Override
     public void accept(final GenDataVisitor genDataVisitor) {
-
+        genDataVisitor.visit(this);
     }
 }

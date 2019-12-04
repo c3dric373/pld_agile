@@ -26,6 +26,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
 
     @Override
     public void loadMap(final Graph graph) {
+        System.out.println("Test appl");
         projectData.setGraph(graph);
         notify(graph);
     }
@@ -79,6 +80,8 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
      * @param genData the changed data to be updated to the view.
      */
     private void notify(final GenData genData) {
+        System.out.println("notify");
         observer.update(genData);
+
     }
 }
