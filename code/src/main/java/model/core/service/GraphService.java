@@ -1,10 +1,13 @@
 package model.core.service;
 
-import model.data.Graph;
-import model.data.Journey;
-import model.data.Point;
-import model.data.Tour;
+import model.core.TSP;
+import model.core.TSP2;
+import model.data.*;
+import model.core.Computing;
+import org.checkerframework.checker.units.qual.C;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GraphService {
@@ -37,8 +40,40 @@ public class GraphService {
         return nearestPoint;
     }
 
-    public static Tour calculateTour(final Tour tour) {
-        return null;
+    public static Tour calculateTour(final Tour tour, final Graph graph) {
+        Computing computing = new Computing();
+        Tour res = tour;
+        TSP tsp2 = new TSP2();
+        int tpsLimite = Integer.MAX_VALUE;
+        List<Journey> journeys = computing.getListJourney(tour, graph, tsp2, tpsLimite);
+
+        List<Point> points = new ArrayList<>();
+        for (int i = 1; i < journeys.size(); i++) {
+            points.add(journeys.get(i).getStartPoint());
+        }
+        List<ActionPoint> actionPoints = new ArrayList<>();
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
+        for (Point point : points) {
+            boolean notFound = true;
+            for (DeliveryProcess deliveryProcess :
+                    tour.getDeliveryProcesses()) {
+                if (deliveryProcess.getDelivery().getLocation() == point) {
+                    actionPoints.add(deliveryProcess.getDelivery());
+                    notFound = false;
+                } else if (deliveryProcess.getPickUP().getLocation() == point) {
+                    actionPoints.add(deliveryProcess.getPickUP());
+                    notFound = false;
+                }
+                if (!notFound) break;;
+            }
+        }
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
+        res.setActionPoints(actionPoints);
+
+        //TODO: calculate time
+        res.setJourneys(journeys);
+
+        return res;
     }
 
     public static boolean isInMap(final Point newPoint) {

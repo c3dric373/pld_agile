@@ -91,7 +91,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
             throw new IllegalStateException("tour not loaded");
         }
         final Tour tour = projectDataWrapper.getProject().getTour();
-        final Tour newTour = graphService.calculateTour(tour);
+        final Graph graph = projectDataWrapper.getProject().getGraph();
+        final Tour newTour = graphService.calculateTour(tour, graph);
         projectDataWrapper.modifyTour(newTour);
         projectState = ProjectState.TOUR_CALCULATED;
     }

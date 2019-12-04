@@ -2,6 +2,7 @@ package model.data;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -13,6 +14,7 @@ import java.util.List;
  * the deliveries that the cyclists should complete.
  */
 @Getter
+@Setter
 @EqualsAndHashCode
 public class Tour implements GenData {
 
