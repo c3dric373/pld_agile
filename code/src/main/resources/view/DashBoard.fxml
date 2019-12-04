@@ -116,7 +116,7 @@
                         </Label>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                            <image>
-                              <Image url="@../styleSetting/delivery-box.png" />
+                              <Image url="@../styleSetting/box.png" />
                            </image>
                            <GridPane.margin>
                               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -124,7 +124,7 @@
                         </ImageView>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <image>
-                              <Image url="@../styleSetting/arrival.png" />
+                              <Image url="@../styleSetting/flag.png" />
                            </image>
                         </ImageView>
                         <Label id="base" fx:id="baseLocation" styleClass="label-bright" GridPane.columnIndex="1" />
