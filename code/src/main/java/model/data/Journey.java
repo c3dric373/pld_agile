@@ -11,13 +11,17 @@ import java.util.List;
  * This class represent the shortest path from one point to another
  */
 @Getter
+@Setter
 public class Journey {
 
     /**
      * Start time of journey.
      */
-    @Setter
     private Time startTime;
+    /**
+     * Finish time of journey.
+     */
+    private Time finishTime;
     /**
      * Start point of the journey.
      */

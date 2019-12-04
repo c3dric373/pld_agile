@@ -4,6 +4,7 @@ import model.core.TSP;
 import model.core.TSP2;
 import model.data.*;
 import model.core.Computing;
+import model.io.XmlToGraph;
 import org.checkerframework.checker.units.qual.C;
 
 import java.sql.Time;
@@ -70,8 +71,9 @@ public class GraphService {
         actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
         res.setActionPoints(actionPoints);
 
-        //TODO: calculate time
-        res.setJourneys(journeys);
+        JourneyService journeyService = new JourneyService();
+        List<Journey> journeys1 = journeyService.calculateTime(journeys, actionPoints, tour.getStartTime());
+        res.setJourneys(journeys1);
 
         return res;
     }
@@ -86,4 +88,14 @@ public class GraphService {
         //todo
         return null;
     }
+//    public static void main(String[] args) {
+//        XmlToGraph xmlToGraph = new XmlToGraph();
+//        Computing computing = new Computing();
+//        String file_graph = "resource/grandPlan.xml";
+//        String file_tour = "resource/demandeGrand7.xml";
+//        List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
+//        Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
+//        Graph graph = new Graph(points);
+//        GraphService.calculateTour(tour, graph);
+//    }
 }
