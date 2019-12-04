@@ -24,10 +24,11 @@ class ComputingTest {
     @BeforeAll
     void setUp() {
         computing = new Computing();
+        XmlToGraph xmlToGraph = new XmlToGraph();
         String file_graph = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/petitPlan.xml";
         String file_tour = "/Users/noe/Desktop/ETUDE/semester 3/Agile/fichiersXML2019/demandePetit1.xml";
-        points = XmlToGraph.getGraphFromXml(file_graph);
-        tour = XmlToGraph.getDeliveriesFromXml(file_tour);
+        points = xmlToGraph.getGraphFromXml(file_graph);
+        tour = xmlToGraph.getDeliveriesFromXml(file_tour);
         graph = new Graph(points);
     }
 

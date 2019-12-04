@@ -1,7 +1,6 @@
 package model.data;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Nested;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -12,19 +11,17 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GraphTest {
 
     private List<Point> points;
-    private  Graph graph;
-    private Map<Long,Integer> map;
+    private Graph test_Graph;
+    private Map<Long, Integer> map;
 
     @Before
     public void setUp() {
-        test_Graph = new Graph();
+
+        test_Graph = new Graph(points);
     }
 
     @Test
@@ -40,21 +37,7 @@ class GraphTest {
 
     }
 
-    @Test
-    public void testCTOR_validInput_correctNbSegments() {
-        // Arrange
 
-        final int CORRECT_NB_SEGMENTS = 0;
-        final List<Point> CORRECT_LIST_POINTS = new ArrayList<Point>();
-        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
-
-        // Act
-        final int nb_segments = test_Graph.getNb_segments();
-
-        //Assert
-        assertEquals("wrong nb_segments", CORRECT_NB_SEGMENTS, nb_segments);
-
-    }
 
     @Test
     public void testCTOR_validInput_correctList_Points() {

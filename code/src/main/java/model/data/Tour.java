@@ -14,7 +14,6 @@ import java.util.List;
  */
 @Getter
 @EqualsAndHashCode
-@Getter
 public class Tour implements GenData {
 
     /**
@@ -66,4 +65,16 @@ public class Tour implements GenData {
         this.startTime = time;
     }
 
+    @Override
+    public void accept(GenDataVisitor genDataVisitor) {
+
+    }
+
+    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        deliveryProcesses.add(deliveryProcess);
+    }
+
+    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        deliveryProcesses.remove(deliveryProcess);
+    }
 }

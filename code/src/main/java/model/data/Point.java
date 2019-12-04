@@ -107,13 +107,13 @@ public class Point implements GenData {
      * Get the distance from this point to another
      * if it's reachable via one segments.
      *
-     * @param pointId the id of the other point
+     * @param id the id of the other point
      * @return the distance from this point to another
      */
     public double getLengthTo(final long id) {
         if (this.id == id) return 0;
         for (final Segment s : segments) {
-            if (s.getId_end() == id) return s.getLength();
+            if (s.getIdEnd() == id) return s.getLength();
         }
         return Double.POSITIVE_INFINITY;
     }

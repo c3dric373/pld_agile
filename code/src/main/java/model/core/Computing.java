@@ -10,11 +10,12 @@ import java.util.Map;
 
 public class Computing {
     public static void main(String[] args) {
+        XmlToGraph xmlToGraph = new XmlToGraph();
         Computing computing = new Computing();
         String file_graph = "resource/grandPlan.xml";
         String file_tour = "resource/demandeGrand9.xml";
-        List<Point> points = XmlToGraph.getGraphFromXml(file_graph);
-        Tour tour = XmlToGraph.getDeliveriesFromXml(file_tour);
+        List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
+        Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
 
         TSP tsp2 = new TSP2();
@@ -47,7 +48,7 @@ public class Computing {
 
         List<tuple> res = new ArrayList<>();
 
-        int nb_points = graph.getNb_points();
+        int nb_points = graph.getNbPoints();
         int start_index = map.get(id_start);
         // flag[i] represents whether we've already got the shortest path from start point to the i-th point
         boolean[] flag = new boolean[nb_points];
@@ -69,7 +70,7 @@ public class Computing {
             flag[cur_index] = true;
             Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
-                long id_other = s.getId_end();
+                long id_other = s.getIdEnd();
                 int index_other = map.get(id_other);
                 if (flag[index_other]) continue;
                 double tmp = cur_point.getLengthTo(id_other);

@@ -29,11 +29,16 @@ public class Graph implements GenData {
     public Graph(final List<Point> points) {
         Validate.notNull(points, "point list of the graph can't be null");
         Validate.noNullElements(points, "points of the graph can't be null");
-        this.nb_points = points.size();
+        this.nbPoints = points.size();
         this.points = points;
         map = new HashMap<>();
-        for (int i = 0; i < this.nb_points; i++) {
+        for (int i = 0; i < this.nbPoints; i++) {
             map.put(points.get(i).getId(), i);
         }
+    }
+
+    @Override
+    public void accept(final GenDataVisitor genDataVisitor) {
+
     }
 }
