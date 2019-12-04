@@ -1,8 +1,8 @@
 package model.data;
 
 import lombok.Getter;
+import org.apache.commons.lang.Validate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,222 +14,31 @@ public class Graph implements GenData {
      */
     private List<Point> points;
     /**
-     * Key: id point.
-     * Value: index in 'list_point'
+     * Key: id point
+     * Value: index in 'points'
      */
-    private Map<Integer, Integer> map;
+    private Map<Long, Integer> map;
     /**
-     * Number of segments in the map.
-     */
-    private int nbSegments;
-    /**
-     * Number of points in the map.
+     * Number of points in the map
      */
     private int nbPoints;
 
     /**
      * Instantiates a Graph.
      */
-    public Graph() {
-        nbPoints = 0;
-        nbSegments = 0;
-        points = new ArrayList<Point>();
-        map = new HashMap<Integer, Integer>();
-    }
-
-    /**
-     * Add a point to the map.
-     * @param id id of the point
-     * @param longitude longitude of the point
-     * @param latitude latitude of the point
-     */
-//    void addPoint(final int id, double longitude, double latitude) {
-//        list_points.add(new Point(id, longitude, latitude));
-//        map.put(id, nb_points++);
-//    }
-
-
-    /**
-     * Add a segment to the map.
-     * @param id_origin id of the origin point
-     * @param id_end id of the end point
-     * @param length distance between the two points
-     * @param name name of the segment
-     */
-
-     /*
-    void addSegment(final int id_origin, final int id_end,
-                    final float length, final String name){
-        Validate.notNull(name, "name is null");
-        if (name.equals("")) {
-            throw new IllegalArgumentException("name is empty");
+    public Graph(final List<Point> points) {
+        Validate.notNull(points, "point list of the graph can't be null");
+        Validate.noNullElements(points, "points of the graph can't be null");
+        this.nbPoints = points.size();
+        this.points = points;
+        map = new HashMap<>();
+        for (int i = 0; i < this.nbPoints; i++) {
+            map.put(points.get(i).getId(), i);
         }
-        if (length<0){
-            throw new IllegalArgumentException("length is negative");
-        }
-        if (length==0){
-            throw new IllegalArgumentException("length is zero");
-        }
-        if (id_origin < 0) {
-            throw new IllegalArgumentException("id_origin is negative");
-        }
-        if (id_end < 0) {
-            throw new IllegalArgumentException("id_end is negative");
-        }
-        if (map.get(id_origin) == null) {
-            throw new IllegalArgumentException("point id_origin not included yet");
-        }
-        if (map.get(id_end) == null) {
-            throw new IllegalArgumentException("point id_end not included yet");
-        }
-        int origin_index = map.get(id_origin);
-        int end_index = map.get(id_end);
-        Segment s = new Segment(id_origin, id_end, length, name);
-        list_points.get(origin_index).addSegment(s);
-        list_points.get(end_index).addSegment(s);
-        nb_segments++;
-    }
-*/
-
-    /**
-     * Show the map.
-     */
-    void showMap() {
-        for (int i = 0; i < nbPoints; i++) {
-            System.out.print(points.get(i).getId() + "     ");
-            for (Segment s : points.get(i).getSegments()) {
-                if (points.get(i).getId() == s.either())
-                    System.out.print(s.other(s.either()) + " ");
-                else
-                    System.out.print(s.either() + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("nb_nodes: " + nbPoints);
-        System.out.println("nb_segments: " + nbSegments);
     }
 
     @Override
     public void accept(final GenDataVisitor genDataVisitor) {
-        genDataVisitor.visit(this);
 
-    }
-
-    class tuple {
-        private int prev = 0;
-        private double dist = Float.POSITIVE_INFINITY;
-
-        tuple(final int prev, final double dist) {
-            this.prev = prev;
-            this.dist = dist;
-        }
-
-        public int getPrev() {
-            return prev;
-        }
-
-        public double getDist() {
-            return dist;
-        }
-
-        public void setPrev(final int prev) {
-            this.prev = prev;
-        }
-
-        public void setDist(final double dist) {
-            this.dist = dist;
-        }
-    }
-
-    /**
-     * Dijkstra shortest path.
-     * the shortest path from start point to other points
-     *
-     * @param start_index the index of start point
-     * @return list of tuple which contains the previous point index and the distance in the shortest path from the start point to each point
-     */
-    List<tuple> dijkstra(final int start_index) {
-        if (start_index < 0) {
-            throw new IllegalArgumentException("start_index is too small");
-        }
-        if (start_index >= nbPoints) {
-            throw new IllegalArgumentException("start_index is too great");
-        }
-        List<tuple> res = new ArrayList<>();
-
-        boolean[] flag = new boolean[nbPoints];
-        Point start_point = points.get(start_index);
-        for (int i = 0; i < nbPoints; i++) {
-            flag[i] = (i == start_index);
-            res.add(new tuple(0, start_point.getLengthTo(points.get(i).getId())));
-        }
-        int cur_index = start_index;
-        for (int i = 1; i < nbPoints; i++) {
-            double min = Float.POSITIVE_INFINITY;
-            for (int j = 0; j < nbPoints; j++) {
-                if (!flag[j] && res.get(j).getDist() < min) {
-                    min = res.get(j).getDist();
-                    cur_index = j;
-                }
-            }
-            flag[cur_index] = true;
-            Point cur_point = points.get(cur_index);
-            for (Segment s : cur_point.getSegments()) {
-                long id_other = s.other(cur_point.getId());
-                int index_other = map.get(id_other);
-                if (flag[index_other]) continue;
-                double tmp = cur_point.getLengthTo(id_other);
-                tmp = (tmp == Float.POSITIVE_INFINITY) ? tmp : tmp + min;
-                if (tmp < res.get(index_other).getDist()) {
-                    res.get(index_other).setPrev(cur_index);
-                    res.get(index_other).setDist(tmp);
-                }
-            }
-        }
-        long start_id = points.get(start_index).getId();
-        System.out.printf("dijkstra(%d)\n", start_id);
-        for (int i = 0; i < nbPoints; i++) {
-            System.out.printf("  shortest(%d, %d)=%f\n", start_id, points.get(i).getId(), res.get(i).getDist());
-        }
-        return res;
-    }
-
-    public static void main(String[] args) {
-      /*
-        Graph graph = new Graph();
-        graph.addPoint(1,0,0);
-        graph.addPoint(2,0,0);
-        graph.addPoint(3,0,0);
-        graph.addPoint(4,0,0);
-        graph.addPoint(5,0,0);
-        graph.addSegment(1, 2, 1, "street_AB");
-        graph.addSegment(1, 3, 2, "street_AC");
-        graph.addSegment(2, 3, 3, "street_BC");
-        graph.addSegment(1, 4, 4, "street_AD");
-        graph.addSegment(4, 5, 5, "street_DE");
-        graph.addSegment(2, 5, 6, "street_BE");
-        graph.show_map();
-        float[] prev = new float[5];
-        float[] dist = new float[5];
-        graph.dijkstra(0, prev, dist);*/
-    }
-
-    public int getNbPoints() {
-        return this.nbPoints;
-    }
-
-    public int getNb_segments() {
-        return this.nbSegments;
-    }
-
-    public List<Point> getPoints() {
-        return this.points;
-    }
-
-    public Map<Integer, Integer> getMap() {
-        return this.map;
-    }
-
-    public enum ProjectState {
     }
 }
