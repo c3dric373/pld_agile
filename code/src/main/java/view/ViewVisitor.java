@@ -6,6 +6,13 @@ import model.data.Point;
 import model.data.Tour;
 
 public class ViewVisitor implements GenDataVisitor {
+
+    DashBoardController dashBoardController;
+
+    public ViewVisitor(DashBoardController dashBoardController) {
+        this.dashBoardController = dashBoardController;
+    }
+
     @Override
     public void visit(final Tour tour) {
         //TODO
@@ -13,8 +20,8 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Graph graph) {
-        //TODO
-
+        System.out.println("View Visitor");
+        dashBoardController.displayMapPoints(graph.getPoints());
     }
 
     @Override

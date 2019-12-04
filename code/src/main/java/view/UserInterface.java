@@ -1,6 +1,5 @@
 package view;
 
-import controlller.DashBoardController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +10,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
+import org.apache.commons.lang.Validate;
 
+import java.io.File;
 import java.io.IOException;
 
 public class UserInterface extends Application implements Observer {
@@ -43,7 +44,8 @@ public class UserInterface extends Application implements Observer {
         // Add some sample data List
         // tourData.addAll();
         this.model = model;
-        this.viewVisitor = new ViewVisitor();
+        this.viewVisitor = new ViewVisitor(new DashBoardController());
+        launch();
     }
 
     /**
@@ -111,12 +113,13 @@ public class UserInterface extends Application implements Observer {
 
     public UserInterface(){};
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void update(final GenData genData) {
         genData.accept(viewVisitor);
+    }
+
+    public void loadMap(final File selectedFile) {
+        Validate.notNull(selectedFile);
+        model.loadMap(selectedFile);
     }
 }
