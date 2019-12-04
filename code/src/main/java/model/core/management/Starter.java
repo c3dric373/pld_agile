@@ -14,7 +14,8 @@ public class Starter {
      */
     public static void main(String[] args) {
         ApplicationManager model = new ApplicationManagerImpl();
-        UserInterface view = new UserInterface(model);
+        UserInterface view = new UserInterface();
         model.setObserver(view);
+        view.setModel(model);
     }
 }

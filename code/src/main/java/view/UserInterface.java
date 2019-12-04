@@ -12,6 +12,7 @@ import lombok.Setter;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
 import org.apache.commons.lang.Validate;
+import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,12 +43,12 @@ public class UserInterface extends Application implements Observer {
      *
      * @param model
      */
-    public UserInterface(final ApplicationManager model) {
+    //public UserInterface(final ApplicationManager model) {
         // Add some sample data List
         // tourData.addAll();
-        this.model = model;
-        launch();
-    }
+        //this.model = model;
+        //launch();
+    //}
 
     /**
      * Returns the data as an observable list of Delivery from Tour.
@@ -99,7 +100,7 @@ public class UserInterface extends Application implements Observer {
             rootLayout.setCenter(dashboardOverview);
 
             // Give the controller access to the main app.
-            DashBoardController controller = loader.getController();
+            controller = loader.getController();
             controller.setMainApp(this);
             setController(controller);
 
@@ -111,7 +112,7 @@ public class UserInterface extends Application implements Observer {
     private void setController(DashBoardController controller) {
         Validate.notNull(controller, "controller ist not null");
         this.controller = controller;
-        this.viewVisitor.addController(controller,this);
+        this.viewVisitor.addController(controller);
     }
 
 
@@ -120,9 +121,8 @@ public class UserInterface extends Application implements Observer {
     }
 
     public UserInterface() {
+        launch();
     }
-
-
 
     @Override
     public void update(final GenData genData) {
@@ -135,6 +135,6 @@ public class UserInterface extends Application implements Observer {
             System.out.println("test");
             this.model.loadMap(selectedFile);
         }
-
     }
+
 }
