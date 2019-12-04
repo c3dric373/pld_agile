@@ -42,4 +42,5 @@ public class ActionPoint {
         this.location = actionLocation;
         this.actionType = type;
     }
+
 }
