@@ -12,9 +12,8 @@ import java.util.List;
  * time. The list of deliveryProcesses are all
  * the deliveries that the cyclists should complete.
  */
-
-@EqualsAndHashCode
 @Getter
+@EqualsAndHashCode
 public class Tour implements GenData {
 
     /**
@@ -67,10 +66,9 @@ public class Tour implements GenData {
         this.startTime = time;
     }
 
-
     @Override
-    public void accept(final GenDataVisitor genDataVisitor) {
-        genDataVisitor.visit(this);
+    public void accept(GenDataVisitor genDataVisitor) {
+
     }
 
     /**

@@ -64,8 +64,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         Validate.notNull(file, "file is null");
         // TODO when graph takes nodes as input
         // List<Point> graph =  xmlToGraph.getGraphFromXml(file.getPath());
-        final Graph graph = new Graph();
-        projectDataWrapper.loadMap(graph);
+        //final Graph graph = new Graph();
+        //projectDataWrapper.loadMap(graph);
         projectState = ProjectState.MAP_LOADED;
     }
 

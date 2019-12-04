@@ -41,36 +41,26 @@ public class PointTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testGetLengthTo_correctInput_validCalculation() {
+    public void testGetLengthTo_validCall() {
 
         // Arrange
-        final double CORRECT_LENGTH = 69.979805;
+        final double CORRECT_LENGTH1 = 0;
+        final double CORRECT_LENGTH2 = 69.979805;
+        final double CORRECT_LENGTH3 = Double.POSITIVE_INFINITY;
         subject.addNeighbour(new Segment(25175791, 25175778, 69.979805, "Rue Danton"));
         subject.addNeighbour(new Segment(25175791, 2117622723, 136.00636, "Rue de l'Abondance\""));
 
         // Act
-        final double test_length = subject.getLengthTo(25175778);
+        final double test_length1 = subject.getLengthTo(25175791);
+        final double test_length2 = subject.getLengthTo(25175778);
+        final double test_length3 = subject.getLengthTo(2117622721);
 
         // Assert
-        assertEquals("wrong length", CORRECT_LENGTH, test_length, 0);
+        assertEquals("wrong length", CORRECT_LENGTH1, test_length1, 0);
+        assertEquals("wrong length", CORRECT_LENGTH2, test_length2, 0);
+        assertEquals("wrong length", CORRECT_LENGTH3, test_length3, 0);
 
     }
-
-    @Test
-    public void testGetLengthTo_pointNotReachable_IllegalArgumentException() {
-
-        // Arrange
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("point not reachable via one segment");
-        final long wrong_id = 2365376415L;
-
-        // Act
-        final double test_length = subject.getLengthTo(wrong_id);
-
-        // Assert -> via annotation
-
-    }
-
 
     @Test
     public void testCTOR_idNegative_throwsIllegalArgumentException() {

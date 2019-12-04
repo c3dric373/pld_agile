@@ -72,28 +72,4 @@ public class Segment {
         this.name = segmentName;
     }
 
-    /**
-     * Get one of the point id of the segment.
-     *
-     * @return one of the point id of the segment.
-     */
-    long either() {
-        return idOrigin;
-    }
-
-    /**
-     * Get the other point id of the segment.
-     *
-     * @param id a point id of the segment.
-     * @return the other point id of the segment.
-     */
-    long other(final long id) {
-        if (id == idOrigin) {
-            return idEnd;
-        } else if (id == idEnd) {
-            return idOrigin;
-        } else {
-            throw new IllegalArgumentException("segment has no such point");
-        }
-    }
 }
