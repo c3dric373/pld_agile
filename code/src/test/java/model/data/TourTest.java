@@ -12,7 +12,7 @@ import java.util.*;
 
 public class TourTest {
     private List<DeliveryProcess> TEST_DELIVERY_PROCESSES = new ArrayList<DeliveryProcess>();
-    private Point TEST_BASE = new Point(5,3,3);
+    private Point TEST_BASE = new Point(5, 3, 3);
     private Time TEST_START_TIME = Time.valueOf("0:0:0");
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -42,22 +42,21 @@ public class TourTest {
 
         // Assert via annotation
     }
-/**
-    @Test
-    public void testCTOR_startTimeNegative_throwsIllegalArgumentException() {
 
-        // Arrange
-        int NEGATIVE_START_TIME = -1;
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("startTime is negative");
-
-        // Act
-        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, NEGATIVE_START_TIME);
-
-        // Assert via annotation
-    }
-
-*/
+    /**
+     * @Test public void testCTOR_startTimeNegative_throwsIllegalArgumentException() {
+     * <p>
+     * // Arrange
+     * int NEGATIVE_START_TIME = -1;
+     * thrown.expect(IllegalArgumentException.class);
+     * thrown.expectMessage("startTime is negative");
+     * <p>
+     * // Act
+     * new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, NEGATIVE_START_TIME);
+     * <p>
+     * // Assert via annotation
+     * }
+     */
     @Test
     public void testCTOR_startTimeNull_throwsIllegalArgumentException() {
 
@@ -71,18 +70,16 @@ public class TourTest {
         // Assert via annotation
     }
 /**
-    @Test
-    public void testCTOR_TourCorrect() {
+ @Test public void testCTOR_TourCorrect() {
 
-        // Arrange
+ // Arrange
 
-        // Act
-        new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, TEST_START_TIME);
+ // Act
+ new Tour(TEST_DELIVERY_PROCESSES, TEST_BASE, TEST_START_TIME);
 
-        // Assert via annotation
-    }
-*/
-
+ // Assert via annotation
+ }
+ */
 
 
 }

@@ -11,34 +11,36 @@ import java.sql.Time;
 public class ActionPoint {
 
     /**
-     * Time it takes to complete the action
+     * Time it takes to complete the action.
      */
     private Time time;
 
     /**
-     * Location of the action
+     * Location of the action.
      */
     private Point location;
 
     /**
-     * Type of the action
+     * Type of the action.
      */
     private ActionType actionType;
 
     /**
-     * Instantiates an ActionPoint
-     * @param time time of action
-     * @param location location of action
-     * @param actionType type of action
+     * Instatiates an ActionPoint.
+     *
+     * @param actionTime     time of action.
+     * @param actionLocation location of action.
+     * @param type           type of action.
      */
-    public ActionPoint(final Time time, final Point location, final ActionType actionType){
-        Validate.notNull(location, "location is null");
-        Validate.notNull(actionType, "actionType is null");
-        Validate.notNull(time,"time is null");
+    public ActionPoint(final Time actionTime, final Point actionLocation,
+                       final ActionType type) {
+        Validate.notNull(actionLocation, "location is null");
+        Validate.notNull(type, "actionType is null");
+        Validate.notNull(actionTime, "time is null");
 
-        this.time = time;
-        this.location = location;
-        this.actionType=actionType;
+        this.time = actionTime;
+        this.location = actionLocation;
+        this.actionType = type;
     }
 
 }

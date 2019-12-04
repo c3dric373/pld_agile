@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 @Getter
-public class Graph {
+public class Graph implements GenData {
     /**
-     * List of points in the map
+     * List of points in the map.
      */
     private List<Point> points;
     /**
@@ -21,10 +21,10 @@ public class Graph {
     /**
      * Number of points in the map
      */
-    private int nb_points;
+    private int nbPoints;
 
     /**
-     * Instantiates a Graph
+     * Instantiates a Graph.
      */
     public Graph(final List<Point> points) {
         Validate.notNull(points, "point list of the graph can't be null");

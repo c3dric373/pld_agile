@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -20,45 +22,67 @@ class GraphTest {
     private  Graph graph;
     private Map<Long,Integer> map;
 
-    @BeforeAll
-    void setUp() {
-        points = new ArrayList<>();
-        points.add(new Point(12345,40.5,40.5));
-        map = new HashMap<>();
-        map.put((long) 12345,0);
-        graph = new Graph(points);
-    }
-
-    @Nested
-    class Constructor {
-        @Test
-        void nullPoints() {
-            assertThrows(IllegalArgumentException.class, () -> new Graph(null));
-        }
-
-        @Test
-        void hasNullPoint() {
-            List<Point> testPoints = new ArrayList<>();
-            testPoints.add(null);
-            assertThrows(IllegalArgumentException.class, () -> new Graph(testPoints));
-        }
+    @Before
+    public void setUp() {
+        test_Graph = new Graph();
     }
 
     @Test
-    void getPoints() {
-        assertEquals(points, graph.getPoints(),
-                () -> "getPoints should return the list of points of the graph");
+    public void testCTOR_validInput_correctNbPoints() {
+        // Arrange
+        final int CORRECT_NB_POINTS = 0;
+
+        // Act
+        final int nb_points = test_Graph.getNbPoints();
+
+        //Assert
+        assertEquals("wrong nb_Points", CORRECT_NB_POINTS, nb_points);
+
     }
 
     @Test
-    void getMap() {
-        assertEquals(map, graph.getMap(),
-                () -> "getMap should return a map<Long, Integer>");
+    public void testCTOR_validInput_correctNbSegments() {
+        // Arrange
+
+        final int CORRECT_NB_SEGMENTS = 0;
+        final List<Point> CORRECT_LIST_POINTS = new ArrayList<Point>();
+        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
+
+        // Act
+        final int nb_segments = test_Graph.getNb_segments();
+
+        //Assert
+        assertEquals("wrong nb_segments", CORRECT_NB_SEGMENTS, nb_segments);
+
     }
 
     @Test
-    void getNb_points() {
-        assertEquals(1, graph.getNb_points(),
-                () -> "getNb_points should return the number of points in the graph");
+    public void testCTOR_validInput_correctList_Points() {
+        // Arrange
+        final boolean isEmpty = true;
+        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
+
+        // Act
+        final boolean test_empty = test_Graph.getPoints().isEmpty();
+
+        //Assert
+        assertEquals("list_points not empty", isEmpty, test_empty);
+
     }
+
+    @Test
+    public void testCTOR_validInput_correctMap() {
+        // Arrange
+        final boolean isEmpty = true;
+        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
+
+        // Act
+        final boolean test_empty = test_Graph.getMap().isEmpty();
+
+        //Assert
+        assertEquals("map not empty", isEmpty, test_empty);
+
+    }
+
+
 }

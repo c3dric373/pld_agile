@@ -9,12 +9,24 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.core.management.ApplicationManager;
+import model.data.GenData;
 
 import java.io.IOException;
 
-public class MainApp extends Application {
+public class UserInterface extends Application implements Observer {
     private Stage primaryStage;
     private BorderPane rootLayout;
+
+    /**
+     * ViewVisitor to handle changes from the model
+     */
+    private ViewVisitor viewVisitor;
+
+    /**
+     * Interface to the model.
+     */
+    private ApplicationManager model;
 
     /**
      * The data as an observable list of Persons.
@@ -24,14 +36,19 @@ public class MainApp extends Application {
 
     /**
      * Constructor
+     *
+     * @param model
      */
-    public MainApp() {
+    public UserInterface(final ApplicationManager model) {
         // Add some sample data List
         // tourData.addAll();
+        this.model = model;
+        this.viewVisitor = new ViewVisitor();
     }
 
     /**
      * Returns the data as an observable list of Delivery from Tour.
+     *
      * @return
      */
     public ObservableList<String> getTour() {
@@ -53,7 +70,7 @@ public class MainApp extends Application {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             System.out.println();
-            loader.setLocation(MainApp.class.getResource("RootLayout.fxml"));
+            loader.setLocation(UserInterface.class.getResource("RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout
@@ -72,8 +89,8 @@ public class MainApp extends Application {
         try {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("DashBoard.fxml"));
-            AnchorPane dashboardOverview =  loader.load();
+            loader.setLocation(UserInterface.class.getResource("DashBoard.fxml"));
+            AnchorPane dashboardOverview = loader.load();
 
             // Set person overview into the center of root layout
             rootLayout.setCenter(dashboardOverview);
@@ -92,8 +109,14 @@ public class MainApp extends Application {
         return primaryStage;
     }
 
+    public UserInterface(){};
+
     public static void main(String[] args) {
         launch(args);
     }
 
+    @Override
+    public void update(final GenData genData) {
+        genData.accept(viewVisitor);
+    }
 }

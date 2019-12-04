@@ -6,6 +6,7 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+
 import static org.junit.Assert.assertEquals;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class DeliveryProcessTest {
     private Point TEST_LOCATION = new Point(1, 0, 0);
     private ActionType TEST_ACTION_TYPE = ActionType.PICK_UP;
     private ActionType TEST_ACTION_TYPE2 = ActionType.DELIVERY;
-    private ActionPoint TEST_PICK_UP = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE );
+    private ActionPoint TEST_PICK_UP = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE);
     private ActionPoint TEST_DELIVERY = new ActionPoint(TEST_TIME, TEST_LOCATION, TEST_ACTION_TYPE2);
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -65,14 +66,13 @@ public class DeliveryProcessTest {
     }
 
     @Test
-    public void testCTOR_correctCall_validCall(){
+    public void testCTOR_correctCall_validCall() {
         // Arrange
 
         // Act
         DeliveryProcess deliveryProcess = new DeliveryProcess(TEST_PICK_UP, TEST_DELIVERY);
-        ActionPoint delivery =  deliveryProcess.getDelivery();
+        ActionPoint delivery = deliveryProcess.getDelivery();
         ActionPoint pickUp = deliveryProcess.getPickUP();
-
 
 
         // Assert

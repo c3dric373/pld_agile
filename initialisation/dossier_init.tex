@@ -18,14 +18,14 @@
 
 %% Grafik
 \usepackage{graphicx} 
-\newcommand{\name}{Insta.edit}
+\newcommand{\name}{DeliVelo}
 
 %% Links im PDF
 \usepackage{hyperref}
 
 
 
-\title{Netzwerkfähiger Multi-User Texteditor\\
+\title{Développement d'application de Pickup and Delivery\\
 \textit{"\name"}}
 \subtitle{Pflichtenheft}
 \author{SEP WS 2017/18\\
@@ -52,10 +52,10 @@ Version 1.0}
 \begin{center}
   \begin{tabular}{ | l | r | }
     \hline
-    Anselm Fehnker \\ \hline
+    Corentin Laharotte \\ \hline
     Augustin Bodet  \\ \hline
     Naoufel \\ \hline
-    Thibualt Gilain \\ \hline
+    Thibaut Gillain \\ \hline
     Shuyao Shen \\ \hline
     Cedric Milinaire\\ \hline
     Martin Germain \\ \hline
@@ -70,13 +70,14 @@ Version 1.0}
 
 \section{Fonctionnalités}
 \subsection{Chargement fichier carte}
-L'utilisateur a la possibilité de charger un fichier XML. Ce fichier représente une carte. Un message d'erreur s'affiche lorsque le fichier n'est pas de type XML. Lorsque le fichier correspond au critères la carte est afficher, et les données du fichier sont enregistrer par l'application. 
+L'utilisateur a la possibilité de charger un fichier XML représentant une carte. Un message d'erreur s'affiche lorsque le fichier n'est pas de type XML. Lorsque le fichier correspond aux critères la carte est affichée, et les données du fichier sont enregistrées par l'application. 
 \subsection{Chargement fichier livraisons}
-L'utilisateur a la possibilité de charger un fichier XML correspondant a une livraison. Un message d'erreur s'affiche lorsque le fichier n'est pas de type XML. Lorsque le fichier correspond au critères les données du fichier sont enregistrer et afficher sur la carte. Si aucune carte est chargé un message d'erreur est envoyé. 
-\subsection{Calcul}
-Lorsqu'une carte et une livraison est chargé l'utilisateur a la possibilité de calcule une tournée. La tournée est calculé avec les donné recu par les deux fichiers XML. Une fois calculé la tournée est affiché. 
-\subsection{Afficher liste}
-Le système calcule le plus court chemin pour le livreur en fonction de son adresse de départ, les points d’enlèvement et de livraison, pour qu'il pourra en suite affiche la liste des adresses où le livreur doit enlever ou livrer un colis, avec les heures d'arrivée et de départ prévues.
+L'utilisateur a la possibilité de charger un fichier XML correspondant à une livraison. Un message d'erreur s'affiche lorsque le fichier n'est pas de type XML. Lorsque le fichier correspond aux critères les données du fichier sont enregistrées et affichées sur la carte. Si aucune carte n'est chargée un message d'erreur est envoyé. 
+\subsection{Calcul d'une tournée}
+Lorsqu'une carte et des livraisons sont chargés l'utilisateur a la possibilité de calculer une tournée. La tournée est calculée avec les données reçues par les deux fichiers XML. Une fois calculée la tournée est affichée. 
+\subsection{Afficher liste de livraisons}
+L'utilisateur pourra afficher la liste des adresses où le livreur doit enlever ou livrer un colis, avec les heures d'arrivée et de départ prévues.
+
 \subsection{Modifier tournée}
 L'utilisateur peut faire des modifications (supprimer les livraisons, ajouter de nouvelles livraisons, ou changer l'ordre de passage). Le système recalcule le passage et le met à jour. L'utilisateur a le droit d'annuler ses modifications à tout moment.
 
@@ -105,4 +106,18 @@ L'utilisateur peut faire des modifications (supprimer les livraisons, ajouter de
 
 \end{itemize}
 
+\newpage
+\section{Fonctionnalités détaillées}
+\subsection{Chargement fichier carte}
+L'utilisateur peut saisir un URL dans la fenêtre de l'application afin que le système lise un fichier XML d'une carte. Le fichier XML envoyé par l'utilisateur doit correspondre au bon format et contenir des noeuds (intersections) et des tronçons (routes). Les données sont alors enregistrées par l'application et transmises à la vue afin d'afficher la carte à l'écran. Les données sont également disponibles pour la partie "Calcul" de l'application afin d'optimiser les différentes tournées.
+
+\subsection{Chargement fichier livraisons}
+Après avoir chargé une carte (cas d'utilisation précédent), l'utilisateur peut charger un nouveau fichier XML afin que le système lise un fichier de livraisons. Le fichier XML doit contenir le point de départ des tournées (entrepot ou Base) et des livraisons (Pick up et Delivery Points ainsi que les durées de traitement à chaque Point). Un objet Tour (tournée) est alors créé. Un fichier de livraisons ne peut être chargé que si un fichier de carte a été chargé et traîté préalablement. De plus, si un point d'une livraison dans le fichier XML de livraisons ne correspond à aucune intersection du fichier XML de carte, une erreur est levée.
+
+\subsection{Calcul d'une tournée}
+L'utilisateur, après avoir chargé une carte et une tournée à partir de fichiers XML, a la possibilité d'afficher la tournée sur la carte de l'application. La tournée affichée est la tournée la plus optimisée, respectant les différentes contraintes de précédence des différentes livraisons. Ainsi, l'utilisateur a la possibilité de visualiser la meilleure tournée possible pour les livraisons décrites précédemment.
+
+\subsection{Afficher liste de livraisons}
+Après avoir chargé un fichier XML de livraisons, l'utilisateur peut demander l'affichage d'une liste comprenant toutes les livraisons récupérées depuis le fichier. Toutes les informations concernant les livraisons sont alors affichées : Pickup Point, Delivery Point, Pickup Time, Delivery Time, nom de rue...
+De plus, un point est affiché sur la carte à chaque endroit de la livraison (même couleurs pour un même colis). L'utilisateur peut alors avoir une vue claire et simple des différents points de livraison de sa tournée.
 \end{document}
