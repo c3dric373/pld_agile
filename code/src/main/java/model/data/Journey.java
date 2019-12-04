@@ -39,9 +39,9 @@ public class Journey {
     /**
      * Instantiates a Journey.
      *
-     * @param points    the List of points in the shortest path from the start
+     * @param newPoints    the List of points in the shortest path from the start
      *                  point to the arrival point in the REVERSE order.
-     * @param minLength The shortest length from the start point to the arrival
+     * @param newMinLength The shortest length from the start point to the arrival
      *                  point.
      */
     public Journey(final List<Point> newPoints, final double newMinLength) {
