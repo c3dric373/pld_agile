@@ -5,6 +5,7 @@ import model.data.ActionPoint;
 import model.data.Journey;
 import model.data.Point;
 import model.data.Tour;
+import org.apache.commons.lang.Validate;
 
 import javax.swing.*;
 import java.sql.Time;
@@ -23,11 +24,20 @@ public class JourneyService {
      */
     static final int NB_SEC_IN_MIN = 60;
 
-    final double TRAVEL_SPEED=15.0/3.6;
+    final double TRAVEL_SPEED = 15.0/3.6;
 
     public List<Journey> calculateTime(final List<Journey> journeys,
                                 final List<ActionPoint> actionPoints,
-                                Time startTime) {
+                                final Time startTime) {
+        Validate.notNull(journeys, "journeys is null");
+        Validate.noNullElements(journeys, "journeys of the List can't be null");
+        Validate.notEmpty(journeys, "journeys can't be empty");
+        Validate.notNull(actionPoints, "actionPoints is null");
+        Validate.noNullElements(actionPoints, "actionPoints of the List can't be null");
+        Validate.notEmpty(actionPoints, "actionPoints can't be empty");
+        Validate.notNull(startTime, "startTime can't be null");
+
+        Time journeyStartTime = startTime;
         ArrayList<Journey> newJourneyList = new ArrayList<Journey>();
         Time referenceTime =Time.valueOf("0:0:0");
         for(Journey journey:journeys){
@@ -40,15 +50,15 @@ public class JourneyService {
             double length = journey.getMinLength();
             int travelTimeInSec = (int)(length/TRAVEL_SPEED);
             System.out.println("-----------------");
-            System.out.println("startTime "+ startTime);
+            System.out.println("startTime "+ journeyStartTime);
             System.out.println ("travelTime " +travelTimeInSec+ " in hhmm " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
-            LocalTime localTime = startTime.toLocalTime();
+            LocalTime journeyLocalTime = journeyStartTime.toLocalTime();
             System.out.println("action time " +actionTime);
-            LocalTime StartPlusTravelTime = localTime.plusSeconds(travelTimeInSec);
+            LocalTime StartPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
             long actionTimeInSec = (actionTime.getTime() - referenceTime.getTime())/1000l;
             LocalTime StartPlusTravelPlusActionTime = StartPlusTravelTime.plusSeconds(actionTimeInSec);
             Time arrivalTime = Time.valueOf(StartPlusTravelPlusActionTime);
-            startTime = arrivalTime;
+            journeyStartTime = arrivalTime;
             System.out.println("arrival time "+arrivalTime);
             journey.setFinishTime(arrivalTime);
 

@@ -15,10 +15,6 @@ import java.util.List;
 public class Journey {
 
     /**
-     * Start time of journey.
-     */
-    private Time startTime;
-    /**
      * Finish time of journey.
      */
     private Time finishTime;
