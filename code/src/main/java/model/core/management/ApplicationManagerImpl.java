@@ -62,16 +62,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
             throw new IllegalStateException("Application not opened");
         }
         Validate.notNull(file, "file is null");
-        // TODO when graph takes nodes as input
-        // List<Point> graph =  xmlToGraph.getGraphFromXml(file.getPath());
-        //final Graph graph = new Graph();
-        //projectDataWrapper.loadMap(graph);
+
+        List<Point> points =  xmlToGraph.getGraphFromXml(file.getPath());
+        final Graph graph = new Graph(points);
+        projectDataWrapper.loadMap(graph);
         projectState = ProjectState.MAP_LOADED;
     }
 
     @Override
     public void setObserver(final UserInterface userInterface) {
-
+        projectDataWrapper.addObserver(userInterface);
     }
 
     @Override
