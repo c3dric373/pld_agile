@@ -156,5 +156,37 @@ public class TourService {
 
     }
 
+    /**
+     * delete the deliveryProcess from the tour
+     *
+     * @param tour Tour
+     * @param deliveryProcess DeliveryProcess
+     * @return the tour with the deliveryProcess removed
+     */
+    public static Tour deleteDeliveryProcess ( final Tour tour,
+            final DeliveryProcess deliveryProcess){
+
+        Validate.notNull(tour, "tour is null");
+        Validate.notNull(deliveryProcess, "deliveryProcess is null");
+
+        Tour newTour;
+        try {
+            List<DeliveryProcess> deliveryProcessesList = tour.getDeliveryProcesses();
+            List<ActionPoint> actionPointList = tour.getActionPoints();
+            ActionPoint pickupPoint = deliveryProcess.getPickUP();
+            ActionPoint deliveryPoint = deliveryProcess.getDelivery();
+
+            actionPointList.remove(pickupPoint);
+            actionPointList.remove(deliveryPoint);
+            deliveryProcessesList.remove(deliveryProcess);
+            newTour = new Tour(deliveryProcessesList, tour.getBase(),
+                    tour.getStartTime());
+
+        } catch (Exception e){
+            throw new IllegalArgumentException(
+                    "deliveryProcess doesn't exist in the tour");
+        }
+        return newTour;
+    }
 
 }
