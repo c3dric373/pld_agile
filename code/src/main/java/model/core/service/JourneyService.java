@@ -25,9 +25,9 @@ public class JourneyService {
      */
     static final int NB_SEC_IN_MIN = 60;
 
-    final double TRAVEL_SPEED = 15.0/3.6;
+    final static double TRAVEL_SPEED = 15.0/3.6;
 
-     List<Journey> calculateTime(final List<Journey> journeys,
+    static List<Journey> calculateTime(final List<Journey> journeys,
                                 final List<ActionPoint> actionPoints,
                                 final Time startTime) {
         Validate.notNull(journeys, "journeys is null");
@@ -52,7 +52,7 @@ public class JourneyService {
             int travelTimeInSec = (int)(length/TRAVEL_SPEED);
             System.out.println("-----------------");
             System.out.println("startTime "+ journeyStartTime);
-            System.out.println ("travelTime " +travelTimeInSec+ " in hhmm " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
+            System.out.println ("travelTime " +travelTimeInSec+ " in mmss " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
             LocalTime journeyLocalTime = journeyStartTime.toLocalTime();
             System.out.println("action time " +actionTime);
             LocalTime StartPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
@@ -98,7 +98,7 @@ public class JourneyService {
         }
         return OptionalInt.empty();
     }
-    private ActionPoint findActionPoint(Point point,
+    static ActionPoint findActionPoint(Point point,
                                         List<ActionPoint> actionPoints){
         long id = point.getId();
         ActionPoint correspondingActionPoint=null;
