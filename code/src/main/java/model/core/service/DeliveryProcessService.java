@@ -70,11 +70,12 @@ public class DeliveryProcessService {
     public static List<DeliveryProcess> addNewDeliveryProcess(
             final List<DeliveryProcess> deliveryProcesses,
             final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
-        Validate.notNull(pickUpPoint,"PickUp Point is null");
-        Validate.notNull(deliveryPoint, "Delivery Point is null");
+        Validate.notNull(pickUpPoint,"pickUpPoint is null");
+        Validate.notNull(deliveryPoint, "deliveryPoint is null");
 
         List<DeliveryProcess> newDeliveryProcesses = deliveryProcesses;
-        newDeliveryProcesses.add(new DeliveryProcess(pickUpPoint,
+        newDeliveryProcesses.add(deliveryProcesses.size(),
+                new DeliveryProcess(pickUpPoint,
                 deliveryPoint));
         return newDeliveryProcesses;
     }
