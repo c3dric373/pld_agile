@@ -383,4 +383,15 @@ public class GraphService {
             this.dist = dist;
         }
     }
+
+    public static void main(String[] args) {
+        XmlToGraph xmlToGraph = new XmlToGraph();
+        GraphService graphService = new GraphService();
+        String file_graph = "resource/grandPlan.xml";
+        String file_tour = "resource/demandeGrand7.xml";
+        List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
+        Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
+        Graph graph = new Graph(points);
+        graphService.calculateTour(tour, graph);
+    }
 }

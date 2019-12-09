@@ -27,12 +27,14 @@ public class TourService {
                     + "of same size");
         }
 
+        GraphService graphService= new GraphService();
+
         final List<Journey> newJourneys = new ArrayList<>();
         for (int i = 1; i < actionPoints.size(); i++) {
             final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
             final Point successorPoint = oldActionPoints.get(i - 1).getLocation();
-            final Journey newJourney = GraphService.
-                    shortestPath(graph, predecessorPoint, successorPoint);
+            final Journey newJourney = graphService.
+                    getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
             newJourneys.add(newJourney);
         }
         final Time startTime = tour.getStartTime();
