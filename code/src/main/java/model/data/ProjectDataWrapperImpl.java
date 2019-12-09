@@ -35,6 +35,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     public void loadTour(final Tour tour) {
         projectData.setTour(tour);
         notify(tour);
+        System.out.println("loqd tour pdz");
     }
 
     @Override

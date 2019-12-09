@@ -69,11 +69,16 @@ public class UserInterface implements Observer {
     }
 
     public void loadMap(final File selectedFile) {
-        Validate.notNull(selectedFile, "selected file null");
+        Validate.notNull(selectedFile, "Selected File Is Null");
         if(this.model!=null){
-            System.out.println("testmodel");
             this.model.loadMap(selectedFile);
         }
     }
 
+    public void loadDeliveryRequest(final File selectedFile) {
+        Validate.notNull(selectedFile, "Selected File Is Null");
+        if(this.model!=null){
+            this.model.loadTour(selectedFile);
+        }
+    }
 }

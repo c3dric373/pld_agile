@@ -23,9 +23,9 @@
          <items>
             <AnchorPane id="DeliveryPane" styleClass="background">
                <children>
-                  <TableView maxHeight="400.0" maxWidth="205.0" minHeight="342.0" minWidth="205.0" prefHeight="342.0" prefWidth="205.0" AnchorPane.bottomAnchor="76.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
+                  <TableView fx:id="actionPointTableView" maxHeight="400.0" maxWidth="205.0" minHeight="342.0" minWidth="205.0" prefHeight="342.0" prefWidth="205.0" AnchorPane.bottomAnchor="76.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
                     <columns>
-                        <TableColumn fx:id="deliveryNumber" minWidth="50.0" prefWidth="50.0" text="N°" />
+                        <TableColumn fx:id="deliveryRank" minWidth="50.0" prefWidth="50.0" text="N°" />
                         <TableColumn fx:id="deliveryType" minWidth="75.0" prefWidth="75.0" text="Type" />
                         <TableColumn fx:id="timeAtPoint" minWidth="80.0" text="Time" />
                     </columns>

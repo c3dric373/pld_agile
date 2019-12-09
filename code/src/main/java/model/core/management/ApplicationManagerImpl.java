@@ -123,7 +123,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         Validate.notNull(actionPoints, "actionPoints null");
         Validate.notEmpty(actionPoints, "actionPointsEmpty");
         final Tour tour = projectDataWrapper.getProject().getTour();
-        final Tour newTour = tourService.changeDeliveryOrder(tour,
+        final Graph graph = projectDataWrapper.getProject().getGraph();
+        final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
         projectDataWrapper.modifyTour(newTour);
     }
