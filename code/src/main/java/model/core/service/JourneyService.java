@@ -52,7 +52,7 @@ public class JourneyService {
             int travelTimeInSec = (int)(length/TRAVEL_SPEED);
             System.out.println("-----------------");
             System.out.println("startTime "+ journeyStartTime);
-            System.out.println ("travelTime " +travelTimeInSec+ " in hhmm " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
+            System.out.println ("travelTime " +travelTimeInSec+ " in mmss " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
             LocalTime journeyLocalTime = journeyStartTime.toLocalTime();
             System.out.println("action time " +actionTime);
             LocalTime StartPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
