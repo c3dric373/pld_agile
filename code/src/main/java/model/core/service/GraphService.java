@@ -43,6 +43,11 @@ public class GraphService {
         return nearestPoint;
     }
 
+    /**
+     * Find thanks to the graph the center of this one
+     * @param graph
+     * @return
+     */
     public static Point addGraphCenter (final Graph graph) {
         Validate.notNull(graph, "graph can't be null");
         double longitudeMax = graph.getPoints().get(0).getLongitude();
@@ -51,22 +56,22 @@ public class GraphService {
         double latitudeMin = graph.getPoints().get(0).getLatitude();
 
         for (Point point : graph.getPoints()) {
-            if (longitudeMax < graph.getPoints().get(0).getLongitude()) {
-                longitudeMax = graph.getPoints().get(0).getLongitude();
+            if (longitudeMax < point.getLongitude()) {
+                longitudeMax = point.getLongitude();
             }
-            if (longitudeMin > graph.getPoints().get(0).getLongitude()) {
-                longitudeMin = graph.getPoints().get(0).getLongitude();
+            if (longitudeMin > point.getLongitude()) {
+                longitudeMin = point.getLongitude();
             }
-            if (latitudeMax < graph.getPoints().get(0).getLatitude()) {
-                latitudeMax = graph.getPoints().get(0).getLatitude();
+            if (latitudeMax < point.getLatitude()) {
+                latitudeMax = point.getLatitude();
             }
-            if (latitudeMax < graph.getPoints().get(0).getLatitude()) {
-                latitudeMax = graph.getPoints().get(0).getLatitude();
+            if (latitudeMin > point.getLatitude()) {
+                latitudeMin = point.getLatitude();
             }
         }
 
-        double latitudeCenter = latitudeMin+(latitudeMax-latitudeMin)/2;
-        double longitudeCenter = longitudeMin+(longitudeMax-longitudeMin)/2;
+        double latitudeCenter = (latitudeMax+latitudeMin)/2;
+        double longitudeCenter = (longitudeMax+longitudeMin)/2;
         Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
 
         System.out.println("Latitude Center : " + latitudeCenter);
