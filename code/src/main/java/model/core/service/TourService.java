@@ -64,7 +64,7 @@ public class TourService {
         final ActionPoint predecessorPoint = actionPoints.
                 get(oldPointIndex - 1);
         final ActionPoint successorPoint = actionPoints.
-                get(oldPointIndex - 1);
+                get(oldPointIndex + 1);
         // Create a new actionPoint and replace the old one in the list of
         // delivery processes
 
@@ -83,13 +83,19 @@ public class TourService {
         final Journey newPredecessorJourney = GraphService.shortestPath(graph,
                 predecessorPoint.getLocation(), newPoint);
         final Journey newSuccessorJourney = GraphService.shortestPath(graph,
-                predecessorPoint.getLocation(), newPoint);
+                successorPoint.getLocation(), newPoint);
         //Replacing the old Journeys with the newly calculated ones
 
         tour.getJourneys().set(optOldPredecessorJ.getAsInt(),
                 newPredecessorJourney);
         tour.getJourneys().set(optOldSuccessorJ.getAsInt(),
                 newSuccessorJourney);
+
+        // Calculate the time it takes to calculate new Journey
+        final List<Journey> newJourneys = JourneyService.calculateTime(
+                tour.getJourneys(),tour.getActionPoints(),tour.getStartTime());
+        tour.setJourneys(newJourneys);
+
         return tour;
     }
 

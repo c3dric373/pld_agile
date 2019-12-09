@@ -91,7 +91,6 @@ public class GraphService {
 
     public static Journey shortestPath(final Graph graph, final Point point1,
                                        final Point point2) {
-        //todo
         return null;
     }
 //    public static void main(String[] args) {
