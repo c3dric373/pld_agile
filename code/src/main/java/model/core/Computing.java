@@ -46,7 +46,8 @@ public class Computing {
         Map<Long, Integer> map = graph.getMap();
         Validate.notNull(map.get(id_start), "id_start not in graph");
 
-        List<tuple> res = new ArrayList<>();
+        // tuples[i] contains the previous point index and the distance in the shortest path from the start point to i-th point
+        List<tuple> tuples = new ArrayList<>();
 
         int nb_points = graph.getNbPoints();
         int start_index = map.get(id_start);
@@ -54,20 +55,25 @@ public class Computing {
         boolean[] flag = new boolean[nb_points];
         List<Point> points = graph.getPoints();
         Point start_point = points.get(start_index);
+        // initialize flag and tuples
         for (int i = 0; i < nb_points; i++) {
             flag[i] = (i == start_index);
-            res.add(new tuple(start_index, start_point.getLengthTo(points.get(i).getId())));
+            tuples.add(new tuple(start_index, start_point.getLengthTo(points.get(i).getId())));
         }
+        // calculate for each point, the index of its previous point and the shortest distance from the start point to this point
         int cur_index = start_index;
         for (int i = 1; i < nb_points; i++) {
+            // search for the shortest distance which has not been 'flag' yet
             double min = Double.POSITIVE_INFINITY;
             for (int j = 0; j < nb_points; j++) {
-                if (!flag[j] && res.get(j).getDist() < min) {
-                    min = res.get(j).getDist();
+                if (!flag[j] && tuples.get(j).getDist() < min) {
+                    min = tuples.get(j).getDist();
                     cur_index = j;
                 }
             }
+            // 'flag' this point
             flag[cur_index] = true;
+            // verify for each point no 'flag', whether it's better to 
             Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
                 long id_other = s.getIdEnd();
@@ -75,9 +81,9 @@ public class Computing {
                 if (flag[index_other]) continue;
                 double tmp = cur_point.getLengthTo(id_other);
                 tmp = (tmp == Double.POSITIVE_INFINITY) ? tmp : tmp + min;
-                if (tmp < res.get(index_other).getDist()) {
-                    res.get(index_other).setPrev(cur_index);
-                    res.get(index_other).setDist(tmp);
+                if (tmp < tuples.get(index_other).getDist()) {
+                    tuples.get(index_other).setPrev(cur_index);
+                    tuples.get(index_other).setDist(tmp);
                 }
             }
         }
@@ -85,7 +91,7 @@ public class Computing {
 //        for (int i = 0; i < nb_points; i++) {
 //            System.out.printf("  shortest(%d, %d)=%f\n", id_start, points.get(i).getId(), res.get(i).getDist());
 //        }
-        return res;
+        return tuples;
     }
 
     /**
