@@ -57,12 +57,6 @@ public class Tour implements GenData {
                 + " is null");
         Validate.notNull(basePoint, "base is null");
         Validate.notNull(time, "startTime is null");
-        /*if (startTime<0){
-            throw new IllegalArgumentException("startTime is negative");
-        }
-        if (startTime>235959){
-            throw new IllegalArgumentException("startTime is too great");
-        }*/
         this.deliveryProcesses = deliveryProcessesList;
         this.base = basePoint;
         this.startTime = time;
@@ -71,23 +65,5 @@ public class Tour implements GenData {
     @Override
     public void accept(GenDataVisitor genDataVisitor) {
 
-    }
-
-    /**
-     * Adds a deliverProcess to the list of existing delivery processes.
-     *
-     * @param deliveryProcess the delivery process to add
-     */
-    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        deliveryProcesses.add(deliveryProcess);
-    }
-
-    /**
-     * Deletes a deliverProcess to the list of existing delivery processes.
-     *
-     * @param deliveryProcess the delivery process to delete
-     */
-    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        deliveryProcesses.remove(deliveryProcess);
     }
 }

@@ -8,7 +8,7 @@ import org.apache.commons.lang.Validate;
 import java.util.List;
 import java.util.OptionalInt;
 
-class DeliveryProcessService {
+public class DeliveryProcessService {
 
     /**
      * Replaces an Action Point in a delivery Process and returns the new
@@ -56,6 +56,27 @@ class DeliveryProcessService {
 
         }
         return OptionalInt.empty();
+    }
+
+    /**
+     * Adds a new delivery process to the delivery process list.
+     * @param deliveryProcesses current delivery process list. (can be null)
+     * @param pickUpPoint pickup Point of the new delivery process.
+     * @param deliveryPoint delivery Point of the new delivery process.
+     * @return Returns the new delivery process list with the new delivery
+     * process added.
+     */
+
+    public static List<DeliveryProcess> addNewDeliveryProcess(
+            final List<DeliveryProcess> deliveryProcesses,
+            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
+        Validate.notNull(pickUpPoint,"PickUp Point is null");
+        Validate.notNull(deliveryPoint, "Delivery Point is null");
+
+        List<DeliveryProcess> newDeliveryProcesses = deliveryProcesses;
+        newDeliveryProcesses.add(new DeliveryProcess(pickUpPoint,
+                deliveryPoint));
+        return newDeliveryProcesses;
     }
 }
 

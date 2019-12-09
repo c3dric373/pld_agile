@@ -2,6 +2,7 @@ package model.core.service;
 
 
 import model.data.*;
+import org.apache.commons.lang.Validate;
 
 import java.util.List;
 import java.util.OptionalInt;
@@ -91,6 +92,30 @@ public class TourService {
         tour.getJourneys().set(optOldSuccessorJ.getAsInt(),
                 newSuccessorJourney);
         return tour;
+    }
+
+    /**
+     * Adds 2 new action points to an ordered ActionPoint list.
+     * The 2 points represent a deliveryProcess.
+     * @param actionPointList Current ordered ActionPoint list.
+     * @param pickUpPoint New PickUp point to add.
+     * @param deliveryPoint New DeliveryPoint to add.
+     * @return Returns the new ActionPoint list with the new DeliveryProcess
+     * added.
+     */
+    static List<ActionPoint> addNewDeliveryProcess(
+            final List<ActionPoint> actionPointList,
+            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
+
+        Validate.notNull(actionPointList,"ActionPoints list is null");
+        Validate.notNull(pickUpPoint,"Pickup Point is null");
+        Validate.notNull(deliveryPoint,"Delivery Point is null");
+
+        List<ActionPoint> newActionPointList = actionPointList;
+        newActionPointList.add(pickUpPoint);
+        newActionPointList.add(pickUpPoint);
+        return newActionPointList;
+
     }
 
 
