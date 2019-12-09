@@ -79,11 +79,12 @@ public class TourService {
 
         // Calculate shortest path between predecessor and new Point and between
         // the successor and the new Point
+        GraphService graphService = new GraphService();
 
-        final Journey newPredecessorJourney = GraphService.shortestPath(graph,
-                predecessorPoint.getLocation(), newPoint);
-        final Journey newSuccessorJourney = GraphService.shortestPath(graph,
-                predecessorPoint.getLocation(), newPoint);
+        final Journey newPredecessorJourney = graphService.getShortestPath(graph,
+                predecessorPoint.getLocation().getId(), newPoint.getId(), null);
+        final Journey newSuccessorJourney = graphService.getShortestPath(graph,
+                predecessorPoint.getLocation().getId(), newPoint.getId(), null);
         //Replacing the old Journeys with the newly calculated ones
 
         tour.getJourneys().set(optOldPredecessorJ.getAsInt(),
