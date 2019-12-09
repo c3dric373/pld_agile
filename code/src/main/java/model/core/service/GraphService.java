@@ -44,7 +44,7 @@ public class GraphService {
     }
 
     /**
-     * Find thanks to the graph the center of this one
+     * Find the center of the graph thanks to itself
      * @param graph
      * @return
      */
