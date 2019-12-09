@@ -53,10 +53,10 @@ public class TSP2 extends TemplateTSP {
 
         int[] duree = new int[nbSommets];
         long start_time = System.currentTimeMillis();
-        tsp2.chercheSolution(tpsLimite, nbSommets, cout, duree);
+        tsp2.searchSolution(tpsLimite, nbSommets, cout, duree);
         System.out.println(tsp2.getCoutMeilleureSolution());
         for (int i = 0; i < nbSommets; i++) {
-            System.out.print(tsp2.getMeilleureSolution(i) + " ");
+            System.out.print(tsp2.getBestSolution(i) + " ");
         }
         System.out.println();
         System.out.println(System.currentTimeMillis() - start_time);

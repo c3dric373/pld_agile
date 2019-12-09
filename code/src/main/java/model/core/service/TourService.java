@@ -27,12 +27,14 @@ public class TourService {
                     + "of same size");
         }
 
+        GraphService graphService= new GraphService();
+
         final List<Journey> newJourneys = new ArrayList<>();
         for (int i = 1; i < actionPoints.size(); i++) {
             final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
             final Point successorPoint = oldActionPoints.get(i - 1).getLocation();
-            final Journey newJourney = GraphService.
-                    shortestPath(graph, predecessorPoint, successorPoint);
+            final Journey newJourney = graphService.
+                    getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
             newJourneys.add(newJourney);
         }
         final Time startTime = tour.getStartTime();
@@ -108,11 +110,12 @@ public class TourService {
 
         // Calculate shortest path between predecessor and new Point and between
         // the successor and the new Point
+        GraphService graphService = new GraphService();
 
-        final Journey newPredecessorJourney = GraphService.shortestPath(graph,
-                predecessorPoint.getLocation(), newPoint);
-        final Journey newSuccessorJourney = GraphService.shortestPath(graph,
-                successorPoint.getLocation(), newPoint);
+        final Journey newPredecessorJourney = graphService.getShortestPath(graph,
+                predecessorPoint.getLocation().getId(), newPoint.getId(), null);
+        final Journey newSuccessorJourney = graphService.getShortestPath(graph,
+                predecessorPoint.getLocation().getId(), newPoint.getId(), null);
         //Replacing the old Journeys with the newly calculated ones
 
         tour.getJourneyList().set(optOldPredecessorJ.getAsInt(),

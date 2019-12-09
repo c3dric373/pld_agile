@@ -13,7 +13,7 @@ public abstract class TemplateTSP implements TSP {
         return tempsLimiteAtteint;
     }
 
-    public void chercheSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree) {
+    public void searchSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree) {
         tempsLimiteAtteint = false;
         coutMeilleureSolution = Integer.MAX_VALUE;
         meilleureSolution = new Integer[nbSommets];
@@ -24,7 +24,7 @@ public abstract class TemplateTSP implements TSP {
         branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
     }
 
-    public Integer getMeilleureSolution(int i) {
+    public Integer getBestSolution(int i) {
         if ((meilleureSolution == null) || (i < 0) || (i >= meilleureSolution.length))
             return null;
         return meilleureSolution[i];
