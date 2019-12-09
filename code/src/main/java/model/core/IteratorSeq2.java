@@ -20,12 +20,11 @@ public class IteratorSeq2 implements Iterator<Integer> {
         boolean pickUp = true;
         if (currentNode > nb) {
             // if current node is a delivery point, we have to verify whether its pick up point is visited or not
-            for (Integer i : notSeen) {
+            for (Integer i : notSeen)
                 if (i == currentNode - nb) {
                     pickUp = false;
                     break;
                 }
-            }
         }
         if (!pickUp) {
             // if current node is a delivery point and its pick up point hasn't been visited, we create an empty iterator
@@ -50,9 +49,4 @@ public class IteratorSeq2 implements Iterator<Integer> {
     public Integer next() {
         return candidates[--nbCandidates];
     }
-
-    @Override
-    public void remove() {
-    }
-
 }

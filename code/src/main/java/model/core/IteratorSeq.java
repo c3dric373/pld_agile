@@ -31,9 +31,4 @@ public class IteratorSeq implements Iterator<Integer> {
     public Integer next() {
         return candidates[--nbCandidates];
     }
-
-    @Override
-    public void remove() {
-    }
-
 }

@@ -7,7 +7,7 @@ public class TSP3 implements TSP {
 
     private Integer[] bestSolution;
     private int lowestCost = 0;
-    private Boolean timeLimitExceeded;
+    private Boolean timeLimitExceeded = false;
     /**
      * ex. records[29][2] represents the lowest cost so far to visit 0, 2, 3 and 4 (started with 0, end with 2)
      * cuz 29 represents '11101' in binary, 2 represents the current index
@@ -99,7 +99,7 @@ public class TSP3 implements TSP {
      */
     void branchAndBound(int currentNode, ArrayList<Integer> notSeen, ArrayList<Integer> seen, int currentCost,
                         int[][] cost, int[] duration, long startTime, int timeLimit) {
-        if (System.currentTimeMillis() - startTime > timeLimit) {
+        if (System.currentTimeMillis() - startTime >= timeLimit) {
             timeLimitExceeded = true;
             return;
         }

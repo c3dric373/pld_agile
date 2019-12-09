@@ -7,7 +7,7 @@ public abstract class TemplateTSP implements TSP {
 
     private Integer[] bestSolution;
     private int lowestCost = 0;
-    private Boolean timeLimitExceeded;
+    private Boolean timeLimitExceeded = false;
 
     public Boolean getTimeLimitExceeded() {
         return timeLimitExceeded;
@@ -71,7 +71,7 @@ public abstract class TemplateTSP implements TSP {
      */
     void branchAndBound(int currentNode, ArrayList<Integer> notSeen, ArrayList<Integer> seen, int currentCost,
                         int[][] cost, int[] duration, long startTime, int timeLimit) {
-        if (System.currentTimeMillis() - startTime > timeLimit) {
+        if (System.currentTimeMillis() - startTime >= timeLimit) {
             timeLimitExceeded = true;
             return;
         }
