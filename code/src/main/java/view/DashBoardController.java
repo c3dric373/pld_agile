@@ -5,10 +5,12 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -27,10 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DashBoardController implements Initializable, MapComponentInitializedListener {
+public class DashBoardController implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback  {
 
     //Map Style.
     private static final String mapStyle = "[{\"featureType\":\"administrative.neighborhood\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#747474\"},{\"lightness\":\"23\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#f38eb0\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ced7db\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffa5a8\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c7e5c8\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#d6cbc7\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c4c9e8\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#b1eaf1\"}]},{\"featureType\":\"road\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#343434\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry\",\"stylers\":[{\"lightness\":\"100\"}]},{\"featureType\":\"road\",\"elementType\":\"labels\",\"stylers\":[{\"visibility\":\"off\"},{\"lightness\":\"100\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#8a8a8a\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffd4a5\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6e6e6e\"}]},{\"featureType\":\"road.arterial\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffe9d2\"}]},{\"featureType\":\"road.arterial\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6e6969\"}]},{\"featureType\":\"road.local\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"}]},{\"featureType\":\"road.local\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"weight\":\"3.00\"}]},{\"featureType\":\"road.local\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"weight\":\"0.30\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text\",\"stylers\":[{\"visibility\":\"on\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#464646\"},{\"lightness\":\"36\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#e9e5dc\"},{\"lightness\":\"30\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"transit.line\",\"elementType\":\"geometry\",\"stylers\":[{\"visibility\":\"off\"},{\"lightness\":\"100\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#d2e7f7\"}]}]";
+
+    private Tour tourLoaded;
+
+    public void setTour(Tour tour) {
+        tourLoaded = tour;
+    }
 
     //Enum Marker Types.
     @Getter
@@ -55,6 +63,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // List des ActionPoints en Observable pour la view
     private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
+
+
+    // Direction Management
+    protected DirectionsService directionsService;
+    protected DirectionsPane directionsPane;
+
+
     /*
     @FXML
     private TableView<ActionPoint> actionPointTableView;
@@ -127,6 +142,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             System.out.println(latLong.getLatitude() + "coucou" + latLong.getLongitude());
         });
 
+        //Set Direction Service
+        directionsService = new DirectionsService();
+        directionsPane = mapView.getDirec();
     }
 
     public void handleLoadMap() {
@@ -169,6 +187,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
+    public void traceDirection() {
+        System.out.println(tourLoaded.getDeliveryProcesses().get(0));
+        showDeliveryProcessOnMap(tourLoaded.getDeliveryProcesses().get(0));
+    }
+
     /**
      * Is called by the main application to give a reference back to itself.
      *
@@ -195,6 +218,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
         // Add map to the view
         map = mapView.createMap(mapOptions);
+        directionsService = new DirectionsService();
+        directionsPane = mapView.getDirec();
     }
 
     public void displayLoadedDeleveryProcess(final Tour tour) {
@@ -253,6 +278,43 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
         return pointMarker;
+    }
+
+    private void clearDirections() {
+        new DirectionsRenderer(true, mapView.getMap(), directionsPane).clearDirections();
+    }
+
+    @Override
+    public void directionsReceived(DirectionsResult results, DirectionStatus status) {
+    }
+
+    public void showDeliveryProcessOnMap(DeliveryProcess deliveryProcess) {
+        // Clear all markers
+        map.clearMarkers();
+        // Clear Past direction
+        clearDirections();
+
+        /*
+        DirectionsRequest request =
+                new DirectionsRequest("Lyon Part dieu",
+                        "Insa Lyon",
+                        TravelModes.DRIVING);
+
+         */
+        DirectionsWaypoint aDWP = new DirectionsWaypoint(tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLatitude() + ", " + tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLongitude());
+        aDWP.setStopOver(false);
+        DirectionsWaypoint route[] = {aDWP};
+
+        DirectionsRequest request =
+                new DirectionsRequest( deliveryProcess.getPickUP().getLocation().getLatitude() + ", " + deliveryProcess.getPickUP().getLocation().getLongitude(),
+                        deliveryProcess.getDelivery().getLocation().getLatitude() + ", " + deliveryProcess.getDelivery().getLocation().getLongitude(),
+                        TravelModes.DRIVING,route);
+
+        //Create Markers with DeliveryProcess Points.
+        // map.addMarker(createMarker(deliveryProcess.getPickUP(),MarkerType.PICKUP));
+        // map.addMarker(createMarker(deliveryProcess.getDelivery(),MarkerType.DELIVERY));
+
+        directionsService.getRoute(request, this, new DirectionsRenderer(false, mapView.getMap(), directionsPane));
     }
 
 

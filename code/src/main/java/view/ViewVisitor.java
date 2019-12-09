@@ -12,6 +12,7 @@ public class ViewVisitor implements GenDataVisitor {
     @Override
     public void visit(final Tour tour) {
         if (tour.getActionPoints() == null) {
+            dashBoardController.setTour(tour);
             dashBoardController.displayLoadedDeleveryProcess(tour);
         }else {
             dashBoardController.displayMapActionPoints(tour.getActionPoints());
