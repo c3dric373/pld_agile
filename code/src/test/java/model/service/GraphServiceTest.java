@@ -16,16 +16,17 @@ import static org.junit.Assert.assertEquals;
 
 public class GraphServiceTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    private XmlToGraph xmlToGraph = new XmlToGraph();
     private GraphService graphService = new GraphService();
+    private XmlToGraph xmlToGraph = new XmlToGraph();
     private List<Point> points = new ArrayList<Point>();
     private Graph TEST_GRAPH = new Graph(points);
     private List<DeliveryProcess> deliveryProcess = new ArrayList<DeliveryProcess>();
     private Point point = new Point(123486, 12.8, 2.0);
     private Time time = Time.valueOf("0:0:0");
     private Tour TEST_TOUR = new Tour(deliveryProcess, point, time);
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testCalculateTour_TourIsNull_throwsIllegalArgumentException() {
@@ -35,7 +36,7 @@ public class GraphServiceTest {
         thrown.expectMessage("tour can't be null");
 
         // Act
-        Tour tourRes = GraphService.calculateTour(null, TEST_GRAPH);
+        Tour tourRes = graphService.calculateTour(null, TEST_GRAPH);
 
         // Assert via annotation
 
@@ -49,7 +50,7 @@ public class GraphServiceTest {
         thrown.expectMessage("graph can't be null");
 
         // Act
-        Tour tourRes = GraphService.calculateTour(TEST_TOUR, null);
+        Tour tourRes = graphService.calculateTour(TEST_TOUR, null);
 
         // Assert via annotation
 
@@ -65,8 +66,8 @@ public class GraphServiceTest {
         List<Point> points = xmlToGraph.getGraphFromXml("resource/petitPlan.xml");
         Tour tour = xmlToGraph.getDeliveriesFromXml("resource/demandePetit1.xml");
         Graph graph = new Graph(points);
-        Tour tourRes = GraphService.calculateTour(tour, graph);
-        List<Journey> journeyList = tourRes.getJourneys();
+        Tour tourRes = graphService.calculateTour(tour, graph);
+        List<Journey> journeyList = tourRes.getJourneyList();
 
         // Assert via annotation
         assertEquals(journeyList.get(0).getFinishTime(), Time.valueOf("08:04:25"));
