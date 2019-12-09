@@ -100,7 +100,7 @@ public class TSP3 implements TSP {
                 vus.toArray(meilleureSolution);
                 coutMeilleureSolution = coutVus;
             }
-        } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution && f[seen][sommetCrt] >= coutVus) {
+        } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution && f[seen][sommetCrt] > coutVus) {
             f[seen][sommetCrt] = coutVus;
             Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
             while (it.hasNext()) {
