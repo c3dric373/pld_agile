@@ -13,7 +13,7 @@ public class Computing {
         XmlToGraph xmlToGraph = new XmlToGraph();
         Computing computing = new Computing();
         String file_graph = "resource/grandPlan.xml";
-        String file_tour = "resource/demandeGrand9.xml";
+        String file_tour = "resource/demandeGrand7.xml";
         List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
         Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
@@ -81,10 +81,10 @@ public class Computing {
                 }
             }
         }
-        System.out.printf("dijkstra(%d)\n", id_start);
-        for (int i = 0; i < nb_points; i++) {
-            System.out.printf("  shortest(%d, %d)=%f\n", id_start, points.get(i).getId(), res.get(i).getDist());
-        }
+//        System.out.printf("dijkstra(%d)\n", id_start);
+//        for (int i = 0; i < nb_points; i++) {
+//            System.out.printf("  shortest(%d, %d)=%f\n", id_start, points.get(i).getId(), res.get(i).getDist());
+//        }
         return res;
     }
 
