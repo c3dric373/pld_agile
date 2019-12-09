@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JourneyTest {
+ class JourneyTest {
 
     private Point startPoint;
     private Point arrivePoint;
@@ -28,6 +28,9 @@ class JourneyTest {
         points.add(arrivePoint);
         points.add(startPoint);
         minLength = 10.5;
+        if (points == null ){
+            System.out.println("test");
+        }
         journey = new Journey(points, minLength);
     }
 

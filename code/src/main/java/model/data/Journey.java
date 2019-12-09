@@ -47,9 +47,10 @@ public class Journey {
     public Journey(final List<Point> newPoints, final double newMinLength) {
         Validate.notNull(newPoints, "point list of the journey can't "
                 + "be null");
-        if (newPoints.size() < 2)
+        if (newPoints.size() < 2) {
             throw new IllegalArgumentException("point list of the journey "
                     + "should have at least two points");
+        }
         Validate.noNullElements(newPoints, "points of the journey can't "
                 + "be null");
         Validate.isTrue(newMinLength > 0, "min length of the"
