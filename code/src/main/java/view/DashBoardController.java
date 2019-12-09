@@ -26,6 +26,7 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -147,6 +148,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         directionsPane = mapView.getDirec();
     }
 
+    public void calculateTour() {
+        this.mainApp.calculateTour();
+    }
+
     public void handleLoadMap() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Map XML");
@@ -188,7 +193,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void traceDirection() {
-        System.out.println(tourLoaded.getDeliveryProcesses().get(0));
         showDeliveryProcessOnMap(tourLoaded.getDeliveryProcesses().get(0));
     }
 
@@ -289,34 +293,45 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void showDeliveryProcessOnMap(DeliveryProcess deliveryProcess) {
+        DirectionsWaypoint aDWP = new DirectionsWaypoint(tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLatitude() + ", " + tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLongitude());
+        aDWP.setStopOver(false);
+        DirectionsWaypoint test = new DirectionsWaypoint(tourLoaded.getDeliveryProcesses().get(0).getDelivery().getLocation().getLatitude() + ", " + tourLoaded.getDeliveryProcesses().get(0).getDelivery().getLocation().getLongitude());
+        test.setStopOver(false);
+        DirectionsWaypoint route[] = {aDWP,test};
+        drawDirection(tourLoaded.getDeliveryProcesses().get(0).getPickUP().getLocation(), tourLoaded.getDeliveryProcesses().get(0).getPickUP().getLocation(), route);
+    }
+
+    //public DirectionsWaypoint[] getDirectionWayPointsFromJourney(Journey journey) {
+
+    //}
+
+    public void displayCalculatedTour(Tour tour) {
+        Journey journey = tour.getJourneyList().get(0);
+        LinkedList<DirectionsWaypoint> path = new LinkedList<DirectionsWaypoint>();
+        // On ajoute tous les points a la liste de points dans l'ordre inversse.
+        for(Point point : journey.getPoints()) {
+                DirectionsWaypoint stop = new DirectionsWaypoint(point.getLatitude() + ", " + point.getLongitude());
+                stop.setStopOver(false);
+                path.addFirst(stop);
+        }
+        // On retire le premier et le dernier qui sont start et end
+        path.remove(0);
+        path.remove(path.getLast());
+        drawDirection(journey.getStartPoint(), journey.getArrivePoint(), path.toArray(new DirectionsWaypoint[path.size()]));
+    }
+
+    public void drawDirection(Point start, Point arrival, DirectionsWaypoint[] directionsWaypoints) {
         // Clear all markers
         map.clearMarkers();
         // Clear Past direction
         clearDirections();
 
-        /*
-        DirectionsRequest request =
-                new DirectionsRequest("Lyon Part dieu",
-                        "Insa Lyon",
-                        TravelModes.DRIVING);
-
-         */
-        DirectionsWaypoint aDWP = new DirectionsWaypoint(tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLatitude() + ", " + tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLongitude());
-        aDWP.setStopOver(false);
-        DirectionsWaypoint route[] = {aDWP};
-
-        DirectionsRequest request =
-                new DirectionsRequest( deliveryProcess.getPickUP().getLocation().getLatitude() + ", " + deliveryProcess.getPickUP().getLocation().getLongitude(),
-                        deliveryProcess.getDelivery().getLocation().getLatitude() + ", " + deliveryProcess.getDelivery().getLocation().getLongitude(),
-                        TravelModes.DRIVING,route);
-
-        //Create Markers with DeliveryProcess Points.
-        // map.addMarker(createMarker(deliveryProcess.getPickUP(),MarkerType.PICKUP));
-        // map.addMarker(createMarker(deliveryProcess.getDelivery(),MarkerType.DELIVERY));
-
+        DirectionsRequest request = new DirectionsRequest(
+                start.getLatitude() + ", " + start.getLongitude(),
+                arrival.getLatitude() + ", " + arrival.getLongitude(),
+                TravelModes.WALKING,
+                directionsWaypoints);
         directionsService.getRoute(request, this, new DirectionsRenderer(false, mapView.getMap(), directionsPane));
     }
-
-
 
 }
