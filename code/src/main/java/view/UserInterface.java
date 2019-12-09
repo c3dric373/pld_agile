@@ -1,6 +1,5 @@
 package view;
 
-import controlller.DashBoardController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,30 +8,33 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import lombok.Setter;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
+import org.apache.commons.lang.Validate;
+import picocli.CommandLine;
 
+import java.io.File;
 import java.io.IOException;
 
-public class UserInterface extends Application implements Observer {
-    private Stage primaryStage;
-    private BorderPane rootLayout;
+public class UserInterface implements Observer {
 
     /**
      * ViewVisitor to handle changes from the model
      */
-    private ViewVisitor viewVisitor;
+    private ViewVisitor viewVisitor = new ViewVisitor();
 
     /**
      * Interface to the model.
      */
-    private ApplicationManager model;
+    @Setter private ApplicationManager model;
 
     /**
      * The data as an observable list of Persons.
      */
     // TODO Modifier ca en autre chose que string genre en liste de livraison
     private ObservableList<String> tourData = FXCollections.observableArrayList();
+    private DashBoardController controller;
 
     /**
      * Constructor
@@ -43,7 +45,6 @@ public class UserInterface extends Application implements Observer {
         // Add some sample data List
         // tourData.addAll();
         this.model = model;
-        this.viewVisitor = new ViewVisitor();
     }
 
     /**
@@ -55,68 +56,24 @@ public class UserInterface extends Application implements Observer {
         return tourData;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Déli'Vélo");
-
-        initRootLayout();
-        showDashboard();
-    }
-
-    // Initialize main layout aka root layout
-    private void initRootLayout() {
-        try {
-            // Load root Layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            System.out.println();
-            loader.setLocation(UserInterface.class.getResource("RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
-
-            // Show the scene containing the root layout
-
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Initialize show person
-    private void showDashboard() {
-        try {
-            // Load root Layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(UserInterface.class.getResource("DashBoard.fxml"));
-            AnchorPane dashboardOverview = loader.load();
-
-            // Set person overview into the center of root layout
-            rootLayout.setCenter(dashboardOverview);
-
-            // Give the controller access to the main app.
-            DashBoardController controller = loader.getController();
-            controller.setMainApp(this);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public UserInterface(){};
-
-    public static void main(String[] args) {
-        launch(args);
+    public void setController(DashBoardController controller) {
+        Validate.notNull(controller, "controller ist not null");
+        this.controller = controller;
+        this.viewVisitor.addController(controller);
     }
 
     @Override
     public void update(final GenData genData) {
+        System.out.println("Visitor User interface");
         genData.accept(viewVisitor);
     }
+
+    public void loadMap(final File selectedFile) {
+        Validate.notNull(selectedFile, "selected file null");
+        if(this.model!=null){
+            System.out.println("testmodel");
+            this.model.loadMap(selectedFile);
+        }
+    }
+
 }
