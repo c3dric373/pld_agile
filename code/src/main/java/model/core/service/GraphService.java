@@ -4,9 +4,7 @@ import model.core.TSP;
 import model.core.TSP2;
 import model.data.*;
 import model.core.Computing;
-import model.io.XmlToGraph;
 import org.apache.commons.lang.Validate;
-import org.checkerframework.checker.units.qual.C;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -78,7 +76,7 @@ public class GraphService {
 
         JourneyService journeyService = new JourneyService();
         List<Journey> journeys1 = journeyService.calculateTime(journeys, actionPoints, tour.getStartTime());
-        res.setJourneys(journeys1);
+        res.setJourneyList(journeys1);
 
         return res;
     }

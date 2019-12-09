@@ -3,17 +3,45 @@ package model.core.service;
 
 import model.data.*;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
 public class TourService {
 
-
-    public Tour changeDeliveryOrder(final Tour tour,
+    /**
+     * Changes the delivery order a Tour, re calculates the journeys for a new
+     * list of action points. Does not optimize anything, only calculates the
+     * shortest path from one point to another.
+     * @param graph the map.
+     * @param tour the tour.
+     * @param actionPoints the new action points.
+     * @return a new Tour with the modified journeys.
+     */
+    public Tour changeDeliveryOrder(final Graph graph, final Tour tour,
                                     final List<ActionPoint> actionPoints) {
-        //TODO
-        return null;
+        final List<ActionPoint> oldActionPoints = tour.getActionPoints();
+        if (oldActionPoints.size() != actionPoints.size()) {
+            throw new IllegalArgumentException("actonPoints list not "
+                    + "of same size");
+        }
+
+        final List<Journey> newJourneys = new ArrayList<>();
+        for (int i = 1; i < actionPoints.size(); i++) {
+            Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
+            Point successorPoint = oldActionPoints.get(i - 1).getLocation();
+            Journey newJourney = GraphService.
+                    shortestPath(graph, predecessorPoint, successorPoint);
+            newJourneys.add(newJourney);
+        }
+        final Time startTime = tour.getStartTime();
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(newJourneys, actionPoints, startTime);
+        tour.setJourneyList(calculatedJourneys);
+        return tour;
     }
+
 
     /**
      * Changes the position of an Action point on a Tour.
@@ -39,7 +67,7 @@ public class TourService {
 
         // Finding the journeys from and to the old point
         final boolean IS_ENDPOINT = true;
-        final List<Journey> oldJourneys = tour.getJourneys();
+        final List<Journey> oldJourneys = tour.getJourneyList();
         final OptionalInt optOldPredecessorJ = JourneyService.
                 findIndexPointInJourneys(oldJourneys, oldPoint.getLocation(),
                         IS_ENDPOINT);
@@ -86,15 +114,16 @@ public class TourService {
                 successorPoint.getLocation(), newPoint);
         //Replacing the old Journeys with the newly calculated ones
 
-        tour.getJourneys().set(optOldPredecessorJ.getAsInt(),
+        tour.getJourneyList().set(optOldPredecessorJ.getAsInt(),
                 newPredecessorJourney);
-        tour.getJourneys().set(optOldSuccessorJ.getAsInt(),
+        tour.getJourneyList().set(optOldSuccessorJ.getAsInt(),
                 newSuccessorJourney);
 
         // Calculate the time it takes to calculate new Journey
         final List<Journey> newJourneys = JourneyService.calculateTime(
-                tour.getJourneys(),tour.getActionPoints(),tour.getStartTime());
-        tour.setJourneys(newJourneys);
+                tour.getJourneyList(), tour.getActionPoints(),
+                tour.getStartTime());
+        tour.setJourneyList(newJourneys);
 
         return tour;
     }
