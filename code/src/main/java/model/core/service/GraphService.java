@@ -165,7 +165,7 @@ public class GraphService {
             }
             // 'flag' this point
             flag[cur_index] = true;
-            // verify for each point not 'flag', whether it's better to
+            // verify for each point not 'flag', whether it's better to go through the current point
             Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
                 long id_other = s.getIdEnd();
@@ -196,6 +196,7 @@ public class GraphService {
      * @return Journey which represents the shortest path from the start point to arrival point
      */
     public Journey getShortestPath(final Graph graph, final long id_start, final long id_arrive, List<tuple> res_dijkstra) {
+        // if dijkstra hasn't been applied, do it
         if (res_dijkstra == null)
             res_dijkstra = dijkstra(graph, id_start);
         List<Point> points = graph.getPoints();
@@ -206,17 +207,19 @@ public class GraphService {
         List<Point> journey_points = new ArrayList<>();
         int cur_index = arrive_index;
         double min_length = res_dijkstra.get(arrive_index).getDist();
+        // if it is impossible to get from the start point to the arrival point, return null
         if (min_length == Double.POSITIVE_INFINITY) return null;
+        // get the REVERSE order of the path one by one (start with the arrival point)
         while (true) {
             journey_points.add(points.get(cur_index));
             if (cur_index == start_index) break;
             cur_index = res_dijkstra.get(cur_index).getPrev();
         }
-        System.out.printf("Shortest Path from %d to %d in REVERSE order:\n", id_start, id_arrive);
-        for (Point point : journey_points) {
-            System.out.printf("  %d", point.getId());
-        }
-        System.out.println();
+//        System.out.printf("Shortest Path from %d to %d in REVERSE order:\n", id_start, id_arrive);
+//        for (Point point : journey_points) {
+//            System.out.printf("  %d", point.getId());
+//        }
+//        System.out.println();
         return new Journey(journey_points, min_length);
     }
 
@@ -234,10 +237,13 @@ public class GraphService {
         for (int i = 0; i < 2 * nb + 1; i++) {
             Point point;
             if (i == 0) {
+                // point base
                 point = tour.getBase();
             } else if (i < nb + 1) {
+                // points pick up
                 point = tour.getDeliveryProcesses().get(i - 1).getPickUP().getLocation();
             } else {
+                // points delivery
                 point = tour.getDeliveryProcesses().get(i - nb - 1).getDelivery().getLocation();
             }
             res_dijkstra.add(dijkstra(graph, point.getId()));
@@ -261,10 +267,13 @@ public class GraphService {
             for (int j = 0; j < 2 * nb + 1; j++) {
                 Point point;
                 if (j == 0) {
+                    // point base
                     point = tour.getBase();
                 } else if (j < nb + 1) {
+                    // points pick up
                     point = tour.getDeliveryProcesses().get(j - 1).getPickUP().getLocation();
                 } else {
+                    // points delivery
                     point = tour.getDeliveryProcesses().get(j - nb - 1).getDelivery().getLocation();
                 }
                 int index = map.get(point.getId());
@@ -288,26 +297,34 @@ public class GraphService {
         int[][] cout = getCost(tour, graph, res_dijkstra);
         int nbSommets = tour.getDeliveryProcesses().size() * 2 + 1;
         int[] duree = new int[nbSommets];
+        // apply the given tsp
         tsp.chercheSolution(tpsLimite, nbSommets, cout, duree);
 
+        // create a list of journey based on the result of tsp
         List<Journey> journeys = new ArrayList<>();
         for (int i = 0; i < nbSommets; i++) {
             int index_start_tour = tsp.getMeilleureSolution(i);
             int index_arrive_tour = tsp.getMeilleureSolution((i + 1) % nbSommets);
             long id_start;
             if (index_start_tour == 0) {
+                // point base
                 id_start = tour.getBase().getId();
             } else if (index_start_tour < nbSommets / 2 + 1) {
+                // points pick up
                 id_start = tour.getDeliveryProcesses().get(index_start_tour - 1).getPickUP().getLocation().getId();
             } else {
+                // points delivery
                 id_start = tour.getDeliveryProcesses().get(index_start_tour - 1 - nbSommets / 2).getDelivery().getLocation().getId();
             }
             long id_arrive;
             if (index_arrive_tour == 0) {
+                // point base
                 id_arrive = tour.getBase().getId();
             } else if (index_arrive_tour < nbSommets / 2 + 1) {
+                // points pick up
                 id_arrive = tour.getDeliveryProcesses().get(index_arrive_tour - 1).getPickUP().getLocation().getId();
             } else {
+                // points delivery
                 id_arrive = tour.getDeliveryProcesses().get(index_arrive_tour - 1 - nbSommets / 2).getDelivery().getLocation().getId();
             }
             Journey journey = getShortestPath(graph, id_start, id_arrive, res_dijkstra.get(index_start_tour));
@@ -326,38 +343,40 @@ public class GraphService {
     public List<Journey> getJourneysForDeliveryProcess(final List<Journey> journeys, final DeliveryProcess deliveryProcess) {
         long id1 = deliveryProcess.getPickUP().getLocation().getId();
         long id2 = deliveryProcess.getDelivery().getLocation().getId();
-        int index_journey1 = -1;
-        int index_journey2 = -1;
+        int index_journey_start = -1;
+        int index_journey_end = -1;
+        // search for the index of the start journey and the end journey
         for (int i = 0; i < journeys.size(); i++) {
-            if (index_journey1 != -1 && index_journey2 != -1) break;
-            if (index_journey1 == -1 && index_journey2 == -1) {
+            if (index_journey_start != -1 && index_journey_end != -1) break;
+            // tsp1 makes no difference between points pick up and points delivery
+            if (index_journey_start == -1 && index_journey_end == -1) {
                 if (journeys.get(i).getStartPoint().getId() == id1) {
-                    index_journey1 = i;
+                    index_journey_start = i;
                 } else if (journeys.get(i).getStartPoint().getId() == id2) {
-                    index_journey2 = i;
+                    index_journey_end = i;
                 } else continue;
             }
-            if (index_journey1 != -1) {
+            if (index_journey_start != -1) {
                 if (journeys.get(i).getArrivePoint().getId() == id1) {
-                    index_journey1 = i;
+                    index_journey_start = i;
                 } else if (journeys.get(i).getArrivePoint().getId() == id2) {
-                    index_journey2 = i;
+                    index_journey_end = i;
                 }
             }
         }
         List<Journey> res = new ArrayList<>();
-        for (int i = index_journey1; i <= index_journey2; i++) {
+        for (int i = index_journey_start; i <= index_journey_end; i++) {
             res.add(journeys.get(i));
         }
-        System.out.printf("Delivery process(id point pick up: %d, id point delivery: %d):\n", id1, id2);
-        for (int i = 0; i < res.size(); i++) {
-            System.out.printf("Journey %d:\n", i + 1);
-            List<Point> points = res.get(i).getPoints();
-            for (int j = points.size() - 1; j >= 0; j--) {
-                Point point = points.get(j);
-                System.out.printf("  id: %d, longitude: %f, latitude: %f\n", point.getId(), point.getLongitude(), point.getLatitude());
-            }
-        }
+//        System.out.printf("Delivery process(id point pick up: %d, id point delivery: %d):\n", id1, id2);
+//        for (int i = 0; i < res.size(); i++) {
+//            System.out.printf("Journey %d:\n", i + 1);
+//            List<Point> points = res.get(i).getPoints();
+//            for (int j = points.size() - 1; j >= 0; j--) {
+//                Point point = points.get(j);
+//                System.out.printf("  id: %d, longitude: %f, latitude: %f\n", point.getId(), point.getLongitude(), point.getLatitude());
+//            }
+//        }
         return res;
     }
 
