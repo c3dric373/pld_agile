@@ -27,7 +27,7 @@ public class Tour implements GenData {
     /**
      * List of all Journeys.
      */
-    private List<Journey> journeys;
+    private List<Journey> journeyList;
 
     /**
      * List of all the deliveries the cyclist has to do
