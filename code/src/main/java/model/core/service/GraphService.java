@@ -5,7 +5,6 @@ import model.core.TSP3;
 import model.data.*;
 import model.io.XmlToGraph;
 import org.apache.commons.lang.Validate;
-import org.checkerframework.checker.units.qual.C;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -45,10 +44,11 @@ public class GraphService {
 
     /**
      * Find the center of the graph thanks to itself
+     *
      * @param graph
      * @return
      */
-    public static Point addGraphCenter (final Graph graph) {
+    public static Point addGraphCenter(final Graph graph) {
         Validate.notNull(graph, "graph can't be null");
         double longitudeMax = graph.getPoints().get(0).getLongitude();
         double longitudeMin = graph.getPoints().get(0).getLongitude();
@@ -70,8 +70,8 @@ public class GraphService {
             }
         }
 
-        double latitudeCenter = (latitudeMax+latitudeMin)/2;
-        double longitudeCenter = (longitudeMax+longitudeMin)/2;
+        double latitudeCenter = (latitudeMax + latitudeMin) / 2;
+        double longitudeCenter = (longitudeMax + longitudeMin) / 2;
         Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
 
         System.out.println("Latitude Center : " + latitudeCenter);
@@ -106,7 +106,7 @@ public class GraphService {
                     actionPoints.add(deliveryProcess.getPickUP());
                     notFound = false;
                 }
-                if (!notFound) break;;
+                if (!notFound) break;
             }
         }
         actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
@@ -122,13 +122,6 @@ public class GraphService {
     public static boolean isInMap(final Point newPoint) {
         //todo
         return false;
-    }
-
-
-    public static Journey shortestPath(final Graph graph, final Point point1,
-                                       final Point point2) {
-        //todo
-        return null;
     }
 
     /**
@@ -172,7 +165,7 @@ public class GraphService {
             }
             // 'flag' this point
             flag[cur_index] = true;
-            // verify for each point no 'flag', whether it's better to
+            // verify for each point not 'flag', whether it's better to
             Point cur_point = points.get(cur_index);
             for (Segment s : cur_point.getSegments()) {
                 long id_other = s.getIdEnd();
@@ -203,6 +196,8 @@ public class GraphService {
      * @return Journey which represents the shortest path from the start point to arrival point
      */
     public Journey getShortestPath(final Graph graph, final long id_start, final long id_arrive, List<tuple> res_dijkstra) {
+        if (res_dijkstra == null)
+            res_dijkstra = dijkstra(graph, id_start);
         List<Point> points = graph.getPoints();
         Map<Long, Integer> map = graph.getMap();
         int start_index = map.get(id_start);
@@ -397,13 +392,12 @@ public class GraphService {
 
     public static void main(String[] args) {
         XmlToGraph xmlToGraph = new XmlToGraph();
-        Computing computing = new Computing();
+        GraphService graphService = new GraphService();
         String file_graph = "resource/grandPlan.xml";
         String file_tour = "resource/demandeGrand7.xml";
         List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
         Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
-//        GraphService.calculateTour(tour, graph);
-        GraphService.addGraphCenter(graph);
+        graphService.calculateTour(tour, graph);
     }
 }
