@@ -12,18 +12,12 @@ public class TSP2 extends TemplateTSP {
 
     @Override
     protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-        int min1 = Integer.MAX_VALUE;
-        int min2 = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE;
         for (Integer sommet : nonVus) {
-            if (min1 == Integer.MAX_VALUE && min2 == Integer.MAX_VALUE) {
-                min1 = cout[sommetCourant][sommet] + duree[sommet];
-                min2 = min1;
-            } else if (cout[sommetCourant][sommet] + duree[sommet] < min1) {
-                min2 = min1;
-                min1 = cout[sommetCourant][sommet] + duree[sommet];
-            }
+            if (cout[sommetCourant][sommet] + duree[sommet] < min)
+                min = cout[sommetCourant][sommet] + duree[sommet];
         }
-        return (min2 == Integer.MAX_VALUE) ? min1 : (min1 + min2) / 2;
+        return min;
     }
 
     public static void main(String[] args) {
