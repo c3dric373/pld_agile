@@ -39,6 +39,7 @@ public class TourService {
         final List<Journey> calculatedJourneys = JourneyService.
                 calculateTime(newJourneys, actionPoints, startTime);
         tour.setJourneyList(calculatedJourneys);
+        tour.setActionPoints(actionPoints);
         return tour;
     }
 
@@ -124,7 +125,6 @@ public class TourService {
                 tour.getJourneyList(), tour.getActionPoints(),
                 tour.getStartTime());
         tour.setJourneyList(newJourneys);
-
         return tour;
     }
 
