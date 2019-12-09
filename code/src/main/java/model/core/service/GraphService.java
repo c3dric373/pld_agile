@@ -125,7 +125,7 @@ public class GraphService {
      * Dijkstra shortest path
      * the shortest path from start point to other points
      *
-     * @param graph    Map which contains a list of points with segments connect to each of them
+     * @param graph   Map which contains a list of points with segments connect to each of them
      * @param idStart Id of start point
      * @return List of tuple which contains the previous point index and the distance in the shortest path
      * from the start point to each point
@@ -182,7 +182,7 @@ public class GraphService {
     /**
      * Create the shortest path from one point to another
      *
-     * @param graph        Map which contains a list of points with segments connect to each of them
+     * @param graph       Map which contains a list of points with segments connect to each of them
      * @param idStart     Id of the start point of the journey
      * @param idArrive    Id of the arrival point of the journey
      * @param resDijkstra Result of dijkstra(idStart)
@@ -270,10 +270,31 @@ public class GraphService {
                     point = tour.getDeliveryProcesses().get(j - nb - 1).getDelivery().getLocation();
                 }
                 int index = map.get(point.getId());
-                cost[i][j] = (int) res_dijkstra.get(i).get(index).getDist();
+                double distance = res_dijkstra.get(i).get(index).getDist();
+                cost[i][j] = (distance == Double.POSITIVE_INFINITY) ? Integer.MAX_VALUE : (int) (res_dijkstra.get(i).get(index).getDist() / JourneyService.TRAVEL_SPEED);
             }
         }
         return cost;
+    }
+
+    public int[] getDuration(final Tour tour, final Graph graph) {
+        Map<Long, Integer> map = graph.getMap();
+        int nb = tour.getDeliveryProcesses().size();
+        int[] duration = new int[2 * nb + 1];
+        Time referenceTime = Time.valueOf("0:0:0");
+        for (int i = 1; i < 2 * nb + 1; i++) {
+            Time time;
+            if (i < nb + 1) {
+                // points pick up
+                time = tour.getDeliveryProcesses().get(i - 1).getPickUP().getTime();
+            } else {
+                // points delivery
+                time = tour.getDeliveryProcesses().get(i - nb - 1).getDelivery().getTime();
+            }
+            duration[i] = (int) ((time.getTime() - referenceTime.getTime()) / 1000);
+        }
+
+        return duration;
     }
 
     /**
@@ -289,7 +310,7 @@ public class GraphService {
         List<List<Tuple>> resDijkstra = applyDijkstraToTour(tour, graph);
         int[][] cost = getCost(tour, graph, resDijkstra);
         int nbNode = tour.getDeliveryProcesses().size() * 2 + 1;
-        int[] duration = new int[nbNode];
+        int[] duration = getDuration(tour, graph);
         // apply the given tsp
         tsp.searchSolution(timeLimit, nbNode, cost, duration);
 
