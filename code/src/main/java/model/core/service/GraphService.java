@@ -43,6 +43,43 @@ public class GraphService {
         return nearestPoint;
     }
 
+    /**
+     * Find the center of the graph thanks to itself
+     * @param graph
+     * @return
+     */
+    public static Point addGraphCenter (final Graph graph) {
+        Validate.notNull(graph, "graph can't be null");
+        double longitudeMax = graph.getPoints().get(0).getLongitude();
+        double longitudeMin = graph.getPoints().get(0).getLongitude();
+        double latitudeMax = graph.getPoints().get(0).getLatitude();
+        double latitudeMin = graph.getPoints().get(0).getLatitude();
+
+        for (Point point : graph.getPoints()) {
+            if (longitudeMax < point.getLongitude()) {
+                longitudeMax = point.getLongitude();
+            }
+            if (longitudeMin > point.getLongitude()) {
+                longitudeMin = point.getLongitude();
+            }
+            if (latitudeMax < point.getLatitude()) {
+                latitudeMax = point.getLatitude();
+            }
+            if (latitudeMin > point.getLatitude()) {
+                latitudeMin = point.getLatitude();
+            }
+        }
+
+        double latitudeCenter = (latitudeMax+latitudeMin)/2;
+        double longitudeCenter = (longitudeMax+longitudeMin)/2;
+        Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
+
+        System.out.println("Latitude Center : " + latitudeCenter);
+        System.out.println("Longitude Center : " + longitudeCenter);
+
+        return centerPoint;
+    }
+
     public static Tour calculateTour(final Tour tour, final Graph graph) {
         Validate.notNull(tour, "tour can't be null");
         Validate.notNull(graph, "graph can't be null");
@@ -94,14 +131,15 @@ public class GraphService {
         //todo
         return null;
     }
-//    public static void main(String[] args) {
-//        XmlToGraph xmlToGraph = new XmlToGraph();
-//        Computing computing = new Computing();
-//        String file_graph = "resource/grandPlan.xml";
-//        String file_tour = "resource/demandeGrand7.xml";
-//        List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
-//        Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
-//        Graph graph = new Graph(points);
+    public static void main(String[] args) {
+        XmlToGraph xmlToGraph = new XmlToGraph();
+        Computing computing = new Computing();
+        String file_graph = "resource/grandPlan.xml";
+        String file_tour = "resource/demandeGrand7.xml";
+        List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
+        Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
+        Graph graph = new Graph(points);
 //        GraphService.calculateTour(tour, graph);
-//    }
+        GraphService.addGraphCenter(graph);
+    }
 }
