@@ -114,7 +114,7 @@ public class GraphService {
 
         JourneyService journeyService = new JourneyService();
         List<Journey> journeys1 = journeyService.calculateTime(journeys, actionPoints, tour.getStartTime());
-        res.setJourneys(journeys1);
+        res.setJourneyList(journeys1);
 
         return res;
     }

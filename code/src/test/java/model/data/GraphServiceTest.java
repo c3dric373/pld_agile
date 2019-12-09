@@ -65,7 +65,7 @@ public class GraphServiceTest {
         Tour tour = xmlToGraph.getDeliveriesFromXml("resource/demandePetit1.xml");
         Graph graph =new Graph(points);
         Tour tourRes = graphService.calculateTour( tour, graph);
-        List<Journey> journeyList = tourRes.getJourneys();
+        List<Journey> journeyList = tourRes.getJourneyList();
 
         // Assert via annotation
         assertEquals(journeyList.get(0).getFinishTime(), Time.valueOf("08:04:25"));

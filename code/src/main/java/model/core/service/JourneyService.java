@@ -25,9 +25,9 @@ public class JourneyService {
      */
     static final int NB_SEC_IN_MIN = 60;
 
-    final double TRAVEL_SPEED = 15.0/3.6;
+    final static double TRAVEL_SPEED = 15.0/3.6;
 
-     List<Journey> calculateTime(final List<Journey> journeys,
+    static List<Journey> calculateTime(final List<Journey> journeys,
                                 final List<ActionPoint> actionPoints,
                                 final Time startTime) {
         Validate.notNull(journeys, "journeys is null");
@@ -98,7 +98,7 @@ public class JourneyService {
         }
         return OptionalInt.empty();
     }
-    private ActionPoint findActionPoint(Point point,
+    static ActionPoint findActionPoint(Point point,
                                         List<ActionPoint> actionPoints){
         long id = point.getId();
         ActionPoint correspondingActionPoint=null;
