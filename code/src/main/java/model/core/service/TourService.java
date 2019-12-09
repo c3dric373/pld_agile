@@ -29,9 +29,9 @@ public class TourService {
 
         final List<Journey> newJourneys = new ArrayList<>();
         for (int i = 1; i < actionPoints.size(); i++) {
-            Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
-            Point successorPoint = oldActionPoints.get(i - 1).getLocation();
-            Journey newJourney = GraphService.
+            final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
+            final Point successorPoint = oldActionPoints.get(i - 1).getLocation();
+            final Journey newJourney = GraphService.
                     shortestPath(graph, predecessorPoint, successorPoint);
             newJourneys.add(newJourney);
         }
