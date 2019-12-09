@@ -103,17 +103,17 @@ public class TourService {
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
      */
-    static List<ActionPoint> addNewDeliveryProcess(
+    public static List<ActionPoint> addNewDeliveryProcess(
             final List<ActionPoint> actionPointList,
             final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
 
-        Validate.notNull(actionPointList,"ActionPoints list is null");
-        Validate.notNull(pickUpPoint,"Pickup Point is null");
-        Validate.notNull(deliveryPoint,"Delivery Point is null");
+        Validate.notNull(actionPointList,"actionPointList is null");
+        Validate.notNull(pickUpPoint,"pickUpPoint is null");
+        Validate.notNull(deliveryPoint,"deliveryPoint is null");
 
         List<ActionPoint> newActionPointList = actionPointList;
         newActionPointList.add(pickUpPoint);
-        newActionPointList.add(pickUpPoint);
+        newActionPointList.add(deliveryPoint);
         return newActionPointList;
 
     }
