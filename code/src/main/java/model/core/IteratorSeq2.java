@@ -5,48 +5,54 @@ import java.util.Iterator;
 
 public class IteratorSeq2 implements Iterator<Integer> {
 
-    private Integer[] candidats;
-    private int nbCandidats;
+    private Integer[] candidates;
+    private int nbCandidates;
 
     /**
-     * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
-     * @param nonVus
-     * @param sommetCrt
+     * Create an iterator which can iterate the permutation of the nodes not seen
+     *
+     * @param notSeen     table of nodes not seen yet
+     * @param currentNode current node
+     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
      */
-    public IteratorSeq2(Collection<Integer> nonVus, int sommetCrt, int[][] cout) {
-        int nb = cout.length / 2;
+    public IteratorSeq2(Collection<Integer> notSeen, int currentNode, int[][] cost) {
+        int nb = cost.length / 2;
         boolean pickUp = true;
-        if (sommetCrt > nb) {
-            for (Integer i : nonVus) {
-                if (i == sommetCrt - nb) {
+        if (currentNode > nb) {
+            // if current node is a delivery point, we have to verify whether its pick up point is visited or not
+            for (Integer i : notSeen) {
+                if (i == currentNode - nb) {
                     pickUp = false;
                     break;
                 }
             }
         }
         if (!pickUp) {
-            this.candidats = new Integer[0];
-            this.nbCandidats = 0;
+            // if current node is a delivery point and its pick up point hasn't been visited, we create an empty iterator
+            this.candidates = new Integer[0];
+            this.nbCandidates = 0;
         } else {
-            this.candidats = new Integer[nonVus.size()];
-            nbCandidats = 0;
-            for (Integer s : nonVus) {
-                candidats[nbCandidats++] = s;
+            // if not, we create a normal iterator
+            this.candidates = new Integer[notSeen.size()];
+            nbCandidates = 0;
+            for (Integer s : notSeen) {
+                candidates[nbCandidates++] = s;
             }
         }
     }
 
     @Override
     public boolean hasNext() {
-        return nbCandidats > 0;
+        return nbCandidates > 0;
     }
 
     @Override
     public Integer next() {
-        return candidats[--nbCandidats];
+        return candidates[--nbCandidates];
     }
 
     @Override
-    public void remove() {}
+    public void remove() {
+    }
 
 }

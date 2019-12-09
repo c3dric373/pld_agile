@@ -5,33 +5,35 @@ import java.util.Iterator;
 
 public class IteratorSeq implements Iterator<Integer> {
 
-	private Integer[] candidats;
-	private int nbCandidats;
+    private Integer[] candidates;
+    private int nbCandidates;
 
-	/**
-	 * Cree un iterateur pour iterer sur l'ensemble des sommets de nonVus
-	 * @param nonVus
-	 * @param sommetCrt
-	 */
-	public IteratorSeq(Collection<Integer> nonVus, int sommetCrt){
-		this.candidats = new Integer[nonVus.size()];
-		nbCandidats = 0;
-		for (Integer s : nonVus){
-			candidats[nbCandidats++] = s;
-		}
-	}
-	
-	@Override
-	public boolean hasNext() {
-		return nbCandidats > 0;
-	}
+    /**
+     * Create an iterator which can iterate the permutation of the nodes not seen
+     *
+     * @param notSeen     table of nodes not seen yet
+     * @param currentNode current node
+     */
+    public IteratorSeq(Collection<Integer> notSeen, int currentNode) {
+        this.candidates = new Integer[notSeen.size()];
+        nbCandidates = 0;
+        for (Integer s : notSeen) {
+            candidates[nbCandidates++] = s;
+        }
+    }
 
-	@Override
-	public Integer next() {
-		return candidats[--nbCandidats];
-	}
+    @Override
+    public boolean hasNext() {
+        return nbCandidates > 0;
+    }
 
-	@Override
-	public void remove() {}
+    @Override
+    public Integer next() {
+        return candidates[--nbCandidates];
+    }
+
+    @Override
+    public void remove() {
+    }
 
 }
