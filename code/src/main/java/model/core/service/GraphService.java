@@ -1,12 +1,11 @@
 package model.core.service;
 
-import model.core.TSP;
-import model.core.TSP2;
-import model.data.*;
 import model.core.Computing;
+import model.core.TSP;
+import model.core.TSP3;
+import model.data.*;
 import model.io.XmlToGraph;
 import org.apache.commons.lang.Validate;
-import org.checkerframework.checker.units.qual.C;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -86,9 +85,9 @@ public class GraphService {
 
         Computing computing = new Computing();
         Tour res = tour;
-        TSP tsp2 = new TSP2();
+        TSP tsp3 = new TSP3();
         int tpsLimite = Integer.MAX_VALUE;
-        List<Journey> journeys = computing.getListJourney(tour, graph, tsp2, tpsLimite);
+        List<Journey> journeys = computing.getListJourney(tour, graph, tsp3, tpsLimite);
 
         List<Point> points = new ArrayList<>();
         for (int i = 1; i < journeys.size(); i++) {
@@ -107,7 +106,7 @@ public class GraphService {
                     actionPoints.add(deliveryProcess.getPickUP());
                     notFound = false;
                 }
-                if (!notFound) break;;
+                if (!notFound) break;
             }
         }
         actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
@@ -131,6 +130,7 @@ public class GraphService {
         //todo
         return null;
     }
+
     public static void main(String[] args) {
         XmlToGraph xmlToGraph = new XmlToGraph();
         Computing computing = new Computing();
@@ -139,7 +139,6 @@ public class GraphService {
         List<Point> points = xmlToGraph.getGraphFromXml(file_graph);
         Tour tour = xmlToGraph.getDeliveriesFromXml(file_tour);
         Graph graph = new Graph(points);
-//        GraphService.calculateTour(tour, graph);
-        GraphService.addGraphCenter(graph);
+        GraphService.calculateTour(tour, graph);
     }
 }
