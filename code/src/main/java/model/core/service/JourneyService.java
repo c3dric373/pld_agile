@@ -25,44 +25,65 @@ public class JourneyService {
      */
     static final int NB_SEC_IN_MIN = 60;
 
-    final double TRAVEL_SPEED = 15.0/3.6;
+    /**
+     * Travel speed in m/s
+     */
+    final static double TRAVEL_SPEED = 15.0/3.6;
 
-     List<Journey> calculateTime(final List<Journey> journeys,
+    /**
+     * Calculate the finish time for each ActionPoints in each journeys.
+     * finish time = start time + travel time + Action time
+     *
+     * @param journeys list of journeys
+     * @param actionPoints list of ActionPoints
+     * @param startTime start Time of the tour
+     * @return list of journeys
+     */
+     public static List<Journey> calculateTime(final List<Journey> journeys,
                                 final List<ActionPoint> actionPoints,
                                 final Time startTime) {
         Validate.notNull(journeys, "journeys is null");
-        Validate.noNullElements(journeys, "journeys of the List can't be null");
+        Validate.noNullElements(journeys,
+                "journeys of the List can't be null");
         Validate.notEmpty(journeys, "journeys can't be empty");
         Validate.notNull(actionPoints, "actionPoints is null");
-        Validate.noNullElements(actionPoints, "actionPoints of the List can't be null");
-        Validate.notEmpty(actionPoints, "actionPoints can't be empty");
-        Validate.notNull(startTime, "startTime can't be null");
+        Validate.noNullElements(actionPoints,
+                "actionPoints of the List can't be null");
+        Validate.notEmpty(actionPoints,
+                "actionPoints can't be empty");
+        Validate.notNull(startTime,
+                "startTime can't be null");
 
         Time journeyStartTime = startTime;
         ArrayList<Journey> newJourneyList = new ArrayList<Journey>();
         Time referenceTime =Time.valueOf("0:0:0");
-        for(Journey journey:journeys){
 
+        for(Journey journey:journeys){
             List<Point> points = journey.getPoints();
             Point arrivalPoint = points.get(0);
             ActionPoint arrivalActionPoint = findActionPoint(arrivalPoint,
                     actionPoints);
             Time actionTime = arrivalActionPoint.getTime();
             double length = journey.getMinLength();
+
+            //duration = length/speed
             int travelTimeInSec = (int)(length/TRAVEL_SPEED);
-            System.out.println("-----------------");
-            System.out.println("startTime "+ journeyStartTime);
-            System.out.println ("travelTime " +travelTimeInSec+ " in hhmm " +travelTimeInSec/60 + ": " + travelTimeInSec%60 );
+
             LocalTime journeyLocalTime = journeyStartTime.toLocalTime();
-            System.out.println("action time " +actionTime);
-            LocalTime StartPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
-            long actionTimeInSec = (actionTime.getTime() - referenceTime.getTime())/1000l;
+            LocalTime StartPlusTravelTime;
+            StartPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
+
+            // get Action time in sec by getting the time in millisecond between
+            // actionTime and the reference time
+            long actionTimeInMillis = actionTime.getTime() - referenceTime.getTime();
+            long actionTimeInSec = actionTimeInMillis /1000l;
+
             LocalTime StartPlusTravelPlusActionTime = StartPlusTravelTime.plusSeconds(actionTimeInSec);
             Time arrivalTime = Time.valueOf(StartPlusTravelPlusActionTime);
             journeyStartTime = arrivalTime;
-            System.out.println("arrival time "+arrivalTime);
             journey.setFinishTime(arrivalTime);
 
+            // add journey to the list of journeys
             newJourneyList.add(journey);
         }
         return newJourneyList;
@@ -98,7 +119,15 @@ public class JourneyService {
         }
         return OptionalInt.empty();
     }
-    private ActionPoint findActionPoint(Point point,
+
+    /**
+     * Find ActionPoint corresponding to the provided Point.
+     *
+     * @param point Point
+     * @param actionPoints list of Action Points
+     * @return the corresponding actionPoint
+     */
+    private static ActionPoint findActionPoint(Point point,
                                         List<ActionPoint> actionPoints){
         long id = point.getId();
         ActionPoint correspondingActionPoint=null;
