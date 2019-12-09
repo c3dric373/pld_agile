@@ -190,8 +190,8 @@ public class GraphService {
      */
     public Journey getShortestPath(final Graph graph, final long idStart, final long idArrive, List<Tuple> resDijkstra) {
         // if dijkstra hasn't been applied, do it
-        if (res_dijkstra == null)
-            res_dijkstra = dijkstra(graph, id_start);
+        if (resDijkstra == null)
+            resDijkstra = dijkstra(graph, idStart);
         List<Point> points = graph.getPoints();
         Map<Long, Integer> map = graph.getMap();
         int startIndex = map.get(idStart);
