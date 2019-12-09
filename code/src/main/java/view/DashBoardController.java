@@ -5,22 +5,19 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
-import com.lynden.gmapsfx.util.MarkerImageFactory;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import lombok.Getter;
-import model.data.*;
+import model.data.ActionPoint;
+import model.data.ActionType;
+import model.data.DeliveryProcess;
+import model.data.Tour;
 import org.apache.commons.lang.Validate;
-import view.UserInterface;
 
-import javax.xml.validation.Validator;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,9 +32,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
-        PICKUP("Pick-Up Point", "P" ,"flag.png"),
-        DELIVERY("Delivery Point","D" , "flag.png"),
-        BASE("Base Point","B", "home-icon-silhouette.png");
+        PICKUP("Pick-Up Point", "P", "flag.png"),
+        DELIVERY("Delivery Point", "D", "flag.png"),
+        BASE("Base Point", "B", "home-icon-silhouette.png");
 
         private String title = "";
         private String firstLetter = "";
@@ -78,7 +75,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private GoogleMap map;
 
-    public DashBoardController() {}
+    public DashBoardController() {
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -179,7 +177,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public void diplayMap() {
+    public void displayMap() {
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(45.771606, 4.880959))
@@ -197,11 +195,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map = mapView.createMap(mapOptions);
     }
 
-    public void displayLoadedDeleveryProcess(final Tour tour) {
+    public void displayLoadedDeliveryProcess(final Tour tour) {
         //TODO Commenter
 
         // Set The Base ID on the view
-        baseLocation.setText(String.valueOf(tour.getBase().getId()) );
+        baseLocation.setText(String.valueOf(tour.getBase().getId()));
 
         // Create a fake list of action Points To display.
         List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tour.getDeliveryProcesses());
@@ -213,10 +211,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         displayMapActionPoints(fakeListActionPoints);
     }
 
-    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess){
+    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess) {
         List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
-        for(DeliveryProcess deliveryProcess : listDeliveryProcess) {
-            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP().getTime(), deliveryProcess.getPickUP().getLocation(), deliveryProcess.getPickUP().getActionType()));
+        for (DeliveryProcess deliveryProcess : listDeliveryProcess) {
+            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
+                    .getTime(), deliveryProcess.getPickUP().getLocation(),
+                    deliveryProcess.getPickUP().getActionType()));
             listActionPoints.add(new ActionPoint(deliveryProcess.getDelivery().getTime(), deliveryProcess.getDelivery().getLocation(), deliveryProcess.getDelivery().getActionType()));
         }
         return listActionPoints;
@@ -225,15 +225,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void displayMapActionPoints(final List<ActionPoint> actionPoints) {
         // First Action Point is the Base
         map.clearMarkers();
-        map.addMarker( createMarker( actionPoints.get(0), MarkerType.BASE ) );
+        map.addMarker(createMarker(actionPoints.get(0), MarkerType.BASE));
 
         //TODO A améliorer Mettre en accord ActionType et Marker Type ?
         //According to ActionType set the good MarkerType
-        for( ActionPoint actionPoint: actionPoints) {
-            if(actionPoint.getActionType() == ActionType.DELIVERY) {
-                map.addMarker( createMarker(actionPoint, MarkerType.DELIVERY ) );
+        for (ActionPoint actionPoint : actionPoints) {
+            if (actionPoint.getActionType() == ActionType.DELIVERY) {
+                map.addMarker(createMarker(actionPoint, MarkerType.DELIVERY));
             } else if (actionPoint.getActionType() == ActionType.PICK_UP) {
-                map.addMarker( createMarker(actionPoint, MarkerType.PICKUP ) );
+                map.addMarker(createMarker(actionPoint, MarkerType.PICKUP));
             }
         }
 
@@ -249,12 +249,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         MarkerOptions markerPoint = new MarkerOptions();
         //markerPoint.icon();
         markerPoint.title(mType.title)
-        .label(mType.firstLetter)
-        .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
+                .label(mType.firstLetter)
+                .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
         return pointMarker;
     }
-
-
 
 }
