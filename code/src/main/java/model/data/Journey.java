@@ -43,10 +43,11 @@ public class Journey {
     /**
      * Instantiates a Journey.
      *
-     * @param newPoints    the List of points in the shortest path from the start
-     *                  point to the arrival point in the REVERSE order.
-     * @param newMinLength The shortest length from the start point to the arrival
-     *                  point.
+     * @param newPoints    the List of points in the shortest path from the
+     *                     start point to the arrival point in the REVERSE
+     *                     order.
+     * @param newMinLength The shortest length from the start point to the
+     *                     arrival point.
      */
     public Journey(final List<Point> newPoints, final double newMinLength) {
         Validate.notNull(newPoints, "point list of the journey can't "

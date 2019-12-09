@@ -1,4 +1,4 @@
-package controlller;
+package view;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
@@ -9,10 +9,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.stage.FileChooser;
+import model.data.Point;
+import org.apache.commons.lang.Validate;
 import view.UserInterface;
 
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
@@ -32,9 +36,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private GoogleMap map;
 
-    public DashBoardController() {
-
-    }
+    public DashBoardController() {}
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -375,11 +377,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("XML", "*.xml")
         );
-        File selectedFile = fileChooser.showOpenDialog(null);
+        final File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
             if (selectedFile.getName().contains("xml")) {
                 System.out.println("File selected: " + selectedFile.getName());
+                this.mainApp.loadMap(selectedFile);
             } else {
                 System.out.println("Error Loading not xml File");
             }
@@ -414,10 +417,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
      *
      * @param mainApp
      */
-    public void setMainApp(UserInterface mainApp) {
+    public void setMainApp(final UserInterface mainApp) {
+        Validate.notNull(mainApp);
         this.mainApp = mainApp;
 
         // Add observable list data to the table
         // tourTable.setItems(mainApp.getTour());
+    }
+
+    public void displayMapPoints(List<Point> points) {
+        for( Point point: points) {
+            //Add markers to the map
+            MarkerOptions markerPoint = new MarkerOptions();
+            markerPoint.position(new LatLong(point.getLatitude(), point.getLongitude()));
+            Marker pointMarker = new Marker(markerPoint);
+            map.addMarker( pointMarker );
+        }
     }
 }
