@@ -1,6 +1,8 @@
 package model.data;
 
 
+import view.Observer;
+
 /**
  * This class acts as a wrapper for the {@link ProjectData} object. It offers
  * convenient methods to add, modify and remove project to all
@@ -53,6 +55,8 @@ public interface ProjectDataWrapper {
      * @param newPoint the point from which to find the nearest point.
      */
     void findNearestPoint(final Point newPoint);
+
+    void addObserver(final Observer observer);
 
 
 }

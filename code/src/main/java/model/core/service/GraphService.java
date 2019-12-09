@@ -15,7 +15,8 @@ import java.util.List;
 public class GraphService {
 
 
-    public Point findNearestPoint(final List<Point> pointList, final double longitude,
+    public Point findNearestPoint(final List<Point> pointList,
+                                  final double longitude,
                                   final double latitude) {
         final Point nearestPoint;
         long nearestId = 0;
@@ -88,7 +89,8 @@ public class GraphService {
     }
 
 
-    public static Journey shortestPath(final Graph graph, final Point point1, final Point point2) {
+    public static Journey shortestPath(final Graph graph, final Point point1,
+                                       final Point point2) {
         //todo
         return null;
     }

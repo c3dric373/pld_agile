@@ -60,7 +60,7 @@ public interface ApplicationManager {
      * @param oldPoint the old position
      * @param newPoint the new position
      */
-    void changePointPosition(final Point oldPoint, final Point newPoint);
+    void changePointPosition(final ActionPoint oldPoint, final Point newPoint);
 
     /**
      * Finds nearest point of a given point with lat and long.
