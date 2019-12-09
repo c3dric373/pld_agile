@@ -69,8 +69,8 @@ public class Tour implements GenData {
     }
 
     @Override
-    public void accept(GenDataVisitor genDataVisitor) {
-
+    public void accept(final GenDataVisitor genDataVisitor) {
+        genDataVisitor.visit(this);
     }
 
     /**
