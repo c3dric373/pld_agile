@@ -20,6 +20,9 @@ public class GraphServiceTest {
     private Graph TEST_GRAPH = new Graph(points);
     private List<DeliveryProcess> deliveryProcess = new ArrayList<DeliveryProcess>();
     private Point point = new Point(123486, 12.8, 2.0);
+    private Point point2 = new Point(123487, 15, 6.0);
+    private Point point3 = new Point(123488, 10, 4.0);
+    private Point point4 = new Point(123489, 11, 5.0);
     private Time time = Time.valueOf("0:0:0");
     private Tour TEST_TOUR = new Tour(deliveryProcess, point, time);
 
@@ -73,4 +76,34 @@ public class GraphServiceTest {
         assertEquals(journeyList.get(0).getStartPoint().getId(),342873658l );
     }
 
+    @Test
+    public void testAddGraphCenter_GraphIsNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("graph can't be null");
+
+        // Act
+        Point point = graphService.addGraphCenter(null);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testAddGraphCenter_GoodResult() {
+
+        // Arrange
+        points.add(point);
+        points.add(point2);
+        points.add(point3);
+        points.add(point4);
+        Graph testGraph = new Graph(points);
+        // Act
+        Point point = graphService.addGraphCenter(testGraph);
+
+        // Assert via annotation
+        assertEquals(point.getId(), 1);
+        assertEquals(point.getLatitude(),12.5,0);
+        assertEquals(point.getLongitude(),4 ,0);
+    }
 }

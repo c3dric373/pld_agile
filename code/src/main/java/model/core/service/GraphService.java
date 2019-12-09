@@ -73,6 +73,7 @@ public class GraphService {
         double latitudeCenter = (latitudeMax + latitudeMin) / 2;
         double longitudeCenter = (longitudeMax + longitudeMin) / 2;
         Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
+        System.out.println(latitudeCenter +"  "+longitudeCenter);
 
         return centerPoint;
     }
