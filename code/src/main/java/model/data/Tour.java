@@ -2,6 +2,7 @@ package model.data;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -13,12 +14,13 @@ import java.util.List;
  * the deliveries that the cyclists should complete.
  */
 @Getter
+@Setter
 @EqualsAndHashCode
 public class Tour implements GenData {
 
     /**
-     * List of all the deliveries the cyclist has to do.
      * List of all the action points delivered in this journey
+     * IN ORDER OF DELIVERY!!!
      */
     private List<ActionPoint> actionPoints;
 
@@ -51,7 +53,8 @@ public class Tour implements GenData {
      */
     public Tour(final List<DeliveryProcess> deliveryProcessesList,
                 final Point basePoint, final Time time) {
-        Validate.notNull(deliveryProcessesList, "deliveryProcess is null");
+        Validate.notNull(deliveryProcessesList, "deliveryProcess"
+                + " is null");
         Validate.notNull(basePoint, "base is null");
         Validate.notNull(time, "startTime is null");
         /*if (startTime<0){
@@ -70,10 +73,20 @@ public class Tour implements GenData {
 
     }
 
+    /**
+     * Adds a deliverProcess to the list of existing delivery processes.
+     *
+     * @param deliveryProcess the delivery process to add
+     */
     public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
         deliveryProcesses.add(deliveryProcess);
     }
 
+    /**
+     * Deletes a deliverProcess to the list of existing delivery processes.
+     *
+     * @param deliveryProcess the delivery process to delete
+     */
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
         deliveryProcesses.remove(deliveryProcess);
     }

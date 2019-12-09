@@ -91,7 +91,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
             throw new IllegalStateException("tour not loaded");
         }
         final Tour tour = projectDataWrapper.getProject().getTour();
-        final Tour newTour = graphService.calculateTour(tour);
+        final Graph graph = projectDataWrapper.getProject().getGraph();
+        final Tour newTour = graphService.calculateTour(tour, graph);
         projectDataWrapper.modifyTour(newTour);
         projectState = ProjectState.TOUR_CALCULATED;
     }
@@ -128,7 +129,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void changePointPosition(final Point oldPoint, final Point newPoint) {
+    public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
         if (projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Tour not loaded");
         }
