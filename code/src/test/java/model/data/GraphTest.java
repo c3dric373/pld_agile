@@ -22,8 +22,10 @@ class GraphTest {
     public void setUp() {
 
         test_Graph = new Graph(points);
-    }
 
+
+    }
+/*
     @Test
     public void testCTOR_validInput_correctNbPoints() {
         // Arrange
@@ -37,35 +39,28 @@ class GraphTest {
 
     }
 
-
+*/
 
     @Test
     public void testCTOR_validInput_correctList_Points() {
         // Arrange
         final boolean isEmpty = true;
-        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
+        final List<Point> points  = new ArrayList<>();
+         final int TEST_ID = 25175791;
+         final double TEST_LATITUDE = 2.2;
+         final double TEST_LONGITUDE = 48.1;
+        points.add(new Point(TEST_ID, TEST_LATITUDE, TEST_LONGITUDE));
 
         // Act
-        final boolean test_empty = test_Graph.getPoints().isEmpty();
+        final Graph testGraph2 = new Graph(points);
+        final List<Point> test_points = testGraph2.getPoints();
 
         //Assert
-        assertEquals("list_points not empty", isEmpty, test_empty);
+        assertEquals("points not equal set points", points,
+                test_points);
 
     }
 
-    @Test
-    public void testCTOR_validInput_correctMap() {
-        // Arrange
-        final boolean isEmpty = true;
-        final Map CORRECT_MAP = new HashMap<Integer, Integer>();
-
-        // Act
-        final boolean test_empty = test_Graph.getMap().isEmpty();
-
-        //Assert
-        assertEquals("map not empty", isEmpty, test_empty);
-
-    }
 
 
 }

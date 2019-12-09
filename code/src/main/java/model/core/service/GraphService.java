@@ -5,6 +5,7 @@ import model.core.TSP2;
 import model.data.*;
 import model.core.Computing;
 import model.io.XmlToGraph;
+import org.apache.commons.lang.Validate;
 import org.checkerframework.checker.units.qual.C;
 
 import java.sql.Time;
@@ -43,6 +44,9 @@ public class GraphService {
     }
 
     public static Tour calculateTour(final Tour tour, final Graph graph) {
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(graph, "graph can't be null");
+
         Computing computing = new Computing();
         Tour res = tour;
         TSP tsp2 = new TSP2();
