@@ -127,6 +127,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         {
             throw new IllegalStateException("Another action is in progress");
         }
+        //TODO : review this method
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
         projectState = projectState.TOUR_LOADED;
@@ -149,6 +150,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
         projectDataWrapper.modifyTour(newTour);
+        projectState = ProjectState.TOUR_CALCULATED;
     }
 
     @Override
@@ -172,6 +174,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
                 (graph, tour, oldPoint, newPoint);
         projectDataWrapper.modifyTour(newTour);
 
+        //TODO : maybe send the previous state to know if the Tour is
+        // calculated or just loaded
+        projectState = ProjectState.TOUR_CALCULATED;
     }
 
     @Override
@@ -184,11 +189,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
         {
             throw new IllegalStateException("Another action is in progress");
         }
+
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
         final Point nearestPoint = graphService.findNearestPoint(pointList,
                 longitude, latitude);
         projectDataWrapper.findNearestPoint(nearestPoint);
+
+        //TODO : maybe send the previous state to know if the Tour is
+        // calculated or just loaded
+        projectState = ProjectState.TOUR_CALCULATED;
     }
 
 
