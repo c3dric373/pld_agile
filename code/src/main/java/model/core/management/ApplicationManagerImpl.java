@@ -98,12 +98,24 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
+    public void addDeliveryProcess(final Tour tour,
+                                   final ActionPoint pickUpPoint,
+                                   final ActionPoint deliveryPoint) {
         if (projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Tour not calculated");
         }
-        Validate.notNull(deliveryProcess, "deliveryProcess null");
-        projectDataWrapper.addDeliveryProcess(deliveryProcess);
+        if(projectState != projectState.ADD_DELIVERY_PROCESS ||
+                projectState != projectState.ADD_DELIVERY_PROCESS_1stPoint)
+        {
+            throw new IllegalStateException("Another action is in progress");
+        }
+        Validate.notNull(tour, "tour null");
+        Validate.notNull(pickUpPoint, "pickUpPoint null");
+        Validate.notNull(deliveryPoint, "deliveryPoint null");
+        final Tour newTour;
+        newTour = tourService.addNewDeliveryProcess(tour, pickUpPoint,
+                deliveryPoint);
+        projectDataWrapper.modifyTour(newTour);
     }
 
     @Override
