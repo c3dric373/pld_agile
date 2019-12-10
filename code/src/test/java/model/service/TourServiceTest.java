@@ -8,12 +8,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import static model.core.service.TourService.addNewDeliveryProcess;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class TourServiceTest {
 
@@ -31,7 +35,7 @@ public class TourServiceTest {
     private List<ActionPoint> TEST_ACTIONPOINT_LIST;
     private DeliveryProcess DELIVERY_PROCESS_TEST;
     private Tour TOUR_TEST;
-
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -48,7 +52,7 @@ public class TourServiceTest {
                 TEST_ACTION_TYPE);
         TEST_ACTIONPOINT_LIST =
                 new ArrayList<ActionPoint>();
-
+        System.setErr(new PrintStream(outContent));
     }
 
     @Test
@@ -168,17 +172,21 @@ public class TourServiceTest {
         List<DeliveryProcess> deliveryProcessesList = newTour.getDeliveryProcesses();
         int listSize = deliveryProcessesList.size();
         DeliveryProcess deliProcess = deliveryProcessesList.get(0);
+        List<ActionPoint> actionPointList = newTour.getActionPoints();
+        int actionListSize = actionPointList.size();
+
 
         // Assert via annotation
         Assert.assertEquals(listSize, 1);
         Assert.assertEquals(deliProcess, deliveryProcess2);
+        Assert.assertEquals(actionListSize, 2);
+        Assert.assertEquals(pickUp2, actionPointList.get(0));
+        Assert.assertEquals(delivery2, actionPointList.get(1));
     }
 
     @Test
     public void deleteDeliveryProcess_NoActionPoints(){
         // Arrange
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("deliveryProcess doesn't exist in the tour");
         List<DeliveryProcess> deliveryProcesses = new ArrayList<DeliveryProcess>();
         Point p1 = new Point(100, 10.0, 12.0);
         Point p2 = new Point(101, 1.0, 2.0);
@@ -198,13 +206,13 @@ public class TourServiceTest {
         Tour newTour = TourService.deleteDeliveryProcess(tour, deliveryProcess1);
 
         // Assert via annotation
+        assertThat(outContent.toString(),
+                containsString("DeliveryProcess/ActionPoint do not exist"));
     }
 
     @Test
     public void deleteDeliveryProcess_DeliveryProcessDoesntExist(){
         // Arrange
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("deliveryProcess doesn't exist in the tour");
         List<DeliveryProcess> deliveryProcesses = new ArrayList<DeliveryProcess>();
         Point p1 = new Point(100, 10.0, 12.0);
         Point p2 = new Point(101, 1.0, 2.0);
@@ -227,5 +235,7 @@ public class TourServiceTest {
         Tour newTour = TourService.deleteDeliveryProcess(tour, deliveryProcess3);
 
         // Assert via annotation
+        assertThat(outContent.toString(),
+                containsString("DeliveryProcess/ActionPoint do not exist"));
     }
 }

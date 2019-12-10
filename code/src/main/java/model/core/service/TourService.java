@@ -169,7 +169,7 @@ public class TourService {
         Validate.notNull(tour, "tour is null");
         Validate.notNull(deliveryProcess, "deliveryProcess is null");
 
-        Tour newTour;
+        Tour newTour = tour;
         try {
             List<DeliveryProcess> deliveryProcessesList = tour.getDeliveryProcesses();
             List<ActionPoint> actionPointList = tour.getActionPoints();
@@ -179,12 +179,12 @@ public class TourService {
             actionPointList.remove(pickupPoint);
             actionPointList.remove(deliveryPoint);
             deliveryProcessesList.remove(deliveryProcess);
-            newTour = new Tour(deliveryProcessesList, tour.getBase(),
-                    tour.getStartTime());
+            //change deliveryProcessList and ActionPointList
+            newTour.setDeliveryProcesses(deliveryProcessesList);
+            newTour.setActionPoints(actionPointList);
 
         } catch (Exception e){
-            throw new IllegalArgumentException(
-                    "deliveryProcess doesn't exist in the tour");
+            System.err.println("DeliveryProcess/ActionPoint do not exist");
         }
         return newTour;
     }
