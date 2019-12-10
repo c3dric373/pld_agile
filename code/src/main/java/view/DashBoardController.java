@@ -5,31 +5,73 @@ import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.util.MarkerImageFactory;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
-import model.data.Point;
+import lombok.Getter;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 import view.UserInterface;
 
 import javax.xml.validation.Validator;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
+    //Map Style.
+    private static final String mapStyle = "[{\"featureType\":\"administrative.neighborhood\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#747474\"},{\"lightness\":\"23\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#f38eb0\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ced7db\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffa5a8\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c7e5c8\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#d6cbc7\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c4c9e8\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#b1eaf1\"}]},{\"featureType\":\"road\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#343434\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry\",\"stylers\":[{\"lightness\":\"100\"}]},{\"featureType\":\"road\",\"elementType\":\"labels\",\"stylers\":[{\"visibility\":\"off\"},{\"lightness\":\"100\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#8a8a8a\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffd4a5\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6e6e6e\"}]},{\"featureType\":\"road.arterial\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffe9d2\"}]},{\"featureType\":\"road.arterial\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6e6969\"}]},{\"featureType\":\"road.local\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"}]},{\"featureType\":\"road.local\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"weight\":\"3.00\"}]},{\"featureType\":\"road.local\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"weight\":\"0.30\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text\",\"stylers\":[{\"visibility\":\"on\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#464646\"},{\"lightness\":\"36\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#e9e5dc\"},{\"lightness\":\"30\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"transit.line\",\"elementType\":\"geometry\",\"stylers\":[{\"visibility\":\"off\"},{\"lightness\":\"100\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#d2e7f7\"}]}]";
+
+    //Enum Marker Types.
+    @Getter
+    public enum MarkerType {
+        PICKUP("Pick-Up Point", "P" ,"flag.png"),
+        DELIVERY("Delivery Point","D" , "flag.png"),
+        BASE("Base Point","B", "home-icon-silhouette.png");
+
+        private String title = "";
+        private String firstLetter = "";
+        private String iconPath = "";
+
+        MarkerType(String title, String firstLetter, String iconPath) {
+            this.title = title;
+            this.firstLetter = firstLetter;
+            this.iconPath = iconPath;
+        }
+    }
 
     // Reference to the main application
     private UserInterface mainApp;
 
+    // List des ActionPoints en Observable pour la view
+    private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
+    /*
     @FXML
-    private Label latitudeLabel;
+    private TableView<ActionPoint> actionPointTableView;
 
     @FXML
-    private Label longitudeLabel;
+    private TableColumn<ActionPoint, String> deliveryNumber;
+
+    @FXML
+    private TableColumn<ActionPoint, String> deliveryType;
+
+    @FXML
+    private TableColumn<ActionPoint, String> timeAtPoint;
+    
+     */
+
+    @FXML
+    private Label baseLocation;
 
     @FXML
     private GoogleMapView mapView;
@@ -40,285 +82,26 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        /*
+        // Initialize the actionPoints table with the 3 columns.
+        deliveryType.setCellValueFactory(
+                cellData -> new SimpleStringProperty( cellData.getValue().getActionType().toString()) );
+        timeAtPoint.setCellValueFactory(
+                cellData -> new SimpleStringProperty( cellData.getValue().getTime().toString()) );
+        actionPointTableView.setItems(null);
+         */
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
     }
 
     @Override
     public void mapInitialized() {
-        LatLong bobUnderwoodLocation = new LatLong(45.76771270760567, 4.854260515750411);
-
-
         //Set the initial properties of the map.
         MapOptions mapOptions = new MapOptions();
 
+        //TODO Create a graph center and pass it to display Map;
         mapOptions.center(new LatLong(45.771606, 4.880959))
-                .styleString("[\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"administrative.neighborhood\",\n" +
-                        "        \"elementType\": \"all\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"off\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi\",\n" +
-                        "        \"elementType\": \"all\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"off\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi\",\n" +
-                        "        \"elementType\": \"labels.text.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#747474\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"lightness\": \"23\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.attraction\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#f38eb0\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.government\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#ced7db\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.medical\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#ffa5a8\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.park\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#c7e5c8\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.place_of_worship\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#d6cbc7\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.school\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#c4c9e8\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"poi.sports_complex\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#b1eaf1\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road\",\n" +
-                        "        \"elementType\": \"all\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"on\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"color\": \"#343434\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road\",\n" +
-                        "        \"elementType\": \"geometry\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"lightness\": \"100\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road\",\n" +
-                        "        \"elementType\": \"labels\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"off\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"lightness\": \"100\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road\",\n" +
-                        "        \"elementType\": \"labels.text.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"on\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"color\": \"#8a8a8a\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.highway\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#ffd4a5\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.highway\",\n" +
-                        "        \"elementType\": \"labels.text.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#6e6e6e\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.arterial\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#ffe9d2\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.arterial\",\n" +
-                        "        \"elementType\": \"labels.text.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#6e6969\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.local\",\n" +
-                        "        \"elementType\": \"all\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"simplified\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.local\",\n" +
-                        "        \"elementType\": \"geometry.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"weight\": \"3.00\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.local\",\n" +
-                        "        \"elementType\": \"geometry.stroke\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"weight\": \"0.30\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.local\",\n" +
-                        "        \"elementType\": \"labels.text\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"on\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.local\",\n" +
-                        "        \"elementType\": \"labels.text.fill\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#464646\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"lightness\": \"36\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"road.local\",\n" +
-                        "        \"elementType\": \"labels.text.stroke\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#e9e5dc\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"lightness\": \"30\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"transit\",\n" +
-                        "        \"elementType\": \"all\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"off\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"transit.line\",\n" +
-                        "        \"elementType\": \"geometry\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"visibility\": \"off\"\n" +
-                        "            },\n" +
-                        "            {\n" +
-                        "                \"lightness\": \"100\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "        \"featureType\": \"water\",\n" +
-                        "        \"elementType\": \"all\",\n" +
-                        "        \"stylers\": [\n" +
-                        "            {\n" +
-                        "                \"color\": \"#d2e7f7\"\n" +
-                        "            }\n" +
-                        "        ]\n" +
-                        "    }\n" +
-                        "]")
+                .styleString(mapStyle)
                 .overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .panControl(false)
@@ -328,15 +111,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 .zoomControl(false)
                 .zoom(12);
 
-        map = mapView.createMap(mapOptions);
-
-        //Add markers to the map
-        MarkerOptions markerOptions3 = new MarkerOptions();
-        markerOptions3.position(bobUnderwoodLocation);
-        markerOptions3.title("Coucou");
-
-        Marker bobUnderwoodMarker = new Marker(markerOptions3);
-
+        /*
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
         infoWindowOptions.content("<h2>Fred Wilkie</h2>"
                 + "Current Location: Safeway<br>"
@@ -344,33 +119,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
         InfoWindow bobUnderwoodWindow = new InfoWindow(infoWindowOptions);
         bobUnderwoodWindow.open(map, bobUnderwoodMarker);
+        map.addMarker( bobUnderwoodMarker );
+         */
 
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
             System.out.println(latLong.getLatitude() + "coucou" + latLong.getLongitude());
         });
-        map.addMarker( bobUnderwoodMarker );
+
     }
 
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    //@FXML
-    //private void initialize() {
-    // Initialize the person table with the two columns.
-    //firstNameColumn.setCellValueFactory(
-    //        cellData -> cellData.getValue().firstNameProperty());
-    //lastNameColumn.setCellValueFactory(
-    //        cellData -> cellData.getValue().lastNameProperty());
-
-    // Clear person details.
-    //showPersonDetails(null);
-
-    // Listen for selection changes and show the person details when changed.
-    //personTable.getSelectionModel().selectedItemProperty().addListener(
-    //        (observable, oldValue, newValue) -> showPersonDetails(newValue));
-    //}
     public void handleLoadMap() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Map XML");
@@ -389,8 +147,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         } else {
             System.out.println("File selection cancelled.");
         }
-
-
     }
 
     public void handleLoadTour() {
@@ -404,6 +160,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (selectedFile != null) {
             if (selectedFile.getName().contains("xml")) {
                 System.out.println("File selected: " + selectedFile.getName());
+                this.mainApp.loadDeliveryRequest(selectedFile);
             } else {
                 System.out.println("Error Loading not xml File");
             }
@@ -420,18 +177,84 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void setMainApp(final UserInterface mainApp) {
         Validate.notNull(mainApp);
         this.mainApp = mainApp;
+    }
+
+    public void diplayMap() {
+        //  Set new center for the map
+        MapOptions mapOptions = new MapOptions();
+        mapOptions.center(new LatLong(45.771606, 4.880959))
+                .styleString(mapStyle)
+                .overviewMapControl(false)
+                .mapType(MapTypeIdEnum.ROADMAP)
+                .panControl(false)
+                .rotateControl(false)
+                .scaleControl(false)
+                .streetViewControl(false)
+                .zoomControl(false)
+                .zoom(12);
+
+        // Add map to the view
+        map = mapView.createMap(mapOptions);
+    }
+
+    public void displayLoadedDeleveryProcess(final Tour tour) {
+        //TODO Commenter
+
+        // Set The Base ID on the view
+        baseLocation.setText(String.valueOf(tour.getBase().getId()) );
+
+        // Create a fake list of action Points To display.
+        List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tour.getDeliveryProcesses());
+
+        actionPoints.addAll(fakeListActionPoints);
 
         // Add observable list data to the table
-        // tourTable.setItems(mainApp.getTour());
+        //actionPointTableView.setItems(actionPoints);
+        displayMapActionPoints(fakeListActionPoints);
     }
 
-    public void displayMapPoints(List<Point> points) {
-        for( Point point: points) {
-            //Add markers to the map
-            MarkerOptions markerPoint = new MarkerOptions();
-            markerPoint.position(new LatLong(point.getLatitude(), point.getLongitude()));
-            Marker pointMarker = new Marker(markerPoint);
-            map.addMarker( pointMarker );
+    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess){
+        List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
+        for(DeliveryProcess deliveryProcess : listDeliveryProcess) {
+            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP().getTime(), deliveryProcess.getPickUP().getLocation(), deliveryProcess.getPickUP().getActionType()));
+            listActionPoints.add(new ActionPoint(deliveryProcess.getDelivery().getTime(), deliveryProcess.getDelivery().getLocation(), deliveryProcess.getDelivery().getActionType()));
         }
+        return listActionPoints;
     }
+
+    public void displayMapActionPoints(final List<ActionPoint> actionPoints) {
+        // First Action Point is the Base
+        map.clearMarkers();
+        map.addMarker( createMarker( actionPoints.get(0), MarkerType.BASE ) );
+
+        //TODO A améliorer Mettre en accord ActionType et Marker Type ?
+        //According to ActionType set the good MarkerType
+        for( ActionPoint actionPoint: actionPoints) {
+            if(actionPoint.getActionType() == ActionType.DELIVERY) {
+                map.addMarker( createMarker(actionPoint, MarkerType.DELIVERY ) );
+            } else if (actionPoint.getActionType() == ActionType.PICK_UP) {
+                map.addMarker( createMarker(actionPoint, MarkerType.PICKUP ) );
+            }
+        }
+
+    }
+
+    public Marker createMarker(final ActionPoint actionPoints, final MarkerType mType) {
+        /* //TODO Marche pas icon
+        String path= MarkerImageFactory.createMarkerImage(mType.iconPath, "png");
+        path = path.replace("(", "");
+        path = path.replace(")", "");
+         */
+
+        MarkerOptions markerPoint = new MarkerOptions();
+        //markerPoint.icon();
+        markerPoint.title(mType.title)
+        .label(mType.firstLetter)
+        .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
+        Marker pointMarker = new Marker(markerPoint);
+        return pointMarker;
+    }
+
+
+
 }
