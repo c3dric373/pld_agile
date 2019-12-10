@@ -99,14 +99,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        /*
+
         // Initialize the actionPoints table with the 3 columns.
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty( cellData.getValue().getActionType().toString()) );
         timeAtPoint.setCellValueFactory(
                 cellData -> new SimpleStringProperty( cellData.getValue().getTime().toString()) );
         actionPointTableView.setItems(null);
-         */
+
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
     }
@@ -207,7 +207,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public void diplayMap() {
+    public void displayMap() {
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(45.771606, 4.880959))
@@ -227,7 +227,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         directionsPane = mapView.getDirec();
     }
 
-    public void displayLoadedDeleveryProcess() {
+    public void displayLoadedDeliveryProcess() {
         //TODO Commenter
 
         // Set The Base ID on the view
@@ -239,7 +239,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         actionPoints.addAll(fakeListActionPoints);
 
         // Add observable list data to the table
-        //actionPointTableView.setItems(actionPoints);
+        actionPointTableView.setItems(actionPoints);
         drawAllActionPoints(fakeListActionPoints);
     }
 

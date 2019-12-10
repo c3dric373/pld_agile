@@ -68,7 +68,7 @@
                         <Label text="PickUp Duration :" GridPane.rowIndex="6" />
                         <Label fx:id="pickUpDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="N° :" />
-                        <Label fx:id="gross_salope" styleClass="label-bright" GridPane.columnIndex="1" />
+                        <Label fx:id="duration" styleClass="label-bright" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <Line endX="120.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />
