@@ -66,6 +66,7 @@ public class TSP3 implements TSP {
     protected int bound(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
         int costEstimation = Integer.MAX_VALUE;
         int durationEstimation = 0;
+        int nbNodes = cost.length;
         for (Integer node : notSeen) {
             if (cost[currentNode][node] < costEstimation)
                 costEstimation = cost[currentNode][node];
@@ -74,7 +75,7 @@ public class TSP3 implements TSP {
         for (Integer node1 : notSeen) {
             int min = Integer.MAX_VALUE;
             for (Integer node2 : notSeen) {
-                if (node1.equals(node2)) continue;
+                if (node1.equals(node2) || node2 + nbNodes / 2 == node1) continue;
                 min = Math.min(cost[node1][node2], min);
             }
             costEstimation += min;
