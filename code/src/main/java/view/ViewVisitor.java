@@ -11,12 +11,12 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Tour tour) {
+        System.out.println(tour.getBase().toString());
         dashBoardController.setTour(tour);
         if (tour.getActionPoints() == null) {
-            dashBoardController.displayLoadedDeleveryProcess(tour);
+            dashBoardController.displayLoadedDeleveryProcess();
         }else {
-            //dashBoardController.displayMapActionPoints(tour.getActionPoints());
-            dashBoardController.displayCalculatedTour(tour);
+            dashBoardController.drawFullTour();
         }
     }
 

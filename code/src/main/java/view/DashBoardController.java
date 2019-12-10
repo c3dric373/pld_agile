@@ -22,8 +22,10 @@ import model.data.*;
 import org.apache.commons.lang.Validate;
 import view.UserInterface;
 
+import javax.swing.*;
 import javax.xml.validation.Validator;
 import java.io.File;
+import java.lang.management.BufferPoolMXBean;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -193,7 +195,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void traceDirection() {
-        showDeliveryProcessOnMap(tourLoaded.getDeliveryProcesses().get(0));
+        drawDeliveryProcess(0);
     }
 
     /**
@@ -226,20 +228,20 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         directionsPane = mapView.getDirec();
     }
 
-    public void displayLoadedDeleveryProcess(final Tour tour) {
+    public void displayLoadedDeleveryProcess() {
         //TODO Commenter
 
         // Set The Base ID on the view
-        baseLocation.setText(String.valueOf(tour.getBase().getId()) );
+        baseLocation.setText(String.valueOf(tourLoaded.getBase().getId()) );
 
         // Create a fake list of action Points To display.
-        List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tour.getDeliveryProcesses());
+        List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tourLoaded.getDeliveryProcesses());
 
         actionPoints.addAll(fakeListActionPoints);
 
         // Add observable list data to the table
         //actionPointTableView.setItems(actionPoints);
-        displayMapActionPoints(fakeListActionPoints);
+        drawAllActionPoints(fakeListActionPoints);
     }
 
     public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess){
@@ -251,7 +253,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         return listActionPoints;
     }
 
-    public void displayMapActionPoints(final List<ActionPoint> actionPoints) {
+    public void drawAllActionPoints(final List<ActionPoint> actionPoints) {
         // First Action Point is the Base
         map.clearMarkers();
         map.addMarker( createMarker( actionPoints.get(0), MarkerType.BASE ) );
@@ -292,46 +294,68 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void directionsReceived(DirectionsResult results, DirectionStatus status) {
     }
 
-    public void showDeliveryProcessOnMap(DeliveryProcess deliveryProcess) {
-        DirectionsWaypoint aDWP = new DirectionsWaypoint(tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLatitude() + ", " + tourLoaded.getDeliveryProcesses().get(2).getPickUP().getLocation().getLongitude());
-        aDWP.setStopOver(false);
-        DirectionsWaypoint test = new DirectionsWaypoint(tourLoaded.getDeliveryProcesses().get(0).getDelivery().getLocation().getLatitude() + ", " + tourLoaded.getDeliveryProcesses().get(0).getDelivery().getLocation().getLongitude());
-        test.setStopOver(false);
-        DirectionsWaypoint route[] = {aDWP,test};
-        drawDirection(tourLoaded.getDeliveryProcesses().get(0).getPickUP().getLocation(), tourLoaded.getDeliveryProcesses().get(0).getPickUP().getLocation(), route);
-    }
 
-    //public DirectionsWaypoint[] getDirectionWayPointsFromJourney(Journey journey) {
-
-    //}
-
-    public void displayCalculatedTour(Tour tour) {
-        Journey journey = tour.getJourneyList().get(0);
-        LinkedList<DirectionsWaypoint> path = new LinkedList<DirectionsWaypoint>();
+    public String[] getDirectionWayPointsFromJourney(final Journey journey) {
+        LinkedList<String> path = new LinkedList<String>();
         // On ajoute tous les points a la liste de points dans l'ordre inversse.
         for(Point point : journey.getPoints()) {
-                DirectionsWaypoint stop = new DirectionsWaypoint(point.getLatitude() + ", " + point.getLongitude());
-                stop.setStopOver(false);
-                path.addFirst(stop);
+            /*DirectionsWaypoint stop = new DirectionsWaypoint(point.toString());
+            stop.setStopOver(false);
+            path.addFirst(stop);
+             */
+            path.addFirst(point.toString());
         }
         // On retire le premier et le dernier qui sont start et end
         path.remove(0);
         path.remove(path.getLast());
-        drawDirection(journey.getStartPoint(), journey.getArrivePoint(), path.toArray(new DirectionsWaypoint[path.size()]));
+        //return path.toArray(new DirectionsWaypoint[path.size()]);
+        return path.toArray(new String[path.size()]);
     }
 
-    public void drawDirection(Point start, Point arrival, DirectionsWaypoint[] directionsWaypoints) {
+    public DirectionsWaypoint[] getDirectionWayPointsFromTour() {
+        LinkedList<DirectionsWaypoint> path = new LinkedList<DirectionsWaypoint>();
+        // On ajoute tous les points a la liste de points dans l'ordre inversse.
+        for(Journey journey: tourLoaded.getJourneyList()) {
+            for(Point point : journey.getPoints()) {
+                DirectionsWaypoint stop = new DirectionsWaypoint(point.toString());
+                stop.setStopOver(false);
+                path.addFirst(stop);
+            }
+            path.remove(path.getLast());
+        }
+        path.remove(0);
+        path.remove(path.getLast());
+
+        // On retire le premier et le dernier qui sont start et end
+        return path.toArray(new DirectionsWaypoint[path.size()]);
+    }
+
+    public void drawDirection(Point start, Point arrival, DirectionsWaypoint[] directionsWaypoints, Boolean clearMarkers, Boolean clearDirections) {
         // Clear all markers
-        map.clearMarkers();
+        if(clearMarkers) map.clearMarkers();
         // Clear Past direction
-        clearDirections();
+        if(clearDirections) clearDirections();
 
         DirectionsRequest request = new DirectionsRequest(
-                start.getLatitude() + ", " + start.getLongitude(),
-                arrival.getLatitude() + ", " + arrival.getLongitude(),
+                start.toString(),
+                arrival.toString(),
                 TravelModes.WALKING,
                 directionsWaypoints);
         directionsService.getRoute(request, this, new DirectionsRenderer(false, mapView.getMap(), directionsPane));
+    }
+
+    public void drawFullTour() {
+        DirectionsWaypoint path[] = getDirectionWayPointsFromTour();
+        drawDirection(tourLoaded.getBase(),tourLoaded.getBase(), path,true,true);
+        drawAllActionPoints(tourLoaded.getActionPoints());
+    }
+
+    public void drawDeliveryProcess(int id) {
+        DeliveryProcess deliveryProcess = tourLoaded.getDeliveryProcesses().get(id);
+        String path[] = getDirectionWayPointsFromJourney(tourLoaded.getJourneyList().get(id+1));
+        //drawDirection(deliveryProcess.getPickUP().getLocation(), deliveryProcess.getDelivery().getLocation(), path,true,true);
+        map.addMarker(createMarker(deliveryProcess.getPickUP(),MarkerType.PICKUP));
+        map.addMarker(createMarker(deliveryProcess.getDelivery(),MarkerType.DELIVERY));
     }
 
 }
