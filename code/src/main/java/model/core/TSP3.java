@@ -64,12 +64,23 @@ public class TSP3 implements TSP {
      * @return a lower bound of the cost
      */
     protected int bound(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
-        int min = Integer.MAX_VALUE;
+        int costEstimation = Integer.MAX_VALUE;
+        int durationEstimation = 0;
         for (Integer node : notSeen) {
-            if (cost[currentNode][node] + duration[node] < min)
-                min = cost[currentNode][node] + duration[node];
+            if (cost[currentNode][node] < costEstimation)
+                costEstimation = cost[currentNode][node];
+            durationEstimation += duration[node];
         }
-        return min;
+        for (Integer node1 : notSeen) {
+            int min = Integer.MAX_VALUE;
+            for (Integer node2 : notSeen) {
+                if (node1.equals(node2)) continue;
+                min = Math.min(cost[node1][node2], min);
+            }
+            costEstimation += min;
+        }
+
+        return costEstimation + durationEstimation;
     }
 
     /**
