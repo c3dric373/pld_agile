@@ -73,7 +73,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     protected DirectionsPane directionsPane;
 
 
-    /*
+
     @FXML
     private TableView<ActionPoint> actionPointTableView;
 
@@ -85,8 +85,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     @FXML
     private TableColumn<ActionPoint, String> timeAtPoint;
-    
-     */
+
 
     @FXML
     private Label baseLocation;
