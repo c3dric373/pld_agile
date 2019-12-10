@@ -66,7 +66,15 @@ public enum ProjectState {
      * The nearest point is showed on the map and the user has to click on
      * the save button to do the modification
      */
-    MODIFY_DELIVERY_PROCESS_POINT_END;
+    MODIFY_DELIVERY_PROCESS_POINT_END,
+
+    /**
+     * State of the modification of Delivery order
+     * Begins after the user click on the change order button
+     * The user then have to modify the order of the actionPoints and has to
+     * save when he is done
+     */
+     CHANGE_DELIVERY_ORDER;
 
     //TODO : Modify time on DeliveryProcess ?
 }

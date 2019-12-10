@@ -101,11 +101,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void addDeliveryProcess(final Tour tour,
                                    final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
+        // Not necessary : can add a DP without a tour loaded
         if (projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Tour not calculated");
         }
-        if(projectState != projectState.ADD_DELIVERY_PROCESS ||
-                projectState != projectState.ADD_DELIVERY_PROCESS_1stPoint)
+        if(projectState != projectState.ADD_DELIVERY_PROCESS_2ndPoint)
         {
             throw new IllegalStateException("Another action is in progress");
         }
@@ -123,14 +123,24 @@ public class ApplicationManagerImpl implements ApplicationManager {
         if (projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Tour not calculated");
         }
+        if(projectState != projectState.DELETE_DELIVERY_PROCESS)
+        {
+            throw new IllegalStateException("Another action is in progress");
+        }
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
+        projectState = projectState.TOUR_LOADED;
     }
 
     @Override
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
+        // Not possible button must be disabled
         if (projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Tour not calculated");
+        }
+        if(projectState != ProjectState.CHANGE_DELIVERY_ORDER)
+        {
+            throw new IllegalStateException("Another action is in progress");
         }
         Validate.notNull(actionPoints, "actionPoints null");
         Validate.notEmpty(actionPoints, "actionPointsEmpty");
@@ -145,6 +155,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
         if (projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Tour not loaded");
+        }
+        if (projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT_END)
+        {
+            throw new IllegalStateException("Another action is in progress");
         }
         Validate.notNull(oldPoint, "oldPoint is null");
         Validate.notNull(newPoint, "newPoint is null");
@@ -164,6 +178,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void findNearestPoint(final double latitude, final double longitude) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
+        if(projectState != ProjectState.ADD_DELIVERY_PROCESS &&
+                projectState != ProjectState.ADD_DELIVERY_PROCESS_1stPoint &&
+                projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT)
+        {
+            throw new IllegalStateException("Another action is in progress");
+        }
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
         final Point nearestPoint = graphService.findNearestPoint(pointList,
