@@ -3,28 +3,28 @@ package model.core;
 public interface TSP {
 
     /**
-     * @return true si chercheSolution() s'est terminee parce que la limite de temps avait ete atteinte, avant d'avoir pu explorer tout l'espace de recherche,
+     * @return true if time limit is exceeded
      */
-	Boolean getTempsLimiteAtteint();
+    Boolean getTimeLimitExceeded();
 
     /**
-     * Cherche un circuit de duree minimale passant par chaque sommet (compris entre 0 et nbSommets-1)
+     * Search for a circle which has the lowest cost to visit every node (between 0 and nbNodes - 1)
      *
-     * @param tpsLimite : limite (en millisecondes) sur le temps d'execution de chercheSolution
-     * @param nbSommets : nombre de sommets du graphe
-     * @param cout      : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
-     * @param duree     : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
+     * @param timeLimit time limit for the resolution
+     * @param nbNodes   number of nodes
+     * @param cost      cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration  duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
      */
-	void searchSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree);
+    void searchSolution(int timeLimit, int nbNodes, int[][] cost, int[] duration);
 
     /**
-     * @param i
-     * @return le sommet visite en i-eme position dans la solution calculee par chercheSolution
+     * @param i an index
+     * @return the node visited in i-th position according to the result of the method searchSolution
      */
-	Integer getBestSolution(int i);
+    Integer getBestSolution(int i);
 
     /**
-     * @return la duree de la solution calculee par chercheSolution
+     * @return the lowest cost according to the result of the method searchSolution
      */
-	int getCoutMeilleureSolution();
+    int getLowestCost();
 }
