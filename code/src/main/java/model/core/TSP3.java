@@ -5,113 +5,124 @@ import java.util.Iterator;
 
 public class TSP3 implements TSP {
 
-    private Integer[] meilleureSolution;
-    private int coutMeilleureSolution = 0;
-    private Boolean tempsLimiteAtteint;
-    private int[][] f;
-    private int seen;
+    private Integer[] bestSolution;
+    private int lowestCost = 0;
+    private Boolean timeLimitExceeded = false;
+    /**
+     * ex. records[29][2] represents the lowest cost so far to visit 0, 2, 3 and 4 (started with 0, end with 2)
+     * cuz 29 represents '11101' in binary, 2 represents the current index
+     */
+    private int[][] records;
+    /**
+     * the binary representation of the index already visited
+     * ex. '11101' means 0, 2, 3 and 4 visited, 1 not visited yet
+     */
+    private int seenInBinary;
 
-    public Boolean getTempsLimiteAtteint() {
-        return tempsLimiteAtteint;
+    public Boolean getTimeLimitExceeded() {
+        return timeLimitExceeded;
     }
 
-    public void searchSolution(int tpsLimite, int nbSommets, int[][] cout, int[] duree) {
-        tempsLimiteAtteint = false;
-        coutMeilleureSolution = Integer.MAX_VALUE;
-        meilleureSolution = new Integer[nbSommets];
-        ArrayList<Integer> nonVus = new ArrayList<>();
-        for (int i = 1; i < nbSommets; i++) nonVus.add(i);
-        ArrayList<Integer> vus = new ArrayList<>(nbSommets);
-        vus.add(0); // le premier sommet visite est 0
-        seen = 1;
+    public void searchSolution(int timeLimit, int nbNodes, int[][] cost, int[] duration) {
+        timeLimitExceeded = false;
+        lowestCost = Integer.MAX_VALUE;
+        bestSolution = new Integer[nbNodes];
+        ArrayList<Integer> notSeen = new ArrayList<>();
+        for (int i = 1; i < nbNodes; i++) notSeen.add(i);
+        ArrayList<Integer> seen = new ArrayList<>(nbNodes);
+        // the first visited node is 0
+        seen.add(0);
+        seenInBinary = 1;
+        // initialize records
+        int length = (1 << nbNodes) - 1;
+        records = new int[length + 1][nbNodes];
+        for (int i = 0; i < length; i++)
+            for (int j = 0; j < nbNodes; j++)
+                records[i][j] = Integer.MAX_VALUE;
+        records[0][0] = 0;
 
-        int smax = (1 << nbSommets) - 1;
-        f = new int[smax + 1][nbSommets];
-        for (int i = 0; i < smax; i++)
-            for (int j = 0; j < nbSommets; j++)
-                f[i][j] = Integer.MAX_VALUE;
-        f[0][0] = 0;
-
-        branchAndBound(0, nonVus, vus, 0, cout, duree, System.currentTimeMillis(), tpsLimite);
+        branchAndBound(0, notSeen, seen, 0, cost, duration, System.currentTimeMillis(), timeLimit);
     }
 
     public Integer getBestSolution(int i) {
-        if ((meilleureSolution == null) || (i < 0) || (i >= meilleureSolution.length))
+        if ((bestSolution == null) || (i < 0) || (i >= bestSolution.length))
             return null;
-        return meilleureSolution[i];
+        return bestSolution[i];
     }
 
-    public int getCoutMeilleureSolution() {
-        return coutMeilleureSolution;
+    public int getLowestCost() {
+        return lowestCost;
     }
 
     /**
-     * Methode devant etre redefinie par les sous-classes de TemplateTSP
+     * Method to estimate future costs
      *
-     * @param sommetCourant
-     * @param nonVus        : tableau des sommets restant a visiter
-     * @param cout          : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
-     * @param duree         : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
-     * @return une borne inferieure du cout des permutations commencant par sommetCourant,
-     * contenant chaque sommet de nonVus exactement une fois et terminant par le sommet 0
+     * @param currentNode current node
+     * @param notSeen     table of nodes not seen yet
+     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration    duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
+     * @return a lower bound of the cost
      */
-    protected int bound(Integer sommetCourant, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
+    protected int bound(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
         int min = Integer.MAX_VALUE;
-        for (Integer sommet : nonVus) {
-            if (cout[sommetCourant][sommet] + duree[sommet] < min)
-                min = cout[sommetCourant][sommet] + duree[sommet];
+        for (Integer node : notSeen) {
+            if (cost[currentNode][node] + duration[node] < min)
+                min = cost[currentNode][node] + duration[node];
         }
         return min;
     }
 
     /**
-     * Methode devant etre redefinie par les sous-classes de TemplateTSP
+     * Method to get an iterator which can iterate the permutation of the nodes not seen
      *
-     * @param sommetCrt
-     * @param nonVus    : tableau des sommets restant a visiter
-     * @param cout      : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
-     * @param duree     : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
-     * @return un iterateur permettant d'iterer sur tous les sommets de nonVus
+     * @param currentNode current node
+     * @param notSeen     table of nodes not seen yet
+     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration    duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
+     * @return an iterator which can iterate the permutation of the nodes not seen
      */
-    protected Iterator<Integer> iterator(Integer sommetCrt, ArrayList<Integer> nonVus, int[][] cout, int[] duree) {
-        return new IteratorSeq2(nonVus, sommetCrt, cout);
+    protected Iterator<Integer> iterator(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
+        return new IteratorSeq2(notSeen, currentNode, cost);
     }
 
     /**
-     * Methode definissant le patron (template) d'une resolution par separation et evaluation (branch and bound) du TSP
+     * Recursive algorithm to calculate the best solution and the lowest cost (by using branch and bound) of the TSP
      *
-     * @param sommetCrt le dernier sommet visite
-     * @param nonVus    la liste des sommets qui n'ont pas encore ete visites
-     * @param vus       la liste des sommets visites (y compris sommetCrt)
-     * @param coutVus   la somme des couts des arcs du chemin passant par tous les sommets de vus + la somme des duree des sommets de vus
-     * @param cout      : cout[i][j] = duree pour aller de i a j, avec 0 <= i < nbSommets et 0 <= j < nbSommets
-     * @param duree     : duree[i] = duree pour visiter le sommet i, avec 0 <= i < nbSommets
-     * @param tpsDebut  : moment ou la resolution a commence
-     * @param tpsLimite : limite de temps pour la resolution
+     * @param currentNode the last visited node
+     * @param notSeen     the list of visited nodes
+     * @param seen        the list of nodes not visited
+     * @param currentCost the sum of the cost so far (from 0 to currentNode)
+     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration    duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
+     * @param startTime   start time of the resolution
+     * @param timeLimit   time limit for the resolution
      */
-    void branchAndBound(int sommetCrt, ArrayList<Integer> nonVus, ArrayList<Integer> vus, int coutVus, int[][] cout, int[] duree, long tpsDebut, int tpsLimite) {
-        if (System.currentTimeMillis() - tpsDebut > tpsLimite) {
-            tempsLimiteAtteint = true;
+    void branchAndBound(int currentNode, ArrayList<Integer> notSeen, ArrayList<Integer> seen, int currentCost,
+                        int[][] cost, int[] duration, long startTime, int timeLimit) {
+        if (System.currentTimeMillis() - startTime >= timeLimit) {
+            timeLimitExceeded = true;
             return;
         }
-        if (nonVus.size() == 0) { // tous les sommets ont ete visites
-            coutVus += cout[sommetCrt][0];
-            if (coutVus < coutMeilleureSolution) { // on a trouve une solution meilleure que meilleureSolution
-                vus.toArray(meilleureSolution);
-                coutMeilleureSolution = coutVus;
+        // if all the nodes have been visited
+        if (notSeen.size() == 0) {
+            currentCost += cost[currentNode][0];
+            // if this solution is better
+            if (currentCost < lowestCost) {
+                seen.toArray(bestSolution);
+                lowestCost = currentCost;
             }
-        } else if (coutVus + bound(sommetCrt, nonVus, cout, duree) < coutMeilleureSolution && f[seen][sommetCrt] > coutVus) {
-            f[seen][sommetCrt] = coutVus;
-            Iterator<Integer> it = iterator(sommetCrt, nonVus, cout, duree);
+        } else if (currentCost + bound(currentNode, notSeen, cost, duration) < lowestCost && records[seenInBinary][currentNode] > currentCost) {
+            records[seenInBinary][currentNode] = currentCost;
+            Iterator<Integer> it = iterator(currentNode, notSeen, cost, duration);
             while (it.hasNext()) {
-                Integer prochainSommet = it.next();
-                vus.add(prochainSommet);
-                nonVus.remove(prochainSommet);
-                seen += (1 << prochainSommet);
-                branchAndBound(prochainSommet, nonVus, vus, coutVus + cout[sommetCrt][prochainSommet] + duree[prochainSommet], cout, duree, tpsDebut, tpsLimite);
-                vus.remove(prochainSommet);
-                nonVus.add(prochainSommet);
-                seen -= (1 << prochainSommet);
+                Integer nextNode = it.next();
+                seen.add(nextNode);
+                notSeen.remove(nextNode);
+                seenInBinary += (1 << nextNode);
+                branchAndBound(nextNode, notSeen, seen, currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
+                seen.remove(nextNode);
+                notSeen.add(nextNode);
+                seenInBinary -= (1 << nextNode);
             }
         }
     }

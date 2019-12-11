@@ -32,7 +32,7 @@ public class Tour implements GenData {
     /**
      * List of all the deliveries the cyclist has to do
      */
-    private final List<DeliveryProcess> deliveryProcesses;
+    private List<DeliveryProcess> deliveryProcesses;
 
     /**
      * Start point of the delivery.
