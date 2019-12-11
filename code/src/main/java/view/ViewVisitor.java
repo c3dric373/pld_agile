@@ -20,6 +20,7 @@ public class ViewVisitor implements GenDataVisitor {
         }
     }
 
+
     @Override
     public void visit(final Graph graph) {
         System.out.println("View Visitor Graph");

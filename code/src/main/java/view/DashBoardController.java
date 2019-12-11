@@ -21,9 +21,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import lombok.Getter;
+import model.core.service.TourService;
 import model.data.*;
 import org.apache.commons.lang.Validate;
-import view.UserInterface;
 
 import javax.swing.*;
 import javax.xml.validation.Validator;
@@ -49,9 +49,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
-        PICKUP("Pick-Up Point", "P" ,"flag.png"),
-        DELIVERY("Delivery Point","D" , "flag.png"),
-        BASE("Base Point","B", "home-icon-silhouette.png");
+        PICKUP("Pick-Up Point", "P", "flag.png"),
+        DELIVERY("Delivery Point", "D", "flag.png"),
+        BASE("Base Point", "B", "home-icon-silhouette.png");
 
         private String title = "";
         private String firstLetter = "";
@@ -81,7 +81,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private TableView<ActionPoint> actionPointTableView;
 
     @FXML
-    private TableColumn<ActionPoint, String> deliveryNumber;
+    private TableColumn<ActionPoint, String> deliveryRank;
 
     @FXML
     private TableColumn<ActionPoint, String> deliveryType;
@@ -98,17 +98,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private GoogleMap map;
 
-    public DashBoardController() {}
+    public DashBoardController() {
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         // Initialize the actionPoints table with the 3 columns.
-        deliveryType.setCellValueFactory(
-                cellData -> new SimpleStringProperty( cellData.getValue().getActionType().toString()) );
-        timeAtPoint.setCellValueFactory(
-                cellData -> new SimpleStringProperty( cellData.getValue().getTime().toString()) );
         actionPointTableView.setItems(null);
+
+        deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty
+                (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
+        deliveryType.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
+        timeAtPoint.setCellValueFactory(
+                cellData -> new SimpleStringProperty(TourService.calculateTimeAtPoint(tourLoaded,cellData.getValue())));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -246,10 +250,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         drawAllActionPoints(fakeListActionPoints);
     }
 
-    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess){
+    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess) {
         List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
-        for(DeliveryProcess deliveryProcess : listDeliveryProcess) {
-            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP().getTime(), deliveryProcess.getPickUP().getLocation(), deliveryProcess.getPickUP().getActionType()));
+        for (DeliveryProcess deliveryProcess : listDeliveryProcess) {
+            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
+                    .getTime(), deliveryProcess.getPickUP().getLocation(),
+                    deliveryProcess.getPickUP().getActionType()));
             listActionPoints.add(new ActionPoint(deliveryProcess.getDelivery().getTime(), deliveryProcess.getDelivery().getLocation(), deliveryProcess.getDelivery().getActionType()));
         }
         return listActionPoints;
@@ -258,15 +264,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void drawAllActionPoints(final List<ActionPoint> actionPoints) {
         // First Action Point is the Base
         map.clearMarkers();
-        map.addMarker( createMarker( actionPoints.get(0), MarkerType.BASE ) );
+        map.addMarker(createMarker(actionPoints.get(0), MarkerType.BASE));
 
         //TODO A améliorer Mettre en accord ActionType et Marker Type ?
         //According to ActionType set the good MarkerType
-        for( ActionPoint actionPoint: actionPoints) {
-            if(actionPoint.getActionType() == ActionType.DELIVERY) {
-                map.addMarker( createMarker(actionPoint, MarkerType.DELIVERY ) );
+        for (ActionPoint actionPoint : actionPoints) {
+            if (actionPoint.getActionType() == ActionType.DELIVERY) {
+                map.addMarker(createMarker(actionPoint, MarkerType.DELIVERY));
             } else if (actionPoint.getActionType() == ActionType.PICK_UP) {
-                map.addMarker( createMarker(actionPoint, MarkerType.PICKUP ) );
+                map.addMarker(createMarker(actionPoint, MarkerType.PICKUP));
             }
         }
 
@@ -282,8 +288,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         MarkerOptions markerPoint = new MarkerOptions();
         //markerPoint.icon();
         markerPoint.title(mType.title)
-        .label(mType.firstLetter)
-        .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
+                .label(mType.firstLetter)
+                .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
         return pointMarker;
     }
