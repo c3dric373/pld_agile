@@ -189,7 +189,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.findNearestPoint(nearestPoint);
     }
 
-    public void setMAP_LOADED(){
+    public void setMapLoaded(){
         if(projectState != ProjectState.INITIALIZED &&
                 projectState != ProjectState.MAP_LOADED){
             throw new IllegalStateException("Another action is in progress");
@@ -197,7 +197,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.MAP_LOADED;
     }
 
-    public void setTOUR_LOADED(){
+    public void setTourLoaded(){
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.MAP_LOADED){
             throw new IllegalStateException("Another action is in progress");
@@ -205,7 +205,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.TOUR_LOADED;
     }
 
-    public void setTOUR_CALCULATED(){
+    public void setTourCalculated(){
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != projectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
@@ -213,7 +213,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = projectState.TOUR_CALCULATED;
     }
 
-    public void setADD_DELIVERY_PROCESS() {
+    public void setAddDeliveryProcess() {
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
@@ -221,21 +221,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.ADD_DELIVERY_PROCESS;
     }
 
-    public void setADD_DELIVERY_PROCESS_1stPoint(){
+    public void setAddDeliveryProcess1stPoint(){
         if(projectState != ProjectState.ADD_DELIVERY_PROCESS){
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.ADD_DELIVERY_PROCESS_1stPoint;
     }
 
-    public void setADD_DELIVERY_PROCESS_2ndPoint(){
+    public void setAddDeliveryProcess2ndPoint(){
         if(projectState != ProjectState.ADD_DELIVERY_PROCESS_1stPoint){
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.ADD_DELIVERY_PROCESS_2ndPoint;
     }
 
-    public void setDELETE_DELIVERY_PROCESS(){
+    public void setDeleteDeliveryProcess(){
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
@@ -243,7 +243,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.DELETE_DELIVERY_PROCESS;
     }
 
-    public void setMODIFY_DELIVERY_PROCESS_POINT(){
+    public void setModifyDeliveryProcessPoint(){
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
@@ -251,14 +251,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT;
     }
 
-    public void setMODIFY_DELIVERY_PROCESS_POINT_END(){
+    public void setModifyDeliveryProcessPointEnd(){
         if(projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT){
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT_END;
     }
 
-    public void setCHANGE_DELIVERY_ORDER(){
+    public void setChangeDeliveryOrder(){
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
