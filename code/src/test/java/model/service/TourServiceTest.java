@@ -33,6 +33,8 @@ public class TourServiceTest {
     private ActionPoint TEST_PICK_UP,TEST_PICK_UP2;
     private ActionPoint TEST_DELIVERY,TEST_DELIVERY2;
     private List<ActionPoint> TEST_ACTIONPOINT_LIST;
+    private List<DeliveryProcess> TEST_DELIVERY_PROCESS_LIST;
+    private Tour TEST_TOUR;
     private DeliveryProcess DELIVERY_PROCESS_TEST;
     private Tour TOUR_TEST;
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -52,6 +54,15 @@ public class TourServiceTest {
                 TEST_ACTION_TYPE);
         TEST_ACTIONPOINT_LIST =
                 new ArrayList<ActionPoint>();
+        TEST_ACTIONPOINT_LIST.add(TEST_PICK_UP);
+        TEST_ACTIONPOINT_LIST.add(TEST_DELIVERY);
+        TEST_DELIVERY_PROCESS_LIST = new ArrayList<DeliveryProcess>();
+        TEST_DELIVERY_PROCESS_LIST.add(new DeliveryProcess(TEST_PICK_UP,
+                TEST_DELIVERY));
+        TEST_TOUR = new Tour(TEST_DELIVERY_PROCESS_LIST,TEST_LOCATION,
+                TEST_TIME);
+        TEST_TOUR.setActionPoints(TEST_ACTIONPOINT_LIST);
+
         System.setErr(new PrintStream(outContent));
     }
 
@@ -63,7 +74,7 @@ public class TourServiceTest {
         thrown.expectMessage("pickUpPoint is null");
 
         // Act
-        addNewDeliveryProcess(TEST_ACTIONPOINT_LIST,
+        addNewDeliveryProcess(TEST_TOUR,
                 null,TEST_DELIVERY);
 
         // Assert via annotation
@@ -77,7 +88,7 @@ public class TourServiceTest {
         thrown.expectMessage("deliveryPoint is null");
 
         // Act
-        addNewDeliveryProcess(TEST_ACTIONPOINT_LIST,
+        addNewDeliveryProcess(TEST_TOUR,
                 TEST_PICK_UP,null);
 
         // Assert via annotation
@@ -87,29 +98,23 @@ public class TourServiceTest {
     public void addNewDeliveryProcessTest_validCall_validAnswer()
     {
         // Arrange
-        final int indexActionPoint1 = 0;
-        final int indexActionPoint2 = 1;
         final int indexActionPoint3 = 2;
         final int indexActionPoint4 = 3;
-        List<ActionPoint> TEST_NEWACTIONPOINTS_LIST =
-                new ArrayList<ActionPoint>();
+        Tour NEW_TEST_TOUR;
+        NEW_TEST_TOUR = new Tour(TEST_DELIVERY_PROCESS_LIST,TEST_LOCATION,
+                TEST_TIME);
+        NEW_TEST_TOUR.setActionPoints(TEST_ACTIONPOINT_LIST);
 
         // Act
-        TEST_NEWACTIONPOINTS_LIST = addNewDeliveryProcess(
-                TEST_NEWACTIONPOINTS_LIST, TEST_PICK_UP,TEST_DELIVERY);
-        TEST_NEWACTIONPOINTS_LIST = addNewDeliveryProcess(
-                TEST_NEWACTIONPOINTS_LIST, TEST_PICK_UP2,TEST_DELIVERY2);
+        NEW_TEST_TOUR = addNewDeliveryProcess(
+                NEW_TEST_TOUR, TEST_PICK_UP2,TEST_DELIVERY2);
 
 
         // Assert via annotation
-        assertEquals("1st index ok", indexActionPoint1,
-                TEST_NEWACTIONPOINTS_LIST.indexOf(TEST_PICK_UP),0);
-        assertEquals("2nd index ok", indexActionPoint2,
-                TEST_NEWACTIONPOINTS_LIST.indexOf(TEST_DELIVERY),0);
         assertEquals("3rd index ok", indexActionPoint3,
-                TEST_NEWACTIONPOINTS_LIST.indexOf(TEST_PICK_UP2),0);
+                NEW_TEST_TOUR.getActionPoints().indexOf(TEST_PICK_UP2),0);
         assertEquals("4th index ok", indexActionPoint4,
-                TEST_NEWACTIONPOINTS_LIST.indexOf(TEST_DELIVERY2),0);
+                NEW_TEST_TOUR.getActionPoints().indexOf(TEST_DELIVERY2),0);
     }
 
     @Test

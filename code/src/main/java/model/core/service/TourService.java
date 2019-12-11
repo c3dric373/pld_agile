@@ -168,25 +168,31 @@ public class TourService {
     /**
      * Adds 2 new action points to an ordered ActionPoint list.
      * The 2 points represent a deliveryProcess.
-     *
-     * @param actionPointList Current ordered ActionPoint list.
-     * @param pickUpPoint     New PickUp point to add.
-     * @param deliveryPoint   New DeliveryPoint to add.
+     * @param tour Current Tour.
+     * @param pickUpPoint New PickUp point to add.
+     * @param deliveryPoint New DeliveryPoint to add.
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
      */
-    public static List<ActionPoint> addNewDeliveryProcess(
-            final List<ActionPoint> actionPointList,
-            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint) {
+    public static Tour addNewDeliveryProcess(final Tour tour,
+            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
 
-        Validate.notNull(actionPointList, "actionPointList is null");
-        Validate.notNull(pickUpPoint, "pickUpPoint is null");
-        Validate.notNull(deliveryPoint, "deliveryPoint is null");
+        Validate.notNull(tour,"tour is null");
+        Validate.notNull(pickUpPoint,"pickUpPoint is null");
+        Validate.notNull(deliveryPoint,"deliveryPoint is null");
 
-        List<ActionPoint> newActionPointList = actionPointList;
+        Tour newTour;
+        List<DeliveryProcess> newDeliveryProcessList =
+                tour.getDeliveryProcesses();
+        List<ActionPoint> newActionPointList = tour.getActionPoints();
         newActionPointList.add(pickUpPoint);
         newActionPointList.add(deliveryPoint);
-        return newActionPointList;
+        newDeliveryProcessList.add(new DeliveryProcess(pickUpPoint,
+                deliveryPoint));
+        newTour = new Tour(newDeliveryProcessList, tour.getBase(),
+                tour.getStartTime());
+        newTour.setActionPoints(newActionPointList);
+        return newTour;
 
     }
 
