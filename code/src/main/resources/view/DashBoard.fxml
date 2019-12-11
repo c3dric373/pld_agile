@@ -146,8 +146,8 @@
                         </Button>
                         <Button fx:id="setPickUp" mnemonicParsing="false" onAction="#setPickUpPoint" text="P" GridPane.rowIndex="1" />
                         <Button fx:id="setDelivery" contentDisplay="TOP" mnemonicParsing="false" onAction="#setDeliveryPoint" text="D" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="Label" fx:id="labelPickUp" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Label" fx:id="labelDelivery" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Button fx:id="clearNDP" mnemonicParsing="false" onAction="#clearNewDeliveryProcess" text="Clear" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
