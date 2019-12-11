@@ -50,13 +50,6 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         return projectData;
     }
 
-    @Override
-    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        Tour tour = projectData.getTour();
-        tour.addDeliveryProcess(deliveryProcess);
-        projectData.setTour(tour);
-        notify(tour);
-    }
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
