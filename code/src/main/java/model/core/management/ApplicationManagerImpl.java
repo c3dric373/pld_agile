@@ -97,6 +97,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         Validate.notNull(file, "file is null");
         final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
+
         projectDataWrapper.loadTour(tour);
         projectState = ProjectState.TOUR_LOADED;
         mainProjectState = ProjectState.TOUR_LOADED;
@@ -197,6 +198,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
         //Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
         Validate.notNull(actionPoint, "actionPoint is null");
+        System.out.println();
         OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
         Validate.isTrue(index.isPresent(), "no delivery process contains such action point");
         DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());

@@ -30,7 +30,7 @@ public class DeliveryProcess implements GenData {
      * only be set after tour calculation.
      */
     @Setter
-    private int distance;
+    private Integer distance;
 
     /**
      * Time it takes to go from the pick up to the delivery point. Should only

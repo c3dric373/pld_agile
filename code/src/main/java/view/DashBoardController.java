@@ -184,9 +184,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
 
     public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        final Point startPoint = deliveryProcess.getPickUP().getLocation();
-        final Point endPoint = deliveryProcess.getDelivery().getLocation();
-        final List<Journey> journeys = tourLoaded.getJourneyList();
         final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
         final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
         final String pickUpPointName = deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName();
@@ -196,9 +193,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         dPDPoint.setText(deliveryPointName);
         dpDDuration.setText(deliveryDuration);
         dpPUDuration.setText(pickUpDuration);
+        if(deliveryProcess.getTime() != null){
+            dpDuration.setText(deliveryProcess.getTime().toString());
+        }
+        if (deliveryProcess.getDistance() != null){
+            dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
 
-        dpDuration.setText(deliveryProcess.getTime().toString());
-        dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+        }
 
 
     }
