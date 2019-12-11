@@ -29,6 +29,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
     private ProjectState projectState;
 
     /**
+     * Main State of the Project
+     */
+    private ProjectState mainProjectState;
+
+    /**
      * Graph Service of the Project.
      */
     private GraphService graphService;
@@ -68,6 +73,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Graph graph = new Graph(points);
         projectDataWrapper.loadMap(graph);
         projectState = ProjectState.MAP_LOADED;
+        mainProjectState = ProjectState.MAP_LOADED;
     }
 
     @Override
@@ -85,6 +91,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
         projectDataWrapper.loadTour(tour);
         projectState = ProjectState.TOUR_LOADED;
+        mainProjectState = ProjectState.TOUR_LOADED;
+
     }
 
     @Override
@@ -98,6 +106,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour newTour = graphService.calculateTour(tour, graph);
         projectDataWrapper.modifyTour(newTour);
         projectState = ProjectState.TOUR_CALCULATED;
+        mainProjectState = ProjectState.TOUR_CALCULATED;
+
     }
 
     @Override
@@ -115,6 +125,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         newTour = tourService.addNewDeliveryProcess(tour, pickUpPoint,
                 deliveryPoint);
         projectDataWrapper.modifyTour(newTour);
+        projectState = mainProjectState;
     }
 
     @Override
@@ -126,7 +137,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         //TODO : review this method
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
-        projectState = projectState.TOUR_LOADED;
+        projectState = mainProjectState;
     }
 
     @Override
@@ -142,7 +153,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
         projectDataWrapper.modifyTour(newTour);
-        projectState = ProjectState.TOUR_CALCULATED;
+        projectState = mainProjectState;
+
     }
 
     @Override
@@ -163,32 +175,20 @@ public class ApplicationManagerImpl implements ApplicationManager {
                 (graph, tour, oldPoint, newPoint);
         projectDataWrapper.modifyTour(newTour);
 
-        //TODO : maybe send the previous state to know if the Tour is
-        // calculated or just loaded
-        projectState = ProjectState.TOUR_CALCULATED;
+        projectState = mainProjectState;
     }
 
     @Override
     public void findNearestPoint(final double latitude, final double longitude) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
-        if(projectState != ProjectState.ADD_DELIVERY_PROCESS &&
-                projectState != ProjectState.ADD_DELIVERY_PROCESS_1stPoint &&
-                projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT)
-        {
-            throw new IllegalStateException("Another action is in progress");
-        }
-
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
         final Point nearestPoint = graphService.findNearestPoint(pointList,
                 longitude, latitude);
         projectDataWrapper.findNearestPoint(nearestPoint);
-
-        //TODO : maybe send the previous state to know if the Tour is
-        // calculated or just loaded
-        projectState = ProjectState.TOUR_CALCULATED;
     }
 
+    
 
 }
