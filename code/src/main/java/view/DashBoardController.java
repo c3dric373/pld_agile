@@ -419,4 +419,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         MVCArray mvc = new MVCArray(ary);
         return mvc;
     }
+
+    public void setPickUpPoint(ActionEvent actionEvent) {
+    }
+
+    public void addNewDeliveryProcess(ActionEvent actionEvent) {
+    }
+
+    public void setDeliveryPoint(ActionEvent actionEvent) {
+    }
+
+    public void clearNewDeliveryProcess(ActionEvent actionEvent) {
+    }
 }
