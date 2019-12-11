@@ -1,5 +1,7 @@
 package model.data;
 
+import model.core.TSP;
+import model.core.TSP3;
 import model.core.service.GraphService;
 import model.io.XmlToGraph;
 import org.junit.Rule;
@@ -105,5 +107,94 @@ public class GraphServiceTest {
         assertEquals(point.getId(), 1);
         assertEquals(point.getLatitude(),12.5,0);
         assertEquals(point.getLongitude(),4 ,0);
+    }
+
+    @Test
+    public void testGetListJourney_TourIsNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("tour can't be null");
+
+        // Act
+        TSP tsp3 = new TSP3();
+        int timeLimit = Integer.MAX_VALUE;
+        List<Journey> journeys = graphService.getListJourney(null, TEST_GRAPH, tsp3, timeLimit);
+
+        // Assert via annotation
+
+    }
+
+    @Test
+    public void testGetListJourney_GraphIsNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("graph can't be null");
+
+        // Act
+        TSP tsp3 = new TSP3();
+        int timeLimit = Integer.MAX_VALUE;
+        List<Journey> journeys = graphService.getListJourney(TEST_TOUR, null, tsp3, timeLimit);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testGetListJourney_TspIsNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("tsp can't be null");
+
+        // Act
+        int timeLimit = Integer.MAX_VALUE;
+        List<Journey> journeys = graphService.getListJourney(TEST_TOUR, TEST_GRAPH, null, timeLimit);
+
+        // Assert via annotation
+    }
+
+    @Test
+    public void testDijkstra_graphIsNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("graph can't be null");
+
+        // Act
+        long id = 123486;
+        graphService.dijkstra(null, id);
+        // Assert via annotation
+    }
+
+    @Test
+    public void testDijkstra_idIsNull_throwsIllegalArgumentException() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("idStart not in graph");
+
+        // Act
+        points.add(point);
+        points.add(point2);
+        Graph test_Graph = new Graph(points);
+        long id = 0;
+        graphService.dijkstra(test_Graph, id);
+        // Assert via annotation
+    }
+
+    public void testDijkstra_() {
+
+        // Arrange
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("idStart not in graph");
+
+        // Act
+        points.add(point);
+        points.add(point2);
+        Graph test_Graph = new Graph(points);
+        long id = 0;
+        graphService.dijkstra(test_Graph, id);
+        // Assert via annotation
     }
 }
