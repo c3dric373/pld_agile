@@ -6,11 +6,9 @@ import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.*;
-import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -20,19 +18,15 @@ import javafx.stage.FileChooser;
 import lombok.Getter;
 import model.data.*;
 import org.apache.commons.lang.Validate;
-import view.UserInterface;
 
-import javax.swing.*;
-import javax.xml.validation.Validator;
 import java.io.File;
-import java.lang.management.BufferPoolMXBean;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DashBoardController implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback  {
+public class DashBoardController implements Initializable, MapComponentInitializedListener, DirectionsServiceCallback {
 
     //Map Style.
     private static final String mapStyle = "[{\"featureType\":\"administrative.neighborhood\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#747474\"},{\"lightness\":\"23\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#f38eb0\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ced7db\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffa5a8\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c7e5c8\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#d6cbc7\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c4c9e8\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#b1eaf1\"}]},{\"featureType\":\"road\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#343434\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry\",\"stylers\":[{\"lightness\":\"100\"}]},{\"featureType\":\"road\",\"elementType\":\"labels\",\"stylers\":[{\"visibility\":\"off\"},{\"lightness\":\"100\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#8a8a8a\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffd4a5\"}]},{\"featureType\":\"road.highway\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6e6e6e\"}]},{\"featureType\":\"road.arterial\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ffe9d2\"}]},{\"featureType\":\"road.arterial\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#6e6969\"}]},{\"featureType\":\"road.local\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"}]},{\"featureType\":\"road.local\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"weight\":\"3.00\"}]},{\"featureType\":\"road.local\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"weight\":\"0.30\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text\",\"stylers\":[{\"visibility\":\"on\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#464646\"},{\"lightness\":\"36\"}]},{\"featureType\":\"road.local\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#e9e5dc\"},{\"lightness\":\"30\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"transit.line\",\"elementType\":\"geometry\",\"stylers\":[{\"visibility\":\"off\"},{\"lightness\":\"100\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#d2e7f7\"}]}]";
@@ -46,9 +40,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
-        PICKUP("Pick-Up Point", "P" ,"flag.png"),
-        DELIVERY("Delivery Point","D" , "flag.png"),
-        BASE("Base Point","B", "home-icon-silhouette.png");
+        PICKUP("Pick-Up Point", "P", "resources/styleSetting/flag.png"),
+        DELIVERY("Delivery Point", "D", "resources/styleSetting/flag.png"),
+        BASE("Base Point", "B", "resources/styleSetting/home-icon-silhouette.png");
 
         private String title = "";
         private String firstLetter = "";
@@ -73,7 +67,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     protected DirectionsPane directionsPane;
 
 
-
     @FXML
     private TableView<ActionPoint> actionPointTableView;
 
@@ -95,16 +88,17 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private GoogleMap map;
 
-    public DashBoardController() {}
+    public DashBoardController() {
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         // Initialize the actionPoints table with the 3 columns.
         deliveryType.setCellValueFactory(
-                cellData -> new SimpleStringProperty( cellData.getValue().getActionType().toString()) );
+                cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
         timeAtPoint.setCellValueFactory(
-                cellData -> new SimpleStringProperty( cellData.getValue().getTime().toString()) );
+                cellData -> new SimpleStringProperty(cellData.getValue().getTime().toString()));
         actionPointTableView.setItems(null);
 
         mapView.addMapInializedListener(this);
@@ -231,7 +225,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         //TODO Commenter
 
         // Set The Base ID on the view
-        baseLocation.setText(String.valueOf(tourLoaded.getBase().getId()) );
+        baseLocation.setText(String.valueOf(tourLoaded.getBase().getId()));
 
         // Create a fake list of action Points To display.
         List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tourLoaded.getDeliveryProcesses());
@@ -243,9 +237,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         drawAllActionPoints(fakeListActionPoints);
     }
 
-    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess){
-        List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
-        for(DeliveryProcess deliveryProcess : listDeliveryProcess) {
+    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess) {
+        List<ActionPoint> listActionPoints = new ArrayList<>();
+        for (DeliveryProcess deliveryProcess : listDeliveryProcess) {
             listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP().getTime(), deliveryProcess.getPickUP().getLocation(), deliveryProcess.getPickUP().getActionType()));
             listActionPoints.add(new ActionPoint(deliveryProcess.getDelivery().getTime(), deliveryProcess.getDelivery().getLocation(), deliveryProcess.getDelivery().getActionType()));
         }
@@ -255,33 +249,39 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void drawAllActionPoints(final List<ActionPoint> actionPoints) {
         // First Action Point is the Base
         map.clearMarkers();
-        map.addMarker( createMarker( actionPoints.get(0), MarkerType.BASE ) );
+        map.addMarker(createMarker(actionPoints.get(0), MarkerType.BASE));
 
         //TODO A améliorer Mettre en accord ActionType et Marker Type ?
         //According to ActionType set the good MarkerType
-        for( ActionPoint actionPoint: actionPoints) {
-            if(actionPoint.getActionType() == ActionType.DELIVERY) {
-                map.addMarker( createMarker(actionPoint, MarkerType.DELIVERY ) );
+        for (ActionPoint actionPoint : actionPoints) {
+            if (actionPoint.getActionType() == ActionType.DELIVERY) {
+                map.addMarker(createMarker(actionPoint, MarkerType.DELIVERY));
             } else if (actionPoint.getActionType() == ActionType.PICK_UP) {
-                map.addMarker( createMarker(actionPoint, MarkerType.PICKUP ) );
+                map.addMarker(createMarker(actionPoint, MarkerType.PICKUP));
             }
         }
 
     }
 
     public Marker createMarker(final ActionPoint actionPoints, final MarkerType mType) {
-        /* //TODO Marche pas icon
-        String path= MarkerImageFactory.createMarkerImage(mType.iconPath, "png");
+        //TODO Marche pas icon
+        Validate.notNull(actionPoints, "actionPoints null");
+        Validate.notNull(mType, "mType is null");
+        System.out.println(mType.iconPath);
+        String path = mType.iconPath;
+        if (path == null) {
+            System.out.println("test");
+        }
         path = path.replace("(", "");
         path = path.replace(")", "");
-         */
+
 
         MarkerOptions markerPoint = new MarkerOptions();
-        //markerPoint.icon();
-        markerPoint.title(mType.title)
-        .label(mType.firstLetter)
-        .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
+        markerPoint.icon(path).title(mType.title)
+                .label(mType.firstLetter).visible(true)
+                .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
+        pointMarker.setVisible(true);
         return pointMarker;
     }
 
@@ -297,7 +297,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public String[] getDirectionWayPointsFromJourney(final Journey journey) {
         LinkedList<String> path = new LinkedList<String>();
         // On ajoute tous les points a la liste de points dans l'ordre inversse.
-        for(Point point : journey.getPoints()) {
+        for (Point point : journey.getPoints()) {
             /*DirectionsWaypoint stop = new DirectionsWaypoint(point.toString());
             stop.setStopOver(false);
             path.addFirst(stop);
@@ -314,8 +314,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public DirectionsWaypoint[] getDirectionWayPointsFromTour() {
         LinkedList<DirectionsWaypoint> path = new LinkedList<DirectionsWaypoint>();
         // On ajoute tous les points a la liste de points dans l'ordre inversse.
-        for(Journey journey: tourLoaded.getJourneyList()) {
-            for(Point point : journey.getPoints()) {
+        for (Journey journey : tourLoaded.getJourneyList()) {
+            for (Point point : journey.getPoints()) {
                 DirectionsWaypoint stop = new DirectionsWaypoint(point.toString());
                 stop.setStopOver(false);
                 path.addFirst(stop);
@@ -331,9 +331,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void drawDirection(Point start, Point arrival, DirectionsWaypoint[] directionsWaypoints, Boolean clearMarkers, Boolean clearDirections) {
         // Clear all markers
-        if(clearMarkers) map.clearMarkers();
+        if (clearMarkers) map.clearMarkers();
         // Clear Past direction
-        if(clearDirections) clearDirections();
+        if (clearDirections) clearDirections();
 
         DirectionsRequest request = new DirectionsRequest(
                 start.toString(),
@@ -345,16 +345,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void drawFullTour() {
         DirectionsWaypoint path[] = getDirectionWayPointsFromTour();
-        drawDirection(tourLoaded.getBase(),tourLoaded.getBase(), path,true,true);
+        drawDirection(tourLoaded.getBase(), tourLoaded.getBase(), path, true, true);
         drawAllActionPoints(tourLoaded.getActionPoints());
     }
 
     public void drawDeliveryProcess(int id) {
         DeliveryProcess deliveryProcess = tourLoaded.getDeliveryProcesses().get(id);
-        String path[] = getDirectionWayPointsFromJourney(tourLoaded.getJourneyList().get(id+1));
+        String path[] = getDirectionWayPointsFromJourney(tourLoaded.getJourneyList().get(id + 1));
         //drawDirection(deliveryProcess.getPickUP().getLocation(), deliveryProcess.getDelivery().getLocation(), path,true,true);
-        map.addMarker(createMarker(deliveryProcess.getPickUP(),MarkerType.PICKUP));
-        map.addMarker(createMarker(deliveryProcess.getDelivery(),MarkerType.DELIVERY));
+        map.addMarker(createMarker(deliveryProcess.getPickUP(), MarkerType.PICKUP));
+        map.addMarker(createMarker(deliveryProcess.getDelivery(), MarkerType.DELIVERY));
     }
 
 }
