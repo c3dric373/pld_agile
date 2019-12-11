@@ -81,10 +81,9 @@ public class GraphService {
         Validate.notNull(tour, "tour can't be null");
         Validate.notNull(graph, "graph can't be null");
 
-        Tour res = tour;
         TSP tsp3 = new TSP3();
-        int tpsLimite = Integer.MAX_VALUE;
-        List<Journey> journeys = getListJourney(tour, graph, tsp3, tpsLimite);
+        int timeLimit = Integer.MAX_VALUE;
+        List<Journey> journeys = getListJourney(tour, graph, tsp3, timeLimit);
 
         List<Point> points = new ArrayList<>();
         for (int i = 1; i < journeys.size(); i++) {
@@ -106,14 +105,14 @@ public class GraphService {
                 if (!notFound) break;
             }
         }
-        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
-        res.setActionPoints(actionPoints);
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
+        tour.setActionPoints(actionPoints);
 
-        //Calulate the finish time of each ActionPoints of each journeys
+        // Calculate the finish time of each ActionPoints of each journeys
         List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
-        res.setJourneyList(journeys1);
+        tour.setJourneyList(journeys1);
 
-        return res;
+        return tour;
     }
 
     public static boolean isInMap(final Point newPoint) {
