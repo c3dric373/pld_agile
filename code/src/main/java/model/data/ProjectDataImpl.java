@@ -23,6 +23,11 @@ public class ProjectDataImpl implements ProjectData {
      */
     private Graph graph;
 
+    /**
+     * Selected DeliveryProcess for ProjectDataWrapper.
+     */
+    private DeliveryProcess selectedDeliveryProcess;
+
     @Override
     public Tour getTour() {
         return tour;
@@ -46,4 +51,15 @@ public class ProjectDataImpl implements ProjectData {
     public Graph getGraph() {
         return graph;
     }
+
+    @Override
+    public void setSelectedDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        selectedDeliveryProcess = deliveryProcess;
+    }
+
+    @Override
+    public DeliveryProcess getSelectedDeliveryProcess() {
+        return selectedDeliveryProcess;
+    }
+
 }

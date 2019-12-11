@@ -8,7 +8,7 @@ import org.apache.commons.lang.Validate;
 import java.util.List;
 import java.util.OptionalInt;
 
-class DeliveryProcessService {
+public class DeliveryProcessService {
 
     /**
      * Replaces an Action Point in a delivery Process and returns the new
@@ -19,7 +19,7 @@ class DeliveryProcessService {
      * @param newActionPoint  the new point to replace with.
      * @return the new delivery process.
      */
-    static DeliveryProcess replacePoint(final DeliveryProcess
+    public DeliveryProcess replacePoint(final DeliveryProcess
                                                 deliveryProcess,
                                         final ActionPoint newActionPoint) {
         Validate.notNull(deliveryProcess, "delivery Process is null");
@@ -44,7 +44,7 @@ class DeliveryProcessService {
      * @param actionPoint       the action point
      * @return returns the index of the action point
      */
-    static OptionalInt findActionPoint(final List<DeliveryProcess>
+    public OptionalInt findActionPoint(final List<DeliveryProcess>
                                                deliveryProcesses,
                                        final ActionPoint actionPoint) {
         for (final DeliveryProcess deliveryProcess : deliveryProcesses) {
