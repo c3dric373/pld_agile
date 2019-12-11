@@ -39,48 +39,6 @@ public class XmlToGraph {
      */
     private static ArrayList<DeliveryProcess> deliveries;
 
-    // public static void main(final String[] args) {
- /*       ArrayList<Point> noeud = getGraphFromXml("resource/petitPlan.xml");
-
-        // WILL BE DELETED --
-        //Check that the informations are correctly instancied
-        for ( Point n : noeud){
-            System.out.println(n.getId());
-            for (Segment s : n.getSegments() ){
-                System.out.println(s.getName());
-            }
-        }
-        ArrayList<Point> noeud = getGraphFromXml("resource/moyenPlan.xml");
-        Tour Deliver = getDeliveriesFromXml("resource/demandeMoyen5.xml");
-        List<DeliveryProcess> Dp = Deliver.getDeliveryProcesses();
-        System.out.println( "------------------------");
-        for (DeliveryProcess p : Dp){
-            System.out.println( "id "+p.getDelivery().getPoint().getId());
-            System.out.println( "lat "+p.getDelivery().getPoint()
-                                                    .getLatitude());
-        }
-    */
-    // }
-
-    /**
-     * Get the point with the provided id.
-     *
-     * @param idPoint id of the Point
-     * @return the Point
-     */
-    public static Point getPointById(final long idPoint) {
-        Point point = null;
-        for (Point p : nodes) {
-            if (p.getId() == idPoint) {
-                point = p;
-            }
-        }
-        if (point == null) {
-            throw new IllegalArgumentException("Point doesn't exist");
-        }
-        return point;
-    }
-
     /**
      * get the nodes parameter.
      *
@@ -275,6 +233,25 @@ public class XmlToGraph {
             System.err.println(e.getMessage());
         }
         return tour;
+    }
+
+    /**
+     * Get the point with the provided id.
+     *
+     * @param idPoint id of the Point
+     * @return the Point
+     */
+    public static Point getPointById(final long idPoint) {
+        Point point = null;
+        for (Point p : nodes) {
+            if (p.getId() == idPoint) {
+                point = p;
+            }
+        }
+        if (point == null) {
+            throw new IllegalArgumentException("Point doesn't exist");
+        }
+        return point;
     }
 
     /**
