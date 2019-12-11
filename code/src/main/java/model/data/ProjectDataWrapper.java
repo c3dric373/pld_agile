@@ -35,12 +35,7 @@ public interface ProjectDataWrapper {
      */
     ProjectData getProject();
 
-    /**
-     * Add a DeliveryProcess to the current Tour.
-     *
-     * @param deliveryProcess the delivery process to add
-     */
-    void addDeliveryProcess(final DeliveryProcess deliveryProcess);
+
 
     /**
      * Delete a DeliveryProcess to the current Tour.
