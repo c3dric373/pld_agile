@@ -14,39 +14,32 @@ import java.util.Map;
 public class GraphService {
 
 
-    public Point findNearestPoint(final List<Point> pointList,
+    public Point findNearestPoint(final List<Point> points,
                                   final double longitude,
                                   final double latitude) {
-        final Point nearestPoint;
-        long nearestId = 0;
-        double nearestLong = 0.0, nearestLat = 0.0;
-        double differenceLong = 100.0, differenceLat = 100.0;
-        for (final Point p : pointList) {
-            if ((Math.abs(p.getLatitude() - latitude) < differenceLat) &&
-                    (Math.abs(p.getLongitude() - longitude) < differenceLong)) {
-                differenceLat = Math.abs(p.getLatitude() - latitude);
-                differenceLong = Math.abs(p.getLongitude() - longitude);
-                nearestLat = p.getLatitude();
-                nearestLong = p.getLongitude();
-                nearestId = p.getId();
+        Validate.notNull(points, "points can't be null");
+        Point nearestPoint = points.get(0);
+        double minDifference = Double.MAX_VALUE;
+        for (final Point point : points) {
+            double differenceLat = point.getLatitude() - latitude;
+            double differenceLong = point.getLongitude() - longitude;
+            double difference = differenceLat * differenceLat + differenceLong * differenceLong;
+            if (difference < minDifference) {
+                nearestPoint = point;
+                minDifference = difference;
             }
         }
-        /*
-        System.out.println("nearestLong : " + nearestLong + " nearestLat : "
-        + nearestLat);
-        System.out.println("nearestID : " + nearestId);
-        System.out.println("differenceLong : "+differenceLong+" differenceLat"
-        +differenceLat);
-        */
-        nearestPoint = new Point(nearestId, nearestLat, nearestLong);
+//        System.out.println("nearestLong : " + nearestPoint.getLongitude() + " nearestLat : " + nearestPoint.getLatitude());
+//        System.out.println("nearestID : " + nearestPoint.getId());
+//        System.out.println("minDifference : " + minDifference);
         return nearestPoint;
     }
 
     /**
      * Find the center of the graph thanks to itself
      *
-     * @param graph
-     * @return
+     * @param graph The graph
+     * @return the center for the points
      */
     public static Point addGraphCenter(final Graph graph) {
         Validate.notNull(graph, "graph can't be null");
@@ -72,9 +65,8 @@ public class GraphService {
 
         double latitudeCenter = (latitudeMax + latitudeMin) / 2;
         double longitudeCenter = (longitudeMax + longitudeMin) / 2;
-        Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
 
-        return centerPoint;
+        return new Point(1, latitudeCenter, longitudeCenter);
     }
 
     public Tour calculateTour(final Tour tour, final Graph graph) {
