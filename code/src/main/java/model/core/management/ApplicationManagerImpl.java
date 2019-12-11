@@ -189,6 +189,83 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.findNearestPoint(nearestPoint);
     }
 
-    
+    public void setMAP_LOADED(){
+        if(projectState != ProjectState.INITIALIZED &&
+                projectState != ProjectState.MAP_LOADED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.MAP_LOADED;
+    }
+
+    public void setTOUR_LOADED(){
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.MAP_LOADED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.TOUR_LOADED;
+    }
+
+    public void setTOUR_CALCULATED(){
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != projectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = projectState.TOUR_CALCULATED;
+    }
+
+    public void setADD_DELIVERY_PROCESS() {
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.ADD_DELIVERY_PROCESS;
+    }
+
+    public void setADD_DELIVERY_PROCESS_1stPoint(){
+        if(projectState != ProjectState.ADD_DELIVERY_PROCESS){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.ADD_DELIVERY_PROCESS_1stPoint;
+    }
+
+    public void setADD_DELIVERY_PROCESS_2ndPoint(){
+        if(projectState != ProjectState.ADD_DELIVERY_PROCESS_1stPoint){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.ADD_DELIVERY_PROCESS_2ndPoint;
+    }
+
+    public void setDELETE_DELIVERY_PROCESS(){
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.DELETE_DELIVERY_PROCESS;
+    }
+
+    public void setMODIFY_DELIVERY_PROCESS_POINT(){
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT;
+    }
+
+    public void setMODIFY_DELIVERY_PROCESS_POINT_END(){
+        if(projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT_END;
+    }
+
+    public void setCHANGE_DELIVERY_ORDER(){
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        projectState = ProjectState.CHANGE_DELIVERY_ORDER;
+    }
+
+
 
 }
