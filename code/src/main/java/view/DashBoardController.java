@@ -16,6 +16,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import lombok.Getter;
+import model.core.service.TourService;
 import model.data.ActionPoint;
 import model.data.ActionType;
 import model.data.DeliveryProcess;
@@ -37,6 +38,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void setTour(Tour tour) {
         tourLoaded = tour;
+    }
+
+    public void tourCalculated() {
+        System.out.println("test");
     }
 
     //Enum Marker Types.
@@ -104,7 +109,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
         timeAtPoint.setCellValueFactory(
-                cellData -> new SimpleStringProperty(cellData.getValue().getTime().toString()));
+                cellData -> new SimpleStringProperty(TourService.calculateTimeAtPoint(tourLoaded,cellData.getValue())));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
