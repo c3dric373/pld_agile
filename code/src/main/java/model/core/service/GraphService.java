@@ -367,7 +367,7 @@ public class GraphService {
                     if (!notFound) break;
                 }
             }
-            actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
+            actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
             tour.setActionPoints(actionPoints);
             // Calculate the finish time of each ActionPoints of each journeys
             List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());

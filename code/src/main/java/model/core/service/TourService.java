@@ -29,21 +29,17 @@ public class TourService {
             return EMPTY_STRING;
         }
         List<Journey> journeys = tourLoaded.getJourneyList();
+        if (actionPoint.getActionType() == ActionType.BASE
+                && tourLoaded.getActionPoints().get(0).getLocation() == actionPoint.getLocation())
+            return tourLoaded.getStartTime().toString();
+        if (actionPoint.getActionType() == ActionType.END
+                && tourLoaded.getActionPoints().get(tourLoaded.getActionPoints().size() - 1).getLocation() == actionPoint.getLocation())
+            return journeys.get(journeys.size() - 1).getFinishTime().toString();
         for (Journey journey : journeys) {
-            if (journey.getStartPoint() == actionPoint.getLocation()) {
-                if (journeys.indexOf(journey) == 0) {
-                    return tourLoaded.getStartTime().toString();
-                } else {
-                    return journeys.get(journeys.indexOf(journey) - 1).
-                            getFinishTime().toString();
-                }
-            } else if (journey.getArrivePoint() == actionPoint.getLocation()) {
-                return journey.getFinishTime().toString();
-            }
+            if (journey.getStartPoint() == actionPoint.getLocation())
+                return journeys.get(journeys.indexOf(journey) - 1).getFinishTime().toString();
         }
         return "";
-
-
     }
 
     /**
