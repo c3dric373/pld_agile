@@ -57,6 +57,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
+    public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        dpPUDuration.setText(String.valueOf(deliveryProcess.getPickUP().getTime().toString()));
+
+    }
+
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
@@ -105,6 +110,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private Label baseLocation;
 
     @FXML
+    private Label dpNumber;
+
+    @FXML
+    private Label dpDuration;
+
+    @FXML
+    private Label dPDistance;
+
+    @FXML
+    private Label dPPuPoint;
+
+    @FXML
+    private Label dPDPoint;
+
+    @FXML
+    private Label dpPUDuration;
+
+
+    @FXML
     private GoogleMapView mapView;
 
     private GoogleMap map;
@@ -124,6 +148,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
         timeAtPoint.setCellValueFactory(
                 cellData -> new SimpleStringProperty(TourService.calculateTimeAtPoint(tourLoaded,cellData.getValue())));
+        actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(oldValue,tourLoaded));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");

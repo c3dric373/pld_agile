@@ -168,7 +168,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
-        Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
+        //Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
         Validate.notNull(actionPoint, "actionPoint is null");
         OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
         Validate.isTrue(index.isPresent(), "no delivery process contains such action point");

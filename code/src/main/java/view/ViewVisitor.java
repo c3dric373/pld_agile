@@ -33,7 +33,9 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final DeliveryProcess deliveryProcess) {
-        //TODO
+        this.dashBoardController.showDeliveryProcess(deliveryProcess);
+
+
     }
 
     public void addController(DashBoardController controller) {

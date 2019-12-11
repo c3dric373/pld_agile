@@ -57,18 +57,18 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Total Duration :" GridPane.rowIndex="1" />
-                        <Label text="PickUp Point :" GridPane.rowIndex="4" />
-                        <Label text="Delivery Point :" GridPane.rowIndex="5" />
+                         <Label text="N° :" />
+                         <Label text="Total Duration :" GridPane.rowIndex="1" />
                         <Label text="Total Distance :" GridPane.rowIndex="2" />
-                        <Label fx:id="totalTime" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="totalDistance" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="pickUpPoint" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label fx:id="deliveryPoint" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label text="PickUp Duration :" GridPane.rowIndex="6" />
-                        <Label fx:id="pickUpDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                        <Label text="N° :" />
-                        <Label fx:id="gross_salope" styleClass="label-bright" GridPane.columnIndex="1" />
+                         <Label text="PickUp Point :" GridPane.rowIndex="4" />
+                         <Label text="Delivery Point :" GridPane.rowIndex="5" />
+                         <Label text="PickUp Duration :" GridPane.rowIndex="6" />
+                         <Label fx:id="dpDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="dPDistance" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="dPPuPoint" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label fx:id="dPDPoint" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label fx:id="dpPUDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label fx:id="dpNumber" styleClass="label-bright" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <Line endX="120.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />
