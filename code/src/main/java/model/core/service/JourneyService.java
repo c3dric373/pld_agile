@@ -169,6 +169,29 @@ public class JourneyService {
         System.out.println("Sum: " + sum);
         return durationToTime(sum);
     }
+
+    public static int lengthPointToPoint(final List<Journey> journeys,
+                                         final Point startPoint,
+                                         final Point endPoint) {
+        Journey startJourney = null;
+        Journey endJourney = null;
+        for (final Journey journey : journeys) {
+            Validate.notNull(journey.getFinishTime(), "journey finish time null");
+            if (journey.getStartPoint() == startPoint) {
+                startJourney = journey;
+            }
+            if (journey.getArrivePoint() == endPoint) {
+                endJourney = journey;
+            }
+        }
+        Validate.notNull(startJourney, "start journey null");
+        Validate.notNull(endJourney, "end journey null");
+        int sum = 0;
+        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++){
+            sum += journeys.get(i).getMinLength();
+        }
+        return sum;
+    }
     /**
      * transform a duration in a time.
      *

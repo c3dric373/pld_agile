@@ -191,17 +191,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
         final Point startPoint = deliveryProcess.getPickUP().getLocation();
         final Point endPoint =  deliveryProcess.getDelivery().getLocation();
+        final List<Journey> journeys = tourLoaded.getJourneyList();
         dpPUDuration.setText(String.valueOf(deliveryProcess.getPickUP().getTime().toString()));
-        dPPuPoint.setText(String.valueOf(deliveryProcess.getPickUP().getLocation().getId()));
-        dPDPoint.setText(String.valueOf(deliveryProcess.getDelivery().getLocation().getId()));
-        for (Journey journey: tourLoaded.getJourneyList()){
-            System.out.println("Journey start: " + journey.getStartPoint().getId());
-            System.out.println("Journey end: " + journey.getArrivePoint().getId());
-        }
-
-
-        dpDuration.setText(JourneyService.calculateTimePointToPoint(
-                tourLoaded.getJourneyList(),startPoint,endPoint).toString());
+        dPPuPoint.setText(String.valueOf(deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName()));
+        dPDPoint.setText(String.valueOf(deliveryProcess.getDelivery().getLocation().getSegments().get(0).getName()));
+        dpDuration.setText(JourneyService.calculateTimePointToPoint(journeys
+             ,startPoint,endPoint).toString());
+        dPDistance.setText(String.valueOf(JourneyService.lengthPointToPoint(journeys,startPoint,endPoint)));
 
 
     }
