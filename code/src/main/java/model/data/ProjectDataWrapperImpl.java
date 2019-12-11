@@ -1,5 +1,6 @@
 package model.data;
 
+import model.core.service.TourService;
 import view.Observer;
 
 /**
@@ -49,19 +50,12 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         return projectData;
     }
 
-    @Override
-    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        Tour tour = projectData.getTour();
-        tour.addDeliveryProcess(deliveryProcess);
-        projectData.setTour(tour);
-        notify(tour);
-    }
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
         Tour tour = projectData.getTour();
-        tour.deleteDeliveryProcess(deliveryProcess);
-        projectData.setTour(tour);
+        Tour newTour = TourService.deleteDeliveryProcess(tour, deliveryProcess);
+        projectData.setTour(newTour);
         notify(tour);
     }
 
@@ -72,6 +66,11 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
 
     public void addObserver(final Observer observer){
         this.observer = observer;
+    }
+
+    public void selectDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        projectData.setSelectedDeliveryProcess(deliveryProcess);
+        notify(deliveryProcess);
     }
 
 

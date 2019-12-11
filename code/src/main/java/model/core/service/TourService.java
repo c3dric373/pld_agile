@@ -2,6 +2,7 @@ package model.core.service;
 
 
 import model.data.*;
+import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -9,13 +10,49 @@ import java.util.List;
 import java.util.OptionalInt;
 
 public class TourService {
+    private final static String EMPTY_STRING = "";
+
+
+    /**
+     * Calculates from a tour the time at a given ActionPoint by searching
+     * through the list of journeys.
+     * If the list of journeys is null  or the loadedTour the method return "".
+     *
+     * @param tourLoaded  the tour to search through
+     * @param actionPoint the action point from which to find the time of passage
+     * @return the time of passage or ""
+     */
+    public static String calculateTimeAtPoint(final Tour tourLoaded,
+                                              final ActionPoint actionPoint) {
+        Validate.notNull(actionPoint, "actionPoint is null");
+        if (tourLoaded == null || tourLoaded.getActionPoints() == null) {
+            return EMPTY_STRING;
+        }
+        List<Journey> journeys = tourLoaded.getJourneyList();
+        for (Journey journey : journeys) {
+            if (journey.getStartPoint() == actionPoint.getLocation()) {
+                if (journeys.indexOf(journey) == 0) {
+                    return tourLoaded.getStartTime().toString();
+                } else {
+                    return journeys.get(journeys.indexOf(journey) - 1).
+                            getFinishTime().toString();
+                }
+            } else if (journey.getArrivePoint() == actionPoint.getLocation()) {
+                return journey.getFinishTime().toString();
+            }
+        }
+        return "";
+
+
+    }
 
     /**
      * Changes the delivery order a Tour, re calculates the journeys for a new
      * list of action points. Does not optimize anything, only calculates the
      * shortest path from one point to another.
-     * @param graph the map.
-     * @param tour the tour.
+     *
+     * @param graph        the map.
+     * @param tour         the tour.
      * @param actionPoints the new action points.
      * @return a new Tour with the modified journeys.
      */
@@ -27,7 +64,7 @@ public class TourService {
                     + "of same size");
         }
 
-        GraphService graphService= new GraphService();
+        GraphService graphService = new GraphService();
 
         final List<Journey> newJourneys = new ArrayList<>();
         for (int i = 1; i < actionPoints.size(); i++) {
@@ -131,5 +168,68 @@ public class TourService {
         return tour;
     }
 
+    /**
+     * Adds 2 new action points to an ordered ActionPoint list.
+     * The 2 points represent a deliveryProcess.
+     * @param tour Current Tour.
+     * @param pickUpPoint New PickUp point to add.
+     * @param deliveryPoint New DeliveryPoint to add.
+     * @return Returns the new ActionPoint list with the new DeliveryProcess
+     * added.
+     */
+    public static Tour addNewDeliveryProcess(final Tour tour,
+            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
+
+        Validate.notNull(tour,"tour is null");
+        Validate.notNull(pickUpPoint,"pickUpPoint is null");
+        Validate.notNull(deliveryPoint,"deliveryPoint is null");
+
+        Tour newTour;
+        List<DeliveryProcess> newDeliveryProcessList =
+                tour.getDeliveryProcesses();
+        List<ActionPoint> newActionPointList = tour.getActionPoints();
+        newActionPointList.add(pickUpPoint);
+        newActionPointList.add(deliveryPoint);
+        newDeliveryProcessList.add(new DeliveryProcess(pickUpPoint,
+                deliveryPoint));
+        newTour = new Tour(newDeliveryProcessList, tour.getBase(),
+                tour.getStartTime());
+        newTour.setActionPoints(newActionPointList);
+        return newTour;
+
+    }
+
+    /**
+     * delete the deliveryProcess from the tour
+     *
+     * @param tour            Tour
+     * @param deliveryProcess DeliveryProcess
+     * @return the tour with the deliveryProcess removed
+     */
+    public static Tour deleteDeliveryProcess(final Tour tour,
+                                             final DeliveryProcess deliveryProcess) {
+
+        Validate.notNull(tour, "tour is null");
+        Validate.notNull(deliveryProcess, "deliveryProcess is null");
+
+        Tour newTour = tour;
+        try {
+            List<DeliveryProcess> deliveryProcessesList = tour.getDeliveryProcesses();
+            List<ActionPoint> actionPointList = tour.getActionPoints();
+            ActionPoint pickupPoint = deliveryProcess.getPickUP();
+            ActionPoint deliveryPoint = deliveryProcess.getDelivery();
+
+            actionPointList.remove(pickupPoint);
+            actionPointList.remove(deliveryPoint);
+            deliveryProcessesList.remove(deliveryProcess);
+            //change deliveryProcessList and ActionPointList
+            newTour.setDeliveryProcesses(deliveryProcessesList);
+            newTour.setActionPoints(actionPointList);
+
+        } catch (Exception e) {
+            System.err.println("DeliveryProcess/ActionPoint do not exist");
+        }
+        return newTour;
+    }
 
 }

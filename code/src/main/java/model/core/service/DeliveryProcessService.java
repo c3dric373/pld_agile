@@ -8,7 +8,7 @@ import org.apache.commons.lang.Validate;
 import java.util.List;
 import java.util.OptionalInt;
 
-class DeliveryProcessService {
+public class DeliveryProcessService {
 
     /**
      * Replaces an Action Point in a delivery Process and returns the new
@@ -19,9 +19,9 @@ class DeliveryProcessService {
      * @param newActionPoint  the new point to replace with.
      * @return the new delivery process.
      */
-    static DeliveryProcess replacePoint(final DeliveryProcess
-                                                deliveryProcess,
-                                        final ActionPoint newActionPoint) {
+    public static DeliveryProcess replacePoint(final DeliveryProcess
+                                                       deliveryProcess,
+                                               final ActionPoint newActionPoint) {
         Validate.notNull(deliveryProcess, "delivery Process is null");
         Validate.notNull(newActionPoint, "newActionPoint is null");
 
@@ -44,9 +44,9 @@ class DeliveryProcessService {
      * @param actionPoint       the action point
      * @return returns the index of the action point
      */
-    static OptionalInt findActionPoint(final List<DeliveryProcess>
-                                               deliveryProcesses,
-                                       final ActionPoint actionPoint) {
+    public static OptionalInt findActionPoint(final List<DeliveryProcess>
+                                                      deliveryProcesses,
+                                              final ActionPoint actionPoint) {
         for (final DeliveryProcess deliveryProcess : deliveryProcesses) {
             if (deliveryProcess.getDelivery() == actionPoint
                     || deliveryProcess.getPickUP() == actionPoint) {
@@ -56,6 +56,28 @@ class DeliveryProcessService {
 
         }
         return OptionalInt.empty();
+    }
+
+    /**
+     * Adds a new delivery process to the delivery process list.
+     * @param deliveryProcesses current delivery process list. (can be null)
+     * @param pickUpPoint pickup Point of the new delivery process.
+     * @param deliveryPoint delivery Point of the new delivery process.
+     * @return Returns the new delivery process list with the new delivery
+     * process added.
+     */
+
+    public static List<DeliveryProcess> addNewDeliveryProcess(
+            final List<DeliveryProcess> deliveryProcesses,
+            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
+        Validate.notNull(pickUpPoint,"pickUpPoint is null");
+        Validate.notNull(deliveryPoint, "deliveryPoint is null");
+
+        List<DeliveryProcess> newDeliveryProcesses = deliveryProcesses;
+        newDeliveryProcesses.add(deliveryProcesses.size(),
+                new DeliveryProcess(pickUpPoint,
+                deliveryPoint));
+        return newDeliveryProcesses;
     }
 }
 

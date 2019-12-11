@@ -1,9 +1,6 @@
 package view;
 
-import model.data.GenDataVisitor;
-import model.data.Graph;
-import model.data.Point;
-import model.data.Tour;
+import model.data.*;
 
 public class ViewVisitor implements GenDataVisitor {
 
@@ -11,22 +8,30 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Tour tour) {
+        System.out.println(tour.getBase().toString());
+        dashBoardController.setTour(tour);
         if (tour.getActionPoints() == null) {
-            dashBoardController.displayLoadedDeleveryProcess(tour);
+            dashBoardController.displayLoadedDeliveryProcess();
         }else {
-            dashBoardController.displayMapActionPoints(tour.getActionPoints());
+            dashBoardController.drawFullTour();
         }
     }
+
 
     @Override
     public void visit(final Graph graph) {
         System.out.println("View Visitor Graph");
-        dashBoardController.diplayMap();
+        dashBoardController.displayMap();
         //dashBoardController.displayMapPoints(graph.getPoints());
     }
 
     @Override
     public void visit(final Point point) {
+        //TODO
+    }
+
+    @Override
+    public void visit(final DeliveryProcess deliveryProcess) {
         //TODO
     }
 
