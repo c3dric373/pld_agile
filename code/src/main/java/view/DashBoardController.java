@@ -6,6 +6,7 @@ import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.DirectionsService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -62,12 +63,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     protected DirectionsPane directionsPane;
 
 
-
     @FXML
     private TableView<ActionPoint> actionPointTableView;
 
     @FXML
-    private TableColumn<ActionPoint, String> deliveryNumber;
+    private TableColumn<ActionPoint, String> deliveryRank;
 
     @FXML
     private TableColumn<ActionPoint, String> deliveryType;
@@ -89,14 +89,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        /*
+
         // Initialize the actionPoints table with the 3 columns.
-        deliveryType.setCellValueFactory(
-                cellData -> new SimpleStringProperty( cellData.getValue().getActionType().toString()) );
-        timeAtPoint.setCellValueFactory(
-                cellData -> new SimpleStringProperty( cellData.getValue().getTime().toString()) );
         actionPointTableView.setItems(null);
-         */
+
+
+        deliveryType.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
+        timeAtPoint.setCellValueFactory(
+                cellData -> new SimpleStringProperty(cellData.getValue().getTime().toString()));
+
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
     }
@@ -216,7 +218,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         actionPoints.addAll(fakeListActionPoints);
 
         // Add observable list data to the table
-        //actionPointTableView.setItems(actionPoints);
+        actionPointTableView.setItems(actionPoints);
+        deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty
+          (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
         displayMapActionPoints(fakeListActionPoints);
     }
 
