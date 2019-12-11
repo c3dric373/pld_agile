@@ -74,4 +74,8 @@ public class UserInterface implements Observer {
             this.model.loadTour(selectedFile);
         }
     }
+
+    public void calculateTour() {
+        this.model.calculateTour();
+    }
 }

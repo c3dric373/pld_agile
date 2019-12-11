@@ -14,9 +14,9 @@ public class ViewVisitor implements GenDataVisitor {
         System.out.println(tour.getBase().toString());
         dashBoardController.setTour(tour);
         if (tour.getActionPoints() == null) {
-            dashBoardController.displayLoadedDeliveryProcess(tour);
+            dashBoardController.displayLoadedDeliveryProcess();
         }else {
-            dashBoardController.tourCalculated();
+            dashBoardController.drawFullTour();
         }
     }
 
