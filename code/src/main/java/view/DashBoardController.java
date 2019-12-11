@@ -52,7 +52,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // List des ActionPoints en Observable pour la view
     private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
-    /*
+
+
+    // Direction Management
+    protected DirectionsService directionsService;
+    protected DirectionsPane directionsPane;
+
+
+
     @FXML
     private TableView<ActionPoint> actionPointTableView;
 
@@ -64,8 +71,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     @FXML
     private TableColumn<ActionPoint, String> timeAtPoint;
-    
-     */
+
 
     @FXML
     private Label baseLocation;
