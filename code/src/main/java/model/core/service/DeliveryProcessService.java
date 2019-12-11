@@ -19,9 +19,9 @@ public class DeliveryProcessService {
      * @param newActionPoint  the new point to replace with.
      * @return the new delivery process.
      */
-    public DeliveryProcess replacePoint(final DeliveryProcess
-                                                deliveryProcess,
-                                        final ActionPoint newActionPoint) {
+    public static DeliveryProcess replacePoint(final DeliveryProcess
+                                                       deliveryProcess,
+                                               final ActionPoint newActionPoint) {
         Validate.notNull(deliveryProcess, "delivery Process is null");
         Validate.notNull(newActionPoint, "newActionPoint is null");
 
@@ -44,9 +44,9 @@ public class DeliveryProcessService {
      * @param actionPoint       the action point
      * @return returns the index of the action point
      */
-    public OptionalInt findActionPoint(final List<DeliveryProcess>
-                                               deliveryProcesses,
-                                       final ActionPoint actionPoint) {
+    public static OptionalInt findActionPoint(final List<DeliveryProcess>
+                                                      deliveryProcesses,
+                                              final ActionPoint actionPoint) {
         for (final DeliveryProcess deliveryProcess : deliveryProcesses) {
             if (deliveryProcess.getDelivery() == actionPoint
                     || deliveryProcess.getPickUP() == actionPoint) {
