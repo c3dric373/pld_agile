@@ -1,5 +1,6 @@
 package model.core.management;
 
+import model.core.service.DeliveryProcessService;
 import model.core.service.GraphService;
 import model.core.service.JourneyService;
 import model.core.service.TourService;
@@ -10,6 +11,7 @@ import view.UserInterface;
 
 import java.io.File;
 import java.util.List;
+import java.util.OptionalInt;
 
 public class ApplicationManagerImpl implements ApplicationManager {
 
@@ -44,6 +46,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
     private TourService tourService;
 
     /**
+     * DeliveryProcessService of the Project
+     */
+    private DeliveryProcessService deliveryProcessService;
+
+    /**
      * Instantiates an Application Manager.
      */
     ApplicationManagerImpl() {
@@ -52,6 +59,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         journeyService = new JourneyService();
         graphService = new GraphService();
         tourService = new TourService();
+        deliveryProcessService = new DeliveryProcessService();
         projectDataWrapper = new ProjectDataWrapperImpl();
 
     }
@@ -159,5 +167,13 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.findNearestPoint(nearestPoint);
     }
 
+    public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
+        Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
+        Validate.notNull(actionPoint, "actionPoint is null");
+        OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
+        Validate.isTrue(index.isPresent(), "no delivery process contains such action point");
+        DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
+        projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+    }
 
 }

@@ -42,5 +42,18 @@ public interface ProjectData {
      */
     Graph getGraph();
 
+    /**
+     * Sets the selected delivery process of the project.
+     *
+     * @param deliveryProcess The delivery process to set.
+     */
+    void setSelectedDeliveryProcess(final DeliveryProcess deliveryProcess);
+
+    /**
+     * Returns the selected delivery process of the project.
+     *
+     * @return The delivery process to be returned.
+     */
+    DeliveryProcess getSelectedDeliveryProcess();
 
 }

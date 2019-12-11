@@ -10,7 +10,7 @@ import org.apache.commons.lang.Validate;
  */
 @Getter
 @EqualsAndHashCode
-public class DeliveryProcess {
+public class DeliveryProcess implements GenData {
 
     /**
      * pickUp point.
@@ -41,4 +41,8 @@ public class DeliveryProcess {
         }
     }
 
+    @Override
+    public void accept(final GenDataVisitor genDataVisitor) {
+        genDataVisitor.visit(this);
+    }
 }

@@ -75,6 +75,11 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         this.observer = observer;
     }
 
+    public void selectDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        projectData.setSelectedDeliveryProcess(deliveryProcess);
+        notify(deliveryProcess);
+    }
+
 
     /**
      * Notifies the view of changes.
