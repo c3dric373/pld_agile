@@ -58,7 +58,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadMap(final File file) {
-        if (projectState != ProjectState.INITIALIZED) {
+        if (projectState != ProjectState.INITIALIZED  &&
+                projectState != ProjectState.MAP_LOADED) {
             throw new IllegalStateException("Application not opened");
         }
         Validate.notNull(file, "file is null");
@@ -76,7 +77,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadTour(final File file) {
-        if (projectState != ProjectState.MAP_LOADED) {
+        if (projectState != ProjectState.MAP_LOADED &&
+                projectState != ProjectState.TOUR_LOADED) {
             throw new IllegalStateException("Map not loaded");
         }
         Validate.notNull(file, "file is null");
@@ -87,7 +89,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void calculateTour() {
-        if (projectState != ProjectState.TOUR_LOADED) {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("tour not loaded");
         }
         final Tour tour = projectDataWrapper.getProject().getTour();
@@ -101,10 +104,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void addDeliveryProcess(final Tour tour,
                                    final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
-        // Not necessary : can add a DP without a tour loaded
-        if (projectState != ProjectState.TOUR_LOADED) {
-            throw new IllegalStateException("Tour not calculated");
-        }
         if(projectState != projectState.ADD_DELIVERY_PROCESS_2ndPoint)
         {
             throw new IllegalStateException("Another action is in progress");
@@ -120,9 +119,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        if (projectState != ProjectState.TOUR_LOADED) {
-            throw new IllegalStateException("Tour not calculated");
-        }
         if(projectState != projectState.DELETE_DELIVERY_PROCESS)
         {
             throw new IllegalStateException("Another action is in progress");
@@ -135,10 +131,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
-        // Not possible button must be disabled
-        if (projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("Tour not calculated");
-        }
         if(projectState != ProjectState.CHANGE_DELIVERY_ORDER)
         {
             throw new IllegalStateException("Another action is in progress");
@@ -155,9 +147,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
-        if (projectState != ProjectState.TOUR_LOADED) {
-            throw new IllegalStateException("Tour not loaded");
-        }
         if (projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT_END)
         {
             throw new IllegalStateException("Another action is in progress");
