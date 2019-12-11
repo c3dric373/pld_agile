@@ -1,10 +1,9 @@
 package model.core.service;
 
-import model.data.ActionPoint;
-import model.data.ActionType;
-import model.data.DeliveryProcess;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -60,25 +59,40 @@ public class DeliveryProcessService {
 
     /**
      * Adds a new delivery process to the delivery process list.
+     *
      * @param deliveryProcesses current delivery process list. (can be null)
-     * @param pickUpPoint pickup Point of the new delivery process.
-     * @param deliveryPoint delivery Point of the new delivery process.
+     * @param pickUpPoint       pickup Point of the new delivery process.
+     * @param deliveryPoint     delivery Point of the new delivery process.
      * @return Returns the new delivery process list with the new delivery
      * process added.
      */
 
     public static List<DeliveryProcess> addNewDeliveryProcess(
             final List<DeliveryProcess> deliveryProcesses,
-            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint){
-        Validate.notNull(pickUpPoint,"pickUpPoint is null");
+            final ActionPoint pickUpPoint, final ActionPoint deliveryPoint) {
+        Validate.notNull(pickUpPoint, "pickUpPoint is null");
         Validate.notNull(deliveryPoint, "deliveryPoint is null");
 
         List<DeliveryProcess> newDeliveryProcesses = deliveryProcesses;
         newDeliveryProcesses.add(deliveryProcesses.size(),
                 new DeliveryProcess(pickUpPoint,
-                deliveryPoint));
+                        deliveryPoint));
         return newDeliveryProcesses;
     }
+
+    public static void setDpInfo(final Tour tour) {
+        final List<Journey> journeys = tour.getJourneyList();
+        for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
+            final Point startPoint = deliveryProcess.getPickUP().getLocation();
+            final Point endPoint = deliveryProcess.getDelivery().getLocation();
+            final int distance = JourneyService.lengthPointToPoint(journeys, startPoint, endPoint);
+            final Time duration = JourneyService.calculateTimePointToPoint(journeys, startPoint, endPoint);
+            deliveryProcess.setDistance(distance);
+            deliveryProcess.setTime(duration);
+        }
+    }
+
+
 }
 
 

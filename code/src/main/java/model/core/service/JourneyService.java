@@ -83,6 +83,8 @@ public class JourneyService {
             // add journey to the list of journeys
             newJourneyList.add(journey);
         }
+
+
         return newJourneyList;
     }
 
@@ -140,9 +142,20 @@ public class JourneyService {
         return correspondingActionPoint;
     }
 
-    public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
+    /**
+     * Finds the indices of the start journey and the end journey of the tour
+     * from a to be.
+     *
+     * @param journeys   list of journeys
+     * @param startPoint start point
+     * @param endPoint   end point
+     * @return list of Integers corresponding to the found indices, null if not
+     * found.
+     */
+    static List<Integer> getStartEndJourney(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
         Journey startJourney = null;
         Journey endJourney = null;
+        List<Integer> result = new ArrayList<>();
         for (final Journey journey : journeys) {
             Validate.notNull(journey.getFinishTime(), "journey finish time null");
             if (journey.getStartPoint() == startPoint) {
@@ -152,17 +165,27 @@ public class JourneyService {
                 endJourney = journey;
             }
         }
+        result.add(journeys.indexOf(startJourney));
+        result.add(journeys.indexOf(endJourney));
+        return result;
+
+    }
+
+    public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
+        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
+        Journey startJourney = journeys.get(indices.get(0));
+        Journey endJourney = journeys.get(indices.get(1));
         Validate.notNull(startJourney, "start journey null");
         Validate.notNull(endJourney, "end journey null");
         int sum = 0;
         for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++) {
             Journey currentJourney = journeys.get(i);
-           long  firstFinishTime = journeys.get(i).getFinishTime().getTime();
-           long  secondFinishTime = journeys.get(i - 1).getFinishTime().getTime();
+            long firstFinishTime = journeys.get(i).getFinishTime().getTime();
+            long secondFinishTime = journeys.get(i - 1).getFinishTime().getTime();
             System.out.println(firstFinishTime);
             System.out.println(secondFinishTime);
             long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
-            journeyTime = journeyTime/1000;
+            journeyTime = journeyTime / 1000;
 
             sum += journeyTime;
         }
@@ -173,25 +196,18 @@ public class JourneyService {
     public static int lengthPointToPoint(final List<Journey> journeys,
                                          final Point startPoint,
                                          final Point endPoint) {
-        Journey startJourney = null;
-        Journey endJourney = null;
-        for (final Journey journey : journeys) {
-            Validate.notNull(journey.getFinishTime(), "journey finish time null");
-            if (journey.getStartPoint() == startPoint) {
-                startJourney = journey;
-            }
-            if (journey.getArrivePoint() == endPoint) {
-                endJourney = journey;
-            }
-        }
+        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
+        Journey startJourney = journeys.get(indices.get(0));
+        Journey endJourney = journeys.get(indices.get(1));
         Validate.notNull(startJourney, "start journey null");
         Validate.notNull(endJourney, "end journey null");
         int sum = 0;
-        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++){
+        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++) {
             sum += journeys.get(i).getMinLength();
         }
         return sum;
     }
+
     /**
      * transform a duration in a time.
      *
