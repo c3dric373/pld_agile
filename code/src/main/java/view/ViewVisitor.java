@@ -1,9 +1,6 @@
 package view;
 
-import model.data.GenDataVisitor;
-import model.data.Graph;
-import model.data.Point;
-import model.data.Tour;
+import model.data.*;
 
 public class ViewVisitor implements GenDataVisitor {
 
@@ -30,6 +27,11 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Point point) {
+        //TODO
+    }
+
+    @Override
+    public void visit(final DeliveryProcess deliveryProcess) {
         //TODO
     }
 

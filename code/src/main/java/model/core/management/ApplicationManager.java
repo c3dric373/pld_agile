@@ -74,4 +74,10 @@ public interface ApplicationManager {
      */
     void findNearestPoint(final double latitude, final double longitude);
 
+    /**
+     * Get the delivery process correspondent to the given action point
+     * @param actionPoint a pick up point or a delivery point
+     */
+    void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint);
+
 }

@@ -53,5 +53,10 @@ public interface ProjectDataWrapper {
 
     void addObserver(final Observer observer);
 
+    /**
+     * Select a DeliveryProcess in the Tour
+     * @param deliveryProcess the delivery process to select
+     */
+    void selectDeliveryProcess(final DeliveryProcess deliveryProcess);
 
 }
