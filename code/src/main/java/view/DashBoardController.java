@@ -93,7 +93,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         // Initialize the actionPoints table with the 3 columns.
         actionPointTableView.setItems(null);
 
-
+        deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty
+                (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
         timeAtPoint.setCellValueFactory(
@@ -219,8 +220,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
         // Add observable list data to the table
         actionPointTableView.setItems(actionPoints);
-        deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty
-          (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
         displayMapActionPoints(fakeListActionPoints);
     }
 
