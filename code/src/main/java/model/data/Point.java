@@ -122,4 +122,9 @@ public class Point implements GenData {
     public void accept(final GenDataVisitor genDataVisitor) {
         genDataVisitor.visit(this);
     }
+
+    @Override
+    public String toString() {
+        return latitude + ", " + longitude ;
+    }
 }

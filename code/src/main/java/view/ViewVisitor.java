@@ -8,13 +8,21 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Tour tour) {
-        //TODO
+        System.out.println(tour.getBase().toString());
+        dashBoardController.setTour(tour);
+        if (tour.getActionPoints() == null) {
+            dashBoardController.displayLoadedDeliveryProcess();
+        }else {
+            dashBoardController.drawFullTour();
+        }
     }
+
 
     @Override
     public void visit(final Graph graph) {
-        System.out.println("View Visitor");
-        dashBoardController.displayMapPoints(graph.getPoints());
+        System.out.println("View Visitor Graph");
+        dashBoardController.displayMap();
+        //dashBoardController.displayMapPoints(graph.getPoints());
     }
 
     @Override

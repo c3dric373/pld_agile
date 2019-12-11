@@ -1,21 +1,13 @@
 package view;
 
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
 import org.apache.commons.lang.Validate;
-import picocli.CommandLine;
 
 import java.io.File;
-import java.io.IOException;
 
 public class UserInterface implements Observer {
 
@@ -27,7 +19,8 @@ public class UserInterface implements Observer {
     /**
      * Interface to the model.
      */
-    @Setter private ApplicationManager model;
+    @Setter
+    private ApplicationManager model;
 
     /**
      * The data as an observable list of Persons.
@@ -69,11 +62,20 @@ public class UserInterface implements Observer {
     }
 
     public void loadMap(final File selectedFile) {
-        Validate.notNull(selectedFile, "selected file null");
-        if(this.model!=null){
-            System.out.println("testmodel");
+        Validate.notNull(selectedFile, "Selected File Is Null");
+        if (this.model != null) {
             this.model.loadMap(selectedFile);
         }
     }
 
+    public void loadDeliveryRequest(final File selectedFile) {
+        Validate.notNull(selectedFile, "Selected File Is Null");
+        if (this.model != null) {
+            this.model.loadTour(selectedFile);
+        }
+    }
+
+    public void calculateTour() {
+        this.model.calculateTour();
+    }
 }

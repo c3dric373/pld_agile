@@ -109,8 +109,8 @@ public class GraphService {
         actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
         res.setActionPoints(actionPoints);
 
-        JourneyService journeyService = new JourneyService();
-        List<Journey> journeys1 = journeyService.calculateTime(journeys, actionPoints, tour.getStartTime());
+        //Calulate the finish time of each ActionPoints of each journeys
+        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
         res.setJourneyList(journeys1);
 
         return res;

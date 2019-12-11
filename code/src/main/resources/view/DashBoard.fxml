@@ -23,9 +23,9 @@
          <items>
             <AnchorPane id="DeliveryPane" styleClass="background">
                <children>
-                  <TableView maxHeight="400.0" maxWidth="205.0" minHeight="342.0" minWidth="205.0" prefHeight="342.0" prefWidth="205.0" AnchorPane.bottomAnchor="76.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
+                  <TableView fx:id="actionPointTableView" maxHeight="400.0" maxWidth="205.0" minHeight="342.0" minWidth="205.0" prefHeight="342.0" prefWidth="205.0" AnchorPane.bottomAnchor="76.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
                     <columns>
-                        <TableColumn fx:id="deliveryNumber" minWidth="50.0" prefWidth="50.0" text="N°" />
+                        <TableColumn fx:id="deliveryRank" minWidth="50.0" prefWidth="50.0" text="N°" />
                         <TableColumn fx:id="deliveryType" minWidth="75.0" prefWidth="75.0" text="Type" />
                         <TableColumn fx:id="timeAtPoint" minWidth="80.0" text="Time" />
                     </columns>
@@ -36,7 +36,7 @@
                   <Button fx:id="loadDeliveryDemand" layoutX="298.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleLoadTour" text="Load Delivery Demand" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="17.5" />
                   <ButtonBar layoutX="145.0" layoutY="469.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="330.0">
                     <buttons>
-                      <Button fx:id="modifie" mnemonicParsing="false" text="Modifie" />
+                      <Button fx:id="modify" mnemonicParsing="false" text="Modify" />
                         <Button fx:id="delete" mnemonicParsing="false" text="Delete" />
                     </buttons>
                   </ButtonBar>
@@ -68,7 +68,7 @@
                         <Label text="PickUp Duration :" GridPane.rowIndex="6" />
                         <Label fx:id="pickUpDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                         <Label text="N° :" />
-                        <Label fx:id="deliveryNumber" styleClass="label-bright" GridPane.columnIndex="1" />
+                        <Label fx:id="gross_salope" styleClass="label-bright" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <Line endX="120.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />
@@ -133,7 +133,7 @@
                         <Label fx:id="arrivalTime" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <Button fx:id="calculateTour" defaultButton="true" layoutX="263.0" layoutY="516.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" />
+                  <Button fx:id="calculateTour" onAction="#calculateTour" defaultButton="true" layoutX="263.0" layoutY="516.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" />
                   <Button fx:id="addDeliveryProcess" layoutX="245.0" layoutY="464.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="183.0" text="Add Delivery Process" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="30.0">
                      <effect>
                         <ColorAdjust />
