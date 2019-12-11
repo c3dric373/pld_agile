@@ -31,6 +31,7 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.lang.management.BufferPoolMXBean;
 import java.net.URL;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -121,6 +122,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label dpPUDuration;
 
+    @FXML
+    private Label dpDDuration;
+
+
 
     @FXML
     private GoogleMapView mapView;
@@ -192,9 +197,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         final Point startPoint = deliveryProcess.getPickUP().getLocation();
         final Point endPoint =  deliveryProcess.getDelivery().getLocation();
         final List<Journey> journeys = tourLoaded.getJourneyList();
-        dpPUDuration.setText(String.valueOf(deliveryProcess.getPickUP().getTime().toString()));
-        dPPuPoint.setText(String.valueOf(deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName()));
-        dPDPoint.setText(String.valueOf(deliveryProcess.getDelivery().getLocation().getSegments().get(0).getName()));
+        final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
+        final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
+        final String pickUpPointName =  deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName();
+        final String deliveryPointName =  deliveryProcess.getDelivery().getLocation().getSegments().get(0).getName();
+
+        dPPuPoint.setText(pickUpPointName);
+        dPDPoint.setText(deliveryPointName);
+        dpDDuration.setText(deliveryDuration);
+        dpPUDuration.setText(pickUpDuration);
+
         dpDuration.setText(JourneyService.calculateTimePointToPoint(journeys
              ,startPoint,endPoint).toString());
         dPDistance.setText(String.valueOf(JourneyService.lengthPointToPoint(journeys,startPoint,endPoint)));

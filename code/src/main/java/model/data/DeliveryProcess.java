@@ -2,7 +2,10 @@ package model.data;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
+
+import java.sql.Time;
 
 /**
  * This class represents one DeliveryProcess. For this it has two ActionPoints
@@ -21,6 +24,20 @@ public class DeliveryProcess implements GenData {
      * Delivery point.
      */
     private final ActionPoint delivery;
+
+    /**
+     * Distance between the two Action Point inside of a calculated tour should
+     * only be set after tour calculation.
+     */
+    @Setter
+    private int distance;
+
+    /**
+     * Time it takes to go from the pick up to the delivery point. Should only
+     * be set if tour was calculated.
+     */
+    @Setter
+    private Time time;
 
     /**
      * Instantiates a Delivery process.
