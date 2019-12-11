@@ -21,6 +21,7 @@ public enum ActionType {
      * Start point of the cyclist
      */
     BASE;
+    
 
     /**
      * Returns the opposing actionType of an actionType.

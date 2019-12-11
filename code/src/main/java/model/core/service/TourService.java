@@ -26,16 +26,13 @@ public class TourService {
                                               final ActionPoint actionPoint) {
         Validate.notNull(actionPoint, "actionPoint is null");
         if (tourLoaded == null || tourLoaded.getActionPoints() == null) {
-            return EMPTY_STRING;
+            return null;
         }
         List<Journey> journeys = tourLoaded.getJourneyList();
         for (Journey journey : journeys) {
             if (journey.getStartPoint() == actionPoint.getLocation()) {
                 if (journeys.indexOf(journey) == 0) {
                     return tourLoaded.getStartTime().toString();
-                } else {
-                    return journeys.get(journeys.indexOf(journey) - 1).
-                            getFinishTime().toString();
                 }
             } else if (journey.getArrivePoint() == actionPoint.getLocation()) {
                 return journey.getFinishTime().toString();

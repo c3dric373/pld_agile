@@ -13,6 +13,7 @@ public class ViewVisitor implements GenDataVisitor {
         if (tour.getActionPoints() == null) {
             dashBoardController.displayLoadedDeliveryProcess();
         }else {
+            dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
         }
     }

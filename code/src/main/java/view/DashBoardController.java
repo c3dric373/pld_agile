@@ -44,6 +44,17 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void setTour(Tour tour) {
         tourLoaded = tour;
+
+    }
+
+    public void setActionPoints(final Tour tour){
+        actionPoints.remove(0,actionPoints.size());
+        System.out.println(actionPoints.size());
+        System.out.println(tour.getActionPoints().size());
+        actionPoints.addAll(tour.getActionPoints());
+       for(ActionPoint actionPoint: actionPoints){
+          System.out.println(actionPoint.getLocation().getId());
+        }
     }
 
     //Enum Marker Types.
