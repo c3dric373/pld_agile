@@ -1,13 +1,10 @@
 package model.core.service;
 
-import lombok.Setter;
 import model.data.ActionPoint;
 import model.data.Journey;
 import model.data.Point;
-import model.data.Tour;
 import org.apache.commons.lang.Validate;
 
-import javax.swing.*;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -28,20 +25,20 @@ public class JourneyService {
     /**
      * Travel speed in m/s
      */
-    final static double TRAVEL_SPEED = 15.0/3.6;
+    final static double TRAVEL_SPEED = 15.0 / 3.6;
 
     /**
      * Calculate the finish time for each ActionPoints in each journeys.
      * finish time = start time + travel time + Action time
      *
-     * @param journeys list of journeys
+     * @param journeys     list of journeys
      * @param actionPoints list of ActionPoints
-     * @param startTime start Time of the tour
+     * @param startTime    start Time of the tour
      * @return list of journeys
      */
-     public static List<Journey> calculateTime(final List<Journey> journeys,
-                                final List<ActionPoint> actionPoints,
-                                final Time startTime) {
+    public static List<Journey> calculateTime(final List<Journey> journeys,
+                                              final List<ActionPoint> actionPoints,
+                                              final Time startTime) {
         Validate.notNull(journeys, "journeys is null");
         Validate.noNullElements(journeys,
                 "journeys of the List can't be null");
@@ -56,9 +53,9 @@ public class JourneyService {
 
         Time journeyStartTime = startTime;
         ArrayList<Journey> newJourneyList = new ArrayList<Journey>();
-        Time referenceTime =Time.valueOf("0:0:0");
+        Time referenceTime = Time.valueOf("0:0:0");
 
-        for(Journey journey:journeys){
+        for (Journey journey : journeys) {
             List<Point> points = journey.getPoints();
             Point arrivalPoint = points.get(0);
             ActionPoint arrivalActionPoint = findActionPoint(arrivalPoint,
@@ -67,7 +64,7 @@ public class JourneyService {
             double length = journey.getMinLength();
 
             //duration = length/speed
-            int travelTimeInSec = (int)(length/TRAVEL_SPEED);
+            int travelTimeInSec = (int) (length / TRAVEL_SPEED);
 
             LocalTime journeyLocalTime = journeyStartTime.toLocalTime();
             LocalTime StartPlusTravelTime;
@@ -76,7 +73,7 @@ public class JourneyService {
             // get Action time in sec by getting the time in millisecond between
             // actionTime and the reference time
             long actionTimeInMillis = actionTime.getTime() - referenceTime.getTime();
-            long actionTimeInSec = actionTimeInMillis /1000l;
+            long actionTimeInSec = actionTimeInMillis / 1000l;
 
             LocalTime StartPlusTravelPlusActionTime = StartPlusTravelTime.plusSeconds(actionTimeInSec);
             Time arrivalTime = Time.valueOf(StartPlusTravelPlusActionTime);
@@ -123,25 +120,69 @@ public class JourneyService {
     /**
      * Find ActionPoint corresponding to the provided Point.
      *
-     * @param point Point
+     * @param point        Point
      * @param actionPoints list of Action Points
      * @return the corresponding actionPoint
      */
     private static ActionPoint findActionPoint(Point point,
-                                        List<ActionPoint> actionPoints){
+                                               List<ActionPoint> actionPoints) {
         long id = point.getId();
-        ActionPoint correspondingActionPoint=null;
-        for(ActionPoint actionPoint : actionPoints){
-            if(id == actionPoint.getLocation().getId()){
+        ActionPoint correspondingActionPoint = null;
+        for (ActionPoint actionPoint : actionPoints) {
+            if (id == actionPoint.getLocation().getId()) {
                 correspondingActionPoint = actionPoint;
                 break;
             }
         }
-        if(correspondingActionPoint == null){
+        if (correspondingActionPoint == null) {
             throw new IllegalArgumentException("This is not an ActionPoint");
         }
         return correspondingActionPoint;
     }
 
+    public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
+        Journey startJourney = null;
+        Journey endJourney = null;
+        for (final Journey journey : journeys) {
+            Validate.notNull(journey.getFinishTime(), "journey finish time null");
+            if (journey.getStartPoint() == startPoint) {
+                startJourney = journey;
+            }
+            if (journey.getArrivePoint() == endPoint) {
+                endJourney = journey;
+            }
+        }
+        Validate.notNull(startJourney, "start journey null");
+        Validate.notNull(endJourney, "end journey null");
+        int sum = 0;
+        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++) {
+            Journey currentJourney = journeys.get(i);
+           long  firstFinishTime = journeys.get(i).getFinishTime().getTime();
+           long  secondFinishTime = journeys.get(i - 1).getFinishTime().getTime();
+            System.out.println(firstFinishTime);
+            System.out.println(secondFinishTime);
+            long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+            journeyTime = journeyTime/1000;
 
+            sum += journeyTime;
+        }
+        System.out.println("Sum: " + sum);
+        return durationToTime(sum);
+    }
+    /**
+     * transform a duration in a time.
+     *
+     * @param durationSec duration in Seconds
+     * @return time object corresponding to durationSec
+     */
+    public static Time durationToTime(final int durationSec) {
+        int nbHour = durationSec / NB_SEC_IN_HOUR;
+        int nbMin = (durationSec % NB_SEC_IN_HOUR) / NB_SEC_IN_MIN;
+        int nbSec = (durationSec % NB_SEC_IN_MIN);
+        String durationString;
+        durationString = String.format("%d:%02d:%02d", nbHour, nbMin, nbSec);
+        Time duration = Time.valueOf(durationString);
+        System.out.println("duration = " + duration);
+        return duration;
+    }
 }

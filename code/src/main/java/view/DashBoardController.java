@@ -21,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import lombok.Getter;
+import model.core.service.JourneyService;
 import model.core.service.TourService;
 import model.data.*;
 import org.apache.commons.lang.Validate;
@@ -49,18 +50,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void setActionPoints(final Tour tour){
         actionPoints.remove(0,actionPoints.size());
-        System.out.println(actionPoints.size());
-        System.out.println(tour.getActionPoints().size());
         actionPoints.addAll(tour.getActionPoints());
-       for(ActionPoint actionPoint: actionPoints){
-          System.out.println(actionPoint.getLocation().getId());
-        }
-    }
-
-    public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        dpPUDuration.setText(String.valueOf(deliveryProcess.getPickUP().getTime().toString()));
 
     }
+
+
 
     //Enum Marker Types.
     @Getter
@@ -149,7 +143,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         timeAtPoint.setCellValueFactory(
                 cellData -> new SimpleStringProperty(TourService.calculateTimeAtPoint(tourLoaded,cellData.getValue())));
         actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(oldValue,tourLoaded));
+                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue,tourLoaded));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -193,6 +187,24 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         directionsPane = mapView.getDirec();
     }
 
+
+    public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        final Point startPoint = deliveryProcess.getPickUP().getLocation();
+        final Point endPoint =  deliveryProcess.getDelivery().getLocation();
+        dpPUDuration.setText(String.valueOf(deliveryProcess.getPickUP().getTime().toString()));
+        dPPuPoint.setText(String.valueOf(deliveryProcess.getPickUP().getLocation().getId()));
+        dPDPoint.setText(String.valueOf(deliveryProcess.getDelivery().getLocation().getId()));
+        for (Journey journey: tourLoaded.getJourneyList()){
+            System.out.println("Journey start: " + journey.getStartPoint().getId());
+            System.out.println("Journey end: " + journey.getArrivePoint().getId());
+        }
+
+
+        dpDuration.setText(JourneyService.calculateTimePointToPoint(
+                tourLoaded.getJourneyList(),startPoint,endPoint).toString());
+
+
+    }
     public void calculateTour() {
         this.mainApp.calculateTour();
     }
@@ -315,7 +327,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     }
 
-    public Marker createMarker(final ActionPoint actionPoints, final MarkerType mType) {
+     Marker createMarker(final ActionPoint actionPoints, final MarkerType mType) {
         /* //TODO Marche pas icon
         String path= MarkerImageFactory.createMarkerImage(mType.iconPath, "png");
         path = path.replace("(", "");
@@ -327,8 +339,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         markerPoint.title(mType.title)
                 .label(mType.firstLetter)
                 .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
-        Marker pointMarker = new Marker(markerPoint);
-        return pointMarker;
+         return new Marker(markerPoint);
     }
 
     private void clearDirections() {
@@ -340,7 +351,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
 
-    public DirectionsWaypoint[] getDirectionWayPointsFromJourney(final Journey journey) {
+     DirectionsWaypoint[] getDirectionWayPointsFromJourney(final Journey journey) {
         // Reverse List and Delete First and last elements, Start and End
         LinkedList<Point> newPointsList = new LinkedList<Point>();
         for(Point point: journey.getPoints()) {
@@ -380,7 +391,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         return path.toArray(new DirectionsWaypoint[path.size()]);
     }
 
-    public void drawDirection(Point start, Point arrival, DirectionsWaypoint[] directionsWaypoints, Boolean clearMarkers, Boolean clearDirections) {
+     void drawDirection(Point start, Point arrival, DirectionsWaypoint[] directionsWaypoints, Boolean clearMarkers, Boolean clearDirections) {
         // Clear all markers
         if(clearMarkers) map.clearMarkers();
         // Clear Past direction
@@ -394,7 +405,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         directionsService.getRoute(request, this, new DirectionsRenderer(false, mapView.getMap(), directionsPane));
     }
 
-    public void drawFullTour() {
+     void drawFullTour() {
         map.clearMarkers();
         //drawDirection(tourLoaded.getBase(),tourLoaded.getBase(), getDirectionWayPointsFromTour(),true,true);
         drawPolyline(getMCVPathFormTour(),"blue");
@@ -409,7 +420,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map.addMarker(createMarker(deliveryProcess.getDelivery(),MarkerType.DELIVERY));
     }
 
-    public void drawPolyline(final MVCArray mvcArray, String color) {
+     void drawPolyline(final MVCArray mvcArray, String color) {
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvcArray)
                 .strokeColor(color)
@@ -420,7 +431,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map.addMapShape(poly);
     }
 
-    public MVCArray getMCVPathFormJourney(final int id) {
+     MVCArray getMCVPathFormJourney(final int id) {
         Journey journey = tourLoaded.getJourneyList().get(id);
         // Reverse List
         LinkedList<Point> newPointsList = new LinkedList<Point>();
