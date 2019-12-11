@@ -30,7 +30,7 @@ public class TourService {
         }
         List<Journey> journeys = tourLoaded.getJourneyList();
         for (Journey journey : journeys) {
-            if (journey.getStartPoint() == actionPoint.getLocation()) {
+            if (journey.getStartPoint() == actionPoint.getLocation() && actionPoint.getActionType() == ActionType.BASE) {
                 if (journeys.indexOf(journey) == 0) {
                     return tourLoaded.getStartTime().toString();
                 }
