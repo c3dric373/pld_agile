@@ -41,10 +41,10 @@
                     </buttons>
                   </ButtonBar>
                   <Label layoutX="183.0" layoutY="135.0" text="Delivery Process :" AnchorPane.leftAnchor="225.0" AnchorPane.topAnchor="135.0" />
-                  <GridPane layoutX="176.0" layoutY="206.0" prefHeight="180.0" prefWidth="221.0" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0">
+                  <GridPane layoutX="176.0" layoutY="206.0" prefHeight="180.0" prefWidth="256.0" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="126.0" minWidth="10.0" prefWidth="114.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.0" minWidth="10.0" prefWidth="86.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="86.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
