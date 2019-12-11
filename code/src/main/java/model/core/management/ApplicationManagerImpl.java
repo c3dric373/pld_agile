@@ -122,7 +122,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void addDeliveryProcess(final Tour tour,
                                    final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
-        if(projectState != projectState.ADD_DELIVERY_PROCESS_2ndPoint)
+        if(projectState != projectState.ADD_DELIVERY_PROCESS)
         {
             throw new IllegalStateException("Another action is in progress");
         }
@@ -235,20 +235,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.ADD_DELIVERY_PROCESS;
-    }
-
-    public void setAddDeliveryProcess1stPoint(){
-        if(projectState != ProjectState.ADD_DELIVERY_PROCESS){
-            throw new IllegalStateException("Another action is in progress");
-        }
-        projectState = ProjectState.ADD_DELIVERY_PROCESS_1stPoint;
-    }
-
-    public void setAddDeliveryProcess2ndPoint(){
-        if(projectState != ProjectState.ADD_DELIVERY_PROCESS_1stPoint){
-            throw new IllegalStateException("Another action is in progress");
-        }
-        projectState = ProjectState.ADD_DELIVERY_PROCESS_2ndPoint;
     }
 
     public void setDeleteDeliveryProcess(){

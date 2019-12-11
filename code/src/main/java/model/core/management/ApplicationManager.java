@@ -75,9 +75,49 @@ public interface ApplicationManager {
     void findNearestPoint(final double latitude, final double longitude);
 
     /**
-     * Get the delivery process correspondent to the given action point
-     * @param actionPoint a pick up point or a delivery point
+     * Get the delivery process correspondent to the given action point.
+     * @param actionPoint a pick up point or a delivery point.
      */
     void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint);
+
+    /**
+     * set the current state to MAP_LOADED.
+     */
+    void setMapLoaded();
+
+    /**
+     * set the current state to TOUR_LOADED.
+     */
+    void setTourLoaded();
+
+    /**
+     * set the current state to TOUR_CALCULATED.
+     */
+    void setTourCalculated();
+
+    /**
+     * set the current state to ADD_DELIVERY_PROCESS.
+     */
+    void setAddDeliveryProcess();
+
+    /**
+     * set the current state to DELETE_DELIVERY_PROCESS.
+     */
+    void setDeleteDeliveryProcess();
+
+    /**
+     * set the current state to MODIFY_DELIVERY_PROCESS_POINT.
+     */
+    void setModifyDeliveryProcessPoint();
+
+    /**
+     * set the current state to MODIFY_DELIVERY_PROCESS_POINT_END.
+     */
+    void setModifyDeliveryProcessPointEnd();
+
+    /**
+     * set the current state to CHANGE_DELIVERY_ORDER.
+     */
+    void setChangeDeliveryOrder();
 
 }

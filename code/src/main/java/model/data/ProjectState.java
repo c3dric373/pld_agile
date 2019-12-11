@@ -23,24 +23,11 @@ public enum ProjectState {
     TOUR_CALCULATED,
 
     /**
-     * 1st state of the adding of a DeliveryProcess.
-     * No points are selected, the user has to select the 1st point of the
-     * DeliveryProcess.
+     * State of the adding of a DeliveryProcess.
+     * After the user clicks on the button, he selects 2 points and then he
+     * clicks again on the add button to save.
      */
     ADD_DELIVERY_PROCESS,
-
-    /**
-     * 2nd state of the adding of a DeliveryProcess.
-     * 1st point (PickUp) is selected and saved, the user
-     * has to select the 2nd Point
-     */
-     ADD_DELIVERY_PROCESS_1stPoint,
-
-    /**
-     * 3rd and last state of the adding of a DeliveryProcess, the 2 points are
-     * selected, the user just has to save in order to add the DeliveryProcess.
-     */
-    ADD_DELIVERY_PROCESS_2ndPoint,
 
     /**
      * State of the deleting of a DeliveryProcess (after clicking on the
