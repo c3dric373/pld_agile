@@ -234,7 +234,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void displayLoadedDeliveryProcess() {
         // Create a fake list of action Points To display.
-        List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tourLoaded.getDeliveryProcesses());
+        List<ActionPoint> fakeListActionPoints = createFakeActionPointList();
 
         actionPoints.addAll(fakeListActionPoints);
 
@@ -244,9 +244,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     //TODO A REPENSER
-    public List<ActionPoint> createFakeActionPointList(final List<DeliveryProcess> listDeliveryProcess) {
+    public List<ActionPoint> createFakeActionPointList() {
         List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
-        for (DeliveryProcess deliveryProcess : listDeliveryProcess) {
+        // Create a base actionPoint.
+        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(),tourLoaded.getBase(),ActionType.BASE);
+        
+        listActionPoints.add(base);
+        for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
             listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
                     .getTime(), deliveryProcess.getPickUP().getLocation(),
                     deliveryProcess.getPickUP().getActionType()));
