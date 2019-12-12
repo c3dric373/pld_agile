@@ -3,6 +3,7 @@ package model.core.management;
 import model.data.ActionPoint;
 import model.data.DeliveryProcess;
 import model.data.Point;
+import model.data.Tour;
 import view.UserInterface;
 
 import java.io.File;
@@ -33,11 +34,14 @@ public interface ApplicationManager {
     void calculateTour();
 
     /**
-     * Adds a {@link  DeliveryProcess}to an already uploaded tour.
-     *
-     * @param deliveryProcess the {@link DeliveryProcess} to add.
+     * Adds a new DeliveryProcess to a Tour
+     * @param tour current tour
+     * @param pickUpPoint pickUp Point of the new DeliveryProcess to add
+     * @param deliveryPoint Delivery Point of the new DeliveryProcess to add
      */
-    void addDeliveryProcess(final DeliveryProcess deliveryProcess);
+    void addDeliveryProcess(final Tour tour,
+                                   final ActionPoint pickUpPoint,
+                                   final ActionPoint deliveryPoint);
 
     /**
      * Deletes a {@link  DeliveryProcess}to an already uploaded tour.
@@ -69,5 +73,11 @@ public interface ApplicationManager {
      * @param longitude longitude of the point
      */
     void findNearestPoint(final double latitude, final double longitude);
+
+    /**
+     * Get the delivery process correspondent to the given action point
+     * @param actionPoint a pick up point or a delivery point
+     */
+    void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint);
 
 }
