@@ -5,6 +5,7 @@ import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public class DeliveryProcessService {
@@ -89,9 +90,26 @@ public class DeliveryProcessService {
             deliveryProcess.setDistance(distance);
             deliveryProcess.setTime(duration);
         }
+
     }
 
 
+    public static Optional<DeliveryProcess> createDpBase(final Tour tour) {
+        ActionPoint endAp = null;
+        ActionPoint base = null;
+        for (ActionPoint actionPoint1 : tour.getActionPoints()) {
+            if (actionPoint1.getActionType() == ActionType.END) {
+                endAp = actionPoint1;
+            } else if (actionPoint1.getActionType() == ActionType.BASE) {
+                base = actionPoint1;
+            }
+        }
+        if (endAp != null && base != null) {
+            DeliveryProcess result = new DeliveryProcess(base, endAp);
+            return Optional.of(result);
+        }
+        return Optional.empty();
+    }
 }
 
 

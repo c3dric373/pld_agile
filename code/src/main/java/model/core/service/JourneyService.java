@@ -84,6 +84,7 @@ public class JourneyService {
             newJourneyList.add(journey);
         }
         return newJourneyList;
+
     }
 
     /**
@@ -103,13 +104,13 @@ public class JourneyService {
                                                 final boolean endPoint) {
         if (endPoint) {
             for (Journey journey : journeys) {
-                if (journey.getStartPoint() == point) {
+                if (journey.getArrivePoint() == point) {
                     return OptionalInt.of(journeys.indexOf(journey));
                 }
             }
         } else {
             for (Journey journey : journeys) {
-                if (journey.getArrivePoint() == point) {
+                if (journey.getStartPoint() == point) {
                     return OptionalInt.of(journeys.indexOf(journey));
                 }
             }
@@ -212,10 +213,10 @@ public class JourneyService {
      * @param durationSec duration in Seconds
      * @return time object corresponding to durationSec
      */
-    public static Time durationToTime(final int durationSec) {
-        int nbHour = durationSec / NB_SEC_IN_HOUR;
-        int nbMin = (durationSec % NB_SEC_IN_HOUR) / NB_SEC_IN_MIN;
-        int nbSec = (durationSec % NB_SEC_IN_MIN);
+    public static Time durationToTime(final long durationSec) {
+        long nbHour = durationSec / NB_SEC_IN_HOUR;
+        long nbMin = (durationSec % NB_SEC_IN_HOUR) / NB_SEC_IN_MIN;
+        long nbSec = (durationSec % NB_SEC_IN_MIN);
         String durationString;
         durationString = String.format("%d:%02d:%02d", nbHour, nbMin, nbSec);
         Time duration = Time.valueOf(durationString);

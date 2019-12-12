@@ -10,7 +10,9 @@ import org.apache.commons.lang.Validate;
 import view.UserInterface;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public class ApplicationManagerImpl implements ApplicationManager {
@@ -113,6 +115,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
         DeliveryProcessService.setDpInfo(newTour);
         TourService.calculateTimeAtPoint(newTour);
         projectDataWrapper.modifyTour(newTour);
@@ -202,13 +208,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
             return;
         }
         OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
-        if(index.isPresent()){
+        if (index.isPresent()) {
             DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
             projectDataWrapper.selectDeliveryProcess(deliveryProcess);
-        }else{
-
+        } else {
+            Tour tour = projectDataWrapper.getProject().getTour();
+            Optional<DeliveryProcess> completeDp = DeliveryProcessService.createDpBase(tour);
+            completeDp.ifPresent(deliveryProcess -> projectDataWrapper.selectDeliveryProcess(deliveryProcess));
         }
-
     }
 
     public void setMapLoaded() {

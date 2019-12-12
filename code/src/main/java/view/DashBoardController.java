@@ -35,6 +35,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private Tour tourLoaded;
 
+
     public void setTour(Tour tour) {
         tourLoaded = tour;
 
@@ -135,7 +136,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
 
         timeAtPoint.setCellValueFactory(
-                    cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
+                cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
 
         actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue, tourLoaded));
@@ -184,7 +185,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
 
     public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        // actionPointTableView.setItems(null);
         final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
         final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
         final String pickUpPointName = deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName();
@@ -193,11 +193,19 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         dPDPoint.setText(deliveryPointName);
         dpDDuration.setText(deliveryDuration);
         dpPUDuration.setText(pickUpDuration);
-        if (deliveryProcess.getTime() != null) {
-            dpDuration.setText(deliveryProcess.getTime().toString());
-        }
-        if (deliveryProcess.getDistance() != null) {
-            dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+        // actionPointTableView.setItems(null);
+        if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
+            dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
+        } else {
+
+
+            if (deliveryProcess.getTime() != null) {
+                dpDuration.setText(deliveryProcess.getTime().toString());
+            }
+            if (deliveryProcess.getDistance() != null) {
+                dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+            }
         }
     }
 

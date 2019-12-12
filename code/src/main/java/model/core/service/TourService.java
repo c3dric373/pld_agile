@@ -34,7 +34,6 @@ public class TourService {
             } else {
                 OptionalInt index = JourneyService.findIndexPointInJourneys(journeys, actionPoint.getLocation(), true);
                 if (index.isPresent()) {
-
                     actionPoint.setPassageTime(journeys.get(index.getAsInt()).getFinishTime().toString());
                 }
             }
@@ -43,6 +42,24 @@ public class TourService {
         }
 
 
+    }
+
+    public static int getCompleteDistance(final Tour tour) {
+        int completeDistance =0;
+        for (Journey journey : tour.getJourneyList()){
+           completeDistance += journey.getMinLength();
+        }
+        return completeDistance;
+    }
+
+    public static Time getCompleteTime(final Tour tour){
+        long firstFinishTime = tour.getJourneyList().get(0).getFinishTime().getTime();
+        long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size()-1).getFinishTime().getTime();
+
+        long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+        journeyTime = journeyTime / 1000;
+
+        return JourneyService.durationToTime(journeyTime);
     }
 
     /**
