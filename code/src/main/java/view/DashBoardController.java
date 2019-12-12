@@ -78,7 +78,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
 
     // Manage New DeliveryProcess
-    private DeliveryProcess newDeliveryProcess = null;
     private ActionPoint newPickUpActionPoint = null;
     private ActionPoint newDeliveryActionPoint = null;
     // Markers of new DeliveryProcess
@@ -222,13 +221,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void addNewDeliveryProcess() {
-        if(canAdd()) {
-            //TODO Generate new DP
-            if(newDeliveryProcess != null) {
-            }
-        } else {
-            showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
-        }
+        if(canAddDeliveryProcess()) {
+            if(newPickUpActionPoint != null && newDeliveryActionPoint != null) {
+                newPickUpActionPoint.setPassageTime(inputPickUpTime.getText());
+                newPickUpActionPoint.setPassageTime(inputDeliveryTime.getText());
+                this.mainApp.addDeliveryProcess(tourLoaded, newPickUpActionPoint, newDeliveryActionPoint);
+            }else showAlert("Action Imposible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
+        } else showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
     }
 
     // Update view
@@ -363,7 +362,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         newDeliveryPointMarker = null;
         newPickUpActionPoint = null;
         newDeliveryActionPoint = null;
-        newDeliveryProcess = null;
     }
 
     public void clearNewPickUpPoint() {
@@ -380,6 +378,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void clearAll() {
         displayMap();
+        clearNewDeliveryProcess();
     }
     // Utils
 
@@ -433,7 +432,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         return label.getText() == "";
     }
 
-    public Boolean canAdd() {
+    public Boolean canAddDeliveryProcess() {
         return labelDeliveryCoordonates.getText() != ""
                 && labelDeliveryCoordonates.getText() != ""
                 && inputPickUpTime.getText() != ""
