@@ -3,6 +3,7 @@ package model.core.service;
 import model.core.TSP;
 import model.core.TSP3;
 import model.data.*;
+import net.sf.saxon.expr.flwor.Tuple;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -12,34 +13,29 @@ import java.util.Map;
 
 public class GraphService {
 
-    /**
-     * Find the nearest point to the selected position
-     *
-     * @param points    a list of points
-     * @param longitude longitude of the selected position
-     * @param latitude  latitude of the selected position
-     * @return the nearest point
-     */
-    public Point findNearestPoint(final List<Point> points,
+
+    public static Point findNearestPoint(final Graph graph,
                                   final double longitude,
                                   final double latitude) {
-        Validate.notNull(points, "points can't be null");
-        Point nearestPoint = points.get(0);
-        double minDifference = Double.POSITIVE_INFINITY;
-        for (final Point point : points) {
-            double differenceLat = point.getLatitude() - latitude;
-            double differenceLong = point.getLongitude() - longitude;
-            double difference = differenceLat * differenceLat + differenceLong * differenceLong;
-            if (difference < minDifference) {
-                nearestPoint = point;
-                minDifference = difference;
+        Validate.notNull(graph, "graph null");
+        final Point nearestPoint;
+        long nearestId = 0;
+        double nearestLong = 0.0, nearestLat = 0.0;
+        double differenceLong = 100.0, differenceLat = 100.0;
+        for (final Point p : graph.getPoints()) {
+            if ((Math.abs(p.getLatitude() - latitude) <= differenceLat) &&
+                    (Math.abs(p.getLongitude() - longitude) <= differenceLong)) {
+                differenceLat = Math.abs(p.getLatitude() - latitude);
+                differenceLong = Math.abs(p.getLongitude() - longitude);
+                nearestLat = p.getLatitude();
+                nearestLong = p.getLongitude();
+                nearestId = p.getId();
             }
         }
-//        System.out.println("nearestLong : " + nearestPoint.getLongitude() + " nearestLat : " + nearestPoint.getLatitude());
-//        System.out.println("nearestID : " + nearestPoint.getId());
-//        System.out.println("minDifference : " + minDifference);
+        nearestPoint = new Point(nearestId, nearestLat, nearestLong);
         return nearestPoint;
     }
+
 
     /**
      * Find the center of the graph thanks to itself
@@ -77,43 +73,6 @@ public class GraphService {
         return new Point(1, latitudeCenter, longitudeCenter);
     }
 
-//    public Tour calculateTour(final Tour tour, final Graph graph) {
-//        Validate.notNull(tour, "tour can't be null");
-//        Validate.notNull(graph, "graph can't be null");
-//
-//        TSP tsp3 = new TSP3();
-//        int timeLimit = Integer.MAX_VALUE;
-//        List<Journey> journeys = getListJourney(tour, graph, tsp3, timeLimit);
-//
-//        List<Point> points = new ArrayList<>();
-//        for (int i = 1; i < journeys.size(); i++) {
-//            points.add(journeys.get(i).getStartPoint());
-//        }
-//        List<ActionPoint> actionPoints = new ArrayList<>();
-//        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
-//        for (Point point : points) {
-//            boolean notFound = true;
-//            for (DeliveryProcess deliveryProcess :
-//                    tour.getDeliveryProcesses()) {
-//                if (deliveryProcess.getDelivery().getLocation() == point) {
-//                    actionPoints.add(deliveryProcess.getDelivery());
-//                    notFound = false;
-//                } else if (deliveryProcess.getPickUP().getLocation() == point) {
-//                    actionPoints.add(deliveryProcess.getPickUP());
-//                    notFound = false;
-//                }
-//                if (!notFound) break;
-//            }
-//        }
-//        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
-//        tour.setActionPoints(actionPoints);
-//
-//        // Calculate the finish time of each ActionPoints of each journeys
-//        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
-//        tour.setJourneyList(journeys1);
-//
-//        return tour;
-//    }
 
     public static boolean isInMap(final Point newPoint) {
         //todo

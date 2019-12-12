@@ -33,4 +33,13 @@ public interface GenDataVisitor {
      * @param deliveryProcess the  {@code graph} to process
      */
     void visit(final DeliveryProcess deliveryProcess);
+
+    /**
+     * Calls the right methods to process a {@link ActionPoint}.
+     *
+     * @param actionPoint the  {@code graph} to process
+     */
+    void visit(final ActionPoint actionPoint);
+
+    void visit(final ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess);
 }

@@ -97,6 +97,8 @@
 .text-field {
     -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: white;
+    -fx-background-color: #393e46;
 }
 
 .button {
@@ -143,3 +145,4 @@
 .button:default:hover {
     -fx-background-color: derive(-fx-focus-color,30%);
 }
+

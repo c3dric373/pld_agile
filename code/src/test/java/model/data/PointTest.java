@@ -112,6 +112,7 @@ public class PointTest {
         new Point(ID_TEST, LAT_TEST, LNG_SMALL);//,SEGMENTS_TEST);
 
         // Assert via annotation
+
     }
 
     @Test

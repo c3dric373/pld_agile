@@ -109,13 +109,13 @@ public class JourneyService {
 
         if (endPoint) {
             for (Journey journey : journeys) {
-                if (journey.getArrivePoint() == point) {
+                if (journey.getArrivePoint().equals(point)) {
                     return OptionalInt.of(journeys.indexOf(journey));
                 }
             }
         } else {
             for (Journey journey : journeys) {
-                if (journey.getStartPoint() == point) {
+                if (journey.getStartPoint().equals(point)) {
                     return OptionalInt.of(journeys.indexOf(journey));
                 }
             }

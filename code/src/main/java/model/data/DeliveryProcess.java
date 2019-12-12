@@ -11,6 +11,7 @@ import java.sql.Time;
  * This class represents one DeliveryProcess. For this it has two ActionPoints
  * one Pick Up point and one Delivery Point
  */
+@Setter
 @Getter
 @EqualsAndHashCode
 public class DeliveryProcess implements GenData {
