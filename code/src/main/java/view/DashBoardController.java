@@ -69,6 +69,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // List des ActionPoints en Observable pour la view
     private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
 
+    private DeliveryProcess newDeliveryProcess = null;
+
     @FXML
     private TableView<ActionPoint> actionPointTableView;
 
@@ -357,6 +359,18 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
 
     public void addNewDeliveryProcess() {
+        if(canAdd()) {
+            generateDeliveryProcess();
+            if(newDeliveryProcess != null) {
+                this.mainApp.addDeliveryProcess(newDeliveryProcess);
+            }
+        } else {
+            showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void generateDeliveryProcess() {
+        
     }
 
     public void clearNewDeliveryProcess() {
@@ -388,11 +402,27 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if(latLong != null) {
             DecimalFormat numberFormat = new DecimalFormat("#.0000");
             return numberFormat.format(latLong.getLatitude()) + ", " + numberFormat.format(latLong.getLongitude());
-        }else return "ErrorInPoint";
+        }else {
+            return "";
+        }
     }
 
     public Boolean editable(Label label) {
         return label.getText() == "";
     }
 
+    public Boolean canAdd() {
+        return labelDeliveryCoordonates.getText() != ""
+                && labelDeliveryCoordonates.getText() != ""
+                && inputPickUpTime.getText() != ""
+                && inputDeliveryTime.getText() !="";
+    }
+
+    private void showAlert(String title,String header, String msg, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
 }

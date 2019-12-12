@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
+import model.data.DeliveryProcess;
 import model.data.GenData;
 import model.data.Point;
 import org.apache.commons.lang.Validate;
@@ -82,5 +83,9 @@ public class UserInterface implements Observer {
 
     public void getNearPoint(final double latitude, final double longitude) {
         this.model.findNearestPoint(latitude,longitude);
+    }
+
+    public void addDeliveryProcess(DeliveryProcess deliveryProcess) {
+        this.model.addDeliveryProcess(deliveryProcess);
     }
 }
