@@ -53,8 +53,9 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        Graph graph = projectData.getGraph();
         Tour tour = projectData.getTour();
-        Tour newTour = TourService.deleteDeliveryProcess(tour, deliveryProcess);
+        Tour newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
         projectData.setTour(newTour);
         notify(tour);
     }
