@@ -16,9 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import model.core.service.TourService;
@@ -30,6 +28,7 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.lang.management.BufferPoolMXBean;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,13 +82,16 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private TableColumn<ActionPoint, String> timeAtPoint;
 
     @FXML
-    private Label labelPickUp;
+    private Label labelPickUpCoordonates;
 
     @FXML
-    private Label labelDelivery;
+    private Label labelDeliveryCoordonates;
 
     @FXML
-    private Label baseLocation;
+    private TextField inputDeliveryTime;
+
+    @FXML
+    private TextField inputPickUpTime;
 
     @FXML
     private GoogleMapView mapView;
@@ -222,11 +224,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
-        //TODO Commenter
-
-        // Set The Base ID on the view
-        baseLocation.setText(String.valueOf(tourLoaded.getBase().getId()) );
-
         // Create a fake list of action Points To display.
         List<ActionPoint> fakeListActionPoints = createFakeActionPointList(tourLoaded.getDeliveryProcesses());
 
@@ -347,23 +344,55 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         return mvc;
     }
 
-    public void setPickUpPoint(ActionEvent actionEvent) {
+    public void handelMouseClickOnPoint(ActionEvent actionEvent) {
+        Button btn = (Button) actionEvent.getSource();
+        String id = btn.getId();
+        System.out.println(id);
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
-            labelPickUp.setText(latLong.getLatitude() + ", " + latLong.getLongitude());
+            if(id.contains("setPickUp") && editable(labelPickUpCoordonates)) labelPickUpCoordonates.setText(stringFormater(latLong));
+            if(id.contains("setDelivery") && editable(labelDeliveryCoordonates)) labelDeliveryCoordonates.setText(stringFormater(latLong));
         });
     }
 
-    public void setDeliveryPoint(ActionEvent actionEvent) {
-        map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
-            LatLong latLong = event.getLatLong();
-            labelDelivery.setText(latLong.getLatitude() + ", " + latLong.getLongitude());
-        });
+
+    public void addNewDeliveryProcess() {
     }
 
-    public void addNewDeliveryProcess(ActionEvent actionEvent) {
+    public void clearNewDeliveryProcess() {
+        clearNewDeliveryPoint();
+        clearNewDeliveryPoint();
+        inputDeliveryTime.setText("");
+        inputPickUpTime.setText("");
     }
 
-    public void clearNewDeliveryProcess(ActionEvent actionEvent) {
+    public void clearNewPickUpPoint() {
+        labelPickUpCoordonates.setText("");
     }
+
+    public void clearNewDeliveryPoint() {
+        labelDeliveryCoordonates.setText("");
+    }
+
+    public void drawClikedPoint(Point point) {
+        System.out.println(point.toString());
+        MarkerOptions markerOptions = new MarkerOptions();
+        LatLong latLong = new LatLong(point.getLatitude(), point.getLongitude());
+        markerOptions.position(latLong);
+        Marker pointMarker = new Marker(markerOptions);
+        map.addMarker(pointMarker);
+        //map.addMarker(createMarker(new ActionPoint(null, new Point(0001,point.getLongitude(),point.getLatitude()), ActionType.PICK_UP),MarkerType.PICKUP));
+    }
+
+    public String stringFormater(final LatLong latLong) {
+        if(latLong != null) {
+            DecimalFormat numberFormat = new DecimalFormat("#.0000");
+            return numberFormat.format(latLong.getLatitude()) + ", " + numberFormat.format(latLong.getLongitude());
+        }else return "ErrorInPoint";
+    }
+
+    public Boolean editable(Label label) {
+        return label.getText() == "";
+    }
+
 }

@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
 import model.data.GenData;
+import model.data.Point;
 import org.apache.commons.lang.Validate;
 
 import java.io.File;
@@ -77,5 +78,9 @@ public class UserInterface implements Observer {
 
     public void calculateTour() {
         this.model.calculateTour();
+    }
+
+    public void getNearPoint(final double latitude, final double longitude) {
+        this.model.findNearestPoint(latitude,longitude);
     }
 }

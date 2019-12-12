@@ -84,6 +84,5 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     private void notify(final GenData genData) {
         System.out.println("notify");
         observer.update(genData);
-
     }
 }

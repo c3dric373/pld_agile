@@ -30,7 +30,7 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Point point) {
-        //TODO
+        dashBoardController.drawClikedPoint(point);
     }
 
     public void addController(DashBoardController controller) {
