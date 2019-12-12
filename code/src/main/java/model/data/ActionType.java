@@ -17,10 +17,17 @@ public enum ActionType {
      * When delivering this type should be used.
      */
     DELIVERY,
+
     /**
      * Start point of the cyclist
      */
-    BASE;
+    BASE,
+
+    /**
+     * End point of the cyclist
+     */
+    END;
+    
 
     /**
      * Returns the opposing actionType of an actionType.

@@ -4,9 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
+import model.data.ActionPoint;
+import model.data.DeliveryProcess;
 import model.data.GenData;
+import model.data.Tour;
 import org.apache.commons.lang.Validate;
 
+import javax.swing.*;
 import java.io.File;
 
 public class UserInterface implements Observer {
@@ -77,5 +81,9 @@ public class UserInterface implements Observer {
 
     public void calculateTour() {
         this.model.calculateTour();
+    }
+
+    public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
+        this.model.getDeliveryProcess(tour.getDeliveryProcesses(),oldValue);
     }
 }

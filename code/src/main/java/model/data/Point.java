@@ -125,6 +125,6 @@ public class Point implements GenData {
 
     @Override
     public String toString() {
-        return latitude + ", " + longitude ;
+        return latitude + ", " + longitude  + "id: " + id;
     }
 }
