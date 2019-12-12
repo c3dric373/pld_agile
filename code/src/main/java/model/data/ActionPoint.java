@@ -9,7 +9,7 @@ import java.sql.Time;
 
 @Getter
 @EqualsAndHashCode
-public class ActionPoint {
+public class ActionPoint implements GenData{
 
     private final String EMPTY_STRING = "";
 
@@ -51,6 +51,11 @@ public class ActionPoint {
         this.time = actionTime;
         this.location = actionLocation;
         this.actionType = type;
+    }
+
+    @Override
+    public void accept(final GenDataVisitor genDataVisitor) {
+        genDataVisitor.visit(this);
     }
 
 }

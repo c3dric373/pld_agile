@@ -56,4 +56,7 @@ public interface ProjectData {
      */
     DeliveryProcess getSelectedDeliveryProcess();
 
+    void setJourneyListForDeliveryProcess(ListJourneyFromDeliveryProcess listForDeliveryProcess);
+
+    ListJourneyFromDeliveryProcess getSelectedJourneyList();
 }

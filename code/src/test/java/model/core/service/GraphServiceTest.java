@@ -41,7 +41,7 @@ class GraphServiceTest {
         @Test
         void correctUsage() {
             Point point = new Point(26086124, 45.759098, 4.8629594);
-            Point nearestPoint = graphService.findNearestPoint(points, 4.8629594, 45.759098);
+            Point nearestPoint = graphService.findNearestPoint(graph, 4.8629594, 45.759098);
             assertAll(
                     () -> assertEquals(point.getId(), nearestPoint.getId(),
                             "findNearestPoint should return the nearest point's Id"),
