@@ -35,11 +35,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // Local Save of Tour.
     private Tour tourLoaded;
+    private DeliveryProcess deliveryProcessLoaded;
 
     // Manage Local Storage.
     public void setTour(Tour tour) {
         tourLoaded = tour;
 
+    }
+    public void deleteDp(){
+        this.mainApp.deleteDp(deliveryProcessLoaded);
     }
 
     public void setActionPoints(final Tour tour) {
@@ -230,6 +234,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Update view
 
     public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        deliveryProcessLoaded = deliveryProcess;
         final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
         final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
         final String pickUpPointName = deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName();

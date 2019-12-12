@@ -54,7 +54,7 @@ public class Journey{
         }
         Validate.noNullElements(newPoints, "points of the journey can't "
                 + "be null");
-        Validate.isTrue(newMinLength > 0, "min length of the"
+        Validate.isTrue(newMinLength >= 0, "min length of the"
                 + " journey should be positive");
         this.startPoint = newPoints.get(newPoints.size() - 1);
         this.arrivePoint = newPoints.get(0);
