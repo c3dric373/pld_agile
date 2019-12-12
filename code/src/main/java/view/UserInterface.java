@@ -86,4 +86,9 @@ public class UserInterface implements Observer {
     public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
         this.model.getDeliveryProcess(tour.getDeliveryProcesses(),oldValue);
     }
+
+    public void deleteDp(final DeliveryProcess deliveryProcessLoaded) {
+        System.out.println("Send message to delete dp");
+        this.model.deleteDeliveryProcess(deliveryProcessLoaded);
+    }
 }

@@ -154,6 +154,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         setDeleteDeliveryProcess();
         Validate.notNull(deliveryProcess, "deliveryProcess null");
+        Tour tour = projectDataWrapper.getProject().getTour();
+        TourService.deleteDeliveryProcess(tour,deliveryProcess);
         projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
         projectState = mainProjectState;
     }
