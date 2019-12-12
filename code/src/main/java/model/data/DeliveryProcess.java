@@ -2,12 +2,14 @@ package model.data;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
 
 /**
  * This class represents one DeliveryProcess. For this it has two ActionPoints
  * one Pick Up point and one Delivery Point
  */
+@Setter
 @Getter
 @EqualsAndHashCode
 public class DeliveryProcess implements GenData {

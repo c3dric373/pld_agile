@@ -28,6 +28,7 @@ import javax.xml.validation.Validator;
 import java.io.File;
 import java.lang.management.BufferPoolMXBean;
 import java.net.URL;
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -69,7 +70,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // List des ActionPoints en Observable pour la view
     private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
 
+    // Manage New DeliveryProcess
     private DeliveryProcess newDeliveryProcess = null;
+    private ActionPoint newPickUpActionPoint = null;
+    private ActionPoint newDeliveryActionPoint = null;
+    // Markers of new DeliveryProcess
+    private Marker newPickUpPointMarker = null;
+    private Marker newDeliveryPointMarker = null;
 
     @FXML
     private TableView<ActionPoint> actionPointTableView;
@@ -263,15 +270,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    public Marker createMarker(final ActionPoint actionPoints, final MarkerType mType) {
-        //String path= MarkerImageFactory.createMarkerImage("/Users/martingermain/Public/Git/pld_agile/code/src/main/resources/view/icons/marker.png", "png");
-        //path = path.replace("(", "");
-        //path = path.replace(")", "");
-
+    public Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {
         MarkerOptions markerPoint = new MarkerOptions();
         markerPoint.title(mType.title)
                 .label(mType.firstLetter)
-                .position(new LatLong(actionPoints.getLocation().getLatitude(), actionPoints.getLocation().getLongitude()));
+                .position(new LatLong(actionPoint.getLocation().getLatitude(), actionPoint.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
         return pointMarker;
     }
@@ -352,8 +355,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         System.out.println(id);
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
-            if(id.contains("setPickUp") && editable(labelPickUpCoordonates)) labelPickUpCoordonates.setText(stringFormater(latLong));
-            if(id.contains("setDelivery") && editable(labelDeliveryCoordonates)) labelDeliveryCoordonates.setText(stringFormater(latLong));
+            if(id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
+                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP,new Time(0,0,0));
+            }
+            if(id.contains("setDelivery") && editable(labelDeliveryCoordonates)){
+                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.DELIVERY,new Time(0,0,0));
+            }
         });
     }
 
@@ -362,7 +369,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if(canAdd()) {
             generateDeliveryProcess();
             if(newDeliveryProcess != null) {
-                this.mainApp.addDeliveryProcess(newDeliveryProcess);
             }
         } else {
             showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
@@ -388,20 +394,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         labelDeliveryCoordonates.setText("");
     }
 
-    public void drawClikedPoint(Point point) {
-        System.out.println(point.toString());
-        MarkerOptions markerOptions = new MarkerOptions();
-        LatLong latLong = new LatLong(point.getLatitude(), point.getLongitude());
-        markerOptions.position(latLong);
-        Marker pointMarker = new Marker(markerOptions);
-        map.addMarker(pointMarker);
-        //map.addMarker(createMarker(new ActionPoint(null, new Point(0001,point.getLongitude(),point.getLatitude()), ActionType.PICK_UP),MarkerType.PICKUP));
-    }
-
-    public String stringFormater(final LatLong latLong) {
-        if(latLong != null) {
+    public String stringFormater(final Point point) {
+        if(point != null) {
             DecimalFormat numberFormat = new DecimalFormat("#.0000");
-            return numberFormat.format(latLong.getLatitude()) + ", " + numberFormat.format(latLong.getLongitude());
+            return numberFormat.format(point.getLatitude()) + ", " + numberFormat.format(point.getLongitude());
         }else {
             return "";
         }
@@ -424,5 +420,30 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         alert.setHeaderText(header);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    public void showAndSaveNewActionPoint(ActionPoint actionPoint) {
+        //Clear past Markers
+        map.clearMarkers();
+        // Draw all tour Action point
+        drawAllActionPoints(tourLoaded.getActionPoints());
+
+        if(actionPoint.getActionType() == ActionType.PICK_UP) {
+            newPickUpActionPoint = actionPoint;
+            newPickUpPointMarker = createMarker(actionPoint, MarkerType.PICKUP);
+            labelPickUpCoordonates.setText(stringFormater(actionPoint.getLocation()));
+        }
+        if(actionPoint.getActionType() == ActionType.DELIVERY) {
+            newPickUpActionPoint = actionPoint;
+            newDeliveryPointMarker = createMarker(actionPoint, MarkerType.DELIVERY);
+            labelDeliveryCoordonates.setText(stringFormater(actionPoint.getLocation()));
+        }
+
+        // Eventualy draw newPickUp and Delivery Point
+        if(newPickUpPointMarker !=null) map.addMarker(newPickUpPointMarker);
+        if(newDeliveryPointMarker !=null) map.addMarker(newDeliveryPointMarker);
+    }
+
+    private void createNewMarkerActionPoint(ActionPoint actionPoint) {
     }
 }

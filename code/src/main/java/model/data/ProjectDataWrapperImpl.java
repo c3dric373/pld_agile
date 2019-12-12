@@ -61,6 +61,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
 
     @Override
     public void findNearestPoint(final ActionPoint newActionPoint) {
+        System.out.println(newActionPoint.getLocation().toString());
         notify(newActionPoint);
     }
 
