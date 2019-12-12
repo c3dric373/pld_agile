@@ -36,7 +36,7 @@
                   <Button fx:id="loadDeliveryDemand" layoutX="298.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleLoadTour" text="Load Delivery Demand" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="17.5" />
                   <ButtonBar layoutX="145.0" layoutY="469.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="350.0">
                     <buttons>
-                      <Button fx:id="modify" mnemonicParsing="false" text="Modify" />
+                      <Button fx:id="modify" mnemonicParsing="false" onAction="#modifieDP" text="Modify" />
                         <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteDp" text="Delete" />
                     </buttons>
                   </ButtonBar>
@@ -57,7 +57,6 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                         <Label text="N° :" />
                          <Label text="Total Duration :" GridPane.rowIndex="1" />
                         <Label text="Total Distance :" GridPane.rowIndex="2" />
                          <Label text="PickUp Point :" GridPane.rowIndex="4" />
@@ -70,7 +69,6 @@
                         <Label fx:id="dPDPoint" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label fx:id="dpPUDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                          <Label fx:id="dpDDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                         <Label fx:id="dpNumber" styleClass="label-bright" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <Line endX="100.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />

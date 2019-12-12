@@ -53,6 +53,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         actionPoints.addAll(tour.getActionPoints());
     }
 
+    public void modifieDP() {
+        int result = showModifieDeliveryDialog(deliveryProcessLoaded);
+        if(result != -1) {
+            System.out.println(result);
+        }
+    }
+
 
     //Enum Marker Types.
     @Getter
@@ -575,6 +582,26 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         } else {
             return false;
         }
+    }
+
+    private int showModifieDeliveryDialog(DeliveryProcess deliveryProcess) {
+        List<Integer> choices = new ArrayList<Integer>();
+        for(int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
+            choices.add(i);
+        }
+
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<Integer>(actionPointTableView.getSelectionModel().getFocusedIndex(), choices);
+        dialog.setTitle("Modifie Order");
+        dialog.setHeaderText("Change Order");
+        dialog.setContentText("Choose the new N°:");
+
+        Optional<Integer> result = dialog.showAndWait();
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            return -1;
+        }
+
     }
 
     /**
