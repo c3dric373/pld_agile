@@ -71,8 +71,48 @@ public class GraphService {
 
         double latitudeCenter = (latitudeMax + latitudeMin) / 2;
         double longitudeCenter = (longitudeMax + longitudeMin) / 2;
+        Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
+        System.out.println(latitudeCenter +"  "+longitudeCenter);
 
         return new Point(1, latitudeCenter, longitudeCenter);
+    }
+
+    public Tour calculateTour(final Tour tour, final Graph graph) {
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(graph, "graph can't be null");
+
+        TSP tsp3 = new TSP3();
+        int timeLimit = Integer.MAX_VALUE;
+        List<Journey> journeys = getListJourney(tour, graph, tsp3, timeLimit);
+
+        List<Point> points = new ArrayList<>();
+        for (int i = 1; i < journeys.size(); i++) {
+            points.add(journeys.get(i).getStartPoint());
+        }
+        List<ActionPoint> actionPoints = new ArrayList<>();
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
+        for (Point point : points) {
+            boolean notFound = true;
+            for (DeliveryProcess deliveryProcess :
+                    tour.getDeliveryProcesses()) {
+                if (deliveryProcess.getDelivery().getLocation() == point) {
+                    actionPoints.add(deliveryProcess.getDelivery());
+                    notFound = false;
+                } else if (deliveryProcess.getPickUP().getLocation() == point) {
+                    actionPoints.add(deliveryProcess.getPickUP());
+                    notFound = false;
+                }
+                if (!notFound) break;
+            }
+        }
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
+        tour.setActionPoints(actionPoints);
+
+        // Calculate the finish time of each ActionPoints of each journeys
+        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
+        tour.setJourneyList(journeys1);
+
+        return tour;
     }
 
     public static boolean isInMap(final Point newPoint) {
@@ -147,18 +187,17 @@ public class GraphService {
      * @param resDijkstra Result of dijkstra(idStart)
      * @return Journey which represents the shortest path from the start point to arrival point
      */
-    public Journey getShortestPath(final Graph graph,
-                                   final long idStart,
-                                   final long idArrive,
-                                   List<Tuple> resDijkstra) {
+    public Journey getShortestPath(final Graph graph, final long idStart, final long idArrive, List<Tuple> resDijkstra) {
         Validate.notNull(graph, "graph can't be null");
-        // if dijkstra hasn't been applied, do it
-        if (resDijkstra == null)
-            resDijkstra = dijkstra(graph, idStart);
-        List<Point> points = graph.getPoints();
         Map<Long, Integer> map = graph.getMap();
         Validate.notNull(map.get(idStart), "idStart not in graph");
         Validate.notNull(map.get(idArrive), "idArrive not in graph");
+        Validate.notNull(resDijkstra, "resDijkstra can't be null");
+
+        if (resDijkstra == null) {
+            resDijkstra = dijkstra(graph, idStart);
+        }
+        List<Point> points = graph.getPoints();
         int startIndex = map.get(idStart);
         int arriveIndex = map.get(idArrive);
 
@@ -285,13 +324,11 @@ public class GraphService {
      * @param timeLimit Time limit for resolution
      * @return List of journeys for a tour
      */
-    public List<Journey> getListJourney(final Tour tour,
-                                        final Graph graph,
-                                        final TSP tsp,
-                                        final int timeLimit) {
+    public List<Journey> getListJourney(final Tour tour, final Graph graph, final TSP tsp, final int timeLimit) {
         Validate.notNull(tour, "tour can't be null");
         Validate.notNull(graph, "graph can't be null");
         Validate.notNull(tsp, "tsp can't be null");
+
         List<List<Tuple>> resDijkstra = applyDijkstraToTour(tour, graph);
         int[][] cost = getCost(tour, graph, resDijkstra);
         int nbNode = tour.getDeliveryProcesses().size() * 2 + 1;

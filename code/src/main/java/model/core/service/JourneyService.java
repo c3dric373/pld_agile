@@ -84,6 +84,7 @@ public class JourneyService {
             newJourneyList.add(journey);
         }
         return newJourneyList;
+
     }
 
     /**
@@ -107,12 +108,12 @@ public class JourneyService {
         Validate.notNull(point, "point can't be null");
 
         if (endPoint) {
-            for (Journey journey : journeys)
-                if (journey.getStartPoint() == point)
+            for (Journey journey : journeys) {
+                if (journey.getArrivePoint() == point) {
                     return OptionalInt.of(journeys.indexOf(journey));
         } else {
-            for (Journey journey : journeys)
-                if (journey.getArrivePoint() == point)
+            for (Journey journey : journeys) {
+                if (journey.getStartPoint() == point) {
                     return OptionalInt.of(journeys.indexOf(journey));
         }
         return OptionalInt.empty();
@@ -141,5 +142,86 @@ public class JourneyService {
         return correspondingActionPoint;
     }
 
+    /**
+     * Finds the indices of the start journey and the end journey of the tour
+     * from a to be.
+     *
+     * @param journeys   list of journeys
+     * @param startPoint start point
+     * @param endPoint   end point
+     * @return list of Integers corresponding to the found indices, null if not
+     * found.
+     */
+    static List<Integer> getStartEndJourney(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
+        Journey startJourney = null;
+        Journey endJourney = null;
+        List<Integer> result = new ArrayList<>();
+        for (final Journey journey : journeys) {
+            Validate.notNull(journey.getFinishTime(), "journey finish time null");
+            if (journey.getStartPoint() == startPoint) {
+                startJourney = journey;
+            }
+            if (journey.getArrivePoint() == endPoint) {
+                endJourney = journey;
+            }
+        }
+        result.add(journeys.indexOf(startJourney));
+        result.add(journeys.indexOf(endJourney));
+        return result;
 
+    }
+
+    public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
+        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
+        Journey startJourney = journeys.get(indices.get(0));
+        Journey endJourney = journeys.get(indices.get(1));
+        Validate.notNull(startJourney, "start journey null");
+        Validate.notNull(endJourney, "end journey null");
+        int sum = 0;
+        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++) {
+            Journey currentJourney = journeys.get(i);
+            long firstFinishTime = journeys.get(i).getFinishTime().getTime();
+            long secondFinishTime = journeys.get(i - 1).getFinishTime().getTime();
+            System.out.println(firstFinishTime);
+            System.out.println(secondFinishTime);
+            long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+            journeyTime = journeyTime / 1000;
+
+            sum += journeyTime;
+        }
+        System.out.println("Sum: " + sum);
+        return durationToTime(sum);
+    }
+
+    public static int lengthPointToPoint(final List<Journey> journeys,
+                                         final Point startPoint,
+                                         final Point endPoint) {
+        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
+        Journey startJourney = journeys.get(indices.get(0));
+        Journey endJourney = journeys.get(indices.get(1));
+        Validate.notNull(startJourney, "start journey null");
+        Validate.notNull(endJourney, "end journey null");
+        int sum = 0;
+        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++) {
+            sum += journeys.get(i).getMinLength();
+        }
+        return sum;
+    }
+
+    /**
+     * transform a duration in a time.
+     *
+     * @param durationSec duration in Seconds
+     * @return time object corresponding to durationSec
+     */
+    public static Time durationToTime(final long durationSec) {
+        long nbHour = durationSec / NB_SEC_IN_HOUR;
+        long nbMin = (durationSec % NB_SEC_IN_HOUR) / NB_SEC_IN_MIN;
+        long nbSec = (durationSec % NB_SEC_IN_MIN);
+        String durationString;
+        durationString = String.format("%d:%02d:%02d", nbHour, nbMin, nbSec);
+        Time duration = Time.valueOf(durationString);
+        System.out.println("duration = " + duration);
+        return duration;
+    }
 }

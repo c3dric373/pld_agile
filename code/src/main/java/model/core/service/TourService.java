@@ -18,28 +18,48 @@ public class TourService {
      * through the list of journeys.
      * If the list of journeys is null  or the loadedTour the method return "".
      *
-     * @param tourLoaded  the tour to search through
-     * @param actionPoint the action point from which to find the time of passage
+     * @param tourLoaded the tour to search through
      * @return the time of passage or ""
      */
-    public static String calculateTimeAtPoint(final Tour tourLoaded,
-                                              final ActionPoint actionPoint) {
-        Validate.notNull(actionPoint, "actionPoint is null");
+    public static void calculateTimeAtPoint(final Tour tourLoaded) {
         if (tourLoaded == null || tourLoaded.getActionPoints() == null) {
-            return EMPTY_STRING;
+            return;
         }
-        List<Journey> journeys = tourLoaded.getJourneyList();
-        if (actionPoint.getActionType() == ActionType.BASE
-                && tourLoaded.getActionPoints().get(0).getLocation() == actionPoint.getLocation())
-            return tourLoaded.getStartTime().toString();
-        if (actionPoint.getActionType() == ActionType.END
-                && tourLoaded.getActionPoints().get(tourLoaded.getActionPoints().size() - 1).getLocation() == actionPoint.getLocation())
-            return journeys.get(journeys.size() - 1).getFinishTime().toString();
-        for (Journey journey : journeys) {
-            if (journey.getStartPoint() == actionPoint.getLocation())
-                return journeys.get(journeys.indexOf(journey) - 1).getFinishTime().toString();
+        final List<Journey> journeys = tourLoaded.getJourneyList();
+        for (ActionPoint actionPoint : tourLoaded.getActionPoints()) {
+            if (actionPoint.getActionType() == ActionType.BASE) {
+                actionPoint.setPassageTime(tourLoaded.getStartTime().toString());
+            } else if (actionPoint.getActionType() == ActionType.END) {
+                actionPoint.setPassageTime(journeys.get(journeys.size() - 1).getFinishTime().toString());
+            } else {
+                OptionalInt index = JourneyService.findIndexPointInJourneys(journeys, actionPoint.getLocation(), true);
+                if (index.isPresent()) {
+                    actionPoint.setPassageTime(journeys.get(index.getAsInt()).getFinishTime().toString());
+                }
+            }
+
+
         }
-        return "";
+
+
+    }
+
+    public static int getCompleteDistance(final Tour tour) {
+        int completeDistance =0;
+        for (Journey journey : tour.getJourneyList()){
+           completeDistance += journey.getMinLength();
+        }
+        return completeDistance;
+    }
+
+    public static Time getCompleteTime(final Tour tour){
+        long firstFinishTime = tour.getJourneyList().get(0).getFinishTime().getTime();
+        long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size()-1).getFinishTime().getTime();
+
+        long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+        journeyTime = journeyTime / 1000;
+
+        return JourneyService.durationToTime(journeyTime);
     }
 
     /**
@@ -184,8 +204,9 @@ public class TourService {
     /**
      * Adds 2 new action points to an ordered ActionPoint list.
      * The 2 points represent a deliveryProcess.
-     * @param tour Current Tour.
-     * @param pickUpPoint New PickUp point to add.
+     *
+     * @param tour          Current Tour.
+     * @param pickUpPoint   New PickUp point to add.
      * @param deliveryPoint New DeliveryPoint to add.
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
