@@ -12,6 +12,7 @@ import view.UserInterface;
 import java.io.File;
 import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public class ApplicationManagerImpl implements ApplicationManager {
@@ -72,16 +73,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadMap(final File file) {
-        if (projectState != ProjectState.INITIALIZED  &&
+        if (projectState != ProjectState.INITIALIZED &&
                 projectState != ProjectState.MAP_LOADED) {
             throw new IllegalStateException("Application not opened");
         }
         Validate.notNull(file, "file is null");
 
-        List<Point> points =  xmlToGraph.getGraphFromXml(file.getPath());
+        List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
         final Graph graph = new Graph(points);
         projectDataWrapper.loadMap(graph);
-        projectState = ProjectState.MAP_LOADED;
+        setMapLoaded();
         mainProjectState = ProjectState.MAP_LOADED;
     }
 
@@ -98,8 +99,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         Validate.notNull(file, "file is null");
         final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
+
         projectDataWrapper.loadTour(tour);
-        projectState = ProjectState.TOUR_LOADED;
+        setTourLoaded();
         mainProjectState = ProjectState.TOUR_LOADED;
 
     }
@@ -113,8 +115,14 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
         projectDataWrapper.modifyTour(newTour);
-        projectState = ProjectState.TOUR_CALCULATED;
+        setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
 
     }
@@ -123,10 +131,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void addDeliveryProcess(final Tour tour,
                                    final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
-        if(projectState != projectState.ADD_DELIVERY_PROCESS_2ndPoint)
-        {
+        if(projectState != projectState.TOUR_LOADED
+                && projectState != projectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
+        setAddDeliveryProcess();
         Validate.notNull(tour, "tour null");
         Validate.notNull(pickUpPoint, "pickUpPoint null");
         Validate.notNull(deliveryPoint, "deliveryPoint null");
@@ -139,11 +148,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        if(projectState != projectState.DELETE_DELIVERY_PROCESS)
-        {
+        if(projectState != projectState.TOUR_LOADED
+                && projectState != projectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
-        //TODO : review this method
+        setDeleteDeliveryProcess();
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         projectDataWrapper.deleteDeliveryProcess(deliveryProcess);
         projectState = mainProjectState;
@@ -151,10 +160,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
-        if(projectState != ProjectState.CHANGE_DELIVERY_ORDER)
+        if(projectState != ProjectState.TOUR_CALCULATED)
         {
             throw new IllegalStateException("Another action is in progress");
         }
+        setChangeDeliveryOrder();
         Validate.notNull(actionPoints, "actionPoints null");
         Validate.notEmpty(actionPoints, "actionPointsEmpty");
         final Tour tour = projectDataWrapper.getProject().getTour();
@@ -168,10 +178,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
-        if (projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT_END)
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED)
         {
             throw new IllegalStateException("Another action is in progress");
         }
+        setModifyDeliveryProcessPoint();
         Validate.notNull(oldPoint, "oldPoint is null");
         Validate.notNull(newPoint, "newPoint is null");
         if (!GraphService.isInMap(newPoint)) {
@@ -206,13 +218,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
-        Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
-        Validate.notNull(actionPoint, "actionPoint is null");
+        //Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
+        if (actionPoint == null) {
+            return;
+        }
         OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
-        Validate.isTrue(index.isPresent(), "no delivery process contains such action point");
-        DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
-        projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+        if (index.isPresent()) {
+            DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
+            projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+        } else {
+            Tour tour = projectDataWrapper.getProject().getTour();
+            Optional<DeliveryProcess> completeDp = DeliveryProcessService.createDpBase(tour);
+            completeDp.ifPresent(deliveryProcess -> projectDataWrapper.selectDeliveryProcess(deliveryProcess));
+        }
     }
+
     public void setMapLoaded(){
         if(projectState != ProjectState.INITIALIZED &&
                 projectState != ProjectState.MAP_LOADED){
@@ -221,42 +241,28 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.MAP_LOADED;
     }
 
-    public void setTourLoaded(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.MAP_LOADED){
+    public void setTourLoaded() {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.MAP_LOADED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.TOUR_LOADED;
     }
 
-    public void setTourCalculated(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != projectState.TOUR_CALCULATED){
+    public void setTourCalculated() {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != projectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = projectState.TOUR_CALCULATED;
     }
 
-    public void setAddDeliveryProcess() {
+    public void setAddDeliveryProcess(){
         if(projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.ADD_DELIVERY_PROCESS;
-    }
-
-    public void setAddDeliveryProcess1stPoint(){
-        if(projectState != ProjectState.ADD_DELIVERY_PROCESS){
-            throw new IllegalStateException("Another action is in progress");
-        }
-        projectState = ProjectState.ADD_DELIVERY_PROCESS_1stPoint;
-    }
-
-    public void setAddDeliveryProcess2ndPoint(){
-        if(projectState != ProjectState.ADD_DELIVERY_PROCESS_1stPoint){
-            throw new IllegalStateException("Another action is in progress");
-        }
-        projectState = ProjectState.ADD_DELIVERY_PROCESS_2ndPoint;
     }
 
     public void setDeleteDeliveryProcess(){
@@ -267,29 +273,20 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.DELETE_DELIVERY_PROCESS;
     }
 
-    public void setModifyDeliveryProcessPoint(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED){
+    public void setModifyDeliveryProcessPoint() {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT;
     }
 
-    public void setModifyDeliveryProcessPointEnd(){
-        if(projectState != ProjectState.MODIFY_DELIVERY_PROCESS_POINT){
-            throw new IllegalStateException("Another action is in progress");
-        }
-        projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT_END;
-    }
-
     public void setChangeDeliveryOrder(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED){
+        if(projectState != ProjectState.TOUR_CALCULATED){
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.CHANGE_DELIVERY_ORDER;
     }
-
 
 
 }

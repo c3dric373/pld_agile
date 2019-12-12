@@ -4,12 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
-import model.data.ActionType;
+import model.data.ActionPoint;
 import model.data.DeliveryProcess;
 import model.data.GenData;
 import model.data.Point;
+import model.data.Tour;
 import org.apache.commons.lang.Validate;
 
+import javax.swing.*;
 import java.io.File;
 import java.sql.Time;
 
@@ -90,5 +92,9 @@ public class UserInterface implements Observer {
 
     public void getNearPoint(double latitude, double longitude, ActionType actionType, Time time) {
         this.model.findNearestPoint(latitude, longitude, actionType, time);
+    }
+
+    public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
+        this.model.getDeliveryProcess(tour.getDeliveryProcesses(),oldValue);
     }
 }

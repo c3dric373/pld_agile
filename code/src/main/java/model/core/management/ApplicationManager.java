@@ -74,9 +74,9 @@ public interface ApplicationManager {
                           final ActionType actionType, final Time actionTime);
 
     /**
-     * Get the delivery process correspondent to the given action point
-     * @param actionPoint a pick up point or a delivery point
+     * Get the delivery process correspondent to the given action point.
+     * @param actionPoint a pick up point or a delivery point.
      */
     void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint);
-
+    
 }

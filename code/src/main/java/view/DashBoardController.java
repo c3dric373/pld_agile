@@ -2,31 +2,24 @@ package view;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.JavascriptObject;
 import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
 import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.service.directions.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
-import com.lynden.gmapsfx.util.MarkerImageFactory;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import lombok.Getter;
-import model.core.service.TourService;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
-import javax.swing.*;
-import javax.xml.validation.Validator;
 import java.io.File;
-import java.lang.management.BufferPoolMXBean;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DecimalFormat;
@@ -42,9 +35,18 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     private Tour tourLoaded;
 
+
     public void setTour(Tour tour) {
         tourLoaded = tour;
+
     }
+
+    public void setActionPoints(final Tour tour) {
+        actionPoints.remove(0, actionPoints.size());
+        actionPoints.addAll(tour.getActionPoints());
+
+    }
+
 
     //Enum Marker Types.
     @Getter
@@ -103,6 +105,28 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private TextField inputPickUpTime;
 
     @FXML
+    private Label dpNumber;
+
+    @FXML
+    private Label dpDuration;
+
+    @FXML
+    private Label dPDistance;
+
+    @FXML
+    private Label dPPuPoint;
+
+    @FXML
+    private Label dPDPoint;
+
+    @FXML
+    private Label dpPUDuration;
+
+    @FXML
+    private Label dpDDuration;
+
+
+    @FXML
     private GoogleMapView mapView;
 
     private GoogleMap map;
@@ -120,8 +144,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
+
         timeAtPoint.setCellValueFactory(
-                cellData -> new SimpleStringProperty(TourService.calculateTimeAtPoint(tourLoaded,cellData.getValue())));
+                cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
+
+        actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue, tourLoaded));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -154,6 +182,32 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         bobUnderwoodWindow.open(map, bobUnderwoodMarker);
         map.addMarker( bobUnderwoodMarker );
          */
+    }
+
+
+    public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
+        final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
+        final String pickUpPointName = deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName();
+        final String deliveryPointName = deliveryProcess.getDelivery().getLocation().getSegments().get(0).getName();
+        dPPuPoint.setText(pickUpPointName);
+        dPDPoint.setText(deliveryPointName);
+        dpDDuration.setText(deliveryDuration);
+        dpPUDuration.setText(pickUpDuration);
+        // actionPointTableView.setItems(null);
+        if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
+            dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
+        } else {
+
+
+            if (deliveryProcess.getTime() != null) {
+                dpDuration.setText(deliveryProcess.getTime().toString());
+            }
+            if (deliveryProcess.getDistance() != null) {
+                dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+            }
+        }
     }
 
     public void calculateTour() {
@@ -302,7 +356,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map.addMarker(createMarker(deliveryProcess.getDelivery(),MarkerType.DELIVERY));
     }
 
-    public void drawPolyline(final MVCArray mvcArray, String color) {
+    void drawPolyline(final MVCArray mvcArray, String color) {
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvcArray)
                 .strokeColor(color)
@@ -313,17 +367,17 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map.addMapShape(poly);
     }
 
-    public MVCArray getMCVPathFormJourney(final int id) {
+    MVCArray getMCVPathFormJourney(final int id) {
         Journey journey = tourLoaded.getJourneyList().get(id);
         // Reverse List
         LinkedList<Point> newPointsList = new LinkedList<Point>();
-        for(Point point: journey.getPoints()) {
+        for (Point point : journey.getPoints()) {
             newPointsList.addFirst(point);
         }
 
         LatLong[] ary = new LatLong[newPointsList.size()];
         int i = 0;
-        for(Point point: newPointsList) {
+        for (Point point : newPointsList) {
             LatLong latLong = new LatLong(point.getLatitude(), point.getLongitude());
             ary[i++] = latLong;
         }
@@ -335,17 +389,17 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
         int count = 0;
         LinkedList<Point> fullListOfPoints = new LinkedList<Point>();
-        for( Journey journey: tourLoaded.getJourneyList()) {
+        for (Journey journey : tourLoaded.getJourneyList()) {
             // Reverse List
             LinkedList<Point> newPointsList = new LinkedList<Point>();
-            for(Point point: journey.getPoints()) {
+            for (Point point : journey.getPoints()) {
                 newPointsList.addFirst(point);
             }
             fullListOfPoints.addAll(newPointsList);
         }
         LatLong[] ary = new LatLong[fullListOfPoints.size()];
         int i = 0;
-        for(Point point: fullListOfPoints) {
+        for (Point point : fullListOfPoints) {
             LatLong latLong = new LatLong(point.getLatitude(), point.getLongitude());
             ary[i++] = latLong;
         }

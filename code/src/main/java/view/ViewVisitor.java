@@ -12,6 +12,7 @@ public class ViewVisitor implements GenDataVisitor {
         if (tour.getActionPoints() == null) {
             dashBoardController.displayLoadedDeliveryProcess();
         }else {
+            dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
         }
     }
@@ -28,7 +29,9 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final DeliveryProcess deliveryProcess) {
-        //TODO
+        this.dashBoardController.showDeliveryProcess(deliveryProcess);
+
+
     }
 
     @Override

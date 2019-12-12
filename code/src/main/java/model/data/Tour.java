@@ -45,6 +45,15 @@ public class Tour implements GenData {
     private Time startTime;
 
     /**
+     * Time it takes to complete the tour.
+     */
+    private Time completeTime;
+
+    /**
+     * Total distance of the tour.
+     */
+    private int totalDistance;
+    /**
      * Instantiates a Tour.
      *
      * @param deliveryProcessesList list of deliveries
