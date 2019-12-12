@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DashBoardController implements Initializable, MapComponentInitializedListener  {
+public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
     // Map Style.
     private static final String mapStyle = "[{\"featureType\":\"administrative\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#e9e5dc\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100},{\"lightness\":99}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54},{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#767676\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":43},{\"lightness\":-11},{\"color\":\"#89cada\"}]}]";
@@ -42,7 +42,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         tourLoaded = tour;
 
     }
-    public void deleteDp(){
+
+    public void deleteDp() {
         this.mainApp.deleteDp(deliveryProcessLoaded);
     }
 
@@ -56,7 +57,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
-        PICKUP("Pick-Up Point", "P","icons/marker.png"),
+        PICKUP("Pick-Up Point", "P", "icons/marker.png"),
         DELIVERY("Delivery Point", "D", "flag.png"),
         BASE("Base Point", "B", "home-icon-silhouette.png");
 
@@ -130,6 +131,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label dpDDuration;
 
+    @FXML
+    private Label arrivalTime;
+
+    @FXML
+    private Label numberDeliveries;
+
+    @FXML
+    private Label startTime;
+
+    private void setBigLabels() {
+        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
+        startTime.setText(tourLoaded.getStartTime().toString());
+        if (tourLoaded.getCompleteTime() != null) {
+            final List<Journey> journeys = tourLoaded.getJourneyList();
+            final int journeysLength = journeys.size();
+            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+        }
+    }
+
 
     @FXML
     private GoogleMapView mapView;
@@ -200,7 +220,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void createFakeActionPointList() {
         List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
         // Create a base actionPoint.
-        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(),tourLoaded.getBase(),ActionType.BASE);
+        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.BASE);
 
         listActionPoints.add(base);
         for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
@@ -222,9 +242,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void addNewDeliveryProcess() {
-        if(canAdd()) {
+        if (canAdd()) {
             //TODO Generate new DP
-            if(newDeliveryProcess != null) {
+            if (newDeliveryProcess != null) {
             }
         } else {
             showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
@@ -246,12 +266,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         // actionPointTableView.setItems(null);
         if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
-            List<Journey>  journeyList = new ArrayList<Journey>();
+            List<Journey> journeyList = new ArrayList<Journey>();
             journeyList.add(tourLoaded.getJourneyList().get(0));
             displayMap();
             drawAllActionPoints();
             drawFullTour();
-            drawPolyline(getMCVPathFormJourneyListe(journeyList),"green",0.5);
+            drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
         } else {
             // DISPLAY POLYLINE.
@@ -285,6 +305,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
+        setBigLabels();
+
         // Create a fake list of action Points To display.
         createFakeActionPointList();
 
@@ -298,10 +320,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Draw
 
     public void drawFullTour() {
+        setBigLabels();
         map.clearMarkers();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()),"blue",0.4);
+        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
         drawAllActionPoints();
     }
+
 
     public void drawAllActionPoints() {
 
@@ -336,20 +360,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         // Draw all tour Action point
         drawAllActionPoints();
 
-        if(actionPoint.getActionType() == ActionType.PICK_UP) {
+        if (actionPoint.getActionType() == ActionType.PICK_UP) {
             newPickUpActionPoint = actionPoint;
             newPickUpPointMarker = createMarker(actionPoint, MarkerType.PICKUP);
             labelPickUpCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
-        if(actionPoint.getActionType() == ActionType.DELIVERY) {
+        if (actionPoint.getActionType() == ActionType.DELIVERY) {
             newPickUpActionPoint = actionPoint;
             newDeliveryPointMarker = createMarker(actionPoint, MarkerType.DELIVERY);
             labelDeliveryCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
 
         // Eventually draw newPickUp and Delivery Point
-        if(newPickUpPointMarker !=null) map.addMarker(newPickUpPointMarker);
-        if(newDeliveryPointMarker !=null) map.addMarker(newDeliveryPointMarker);
+        if (newPickUpPointMarker != null) map.addMarker(newPickUpPointMarker);
+        if (newDeliveryPointMarker != null)
+            map.addMarker(newDeliveryPointMarker);
     }
 
     // Clear / Reset.
@@ -410,21 +435,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         System.out.println(id);
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
-            if(id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
+            if (id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
                 System.out.println("this is a test");
-                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP,new Time(0,0,0));
+                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP, new Time(0, 0, 0));
             }
-            if(id.contains("setDelivery") && editable(labelDeliveryCoordonates)){
-                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.DELIVERY,new Time(0,0,0));
+            if (id.contains("setDelivery") && editable(labelDeliveryCoordonates)) {
+                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.DELIVERY, new Time(0, 0, 0));
             }
         });
     }
 
     public String stringFormater(final Point point) {
-        if(point != null) {
+        if (point != null) {
             DecimalFormat numberFormat = new DecimalFormat("#.0000");
             return numberFormat.format(point.getLatitude()) + ", " + numberFormat.format(point.getLongitude());
-        }else {
+        } else {
             return "";
         }
     }
@@ -482,7 +507,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    private void showAlert(String title,String header, String msg, Alert.AlertType alertType) {
+    private void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
@@ -500,7 +525,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public String pointToColour (Point point) {
+    public String pointToColour(Point point) {
 
         //TODO MARCHE PAS
 
