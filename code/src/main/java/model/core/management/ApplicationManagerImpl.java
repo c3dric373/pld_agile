@@ -114,6 +114,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
         DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
         projectDataWrapper.modifyTour(newTour);
         projectState = ProjectState.TOUR_CALCULATED;
         mainProjectState = ProjectState.TOUR_CALCULATED;
@@ -197,12 +198,17 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
         //Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
-        Validate.notNull(actionPoint, "actionPoint is null");
-        System.out.println();
+        if (actionPoint == null) {
+            return;
+        }
         OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
-        Validate.isTrue(index.isPresent(), "no delivery process contains such action point");
-        DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
-        projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+        if(index.isPresent()){
+            DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
+            projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+        }else{
+
+        }
+
     }
 
     public void setMapLoaded() {

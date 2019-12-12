@@ -46,9 +46,6 @@ public class DeliveryProcessService {
     public static OptionalInt findActionPoint(final List<DeliveryProcess>
                                                       deliveryProcesses,
                                               final ActionPoint actionPoint) {
-        System.out.println("-----Start-----");
-        System.out.println(actionPoint.getLocation());
-        System.out.println(actionPoint.getActionType());
         for (final DeliveryProcess deliveryProcess : deliveryProcesses) {
             if (deliveryProcess.getDelivery().equals(actionPoint)
                     || deliveryProcess.getPickUP().equals(actionPoint)) {

@@ -83,8 +83,6 @@ public class JourneyService {
             // add journey to the list of journeys
             newJourneyList.add(journey);
         }
-
-
         return newJourneyList;
     }
 

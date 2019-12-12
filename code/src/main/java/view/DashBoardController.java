@@ -18,8 +18,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import lombok.Getter;
-import model.core.service.JourneyService;
-import model.core.service.TourService;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
@@ -135,8 +133,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
+
         timeAtPoint.setCellValueFactory(
-                cellData -> new SimpleStringProperty(TourService.calculateTimeAtPoint(tourLoaded, cellData.getValue())));
+                    cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
+
         actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue, tourLoaded));
 
@@ -184,24 +184,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
 
     public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        // actionPointTableView.setItems(null);
         final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
         final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
         final String pickUpPointName = deliveryProcess.getPickUP().getLocation().getSegments().get(0).getName();
         final String deliveryPointName = deliveryProcess.getDelivery().getLocation().getSegments().get(0).getName();
-
         dPPuPoint.setText(pickUpPointName);
         dPDPoint.setText(deliveryPointName);
         dpDDuration.setText(deliveryDuration);
         dpPUDuration.setText(pickUpDuration);
-        if(deliveryProcess.getTime() != null){
+        if (deliveryProcess.getTime() != null) {
             dpDuration.setText(deliveryProcess.getTime().toString());
         }
-        if (deliveryProcess.getDistance() != null){
+        if (deliveryProcess.getDistance() != null) {
             dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
-
         }
-
-
     }
 
     public void calculateTour() {
