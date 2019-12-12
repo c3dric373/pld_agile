@@ -198,6 +198,7 @@ public class GraphService {
 
         if (resDijkstra == null) {
             resDijkstra = dijkstra(graph, idStart);
+        }
         List<Point> points = graph.getPoints();
         int startIndex = map.get(idStart);
         int arriveIndex = map.get(idArrive);
