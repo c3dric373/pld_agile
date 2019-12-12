@@ -133,6 +133,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label dpDDuration;
 
+    @FXML
+    private Label arrivalTime;
+
+    @FXML
+    private Label numberDeliveries;
+
+    @FXML
+    private Label startTime;
+
+    private void setBigLabels() {
+        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
+        startTime.setText(tourLoaded.getStartTime().toString());
+        if (tourLoaded.getCompleteTime() != null) {
+            final List<Journey> journeys = tourLoaded.getJourneyList();
+            final int journeysLength = journeys.size();
+            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+        }
+    }
+
 
     @FXML
     private GoogleMapView mapView;
@@ -306,6 +325,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
+        setBigLabels();
+
         // Create a fake list of action Points To display.
         createFakeActionPointList();
         actionPoints.remove(0, actionPoints.size());
@@ -320,10 +341,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Draw
 
     public void drawFullTour() {
+        setBigLabels();
         map.clearMarkers();
         drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
         drawAllActionPoints();
     }
+
 
     public void drawAllActionPoints() {
 
