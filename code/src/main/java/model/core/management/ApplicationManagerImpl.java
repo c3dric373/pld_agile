@@ -208,10 +208,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
         Validate.notNull(longitude, "longitude is null");
         Validate.notNull(actionType,"actionType is null");
         Validate.notNull(actionTime, "actionTime is null");
-        final List<Point> pointList =
-                projectDataWrapper.getProject().getPointList();
-        final Point nearestPoint = graphService.findNearestPoint(pointList,
-                longitude, latitude);
+        final Graph graph=
+                projectDataWrapper.getProject().getGraph();
+        final Point nearestPoint = GraphService.findNearestPoint(graph,
+          longitude, latitude);
         final ActionPoint nearestActionPoint = new ActionPoint(actionTime,
                 nearestPoint, actionType);
         projectDataWrapper.findNearestPoint(nearestActionPoint);

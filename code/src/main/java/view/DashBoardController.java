@@ -415,6 +415,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
             if(id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
+                System.out.println("this is a test");
                 this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP,new Time(0,0,0));
             }
             if(id.contains("setDelivery") && editable(labelDeliveryCoordonates)){
@@ -498,7 +499,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             labelDeliveryCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
 
-        // Eventualy draw newPickUp and Delivery Point
+        // Eventually draw newPickUp and Delivery Point
         if(newPickUpPointMarker !=null) map.addMarker(newPickUpPointMarker);
         if(newDeliveryPointMarker !=null) map.addMarker(newDeliveryPointMarker);
     }

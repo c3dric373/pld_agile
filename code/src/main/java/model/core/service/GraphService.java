@@ -14,14 +14,15 @@ import java.util.Map;
 public class GraphService {
 
 
-    public Point findNearestPoint(final List<Point> pointList,
+    public static Point findNearestPoint(final Graph graph,
                                   final double longitude,
                                   final double latitude) {
+        Validate.notNull(graph, "graph null");
         final Point nearestPoint;
         long nearestId = 0;
         double nearestLong = 0.0, nearestLat = 0.0;
         double differenceLong = 100.0, differenceLat = 100.0;
-        for (final Point p : pointList) {
+        for (final Point p : graph.getPoints()) {
             if ((Math.abs(p.getLatitude() - latitude) < differenceLat) &&
                     (Math.abs(p.getLongitude() - longitude) < differenceLong)) {
                 differenceLat = Math.abs(p.getLatitude() - latitude);
@@ -31,10 +32,10 @@ public class GraphService {
                 nearestId = p.getId();
             }
         }
-
         nearestPoint = new Point(nearestId, nearestLat, nearestLong);
         return nearestPoint;
     }
+
 
     /**
      * Find the center of the graph thanks to itself
@@ -71,6 +72,7 @@ public class GraphService {
 
         return centerPoint;
     }
+
 
     public Tour calculateTour(final Tour tour, final Graph graph) {
         Validate.notNull(tour, "tour can't be null");
