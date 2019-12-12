@@ -22,7 +22,7 @@ public class TourService {
      * @return the time of passage or ""
      */
     public static void calculateTimeAtPoint(final Tour tourLoaded) {
-        if (tourLoaded == null || tourLoaded.getActionPoints() == null) {
+        if (tourLoaded == null || tourLoaded.getActionPoints() == null || tourLoaded.getJourneyList() == null) {
             return;
         }
         final List<Journey> journeys = tourLoaded.getJourneyList();
@@ -37,14 +37,12 @@ public class TourService {
                     actionPoint.setPassageTime(journeys.get(index.getAsInt()).getFinishTime().toString());
                 }
             }
-
-
         }
-
-
     }
 
     public static int getCompleteDistance(final Tour tour) {
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(tour.getJourneyList(), "journey list of tour can't be null");
         int completeDistance = 0;
         for (Journey journey : tour.getJourneyList()) {
             completeDistance += journey.getMinLength();
@@ -53,22 +51,30 @@ public class TourService {
     }
 
     public static Time getCompleteTime(final Tour tour) {
-        long firstFinishTime = tour.getJourneyList().get(0).getFinishTime().getTime();
-        long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(tour.getJourneyList(), "journey list of tour can't be null");
+        long startTime = tour.getStartTime().getTime();
+        long finishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
 
-        long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+        long journeyTime = Math.abs(startTime - finishTime);
         journeyTime = journeyTime / 1000;
 
         return JourneyService.durationToTime(journeyTime);
     }
 
     public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
-        tour.getDeliveryProcesses().remove(deliveryProcess);
+        Validate.notNull(tour, "tour can't be null");
+        Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
+        Validate.isTrue(tour.getActionPoints() == null, "tour can't have actionPoint list");
+        tour.deleteDeliveryProcess(deliveryProcess);
         return tour;
     }
 
     public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
-        tour.getDeliveryProcesses().add(deliveryProcess);
+        Validate.notNull(tour, "tour can't be null");
+        Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
+        Validate.isTrue(tour.getActionPoints() == null, "tour can't have actionPoint list");
+        tour.addDeliveryProcess(deliveryProcess);
         return tour;
 
     }

@@ -2,8 +2,11 @@ package model.core.service;
 
 import model.data.*;
 import model.io.XmlToGraph;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,28 +50,96 @@ class TourServiceTest {
         notInTour = new ActionPoint(xmlToGraph.durationToTime(100), new Point(1, 10, 10), ActionType.PICK_UP);
     }
 
-//    @Nested
-//    class calculateTimeAtPoint {
-//        @Test
-//        void nullParameter() {
-//            assertAll(
-//                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.calculateTimeAtPoint(tourBeforeCalculate, null)),
-//                    () -> assertEquals("", tourService.calculateTimeAtPoint(null, actionPoint)),
-//                    () -> assertEquals("", tourService.calculateTimeAtPoint(tourBeforeCalculate, actionPoint))
-//            );
-//        }
-//
-//        @Test
-//        void correctUsage() {
-//            assertAll(
-//                    () -> assertEquals("08:00:00", tourService.calculateTimeAtPoint(tourAfterCalculate, base)),
-//                    () -> assertEquals("08:04:25", tourService.calculateTimeAtPoint(tourAfterCalculate, actionPoint)),
-//                    () -> assertEquals("08:17:55", tourService.calculateTimeAtPoint(tourAfterCalculate, actionPoint1)),
-//                    () -> assertEquals("08:28:54", tourService.calculateTimeAtPoint(tourAfterCalculate, end)),
-//                    () -> assertEquals("", tourService.calculateTimeAtPoint(tourAfterCalculate, notInTour))
-//            );
-//        }
-//    }
+    @Test
+    void calculateTimeAtPoint() {
+        tourService.calculateTimeAtPoint(null);
+        tourService.calculateTimeAtPoint(tourAfterCalculate);
+    }
+
+    @Nested
+    class getCompleteDistance {
+        @Test
+        void nullParameter() {
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.getCompleteDistance(null)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.getCompleteDistance(tourBeforeCalculate))
+            );
+        }
+
+        @Test
+        void correctUsage() {
+            assertEquals(5477, tourService.getCompleteDistance(tourAfterCalculate),
+                    "getCompleteDistance should return the right distance");
+        }
+    }
+
+    @Nested
+    class getCompleteTime {
+        @Test
+        void nullParameter() {
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.getCompleteDistance(null)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.getCompleteDistance(tourBeforeCalculate))
+            );
+        }
+
+        @Test
+        void correctUsage() {
+            Time res = tourService.getCompleteTime(tourAfterCalculate);
+            assertEquals(-1866000.0, res.getTime(),
+                    "getCompleteTime should return the right time");
+        }
+    }
+
+    @Nested
+    class deleteDpTourNotCalculated {
+        @Test
+        void nullParameter() {
+            List<DeliveryProcess> deliveryProcesses = tourBeforeCalculate.getDeliveryProcesses();
+            Tour withActionPointList = new Tour(deliveryProcesses, base.getLocation(), tourBeforeCalculate.getStartTime());
+            withActionPointList.setActionPoints(tourAfterCalculate.getActionPoints());
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.deleteDpTourNotCalculated(null, tourBeforeCalculate.getDeliveryProcesses().get(0))),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.deleteDpTourNotCalculated(tourAfterCalculate, tourAfterCalculate.getDeliveryProcesses().get(0))),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.deleteDpTourNotCalculated(withActionPointList, withActionPointList.getDeliveryProcesses().get(0)))
+            );
+        }
+
+        @Test
+        void correctUsage() {
+            tourService.deleteDpTourNotCalculated(tourBeforeCalculate, tourBeforeCalculate.getDeliveryProcesses().get(0));
+            assertEquals(0, tourBeforeCalculate.getDeliveryProcesses().size(),
+                    "deleteDpTourNotCalculated should delete the selected deliveryProcess");
+        }
+    }
+
+    @Nested
+    class addDpTourNotCalculated {
+        @Test
+        void nullParameter() {
+            List<DeliveryProcess> deliveryProcesses = tourBeforeCalculate.getDeliveryProcesses();
+            Tour withActionPointList = new Tour(deliveryProcesses, base.getLocation(), tourBeforeCalculate.getStartTime());
+            withActionPointList.setActionPoints(tourAfterCalculate.getActionPoints());
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.addDpTourNotCalculated(null, tourBeforeCalculate.getDeliveryProcesses().get(0))),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.addDpTourNotCalculated(tourAfterCalculate, tourAfterCalculate.getDeliveryProcesses().get(0))),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.addDpTourNotCalculated(withActionPointList, withActionPointList.getDeliveryProcesses().get(0)))
+            );
+        }
+
+        @Test
+        void correctUsage() {
+            tourService.addDpTourNotCalculated(tourBeforeCalculate, tourBeforeCalculate.getDeliveryProcesses().get(0));
+            assertEquals(2, tourBeforeCalculate.getDeliveryProcesses().size(),
+                    "addDpTourNotCalculated should add the given deliveryProcess");
+        }
+    }
 
     @Nested
     class changeDeliveryOrder {
@@ -121,13 +192,13 @@ class TourServiceTest {
             Tour res = tourService.changeDeliveryOrder(graph1, tourAfterCalculate, newOrder);
             assertAll(
                     () -> assertEquals(base, res.getActionPoints().get(0),
-                            "changeDeliveryOrder should return a tour with new order of actionPoints"),
+                            "changeDeliveryOrder should return a tour with right actionPoint at index 0"),
                     () -> assertEquals(actionPoint1, res.getActionPoints().get(1),
-                            "changeDeliveryOrder should return a tour with new order of actionPoints"),
+                            "changeDeliveryOrder should return a tour with right actionPoint at index 1"),
                     () -> assertEquals(actionPoint, res.getActionPoints().get(2),
-                            "changeDeliveryOrder should return a tour with new order of actionPoints"),
+                            "changeDeliveryOrder should return a tour with right actionPoint at index 2"),
                     () -> assertEquals(end, res.getActionPoints().get(3),
-                            "changeDeliveryOrder should return a tour with new order of actionPoints")
+                            "changeDeliveryOrder should return a tour with right actionPoint at index 3")
             );
         }
     }
@@ -167,17 +238,17 @@ class TourServiceTest {
             Tour finalRes = tourService.changePointPosition(graph1, res, oldPoint1, newPoint1);
             assertAll(
                     () -> assertEquals(newPoint, finalRes.getDeliveryProcesses().get(0).getPickUP().getLocation(),
-                            "changePointPosition should return a tour with new actionPoint adapted"),
+                            "changePointPosition should return a tour with right deliveryProcess at index 0"),
                     () -> assertEquals(newPoint1, finalRes.getDeliveryProcesses().get(0).getDelivery().getLocation(),
-                            "changePointPosition should return a tour with new actionPoint adapted"),
+                            "changePointPosition should return a tour with right deliveryProcess at index 0"),
                     () -> assertEquals(base, finalRes.getActionPoints().get(0),
-                            "changePointPosition should return a tour with new actionPoint adapted"),
+                            "changePointPosition should return a tour with right actionPoint at index 0"),
                     () -> assertEquals(newPoint, finalRes.getActionPoints().get(1).getLocation(),
-                            "changePointPosition should return a tour with new actionPoint adapted"),
+                            "changePointPosition should return a tour with right actionPoint at index 1"),
                     () -> assertEquals(newPoint1, finalRes.getActionPoints().get(2).getLocation(),
-                            "changePointPosition should return a tour with new actionPoint adapted"),
+                            "changePointPosition should return a tour with right actionPoint at index 2"),
                     () -> assertEquals(end, finalRes.getActionPoints().get(3),
-                            "changePointPosition should return a tour with new actionPoint adapted")
+                            "changePointPosition should return a tour with right actionPoint at index 3")
             );
         }
     }
@@ -209,24 +280,27 @@ class TourServiceTest {
             Tour res = tourService.addNewDeliveryProcess(graph1, tourAfterCalculate, actionPoint2, actionPoint3);
             assertAll(
                     () -> assertEquals(actionPoint.getLocation(), res.getDeliveryProcesses().get(0).getPickUP().getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right deliveryProcess at index 0"),
                     () -> assertEquals(actionPoint1.getLocation(), res.getDeliveryProcesses().get(0).getDelivery().getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right deliveryProcess at index 0"),
                     () -> assertEquals(actionPoint2, res.getDeliveryProcesses().get(1).getPickUP(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right deliveryProcess at index 1"),
                     () -> assertEquals(actionPoint3, res.getDeliveryProcesses().get(1).getDelivery(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right deliveryProcess at index 1"),
                     () -> assertEquals(base.getLocation(), res.getActionPoints().get(0).getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right actionPoint at index 0"),
                     () -> assertEquals(actionPoint.getLocation(), res.getActionPoints().get(1).getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right actionPoint at index 1"),
                     () -> assertEquals(actionPoint1.getLocation(), res.getActionPoints().get(2).getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right actionPoint at index 2"),
                     () -> assertEquals(actionPoint2.getLocation(), res.getActionPoints().get(3).getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
+                            "addNewDeliveryProcess should return a tour with right actionPoint at index 3"),
                     () -> assertEquals(actionPoint3.getLocation(), res.getActionPoints().get(4).getLocation(),
-                            "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
-                    () -> assertEquals(end.getLocation(), res.getActionPoints().get(5).getLocation())
+                            "addNewDeliveryProcess should return a tour with right actionPoint at index 4"),
+                    () -> assertEquals(end.getLocation(), res.getActionPoints().get(5).getLocation(),
+                            "addNewDeliveryProcess should return a tour with right actionPoint at index 5"),
+                    () -> assertEquals(5, res.getJourneyList().size(),
+                            "addNewDeliveryProcess should return a tour with journey list adapted")
             );
         }
     }
