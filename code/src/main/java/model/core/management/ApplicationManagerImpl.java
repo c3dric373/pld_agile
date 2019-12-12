@@ -146,7 +146,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
             newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
         } else {
             setAddDeliveryProcess();
-            newTour = TourService.addNewDeliveryProcess(tour, pickUpPoint,
+            Graph graph = projectDataWrapper.getProject().getGraph();
+            newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
                     deliveryPoint);
         }
 

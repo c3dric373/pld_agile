@@ -232,7 +232,7 @@ public class TourService {
         Validate.notNull(deliveryPoint, "deliveryPoint is null");
         Validate.notNull(tour.getActionPoints(), "actionPoints of tour is null");
 
-        Tour newTour;
+        Tour newTour = tour;
         List<DeliveryProcess> newDeliveryProcessList =
                 tour.getDeliveryProcesses();
         List<ActionPoint> newActionPointList = tour.getActionPoints();
@@ -240,8 +240,7 @@ public class TourService {
         newActionPointList.add(newActionPointList.size() - 1, deliveryPoint);
         newDeliveryProcessList.add(new DeliveryProcess(pickUpPoint,
                 deliveryPoint));
-        newTour = new Tour(newDeliveryProcessList, tour.getBase(),
-                tour.getStartTime());
+        newTour.setDeliveryProcesses(newDeliveryProcessList);
         newTour.setActionPoints(newActionPointList);
         List<Journey> journeys = newTour.getJourneyList();
         Journey journey = journeys.get(journeys.size()-1);
