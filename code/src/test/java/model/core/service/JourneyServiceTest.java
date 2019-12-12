@@ -143,4 +143,80 @@ class JourneyServiceTest {
             );
         }
     }
+
+    @Nested
+    class getStartEndJourney {
+        @Test
+        void nullParameter() {
+            List<Journey> nullElement = new ArrayList<>();
+            nullElement.add(null);
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(null, point2, point1)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, null, point1)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, point2, null)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(nullElement, point2, point1)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, point2, point1))
+            );
+        }
+
+        @Test
+        void correctUsage() {
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            List<Integer> res = journeyService.getStartEndJourney(journeys, point3, point1);
+            List<Integer> res1 = journeyService.getStartEndJourney(journeys, point2, point1);
+            List<Integer> res2 = journeyService.getStartEndJourney(journeys, point3, point2);
+            assertAll(
+                    () -> assertEquals(0, res.get(0), "getStartEndJourney should return the right indexes"),
+                    () -> assertEquals(0, res.get(1), "getStartEndJourney should return the right indexes"),
+                    () -> assertEquals(-1, res1.get(0), "getStartEndJourney should return the right indexes"),
+                    () -> assertEquals(0, res1.get(1), "getStartEndJourney should return the right indexes"),
+                    () -> assertEquals(0, res2.get(0), "getStartEndJourney should return the right indexes"),
+                    () -> assertEquals(-1, res2.get(1), "getStartEndJourney should return the right indexes")
+            );
+        }
+    }
+
+    @Nested
+    class calculateTimePointToPoint {
+        @Test
+        void nullParameter() {
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> journeyService.calculateTimePointToPoint(journeys, point2, point1)),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> journeyService.calculateTimePointToPoint(journeys, point3, point2))
+            );
+        }
+
+        @Test
+        void incompatibleParameter() {
+            Point point4 = new Point(11, 20.0, 12.0);
+            Point point5 = new Point(111, 20.0, 5.0);
+            List<Point> points1 = new ArrayList<>();
+            points1.add(point4);
+            points1.add(point5);
+            points1.add(point1);
+            Journey journey1 = new Journey(points1, 10);
+            journeys.add(journey1);
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            journey1.setFinishTime(Time.valueOf("08:10:00"));
+            assertThrows(IllegalArgumentException.class, () -> journeyService.calculateTimePointToPoint(journeys, point1, point3));
+        }
+
+//        @Test
+//        void correctUsage() {
+//            Point point4 = new Point(11, 20.0, 12.0);
+//            Point point5 = new Point(111, 20.0, 5.0);
+//            List<Point> points1 = new ArrayList<>();
+//            points1.add(point4);
+//            points1.add(point5);
+//            points1.add(point1);
+//            Journey journey1 = new Journey(points1, 10);
+//            journeys.add(journey1);
+//            journey.setFinishTime(Time.valueOf("08:00:00"));
+//            journey1.setFinishTime(Time.valueOf("08:10:00"));
+//            Time res = journeyService.calculateTimePointToPoint(journeys, point3, point4);
+//        }
+    }
 }
