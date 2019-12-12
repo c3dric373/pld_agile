@@ -24,10 +24,7 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
@@ -45,7 +42,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void deleteDp() {
-        this.mainApp.deleteDp(deliveryProcessLoaded);
+        if(showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")){
+            this.mainApp.deleteDp(deliveryProcessLoaded);
+        }
     }
 
     public void setActionPoints(final Tour tour) {
@@ -517,6 +516,24 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         alert.setHeaderText(header);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private Boolean showConfirmationAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(msg);
+
+        ButtonType buttonTypeOne = new ButtonType("Yes");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOne){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
