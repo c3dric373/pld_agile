@@ -246,6 +246,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         // actionPointTableView.setItems(null);
         if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            List<Journey>  journeyList = new ArrayList<Journey>();
+            journeyList.add(tourLoaded.getJourneyList().get(0));
+            displayMap();
+            drawAllActionPoints();
+            drawFullTour();
+            drawPolyline(getMCVPathFormJourneyListe(journeyList),"green",0.5);
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
         } else {
             // DISPLAY POLYLINE.
@@ -494,10 +500,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public String generateColorFromPoint(Point point) {
-        String color = "#32a";
-        color += String.valueOf(point.getId()).charAt(2) + String.valueOf(point.getId()).charAt(3) + String.valueOf(point.getId()).charAt(1);
-        return color;
+    public String pointToColour (Point point) {
+
+        //TODO MARCHE PAS
+
+        String pointString = String.valueOf(point.getId());
+        int hash = 0;
+        for (int i = 0; i < pointString.length(); i++) {
+            hash = pointString.charAt(i) + ((hash << 5) - hash);
+        }
+        String colour = "#";
+        for (int i = 0; i < 3; i++) {
+            int value = (hash >> (i * 8)) & 0xFF;
+            colour += ("00" + value).substring(-2);
+        }
+        return "red";
     }
 
 

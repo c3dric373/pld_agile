@@ -3,6 +3,7 @@ package model.core.service;
 import model.core.TSP;
 import model.core.TSP3;
 import model.data.*;
+import net.sf.saxon.expr.flwor.Tuple;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -72,10 +73,6 @@ public class GraphService {
         return new Point(1, latitudeCenter, longitudeCenter);
     }
 
-
-    public Tour calculateTour(final Tour tour, final Graph graph) {
-        Validate.notNull(tour, "tour can't be null");
-        Validate.notNull(graph, "graph can't be null");
 
     public static boolean isInMap(final Point newPoint) {
         //todo
