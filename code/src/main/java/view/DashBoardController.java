@@ -455,8 +455,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public Boolean canAddDeliveryProcess() {
-        if(inputPickUpTimeH.getText() == "") inputPickUpTimeH.setText("0");
-        if(inputDeliveryTimeH.getText() == "") inputDeliveryTimeH.setText("0");
+        if (inputPickUpTimeH.getText().equals("")) {
+            inputPickUpTimeH.setText("0");
+        }
+        if (inputDeliveryTimeH.getText().equals("")) {
+            inputDeliveryTimeH.setText("0");
+        }
         return labelDeliveryCoordonates.getText() != ""
                 && labelDeliveryCoordonates.getText() != ""
                 && inputDeliveryTimeM.getText() != ""
