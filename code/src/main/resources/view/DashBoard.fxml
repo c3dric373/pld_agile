@@ -120,7 +120,7 @@
                            </image>
                         </ImageView>
                         <Label id="depTime" fx:id="startTime" styleClass="label-bright" GridPane.columnIndex="1" />
-                        <Label fx:id="numberDeliveries" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="numberDeliveries" GridPane.columnIndex="1" styleClass="label-bright" GridPane.rowIndex="1" />
                         <Label fx:id="arrivalTime" styleClass="label-bright" GridPane.columnIndex="3" />
                         <Button fx:id="calculateTour" defaultButton="true" mnemonicParsing="false" onAction="#calculateTour" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      </children>
