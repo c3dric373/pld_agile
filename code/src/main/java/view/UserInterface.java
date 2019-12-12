@@ -4,11 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
-import model.data.ActionPoint;
-import model.data.DeliveryProcess;
-import model.data.GenData;
-import model.data.Point;
-import model.data.Tour;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 
 import javax.swing.*;
