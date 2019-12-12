@@ -48,9 +48,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void setActionPoints(final Tour tour) {
+        actionPointTableView.getSelectionModel().clearSelection();
         actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tour.getActionPoints());
-
     }
 
 
@@ -537,7 +537,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     private void handelTableSelection(ActionPoint newValue) {
-        if(newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null){
+        if(newValue!= null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null){
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
             List<Journey> journeyList = new ArrayList<Journey>();
