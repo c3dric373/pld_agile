@@ -157,7 +157,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
 
         actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue, tourLoaded));
+                (observable, oldValue, newValue) -> handelTableSelection(newValue));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -265,20 +265,20 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (tourLoaded.getJourneyList() != null) {
             if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
                 dpDuration.setText(tourLoaded.getCompleteTime().toString());
-                dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
+                dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
                 List<Journey> journeyList = new ArrayList<Journey>();
                 journeyList.add(tourLoaded.getJourneyList().get(0));
                 displayMap();
                 drawAllActionPoints();
                 drawFullTour();
                 drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
-            } else {
+            }else {
                 this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
                     dpDuration.setText(deliveryProcess.getTime().toString());
                 }
                 if (deliveryProcess.getDistance() != null) {
-                    dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+                    dPDistance.setText(String.valueOf(deliveryProcess.getDistance()) + " m");
                 }
             }
         }
@@ -507,6 +507,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             }
         } else {
             System.out.println("File selection cancelled.");
+        }
+    }
+
+    private void handelTableSelection(ActionPoint newValue) {
+        if(newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null){
+            dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
+            List<Journey> journeyList = new ArrayList<Journey>();
+            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
+            displayMap();
+            drawAllActionPoints();
+            drawFullTour();
+            drawPolyline(getMCVPathFormJourneyListe(journeyList), "black", 0.5);
+        }else {
+            mainApp.showDeliveryProcess(newValue, tourLoaded);
         }
     }
 
