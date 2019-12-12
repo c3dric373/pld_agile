@@ -44,8 +44,9 @@ public class ViewVisitor implements GenDataVisitor {
         dashBoardController.displayMap();
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
-        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),"red",0.8);
+        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),dashBoardController.generateColorFromPoint(listJourneyFromDeliveryProcess.getJourneyList().get(0).getPoints().get(0)),0.8);
     }
+
 
     public void addController(DashBoardController controller) {
         this.dashBoardController = controller;

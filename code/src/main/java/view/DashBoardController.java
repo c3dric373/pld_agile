@@ -489,5 +489,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
+    public String generateColorFromPoint(Point point) {
+        String color = "#32a";
+        color += String.valueOf(point.getId()).charAt(2) + String.valueOf(point.getId()).charAt(3) + String.valueOf(point.getId()).charAt(1);
+        return color;
+    }
+
 
 }
