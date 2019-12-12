@@ -10,7 +10,9 @@ import org.apache.commons.lang.Validate;
 import view.UserInterface;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public class ApplicationManagerImpl implements ApplicationManager {
@@ -71,13 +73,13 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadMap(final File file) {
-        if (projectState != ProjectState.INITIALIZED  &&
+        if (projectState != ProjectState.INITIALIZED &&
                 projectState != ProjectState.MAP_LOADED) {
             throw new IllegalStateException("Application not opened");
         }
         Validate.notNull(file, "file is null");
 
-        List<Point> points =  xmlToGraph.getGraphFromXml(file.getPath());
+        List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
         final Graph graph = new Graph(points);
         projectDataWrapper.loadMap(graph);
         setMapLoaded();
@@ -97,6 +99,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         Validate.notNull(file, "file is null");
         final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
+
         projectDataWrapper.loadTour(tour);
         setTourLoaded();
         mainProjectState = ProjectState.TOUR_LOADED;
@@ -112,6 +115,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
@@ -202,12 +211,19 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
-        Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
-        Validate.notNull(actionPoint, "actionPoint is null");
+        //Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
+        if (actionPoint == null) {
+            return;
+        }
         OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
-        Validate.isTrue(index.isPresent(), "no delivery process contains such action point");
-        DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
-        projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+        if (index.isPresent()) {
+            DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
+            projectDataWrapper.selectDeliveryProcess(deliveryProcess);
+        } else {
+            Tour tour = projectDataWrapper.getProject().getTour();
+            Optional<DeliveryProcess> completeDp = DeliveryProcessService.createDpBase(tour);
+            completeDp.ifPresent(deliveryProcess -> projectDataWrapper.selectDeliveryProcess(deliveryProcess));
+        }
     }
 
     public void setMapLoaded(){
@@ -218,17 +234,17 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.MAP_LOADED;
     }
 
-    public void setTourLoaded(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.MAP_LOADED){
+    public void setTourLoaded() {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.MAP_LOADED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.TOUR_LOADED;
     }
 
-    public void setTourCalculated(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != projectState.TOUR_CALCULATED){
+    public void setTourCalculated() {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != projectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = projectState.TOUR_CALCULATED;
@@ -250,9 +266,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectState = ProjectState.DELETE_DELIVERY_PROCESS;
     }
 
-    public void setModifyDeliveryProcessPoint(){
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED){
+    public void setModifyDeliveryProcessPoint() {
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT;
@@ -264,7 +280,6 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         projectState = ProjectState.CHANGE_DELIVERY_ORDER;
     }
-
 
 
 }

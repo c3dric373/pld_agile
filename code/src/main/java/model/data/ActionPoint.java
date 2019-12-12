@@ -2,6 +2,7 @@ package model.data;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -10,10 +11,19 @@ import java.sql.Time;
 @EqualsAndHashCode
 public class ActionPoint {
 
+    private final String EMPTY_STRING = "";
+
     /**
      * Time it takes to complete the action.
      */
     private Time time;
+
+    /**
+     * Time at which the cyclist arrives at this point should only be set when
+     * a tour was calculated.
+     */
+    @Setter
+    private String passageTime = EMPTY_STRING;
 
     /**
      * Location of the action.
