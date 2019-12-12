@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class Journey {
+public class Journey{
 
     /**
      * Finish time of journey.
@@ -61,4 +61,5 @@ public class Journey {
         this.points = newPoints;
         this.minLength = newMinLength;
     }
+
 }

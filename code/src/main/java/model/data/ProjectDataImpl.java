@@ -24,6 +24,11 @@ public class ProjectDataImpl implements ProjectData {
     private Graph graph;
 
     /**
+     * Selected JourneyList for ProjectDataWapper.
+     */
+    private ListJourneyFromDeliveryProcess journeyList;
+
+    /**
      * Selected DeliveryProcess for ProjectDataWrapper.
      */
     private DeliveryProcess selectedDeliveryProcess;
@@ -60,6 +65,16 @@ public class ProjectDataImpl implements ProjectData {
     @Override
     public DeliveryProcess getSelectedDeliveryProcess() {
         return selectedDeliveryProcess;
+    }
+
+    @Override
+    public void setJourneyListForDeliveryProcess(ListJourneyFromDeliveryProcess listForDeliveryProcess) {
+        journeyList = listForDeliveryProcess;
+    }
+
+    @Override
+    public ListJourneyFromDeliveryProcess getSelectedJourneyList() {
+        return journeyList;
     }
 
 }

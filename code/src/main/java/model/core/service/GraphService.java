@@ -23,8 +23,8 @@ public class GraphService {
         double nearestLong = 0.0, nearestLat = 0.0;
         double differenceLong = 100.0, differenceLat = 100.0;
         for (final Point p : graph.getPoints()) {
-            if ((Math.abs(p.getLatitude() - latitude) < differenceLat) &&
-                    (Math.abs(p.getLongitude() - longitude) < differenceLong)) {
+            if ((Math.abs(p.getLatitude() - latitude) <= differenceLat) &&
+                    (Math.abs(p.getLongitude() - longitude) <= differenceLong)) {
                 differenceLat = Math.abs(p.getLatitude() - latitude);
                 differenceLong = Math.abs(p.getLongitude() - longitude);
                 nearestLat = p.getLatitude();

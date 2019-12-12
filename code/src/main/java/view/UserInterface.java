@@ -10,6 +10,7 @@ import org.apache.commons.lang.Validate;
 import javax.swing.*;
 import java.io.File;
 import java.sql.Time;
+import java.util.List;
 
 public class UserInterface implements Observer {
 
@@ -92,5 +93,9 @@ public class UserInterface implements Observer {
 
     public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
         this.model.getDeliveryProcess(tour.getDeliveryProcesses(),oldValue);
+    }
+
+    public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
+        this.model.getJourneyList(journeyList, deliveryProcess);
     }
 }

@@ -78,5 +78,11 @@ public interface ApplicationManager {
      * @param actionPoint a pick up point or a delivery point.
      */
     void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint);
-    
+
+    /**
+     * Get the journeyList of a deliveryProcess
+     * @param journeyList
+     * @param deliveryProcess
+     */
+    void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess);
 }

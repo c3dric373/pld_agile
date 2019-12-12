@@ -233,6 +233,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
     }
 
+    @Override
+    public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
+        projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
+    }
+
     public void setMapLoaded(){
         if(projectState != ProjectState.INITIALIZED &&
                 projectState != ProjectState.MAP_LOADED){

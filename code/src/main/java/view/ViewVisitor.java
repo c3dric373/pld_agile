@@ -12,6 +12,7 @@ public class ViewVisitor implements GenDataVisitor {
         if (tour.getActionPoints() == null) {
             dashBoardController.displayLoadedDeliveryProcess();
         }else {
+            dashBoardController.clearAll();
             dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
         }
@@ -30,14 +31,20 @@ public class ViewVisitor implements GenDataVisitor {
     @Override
     public void visit(final DeliveryProcess deliveryProcess) {
         this.dashBoardController.showDeliveryProcess(deliveryProcess);
-
-
     }
 
     @Override
     public void visit(ActionPoint actionPoint) {
         System.out.println("ViewVisitor action Point");
-        dashBoardController.showAndSaveNewActionPoint(actionPoint);
+        dashBoardController.drawAndSaveNewActionPoint(actionPoint);
+    }
+
+    @Override
+    public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
+        dashBoardController.displayMap();
+        dashBoardController.drawAllActionPoints();
+        dashBoardController.drawFullTour();
+        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),"red",0.8);
     }
 
     public void addController(DashBoardController controller) {

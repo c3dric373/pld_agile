@@ -40,4 +40,6 @@ public interface GenDataVisitor {
      * @param actionPoint the  {@code graph} to process
      */
     void visit(final ActionPoint actionPoint);
+
+    void visit(final ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess);
 }

@@ -1,7 +1,10 @@
 package model.data;
 
+import model.core.service.GraphService;
 import model.core.service.TourService;
 import view.Observer;
+
+import java.util.List;
 
 /**
  * Implementation of {@link ProjectDataWrapper}.
@@ -71,6 +74,14 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     public void selectDeliveryProcess(final DeliveryProcess deliveryProcess) {
         projectData.setSelectedDeliveryProcess(deliveryProcess);
         notify(deliveryProcess);
+    }
+
+    @Override
+    public void getJourneyList(List<Journey> journeyList) {
+        ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess = new ListJourneyFromDeliveryProcess();
+        listJourneyFromDeliveryProcess.setJourneyList(journeyList);
+        projectData.setJourneyListForDeliveryProcess(listJourneyFromDeliveryProcess);
+        notify(listJourneyFromDeliveryProcess);
     }
 
 

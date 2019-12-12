@@ -3,6 +3,8 @@ package model.data;
 
 import view.Observer;
 
+import java.util.List;
+
 /**
  * This class acts as a wrapper for the {@link ProjectData} object. It offers
  * convenient methods to add, modify and remove project to all
@@ -60,4 +62,5 @@ public interface ProjectDataWrapper {
      */
     void selectDeliveryProcess(final DeliveryProcess deliveryProcess);
 
+    void getJourneyList(List<Journey> journeyList);
 }
