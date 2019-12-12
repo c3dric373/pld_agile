@@ -4,14 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
-import model.data.ActionPoint;
-import model.data.DeliveryProcess;
-import model.data.GenData;
-import model.data.Tour;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 
 import javax.swing.*;
 import java.io.File;
+import java.sql.Time;
+import java.util.List;
 
 public class UserInterface implements Observer {
 
@@ -83,6 +82,15 @@ public class UserInterface implements Observer {
         this.model.calculateTour();
     }
 
+
+    public void addDeliveryProcess(DeliveryProcess deliveryProcess) {
+        //this.model.addDeliveryProcess(deliveryProcess);
+    }
+
+    public void getNearPoint(double latitude, double longitude, ActionType actionType, Time time) {
+        this.model.findNearestPoint(latitude, longitude, actionType, time);
+    }
+
     public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
         this.model.getDeliveryProcess(tour.getDeliveryProcesses(),oldValue);
     }
@@ -90,5 +98,9 @@ public class UserInterface implements Observer {
     public void deleteDp(final DeliveryProcess deliveryProcessLoaded) {
         System.out.println("Send message to delete dp");
         this.model.deleteDeliveryProcess(deliveryProcessLoaded);
+    }
+
+    public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
+        this.model.getJourneyList(journeyList, deliveryProcess);
     }
 }

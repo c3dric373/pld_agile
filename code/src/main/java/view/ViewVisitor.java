@@ -8,11 +8,11 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Tour tour) {
-        System.out.println(tour.getBase().toString());
         dashBoardController.setTour(tour);
         if (tour.getActionPoints() == null) {
             dashBoardController.displayLoadedDeliveryProcess();
         }else {
+            dashBoardController.clearAll();
             dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
         }
@@ -21,22 +21,33 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Graph graph) {
-        System.out.println("View Visitor Graph");
         dashBoardController.displayMap();
-        //dashBoardController.displayMapPoints(graph.getPoints());
     }
 
     @Override
     public void visit(final Point point) {
-        //TODO
     }
 
     @Override
     public void visit(final DeliveryProcess deliveryProcess) {
         this.dashBoardController.showDeliveryProcess(deliveryProcess);
-
-
     }
+
+    @Override
+    public void visit(ActionPoint actionPoint) {
+        System.out.println("ViewVisitor action Point");
+        dashBoardController.drawAndSaveNewActionPoint(actionPoint);
+    }
+
+    @Override
+    public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
+        dashBoardController.displayMap();
+        dashBoardController.drawAllActionPoints();
+        dashBoardController.drawFullTour();
+        //dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),dashBoardController.pointToColour(listJourneyFromDeliveryProcess.getJourneyList().get(0).getPoints().get(0)),0.4);
+        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),"red",0.4);
+    }
+
 
     public void addController(DashBoardController controller) {
         this.dashBoardController = controller;

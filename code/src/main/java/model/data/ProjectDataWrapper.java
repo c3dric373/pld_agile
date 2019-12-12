@@ -3,6 +3,8 @@ package model.data;
 
 import view.Observer;
 
+import java.util.List;
+
 /**
  * This class acts as a wrapper for the {@link ProjectData} object. It offers
  * convenient methods to add, modify and remove project to all
@@ -45,11 +47,12 @@ public interface ProjectDataWrapper {
     void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
 
     /**
-     * Return the nearestPoint from the param.
+     * Return the nearest Point from the param.
      *
-     * @param newPoint the point from which to find the nearest point.
+     * @param newActionPoint the ActionPoint from which to find the nearest
+     *                       point.
      */
-    void findNearestPoint(final Point newPoint);
+    void findNearestPoint(final ActionPoint newActionPoint);
 
     void addObserver(final Observer observer);
 
@@ -59,4 +62,5 @@ public interface ProjectDataWrapper {
      */
     void selectDeliveryProcess(final DeliveryProcess deliveryProcess);
 
+    void getJourneyList(List<Journey> journeyList);
 }

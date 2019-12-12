@@ -1,7 +1,10 @@
 package model.data;
 
+import model.core.service.GraphService;
 import model.core.service.TourService;
 import view.Observer;
+
+import java.util.List;
 
 /**
  * Implementation of {@link ProjectDataWrapper}.
@@ -61,8 +64,8 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     }
 
     @Override
-    public void findNearestPoint(final Point newPoint) {
-        notify(newPoint);
+    public void findNearestPoint(final ActionPoint newActionPoint) {
+        notify(newActionPoint);
     }
 
     public void addObserver(final Observer observer){
@@ -74,6 +77,14 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         notify(deliveryProcess);
     }
 
+    @Override
+    public void getJourneyList(List<Journey> journeyList) {
+        ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess = new ListJourneyFromDeliveryProcess();
+        listJourneyFromDeliveryProcess.setJourneyList(journeyList);
+        projectData.setJourneyListForDeliveryProcess(listJourneyFromDeliveryProcess);
+        notify(listJourneyFromDeliveryProcess);
+    }
+
 
     /**
      * Notifies the view of changes.
@@ -83,6 +94,5 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     private void notify(final GenData genData) {
         System.out.println("notify");
         observer.update(genData);
-
     }
 }

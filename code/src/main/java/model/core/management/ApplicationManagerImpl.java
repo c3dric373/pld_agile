@@ -209,14 +209,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void findNearestPoint(final double latitude, final double longitude) {
+    public void findNearestPoint(final double latitude,
+                                 final double longitude,
+                                 ActionType actionType,
+                                 Time actionTime) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
-        final List<Point> pointList =
-                projectDataWrapper.getProject().getPointList();
-        final Point nearestPoint = graphService.findNearestPoint(pointList,
-                longitude, latitude);
-        projectDataWrapper.findNearestPoint(nearestPoint);
+        Validate.notNull(actionType,"actionType is null");
+        Validate.notNull(actionTime, "actionTime is null");
+        final Graph graph=
+                projectDataWrapper.getProject().getGraph();
+        final Point nearestPoint = GraphService.findNearestPoint(graph,
+          longitude, latitude);
+        final ActionPoint nearestActionPoint = new ActionPoint(actionTime,
+                nearestPoint, actionType);
+        projectDataWrapper.findNearestPoint(nearestActionPoint);
     }
 
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
@@ -235,9 +242,19 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
     }
 
-    public void setMapLoaded() {
-        if (projectState != ProjectState.INITIALIZED &&
-                projectState != ProjectState.MAP_LOADED) {
+    @Override
+    public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
+        if(projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED){
+            throw new IllegalStateException("Another action is in progress");
+        }
+        List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
+        projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
+    }
+
+    public void setMapLoaded(){
+        if(projectState != ProjectState.INITIALIZED &&
+                projectState != ProjectState.MAP_LOADED){
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.MAP_LOADED;
