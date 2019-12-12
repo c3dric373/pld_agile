@@ -105,10 +105,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private Label labelDeliveryCoordonates;
 
     @FXML
-    private TextField inputDeliveryTime;
-
+    private TextField inputDeliveryTimeH;
     @FXML
-    private TextField inputPickUpTime;
+    private TextField inputDeliveryTimeM;
+    @FXML
+    private TextField inputPickUpTimeH;
+    @FXML
+    private TextField inputPickUpTimeM;
 
     @FXML
     private Label dpNumber;
@@ -225,14 +228,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void addNewDeliveryProcess() {
         if (canAddDeliveryProcess()) {
             if (newPickUpActionPoint != null && newDeliveryActionPoint != null) {
-
-                newPickUpActionPoint.setPassageTime(inputPickUpTime.getText());
-                newPickUpActionPoint.setPassageTime(inputDeliveryTime.getText());
+                newPickUpActionPoint.setTime(parseStringToTime(inputPickUpTimeH.getText(), inputPickUpTimeM.getText()));
+                newDeliveryActionPoint.setTime(parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
                 this.mainApp.addDeliveryProcess(tourLoaded, newPickUpActionPoint, newDeliveryActionPoint);
-            } else
+            } else {
                 showAlert("Action Imposible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
-        } else
+            }
+        } else {
             showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
+        }
     }
 
     private Time parseStringToTime(final String hours, final String minutes) {
@@ -356,7 +360,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             labelPickUpCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
         if (actionPoint.getActionType() == ActionType.DELIVERY) {
-            newPickUpActionPoint = actionPoint;
+            newDeliveryActionPoint = actionPoint;
             newDeliveryPointMarker = createMarker(actionPoint, MarkerType.DELIVERY);
             labelDeliveryCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
@@ -372,8 +376,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void clearNewDeliveryProcess() {
         clearNewDeliveryPoint();
         clearNewPickUpPoint();
-        inputDeliveryTime.setText("");
-        inputPickUpTime.setText("");
+        inputDeliveryTimeM.setText("");
+        inputPickUpTimeM.setText("");
+        inputPickUpTimeH.setText("");
+        inputDeliveryTimeH.setText("");
         newPickUpPointMarker = null;
         newDeliveryPointMarker = null;
         newPickUpActionPoint = null;
@@ -449,10 +455,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public Boolean canAddDeliveryProcess() {
+        if(inputPickUpTimeH.getText() == "") inputPickUpTimeH.setText("0");
+        if(inputDeliveryTimeH.getText() == "") inputDeliveryTimeH.setText("0");
         return labelDeliveryCoordonates.getText() != ""
                 && labelDeliveryCoordonates.getText() != ""
-                && inputPickUpTime.getText() != ""
-                && inputDeliveryTime.getText() != "";
+                && inputDeliveryTimeM.getText() != ""
+                && inputPickUpTimeM.getText() != "";
     }
 
     // Utils Pop Up

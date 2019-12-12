@@ -162,8 +162,8 @@
                           </rowConstraints>
                            <children>
                               <Label text="h" GridPane.columnIndex="1" />
-                              <TextField promptText="hh" styleClass="text-field" />
-                              <TextField promptText="mm" styleClass="text-field" GridPane.columnIndex="2" />
+                              <TextField promptText="hh" fx:id="inputDeliveryTimeH" styleClass="text-field" />
+                              <TextField promptText="mm" fx:id="inputDeliveryTimeM" styleClass="text-field" GridPane.columnIndex="2" />
                            </children>
                         </GridPane>
                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -174,8 +174,8 @@
                            </columnConstraints>
                            <children>
                               <Label text="h" GridPane.columnIndex="1" />
-                              <TextField promptText="hh" styleClass="text-field" />
-                              <TextField promptText="mm" styleClass="text-field" GridPane.columnIndex="2" />
+                              <TextField promptText="hh" fx:id="inputPickUpTimeH" styleClass="text-field" />
+                              <TextField promptText="mm" fx:id="inputPickUpTimeM" styleClass="text-field" GridPane.columnIndex="2" />
                            </children>
                         </GridPane>
                      </children>

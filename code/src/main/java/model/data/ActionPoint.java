@@ -16,6 +16,7 @@ public class ActionPoint implements GenData{
     /**
      * Time it takes to complete the action.
      */
+    @Setter
     private Time time;
 
     /**
