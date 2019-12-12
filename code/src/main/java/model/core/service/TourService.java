@@ -62,6 +62,11 @@ public class TourService {
         return JourneyService.durationToTime(journeyTime);
     }
 
+    public static Tour deleteDpMapNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+        tour.getDeliveryProcesses().remove(deliveryProcess);
+        return tour;
+    }
+
     /**
      * Changes the delivery order a Tour, re calculates the journeys for a new
      * list of action points. Does not optimize anything, only calculates the

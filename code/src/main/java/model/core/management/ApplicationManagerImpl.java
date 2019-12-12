@@ -148,15 +148,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        if (projectState != projectState.TOUR_LOADED
-                && projectState != projectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
         setDeleteDeliveryProcess();
         Validate.notNull(deliveryProcess, "deliveryProcess null");
-        final Tour tour = projectDataWrapper.getProject().getTour();
-        final Graph graph = projectDataWrapper.getProject().getGraph();
-        Tour newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+        Tour newTour;
+        if (projectState == ProjectState.TOUR_LOADED) {
+            final Tour tour = projectDataWrapper.getProject().getTour();
+            newTour = TourService.deleteDpMapNotCalculated(tour, deliveryProcess);
+        } else {
+            final Tour tour = projectDataWrapper.getProject().getTour();
+            final Graph graph = projectDataWrapper.getProject().getGraph();
+            newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+        }
         projectDataWrapper.loadTour(newTour);
         projectState = mainProjectState;
     }
