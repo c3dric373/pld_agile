@@ -181,8 +181,8 @@ public class JourneyService {
 
     public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
         List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
-        Validate.isTrue(indices.get(0) != -1 && indices.get(0) != null, "start journey null");
-        Validate.isTrue(indices.get(1) != -1 && indices.get(1) != null, "end journey null");
+        Validate.isTrue(indices.get(0) > 0 && indices.get(0) != null, "start journey can't be calculated");
+        Validate.isTrue(indices.get(1) > 0 && indices.get(1) != null, "end journey can't be calculated");
         Validate.isTrue(indices.get(0) <= indices.get(1), "start journey index is bigger than end journey index");
         int sum = 0;
         for (int i = indices.get(0); i <= indices.get(1); i++) {
@@ -203,12 +203,11 @@ public class JourneyService {
                                          final Point startPoint,
                                          final Point endPoint) {
         List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
-        Journey startJourney = journeys.get(indices.get(0));
-        Journey endJourney = journeys.get(indices.get(1));
-        Validate.notNull(startJourney, "start journey null");
-        Validate.notNull(endJourney, "end journey null");
+        Validate.isTrue(indices.get(0) > 0 && indices.get(0) != null, "start journey can't be calculated");
+        Validate.isTrue(indices.get(1) > 0 && indices.get(1) != null, "end journey can't be calculated");
+        Validate.isTrue(indices.get(0) <= indices.get(1), "start journey index is bigger than end journey index");
         int sum = 0;
-        for (int i = journeys.indexOf(startJourney); i < journeys.indexOf(endJourney) + 1; i++) {
+        for (int i = indices.get(0); i <= indices.get(1); i++) {
             sum += journeys.get(i).getMinLength();
         }
         return sum;

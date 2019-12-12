@@ -1,10 +1,6 @@
 package model.core.service;
 
-import model.core.TSP;
-import model.core.TSP3;
 import model.data.*;
-import model.io.XmlToGraph;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class JourneyServiceTest {
 
     private JourneyService journeyService;
-    private Point point1;
-    private Point point2;
     private Point point3;
+    private Point point2;
+    private Point point1;
     private List<Point> points;
     private ActionPoint actionPoint1;
     private ActionPoint actionPoint2;
@@ -34,16 +30,16 @@ class JourneyServiceTest {
     @BeforeEach
     void setUp() {
         journeyService = new JourneyService();
-        point1 = new Point(10, 20.0, 12.0);
+        point3 = new Point(10, 20.0, 12.0);
         point2 = new Point(110, 20.0, 5.0);
-        point3 = new Point(1110, 20.75, 14.0);
+        point1 = new Point(1110, 20.75, 14.0);
         points = new ArrayList<>();
-        points.add(point1);
-        points.add(point2);
         points.add(point3);
-        actionPoint1 = new ActionPoint(Time.valueOf("0:2:0"), point1, ActionType.DELIVERY);
+        points.add(point2);
+        points.add(point1);
+        actionPoint1 = new ActionPoint(Time.valueOf("0:2:0"), point3, ActionType.DELIVERY);
         actionPoint2 = new ActionPoint(Time.valueOf("0:3:0"), point2, ActionType.PICK_UP);
-        actionPoint3 = new ActionPoint(Time.valueOf("0:0:0"), point3, ActionType.PICK_UP);
+        actionPoint3 = new ActionPoint(Time.valueOf("0:0:0"), point1, ActionType.PICK_UP);
         actionPoints = new ArrayList<>();
         actionPoints.add(actionPoint1);
         actionPoints.add(actionPoint2);
@@ -82,12 +78,12 @@ class JourneyServiceTest {
         @Test
         void incompatibleParameter() {
             List<Point> points1 = new ArrayList<>();
-            points1.add(point1);
+            points1.add(point3);
             points1.add(point2);
             Journey journey1 = new Journey(points1, 5);
             List<Point> points2 = new ArrayList<>();
             points2.add(point2);
-            points2.add(point3);
+            points2.add(point1);
             Journey journey2 = new Journey(points2, 5);
             List<Journey> journeys1 = new ArrayList<>();
             journeys1.add(journey1);
@@ -100,8 +96,8 @@ class JourneyServiceTest {
         @Test
         void correctUsage() {
             List<Point> points1 = new ArrayList<>();
-            points1.add(point3);
             points1.add(point1);
+            points1.add(point3);
             Journey journey1 = new Journey(points1, 15);
             List<Journey> journeys1 = new ArrayList<>();
             journeys1.add(journey1);
@@ -119,11 +115,11 @@ class JourneyServiceTest {
             journeys1.add(null);
             assertAll(
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> journeyService.findIndexPointInJourneys(null, point1, false)),
+                            () -> journeyService.findIndexPointInJourneys(null, point3, false)),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> journeyService.findIndexPointInJourneys(new ArrayList<>(), point1, false)),
+                            () -> journeyService.findIndexPointInJourneys(new ArrayList<>(), point3, false)),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> journeyService.findIndexPointInJourneys(journeys1, point1, false)),
+                            () -> journeyService.findIndexPointInJourneys(journeys1, point3, false)),
                     () -> assertThrows(IllegalArgumentException.class,
                             () -> journeyService.findIndexPointInJourneys(journeys, null, false))
             );
@@ -131,8 +127,8 @@ class JourneyServiceTest {
 
         @Test
         void correctUsage() {
-            OptionalInt res1 = journeyService.findIndexPointInJourneys(journeys, point1, true);
-            OptionalInt res2 = journeyService.findIndexPointInJourneys(journeys, point3, false);
+            OptionalInt res1 = journeyService.findIndexPointInJourneys(journeys, point3, true);
+            OptionalInt res2 = journeyService.findIndexPointInJourneys(journeys, point1, false);
             OptionalInt res3 = journeyService.findIndexPointInJourneys(journeys, point2, true);
             OptionalInt res4 = journeyService.findIndexPointInJourneys(journeys, point2, false);
             assertAll(
@@ -151,20 +147,20 @@ class JourneyServiceTest {
             List<Journey> nullElement = new ArrayList<>();
             nullElement.add(null);
             assertAll(
-                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(null, point2, point1)),
-                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, null, point1)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(null, point2, point3)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, null, point3)),
                     () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, point2, null)),
-                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(nullElement, point2, point1)),
-                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, point2, point1))
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(nullElement, point2, point3)),
+                    () -> assertThrows(IllegalArgumentException.class, () -> journeyService.getStartEndJourney(journeys, point2, point3))
             );
         }
 
         @Test
         void correctUsage() {
             journey.setFinishTime(Time.valueOf("08:00:00"));
-            List<Integer> res = journeyService.getStartEndJourney(journeys, point3, point1);
-            List<Integer> res1 = journeyService.getStartEndJourney(journeys, point2, point1);
-            List<Integer> res2 = journeyService.getStartEndJourney(journeys, point3, point2);
+            List<Integer> res = journeyService.getStartEndJourney(journeys, point1, point3);
+            List<Integer> res1 = journeyService.getStartEndJourney(journeys, point2, point3);
+            List<Integer> res2 = journeyService.getStartEndJourney(journeys, point1, point2);
             assertAll(
                     () -> assertEquals(0, res.get(0), "getStartEndJourney should return the right indexes"),
                     () -> assertEquals(0, res.get(1), "getStartEndJourney should return the right indexes"),
@@ -180,43 +176,145 @@ class JourneyServiceTest {
     class calculateTimePointToPoint {
         @Test
         void nullParameter() {
+            Point point5 = new Point(11, 20.0, 12.0);
+            Point point4 = new Point(111, 20.0, 5.0);
+            List<Point> points1 = new ArrayList<>();
+            points1.add(point5);
+            points1.add(point4);
+            points1.add(point3);
+            Journey journey1 = new Journey(points1, 10);
+            journeys.add(journey1);
             journey.setFinishTime(Time.valueOf("08:00:00"));
+            journey1.setFinishTime(Time.valueOf("08:10:00"));
             assertAll(
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> journeyService.calculateTimePointToPoint(journeys, point2, point1)),
+                            () -> journeyService.calculateTimePointToPoint(journeys, point4, point5)),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> journeyService.calculateTimePointToPoint(journeys, point3, point2))
+                            () -> journeyService.calculateTimePointToPoint(journeys, point3, point4))
             );
         }
 
         @Test
         void incompatibleParameter() {
-            Point point4 = new Point(11, 20.0, 12.0);
-            Point point5 = new Point(111, 20.0, 5.0);
+            Point point7 = new Point(11111, 20.0, 12.0);
+            Point point6 = new Point(1111, 20.0, 5.0);
+            Point point5 = new Point(11, 20.0, 12.0);
+            Point point4 = new Point(111, 20.0, 5.0);
             List<Point> points1 = new ArrayList<>();
-            points1.add(point4);
             points1.add(point5);
-            points1.add(point1);
+            points1.add(point4);
+            points1.add(point3);
+            List<Point> points2 = new ArrayList<>();
+            points2.add(point7);
+            points2.add(point6);
+            points2.add(point5);
+            Journey journey1 = new Journey(points1, 10);
+            Journey journey2 = new Journey(points2, 10);
+            journeys.add(journey1);
+            journeys.add(journey2);
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            journey1.setFinishTime(Time.valueOf("08:10:00"));
+            journey2.setFinishTime(Time.valueOf("08:20:00"));
+            assertThrows(IllegalArgumentException.class, () -> journeyService.calculateTimePointToPoint(journeys, point5, point5));
+        }
+
+        @Test
+        void correctUsage() {
+            Point point7 = new Point(11111, 20.0, 12.0);
+            Point point6 = new Point(1111, 20.0, 5.0);
+            Point point5 = new Point(11, 20.0, 12.0);
+            Point point4 = new Point(111, 20.0, 5.0);
+            List<Point> points1 = new ArrayList<>();
+            points1.add(point5);
+            points1.add(point4);
+            points1.add(point3);
+            List<Point> points2 = new ArrayList<>();
+            points2.add(point7);
+            points2.add(point6);
+            points2.add(point5);
+            Journey journey1 = new Journey(points1, 10);
+            Journey journey2 = new Journey(points2, 10);
+            journeys.add(journey1);
+            journeys.add(journey2);
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            journey1.setFinishTime(Time.valueOf("08:10:00"));
+            journey2.setFinishTime(Time.valueOf("08:20:00"));
+            Time res = journeyService.calculateTimePointToPoint(journeys, point3, point7);
+            assertEquals(-2400000.0, res.getTime(),
+                    "calculateTimePointToPoint should return the correct time");
+        }
+    }
+
+    @Nested
+    class lengthPointToPoint {
+        @Test
+        void nullParameter() {
+            Point point5 = new Point(11, 20.0, 12.0);
+            Point point4 = new Point(111, 20.0, 5.0);
+            List<Point> points1 = new ArrayList<>();
+            points1.add(point5);
+            points1.add(point4);
+            points1.add(point3);
             Journey journey1 = new Journey(points1, 10);
             journeys.add(journey1);
             journey.setFinishTime(Time.valueOf("08:00:00"));
             journey1.setFinishTime(Time.valueOf("08:10:00"));
-            assertThrows(IllegalArgumentException.class, () -> journeyService.calculateTimePointToPoint(journeys, point1, point3));
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> journeyService.lengthPointToPoint(journeys, point4, point5)),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> journeyService.lengthPointToPoint(journeys, point3, point4))
+            );
         }
 
-//        @Test
-//        void correctUsage() {
-//            Point point4 = new Point(11, 20.0, 12.0);
-//            Point point5 = new Point(111, 20.0, 5.0);
-//            List<Point> points1 = new ArrayList<>();
-//            points1.add(point4);
-//            points1.add(point5);
-//            points1.add(point1);
-//            Journey journey1 = new Journey(points1, 10);
-//            journeys.add(journey1);
-//            journey.setFinishTime(Time.valueOf("08:00:00"));
-//            journey1.setFinishTime(Time.valueOf("08:10:00"));
-//            Time res = journeyService.calculateTimePointToPoint(journeys, point3, point4);
-//        }
+        @Test
+        void incompatibleParameter() {
+            Point point7 = new Point(11111, 20.0, 12.0);
+            Point point6 = new Point(1111, 20.0, 5.0);
+            Point point5 = new Point(11, 20.0, 12.0);
+            Point point4 = new Point(111, 20.0, 5.0);
+            List<Point> points1 = new ArrayList<>();
+            points1.add(point5);
+            points1.add(point4);
+            points1.add(point3);
+            List<Point> points2 = new ArrayList<>();
+            points2.add(point7);
+            points2.add(point6);
+            points2.add(point5);
+            Journey journey1 = new Journey(points1, 10);
+            Journey journey2 = new Journey(points2, 10);
+            journeys.add(journey1);
+            journeys.add(journey2);
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            journey1.setFinishTime(Time.valueOf("08:10:00"));
+            journey2.setFinishTime(Time.valueOf("08:20:00"));
+            assertThrows(IllegalArgumentException.class, () -> journeyService.lengthPointToPoint(journeys, point5, point5));
+        }
+
+        @Test
+        void correctUsage() {
+            Point point7 = new Point(11111, 20.0, 12.0);
+            Point point6 = new Point(1111, 20.0, 5.0);
+            Point point5 = new Point(11, 20.0, 12.0);
+            Point point4 = new Point(111, 20.0, 5.0);
+            List<Point> points1 = new ArrayList<>();
+            points1.add(point5);
+            points1.add(point4);
+            points1.add(point3);
+            List<Point> points2 = new ArrayList<>();
+            points2.add(point7);
+            points2.add(point6);
+            points2.add(point5);
+            Journey journey1 = new Journey(points1, 10);
+            Journey journey2 = new Journey(points2, 10);
+            journeys.add(journey1);
+            journeys.add(journey2);
+            journey.setFinishTime(Time.valueOf("08:00:00"));
+            journey1.setFinishTime(Time.valueOf("08:10:00"));
+            journey2.setFinishTime(Time.valueOf("08:20:00"));
+            int res = journeyService.lengthPointToPoint(journeys, point3, point7);
+            assertEquals(20, res,
+                    "calculateTimePointToPoint should return the correct time");
+        }
     }
 }
