@@ -1,7 +1,6 @@
 package model.core.service;
 
 
-import com.google.common.graph.Graphs;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
@@ -99,23 +98,19 @@ public class TourService {
         }
 
         GraphService graphService = new GraphService();
-        try {
-            final List<Journey> newJourneys = new ArrayList<>();
-            for (int i = 1; i < actionPoints.size(); i++) {
-                final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
-                final Point successorPoint = oldActionPoints.get(i).getLocation();
-                final Journey newJourney = graphService.
-                        getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
-                newJourneys.add(newJourney);
-            }
-            final Time startTime = tour.getStartTime();
-            final List<Journey> calculatedJourneys = JourneyService.
-                    calculateTime(newJourneys, actionPoints, startTime);
-            tour.setJourneyList(calculatedJourneys);
-            tour.setActionPoints(actionPoints);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
+        final List<Journey> newJourneys = new ArrayList<>();
+        for (int i = 1; i < actionPoints.size(); i++) {
+            final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
+            final Point successorPoint = oldActionPoints.get(i).getLocation();
+            final Journey newJourney = graphService.
+                    getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
+            newJourneys.add(newJourney);
         }
+        final Time startTime = tour.getStartTime();
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(newJourneys, actionPoints, startTime);
+        tour.setJourneyList(calculatedJourneys);
+        tour.setActionPoints(actionPoints);
         return tour;
     }
 
@@ -209,7 +204,10 @@ public class TourService {
         final List<Journey> newJourneys = JourneyService.calculateTime(
                 tour.getJourneyList(), tour.getActionPoints(),
                 tour.getStartTime());
-        tour.setJourneyList(newJourneys);
+
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(newJourneys, tour.getActionPoints(), tour.getStartTime());
+        tour.setJourneyList(calculatedJourneys);
         return tour;
     }
 
@@ -243,19 +241,21 @@ public class TourService {
         newTour.setDeliveryProcesses(newDeliveryProcessList);
         newTour.setActionPoints(newActionPointList);
         List<Journey> journeys = newTour.getJourneyList();
-        Journey journey = journeys.get(journeys.size()-1);
+        Journey journey = journeys.get(journeys.size() - 1);
         Point pointBefore = journey.getStartPoint();
         Point pointAfter = journey.getArrivePoint();
         GraphService graphService = new GraphService();
         Journey journey1 = graphService.getShortestPath(graph, pointBefore.getId(), pickUpPoint.getLocation().getId(), null);
         Journey journey2 = graphService.getShortestPath(graph, pickUpPoint.getLocation().getId(), deliveryPoint.getLocation().getId(), null);
         Journey journey3 = graphService.getShortestPath(graph, deliveryPoint.getLocation().getId(), pointAfter.getId(), null);
-        journeys.remove(journeys.size()-1);
+        journeys.remove(journeys.size() - 1);
         journeys.add(journey1);
         journeys.add(journey2);
         journeys.add(journey3);
-        newTour.setJourneyList(journeys);
-        
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(journeys, tour.getActionPoints(), tour.getStartTime());
+        newTour.setJourneyList(calculatedJourneys);
+
         return newTour;
 
     }
@@ -307,6 +307,10 @@ public class TourService {
         journeys.add(index1, journey2);
         // change actionPointList
         newTour.setActionPoints(actionPointList);
+
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(journeys, tour.getActionPoints(), tour.getStartTime());
+        tour.setJourneyList(calculatedJourneys);
 
         return newTour;
     }

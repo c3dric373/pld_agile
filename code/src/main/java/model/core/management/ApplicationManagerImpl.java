@@ -149,6 +149,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
             Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
                     deliveryPoint);
+            DeliveryProcessService.setDpInfo(newTour);
+            TourService.calculateTimeAtPoint(newTour);
         }
 
 
@@ -168,14 +170,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+            projectDataWrapper.loadTour(newTour);
         } else {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+            DeliveryProcessService.setDpInfo(newTour);
+            TourService.calculateTimeAtPoint(newTour);
         }
 
-        projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
     }
 
@@ -191,6 +195,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
 
@@ -213,6 +219,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = tourService.changePointPosition
                 (graph, tour, oldPoint, newPoint);
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
         projectDataWrapper.modifyTour(newTour);
 
         projectState = mainProjectState;
