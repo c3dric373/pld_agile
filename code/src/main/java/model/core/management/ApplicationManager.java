@@ -111,11 +111,6 @@ public interface ApplicationManager {
     void setModifyDeliveryProcessPoint();
 
     /**
-     * set the current state to MODIFY_DELIVERY_PROCESS_POINT_END.
-     */
-    void setModifyDeliveryProcessPointEnd();
-
-    /**
      * set the current state to CHANGE_DELIVERY_ORDER.
      */
     void setChangeDeliveryOrder();
