@@ -9,7 +9,7 @@ public class ViewVisitor implements GenDataVisitor {
     @Override
     public void visit(final Tour tour) {
         dashBoardController.setTour(tour);
-        if (tour.getActionPoints() == null) {
+        if (tour.getJourneyList() == null) {
             dashBoardController.displayLoadedDeliveryProcess();
         } else {
             dashBoardController.clearAll();

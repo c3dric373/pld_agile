@@ -262,23 +262,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         dpDDuration.setText(deliveryDuration);
         dpPUDuration.setText(pickUpDuration);
         // actionPointTableView.setItems(null);
-        if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
-            dpDuration.setText(tourLoaded.getCompleteTime().toString());
-            List<Journey> journeyList = new ArrayList<Journey>();
-            journeyList.add(tourLoaded.getJourneyList().get(0));
-            displayMap();
-            drawAllActionPoints();
-            drawFullTour();
-            drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
-            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
-        } else {
-            // DISPLAY POLYLINE.
-            this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
-            if (deliveryProcess.getTime() != null) {
-                dpDuration.setText(deliveryProcess.getTime().toString());
-            }
-            if (deliveryProcess.getDistance() != null) {
-                dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+        // DISPLAY POLYLINE.
+        if (tourLoaded.getJourneyList() != null) {
+            if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
+                dpDuration.setText(tourLoaded.getCompleteTime().toString());
+                dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
+                List<Journey> journeyList = new ArrayList<Journey>();
+                journeyList.add(tourLoaded.getJourneyList().get(0));
+                displayMap();
+                drawAllActionPoints();
+                drawFullTour();
+                drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
+            } else {
+                this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
+                if (deliveryProcess.getTime() != null) {
+                    dpDuration.setText(deliveryProcess.getTime().toString());
+                }
+                if (deliveryProcess.getDistance() != null) {
+                    dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+                }
             }
         }
     }
@@ -407,7 +409,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public MVCArray getMCVPathFormJourneyListe(final List<Journey> journeyList) {
         int count = 0;
         LinkedList<Point> fullListOfPoints = new LinkedList<Point>();
-            for (Journey journey : journeyList) {
+        for (Journey journey : journeyList) {
             // Reverse List
             LinkedList<Point> newPointsList = new LinkedList<Point>();
             for (Point point : journey.getPoints()) {

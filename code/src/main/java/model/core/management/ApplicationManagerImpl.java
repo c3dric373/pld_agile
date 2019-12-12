@@ -168,14 +168,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+            projectDataWrapper.loadTour(newTour);
         } else {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+            projectDataWrapper.modifyTour(newTour);
+
         }
 
-        projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
     }
 
