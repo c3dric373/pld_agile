@@ -246,7 +246,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         Validate.isTrue(NumberUtils.isNumber(minutes), "minutes not a number");
         Validate.isTrue(Integer.parseInt(hours) < 24 && Integer.parseInt(hours) >= 0, "not an hour");
         Validate.isTrue(Integer.parseInt(minutes) < 59 && Integer.parseInt(minutes) >= 0, "not a minute");
-        final String toParse = hours + ":" + minutes;
+        final String toParse = hours + ":" + minutes + ":00";
         return Time.valueOf(toParse);
     }
     // Update view
@@ -407,7 +407,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public MVCArray getMCVPathFormJourneyListe(final List<Journey> journeyList) {
         int count = 0;
         LinkedList<Point> fullListOfPoints = new LinkedList<Point>();
-        for (Journey journey : journeyList) {
+            for (Journey journey : journeyList) {
             // Reverse List
             LinkedList<Point> newPointsList = new LinkedList<Point>();
             for (Point point : journey.getPoints()) {

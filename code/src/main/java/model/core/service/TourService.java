@@ -242,6 +242,7 @@ public class TourService {
         newTour = new Tour(newDeliveryProcessList, tour.getBase(),
                 tour.getStartTime());
         newTour.setActionPoints(newActionPointList);
+        
         return newTour;
 
     }
