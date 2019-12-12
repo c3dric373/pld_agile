@@ -104,4 +104,8 @@ public class UserInterface implements Observer {
     public void addDeliveryProcess(Tour tourLoaded, ActionPoint newPickUpActionPoint, ActionPoint newDeliveryActionPoint) {
         this.model.addDeliveryProcess(tourLoaded, newPickUpActionPoint,newDeliveryActionPoint);
     }
+
+    public void modifyOrder(final List<ActionPoint> actionPoints){
+        this.model.changeDeliveryOrder(actionPoints);
+    }
 }

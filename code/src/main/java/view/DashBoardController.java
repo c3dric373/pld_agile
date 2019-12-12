@@ -42,7 +42,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void deleteDp() {
-        if(showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")){
+        if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
             this.mainApp.deleteDp(deliveryProcessLoaded);
         }
     }
@@ -55,8 +55,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void modifieDP() {
         int result = showModifieDeliveryDialog(deliveryProcessLoaded);
-        if(result != -1) {
-            System.out.println(result);
+        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
+        if (result != -1) {
+            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
+            ActionPoint actionPoint = actionPoints.remove(index);
+            actionPoints.add(result, actionPoint);
+            this.mainApp.modifyOrder(actionPoints);
         }
     }
 
@@ -300,7 +304,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 drawAllActionPoints();
                 drawFullTour();
                 drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
-            }else {
+            } else {
                 this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
                     dpDuration.setText(deliveryProcess.getTime().toString());
@@ -544,7 +548,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     private void handelTableSelection(ActionPoint newValue) {
-        if(newValue!= null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null){
+        if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
             List<Journey> journeyList = new ArrayList<Journey>();
@@ -553,7 +557,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             drawAllActionPoints();
             drawFullTour();
             drawPolyline(getMCVPathFormJourneyListe(journeyList), "black", 0.5);
-        }else {
+        } else {
             mainApp.showDeliveryProcess(newValue, tourLoaded);
         }
     }
@@ -577,26 +581,26 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == buttonTypeOne){
+        if (result.get() == buttonTypeOne) {
             return true;
         } else {
             return false;
         }
     }
 
-    private int showModifieDeliveryDialog(DeliveryProcess deliveryProcess) {
+    private int showModifieDeliveryDialog(final DeliveryProcess deliveryProcess) {
         List<Integer> choices = new ArrayList<Integer>();
-        for(int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
+        for (int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
             choices.add(i);
         }
 
         ChoiceDialog<Integer> dialog = new ChoiceDialog<Integer>(actionPointTableView.getSelectionModel().getFocusedIndex(), choices);
-        dialog.setTitle("Modifie Order");
+        dialog.setTitle("Modify Order");
         dialog.setHeaderText("Change Order");
         dialog.setContentText("Choose the new N°:");
 
         Optional<Integer> result = dialog.showAndWait();
-        if (result.isPresent()){
+        if (result.isPresent()) {
             return result.get();
         } else {
             return -1;

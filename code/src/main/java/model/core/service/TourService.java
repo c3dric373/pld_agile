@@ -96,7 +96,9 @@ public class TourService {
             throw new IllegalArgumentException("actonPoints list not "
                     + "of same size");
         }
-
+        if (TourService.checkChangeOrder(tour, actionPoints)) {
+            throw new IllegalArgumentException("illegal order change");
+        }
         GraphService graphService = new GraphService();
         final List<Journey> newJourneys = new ArrayList<>();
         for (int i = 1; i < actionPoints.size(); i++) {
@@ -112,6 +114,16 @@ public class TourService {
         tour.setJourneyList(calculatedJourneys);
         tour.setActionPoints(actionPoints);
         return tour;
+    }
+
+    private static boolean checkChangeOrder(final Tour tour, final List<ActionPoint> actionPoints) {
+
+        for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
+            if (actionPoints.indexOf(deliveryProcess.getDelivery()) < actionPoints.indexOf(deliveryProcess.getPickUP())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
