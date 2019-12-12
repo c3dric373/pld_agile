@@ -62,9 +62,15 @@ public class TourService {
         return JourneyService.durationToTime(journeyTime);
     }
 
-    public static Tour deleteDpMapNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+    public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().remove(deliveryProcess);
         return tour;
+    }
+
+    public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+        tour.getDeliveryProcesses().add(deliveryProcess);
+        return tour;
+
     }
 
     /**
