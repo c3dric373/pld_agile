@@ -24,10 +24,7 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
@@ -45,13 +42,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void deleteDp() {
-        this.mainApp.deleteDp(deliveryProcessLoaded);
+        if(showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")){
+            this.mainApp.deleteDp(deliveryProcessLoaded);
+        }
     }
 
     public void setActionPoints(final Tour tour) {
+        actionPointTableView.getSelectionModel().clearSelection();
         actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tour.getActionPoints());
-
     }
 
 
@@ -134,6 +133,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label dpDDuration;
 
+    @FXML
+    private Label arrivalTime;
+
+    @FXML
+    private Label numberDeliveries;
+
+    @FXML
+    private Label startTime;
+
+    private void setBigLabels() {
+        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
+        startTime.setText(tourLoaded.getStartTime().toString());
+        if (tourLoaded.getCompleteTime() != null) {
+            final List<Journey> journeys = tourLoaded.getJourneyList();
+            final int journeysLength = journeys.size();
+            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+        }
+    }
+
 
     @FXML
     private GoogleMapView mapView;
@@ -158,7 +176,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
 
         actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue, tourLoaded));
+                (observable, oldValue, newValue) -> handelTableSelection(newValue));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -202,11 +220,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Create / Update
 
     public void createFakeActionPointList() {
-        List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
+        List<ActionPoint> listActionPoints = new ArrayList<>();
         // Create a base actionPoint.
         ActionPoint base = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.BASE);
+        ActionPoint end = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.END);
 
         listActionPoints.add(base);
+        listActionPoints.add(end);
         for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
             listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
                     .getTime(), deliveryProcess.getPickUP().getLocation(),
@@ -266,20 +286,20 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (tourLoaded.getJourneyList() != null) {
             if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
                 dpDuration.setText(tourLoaded.getCompleteTime().toString());
-                dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
+                dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
                 List<Journey> journeyList = new ArrayList<Journey>();
                 journeyList.add(tourLoaded.getJourneyList().get(0));
                 displayMap();
                 drawAllActionPoints();
                 drawFullTour();
                 drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
-            } else {
+            }else {
                 this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
                     dpDuration.setText(deliveryProcess.getTime().toString());
                 }
                 if (deliveryProcess.getDistance() != null) {
-                    dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+                    dPDistance.setText(String.valueOf(deliveryProcess.getDistance()) + " m");
                 }
             }
         }
@@ -305,11 +325,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
+        setBigLabels();
+
         // Create a fake list of action Points To display.
         createFakeActionPointList();
-
+        actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tourLoaded.getActionPoints());
 
+        System.out.println(actionPoints.size() + " action point size");
         // Add observable list data to the table
         actionPointTableView.setItems(actionPoints);
         drawAllActionPoints();
@@ -318,10 +341,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Draw
 
     public void drawFullTour() {
+        setBigLabels();
         map.clearMarkers();
         drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
         drawAllActionPoints();
     }
+
 
     public void drawAllActionPoints() {
 
@@ -511,12 +536,45 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
+    private void handelTableSelection(ActionPoint newValue) {
+        if(newValue!= null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null){
+            dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
+            List<Journey> journeyList = new ArrayList<Journey>();
+            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
+            displayMap();
+            drawAllActionPoints();
+            drawFullTour();
+            drawPolyline(getMCVPathFormJourneyListe(journeyList), "black", 0.5);
+        }else {
+            mainApp.showDeliveryProcess(newValue, tourLoaded);
+        }
+    }
+
     private void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private Boolean showConfirmationAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(msg);
+
+        ButtonType buttonTypeOne = new ButtonType("Yes");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOne){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
