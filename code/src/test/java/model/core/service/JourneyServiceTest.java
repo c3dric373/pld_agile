@@ -131,13 +131,15 @@ class JourneyServiceTest {
 
         @Test
         void correctUsage() {
-            OptionalInt res1 = journeyService.findIndexPointInJourneys(journeys, point1, false);
-            OptionalInt res2 = journeyService.findIndexPointInJourneys(journeys, point3, true);
+            OptionalInt res1 = journeyService.findIndexPointInJourneys(journeys, point1, true);
+            OptionalInt res2 = journeyService.findIndexPointInJourneys(journeys, point3, false);
             OptionalInt res3 = journeyService.findIndexPointInJourneys(journeys, point2, true);
+            OptionalInt res4 = journeyService.findIndexPointInJourneys(journeys, point2, false);
             assertAll(
                     () -> assertEquals(0, res1.getAsInt(), "findIndexPointInJourneys should return the journey index"),
                     () -> assertEquals(0, res2.getAsInt(), "findIndexPointInJourneys should return the journey index"),
-                    () -> assertTrue(res3.isEmpty(), "findIndexPointInJourneys should return the journey index")
+                    () -> assertTrue(res3.isEmpty(), "findIndexPointInJourneys should return the journey index"),
+                    () -> assertTrue(res4.isEmpty(), "findIndexPointInJourneys should return the journey index")
             );
         }
     }

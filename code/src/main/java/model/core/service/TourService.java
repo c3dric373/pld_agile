@@ -282,7 +282,7 @@ public class TourService {
         journeys.add(index1, journey2);
         // change actionPointList
         newTour.setActionPoints(actionPointList);
-        
+
         return newTour;
     }
 
