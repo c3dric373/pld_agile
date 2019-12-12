@@ -45,16 +45,16 @@ public class TourService {
     }
 
     public static int getCompleteDistance(final Tour tour) {
-        int completeDistance =0;
-        for (Journey journey : tour.getJourneyList()){
-           completeDistance += journey.getMinLength();
+        int completeDistance = 0;
+        for (Journey journey : tour.getJourneyList()) {
+            completeDistance += journey.getMinLength();
         }
         return completeDistance;
     }
 
-    public static Time getCompleteTime(final Tour tour){
+    public static Time getCompleteTime(final Tour tour) {
         long firstFinishTime = tour.getJourneyList().get(0).getFinishTime().getTime();
-        long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size()-1).getFinishTime().getTime();
+        long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
 
         long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
         journeyTime = journeyTime / 1000;
@@ -213,19 +213,19 @@ public class TourService {
      */
     public static Tour addNewDeliveryProcess(final Tour tour,
                                              final ActionPoint pickUpPoint,
-                                             final ActionPoint deliveryPoint){
+                                             final ActionPoint deliveryPoint) {
 
-        Validate.notNull(tour,"tour is null");
-        Validate.notNull(pickUpPoint,"pickUpPoint is null");
-        Validate.notNull(deliveryPoint,"deliveryPoint is null");
+        Validate.notNull(tour, "tour is null");
+        Validate.notNull(pickUpPoint, "pickUpPoint is null");
+        Validate.notNull(deliveryPoint, "deliveryPoint is null");
         Validate.notNull(tour.getActionPoints(), "actionPoints of tour is null");
 
         Tour newTour;
         List<DeliveryProcess> newDeliveryProcessList =
                 tour.getDeliveryProcesses();
         List<ActionPoint> newActionPointList = tour.getActionPoints();
-        newActionPointList.add(newActionPointList.size()-1, pickUpPoint);
-        newActionPointList.add(newActionPointList.size()-1, deliveryPoint);
+        newActionPointList.add(newActionPointList.size() - 1, pickUpPoint);
+        newActionPointList.add(newActionPointList.size() - 1, deliveryPoint);
         newDeliveryProcessList.add(new DeliveryProcess(pickUpPoint,
                 deliveryPoint));
         newTour = new Tour(newDeliveryProcessList, tour.getBase(),
@@ -250,42 +250,39 @@ public class TourService {
         Validate.notNull(deliveryProcess, "deliveryProcess is null");
 
         Tour newTour = tour;
-        try {
-            List<DeliveryProcess> deliveryProcessesList = tour.getDeliveryProcesses();
-            List<ActionPoint> actionPointList = tour.getActionPoints();
-            ActionPoint pickupPoint = deliveryProcess.getPickUP();
-            ActionPoint deliveryPoint = deliveryProcess.getDelivery();
+        List<DeliveryProcess> deliveryProcessesList = tour.getDeliveryProcesses();
+        List<ActionPoint> actionPointList = tour.getActionPoints();
+        ActionPoint pickupPoint = deliveryProcess.getPickUP();
+        ActionPoint deliveryPoint = deliveryProcess.getDelivery();
 
-            actionPointList.remove(pickupPoint);
-            actionPointList.remove(deliveryPoint);
-            deliveryProcessesList.remove(deliveryProcess);
-            // change deliveryProcessList
-            newTour.setDeliveryProcesses(deliveryProcessesList);
-            // change journeyList
-            List<Journey> journeys = tour.getJourneyList();
-            JourneyService journeyService = new JourneyService();
-            GraphService graphService = new GraphService();
-            int index1 = journeyService.findIndexPointInJourneys(journeys, pickupPoint.getLocation(), true).getAsInt();
-            Point pointBefore1 = journeys.get(index1).getStartPoint();
-            int index2 = journeyService.findIndexPointInJourneys(journeys, pickupPoint.getLocation(), false).getAsInt();
-            Point pointAfter1 = journeys.get(index2).getArrivePoint();
-            Journey journey1 = graphService.getShortestPath(graph,pointBefore1.getId(), pointAfter1.getId(), null);
-            journeys.remove(index2);
-            journeys.remove(index1);
-            journeys.add(index1, journey1);
-            index1 = journeyService.findIndexPointInJourneys(journeys, deliveryPoint.getLocation(), true).getAsInt();
-            Point pointBefore2 = journeys.get(index1).getStartPoint();
-            index2 = journeyService.findIndexPointInJourneys(journeys, deliveryPoint.getLocation(), false).getAsInt();
-            Point pointAfter2 = journeys.get(index2).getArrivePoint();
-            Journey journey2 = graphService.getShortestPath(graph,pointBefore2.getId(), pointAfter2.getId(), null);
-            journeys.remove(index2);
-            journeys.remove(index1);
-            journeys.add(index1, journey2);
-            // change actionPointList
-            newTour.setActionPoints(actionPointList);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("deleteDeliveryProcess should delete the selected deliveryProcess");
-        }
+        actionPointList.remove(pickupPoint);
+        actionPointList.remove(deliveryPoint);
+        deliveryProcessesList.remove(deliveryProcess);
+        // change deliveryProcessList
+        newTour.setDeliveryProcesses(deliveryProcessesList);
+        // change journeyList
+        List<Journey> journeys = tour.getJourneyList();
+        JourneyService journeyService = new JourneyService();
+        GraphService graphService = new GraphService();
+        int index1 = journeyService.findIndexPointInJourneys(journeys, pickupPoint.getLocation(), true).getAsInt();
+        Point pointBefore1 = journeys.get(index1).getStartPoint();
+        int index2 = journeyService.findIndexPointInJourneys(journeys, pickupPoint.getLocation(), false).getAsInt();
+        Point pointAfter1 = journeys.get(index2).getArrivePoint();
+        Journey journey1 = graphService.getShortestPath(graph, pointBefore1.getId(), pointAfter1.getId(), null);
+        journeys.remove(index2);
+        journeys.remove(index1);
+        journeys.add(index1, journey1);
+        index1 = journeyService.findIndexPointInJourneys(journeys, deliveryPoint.getLocation(), true).getAsInt();
+        Point pointBefore2 = journeys.get(index1).getStartPoint();
+        index2 = journeyService.findIndexPointInJourneys(journeys, deliveryPoint.getLocation(), false).getAsInt();
+        Point pointAfter2 = journeys.get(index2).getArrivePoint();
+        Journey journey2 = graphService.getShortestPath(graph, pointBefore2.getId(), pointAfter2.getId(), null);
+        journeys.remove(index2);
+        journeys.remove(index1);
+        journeys.add(index1, journey2);
+        // change actionPointList
+        newTour.setActionPoints(actionPointList);
+        
         return newTour;
     }
 

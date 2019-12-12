@@ -111,10 +111,14 @@ public class JourneyService {
             for (Journey journey : journeys) {
                 if (journey.getArrivePoint() == point) {
                     return OptionalInt.of(journeys.indexOf(journey));
+                }
+            }
         } else {
             for (Journey journey : journeys) {
                 if (journey.getStartPoint() == point) {
                     return OptionalInt.of(journeys.indexOf(journey));
+                }
+            }
         }
         return OptionalInt.empty();
     }

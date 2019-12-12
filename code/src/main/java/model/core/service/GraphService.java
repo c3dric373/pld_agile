@@ -72,48 +72,48 @@ public class GraphService {
         double latitudeCenter = (latitudeMax + latitudeMin) / 2;
         double longitudeCenter = (longitudeMax + longitudeMin) / 2;
         Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
-        System.out.println(latitudeCenter +"  "+longitudeCenter);
+        System.out.println(latitudeCenter + "  " + longitudeCenter);
 
         return new Point(1, latitudeCenter, longitudeCenter);
     }
 
-    public Tour calculateTour(final Tour tour, final Graph graph) {
-        Validate.notNull(tour, "tour can't be null");
-        Validate.notNull(graph, "graph can't be null");
-
-        TSP tsp3 = new TSP3();
-        int timeLimit = Integer.MAX_VALUE;
-        List<Journey> journeys = getListJourney(tour, graph, tsp3, timeLimit);
-
-        List<Point> points = new ArrayList<>();
-        for (int i = 1; i < journeys.size(); i++) {
-            points.add(journeys.get(i).getStartPoint());
-        }
-        List<ActionPoint> actionPoints = new ArrayList<>();
-        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
-        for (Point point : points) {
-            boolean notFound = true;
-            for (DeliveryProcess deliveryProcess :
-                    tour.getDeliveryProcesses()) {
-                if (deliveryProcess.getDelivery().getLocation() == point) {
-                    actionPoints.add(deliveryProcess.getDelivery());
-                    notFound = false;
-                } else if (deliveryProcess.getPickUP().getLocation() == point) {
-                    actionPoints.add(deliveryProcess.getPickUP());
-                    notFound = false;
-                }
-                if (!notFound) break;
-            }
-        }
-        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
-        tour.setActionPoints(actionPoints);
-
-        // Calculate the finish time of each ActionPoints of each journeys
-        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
-        tour.setJourneyList(journeys1);
-
-        return tour;
-    }
+//    public Tour calculateTour(final Tour tour, final Graph graph) {
+//        Validate.notNull(tour, "tour can't be null");
+//        Validate.notNull(graph, "graph can't be null");
+//
+//        TSP tsp3 = new TSP3();
+//        int timeLimit = Integer.MAX_VALUE;
+//        List<Journey> journeys = getListJourney(tour, graph, tsp3, timeLimit);
+//
+//        List<Point> points = new ArrayList<>();
+//        for (int i = 1; i < journeys.size(); i++) {
+//            points.add(journeys.get(i).getStartPoint());
+//        }
+//        List<ActionPoint> actionPoints = new ArrayList<>();
+//        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
+//        for (Point point : points) {
+//            boolean notFound = true;
+//            for (DeliveryProcess deliveryProcess :
+//                    tour.getDeliveryProcesses()) {
+//                if (deliveryProcess.getDelivery().getLocation() == point) {
+//                    actionPoints.add(deliveryProcess.getDelivery());
+//                    notFound = false;
+//                } else if (deliveryProcess.getPickUP().getLocation() == point) {
+//                    actionPoints.add(deliveryProcess.getPickUP());
+//                    notFound = false;
+//                }
+//                if (!notFound) break;
+//            }
+//        }
+//        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
+//        tour.setActionPoints(actionPoints);
+//
+//        // Calculate the finish time of each ActionPoints of each journeys
+//        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
+//        tour.setJourneyList(journeys1);
+//
+//        return tour;
+//    }
 
     public static boolean isInMap(final Point newPoint) {
         //todo
@@ -192,7 +192,6 @@ public class GraphService {
         Map<Long, Integer> map = graph.getMap();
         Validate.notNull(map.get(idStart), "idStart not in graph");
         Validate.notNull(map.get(idArrive), "idArrive not in graph");
-        Validate.notNull(resDijkstra, "resDijkstra can't be null");
 
         if (resDijkstra == null) {
             resDijkstra = dijkstra(graph, idStart);
@@ -217,6 +216,9 @@ public class GraphService {
 //            System.out.printf("  %d", point.getId());
 //        }
 //        System.out.println();
+        if (journeyPoints.size() == 1) {
+            journeyPoints.add(journeyPoints.get(0));
+        }
         return new Journey(journeyPoints, minLength);
     }
 

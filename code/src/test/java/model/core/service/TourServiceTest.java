@@ -47,28 +47,28 @@ class TourServiceTest {
         notInTour = new ActionPoint(xmlToGraph.durationToTime(100), new Point(1, 10, 10), ActionType.PICK_UP);
     }
 
-    @Nested
-    class calculateTimeAtPoint {
-        @Test
-        void nullParameter() {
-            assertAll(
-                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.calculateTimeAtPoint(tourBeforeCalculate, null)),
-                    () -> assertEquals("", tourService.calculateTimeAtPoint(null, actionPoint)),
-                    () -> assertEquals("", tourService.calculateTimeAtPoint(tourBeforeCalculate, actionPoint))
-            );
-        }
-
-        @Test
-        void correctUsage() {
-            assertAll(
-                    () -> assertEquals("08:00:00", tourService.calculateTimeAtPoint(tourAfterCalculate, base)),
-                    () -> assertEquals("08:04:25", tourService.calculateTimeAtPoint(tourAfterCalculate, actionPoint)),
-                    () -> assertEquals("08:17:55", tourService.calculateTimeAtPoint(tourAfterCalculate, actionPoint1)),
-                    () -> assertEquals("08:28:54", tourService.calculateTimeAtPoint(tourAfterCalculate, end)),
-                    () -> assertEquals("", tourService.calculateTimeAtPoint(tourAfterCalculate, notInTour))
-            );
-        }
-    }
+//    @Nested
+//    class calculateTimeAtPoint {
+//        @Test
+//        void nullParameter() {
+//            assertAll(
+//                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.calculateTimeAtPoint(tourBeforeCalculate, null)),
+//                    () -> assertEquals("", tourService.calculateTimeAtPoint(null, actionPoint)),
+//                    () -> assertEquals("", tourService.calculateTimeAtPoint(tourBeforeCalculate, actionPoint))
+//            );
+//        }
+//
+//        @Test
+//        void correctUsage() {
+//            assertAll(
+//                    () -> assertEquals("08:00:00", tourService.calculateTimeAtPoint(tourAfterCalculate, base)),
+//                    () -> assertEquals("08:04:25", tourService.calculateTimeAtPoint(tourAfterCalculate, actionPoint)),
+//                    () -> assertEquals("08:17:55", tourService.calculateTimeAtPoint(tourAfterCalculate, actionPoint1)),
+//                    () -> assertEquals("08:28:54", tourService.calculateTimeAtPoint(tourAfterCalculate, end)),
+//                    () -> assertEquals("", tourService.calculateTimeAtPoint(tourAfterCalculate, notInTour))
+//            );
+//        }
+//    }
 
     @Nested
     class changeDeliveryOrder {
