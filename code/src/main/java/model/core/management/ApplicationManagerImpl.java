@@ -178,6 +178,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
             DeliveryProcessService.setDpInfo(newTour);
             TourService.calculateTimeAtPoint(newTour);
+            projectDataWrapper.loadTour(newTour);
         }
 
         projectState = mainProjectState;

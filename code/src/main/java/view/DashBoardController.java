@@ -201,11 +201,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Create / Update
 
     public void createFakeActionPointList() {
-        List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
+        List<ActionPoint> listActionPoints = new ArrayList<>();
         // Create a base actionPoint.
         ActionPoint base = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.BASE);
+        ActionPoint end = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.END);
 
         listActionPoints.add(base);
+        listActionPoints.add(end);
         for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
             listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
                     .getTime(), deliveryProcess.getPickUP().getLocation(),
@@ -306,9 +308,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void displayLoadedDeliveryProcess() {
         // Create a fake list of action Points To display.
         createFakeActionPointList();
-
+        actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tourLoaded.getActionPoints());
 
+        System.out.println(actionPoints.size() + " action point size");
         // Add observable list data to the table
         actionPointTableView.setItems(actionPoints);
         drawAllActionPoints();
