@@ -8,7 +8,7 @@ import java.sql.Time;
 
 @Getter
 @EqualsAndHashCode
-public class ActionPoint {
+public class ActionPoint implements GenData{
 
     /**
      * Time it takes to complete the action.
@@ -41,6 +41,11 @@ public class ActionPoint {
         this.time = actionTime;
         this.location = actionLocation;
         this.actionType = type;
+    }
+
+    @Override
+    public void accept(final GenDataVisitor genDataVisitor) {
+        genDataVisitor.visit(this);
     }
 
 }

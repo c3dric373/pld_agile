@@ -10,6 +10,7 @@ import org.apache.commons.lang.Validate;
 import view.UserInterface;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -187,14 +188,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void findNearestPoint(final double latitude, final double longitude) {
+    public void findNearestPoint(final double latitude,
+                                 final double longitude,
+                                 ActionType actionType,
+                                 Time actionTime) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
+        Validate.notNull(actionType,"actionType is null");
+        Validate.notNull(actionTime, "actionTime is null");
         final List<Point> pointList =
                 projectDataWrapper.getProject().getPointList();
         final Point nearestPoint = graphService.findNearestPoint(pointList,
                 longitude, latitude);
-        projectDataWrapper.findNearestPoint(nearestPoint);
+        final ActionPoint nearestActionPoint = new ActionPoint(actionTime,
+                nearestPoint, actionType);
+        projectDataWrapper.findNearestPoint(nearestActionPoint);
     }
 
     public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {

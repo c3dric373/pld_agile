@@ -1,12 +1,10 @@
 package model.core.management;
 
-import model.data.ActionPoint;
-import model.data.DeliveryProcess;
-import model.data.Point;
-import model.data.Tour;
+import model.data.*;
 import view.UserInterface;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.List;
 
 /**
@@ -72,7 +70,8 @@ public interface ApplicationManager {
      * @param latitude  latitude of the point
      * @param longitude longitude of the point
      */
-    void findNearestPoint(final double latitude, final double longitude);
+    void findNearestPoint(final double latitude, final double longitude,
+                          final ActionType actionType, final Time actionTime);
 
     /**
      * Get the delivery process correspondent to the given action point

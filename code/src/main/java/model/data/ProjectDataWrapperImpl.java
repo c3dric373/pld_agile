@@ -60,8 +60,8 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     }
 
     @Override
-    public void findNearestPoint(final Point newPoint) {
-        notify(newPoint);
+    public void findNearestPoint(final ActionPoint newActionPoint) {
+        notify(newActionPoint);
     }
 
     public void addObserver(final Observer observer){

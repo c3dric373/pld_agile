@@ -31,13 +31,7 @@ public class GraphService {
                 nearestId = p.getId();
             }
         }
-        /*
-        System.out.println("nearestLong : " + nearestLong + " nearestLat : "
-        + nearestLat);
-        System.out.println("nearestID : " + nearestId);
-        System.out.println("differenceLong : "+differenceLong+" differenceLat"
-        +differenceLat);
-        */
+
         nearestPoint = new Point(nearestId, nearestLat, nearestLong);
         return nearestPoint;
     }
