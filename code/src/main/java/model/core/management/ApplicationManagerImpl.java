@@ -131,17 +131,27 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void addDeliveryProcess(final Tour tour,
                                    final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
-        if (projectState != projectState.TOUR_LOADED
-                && projectState != projectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
-        setAddDeliveryProcess();
         Validate.notNull(tour, "tour null");
         Validate.notNull(pickUpPoint, "pickUpPoint null");
         Validate.notNull(deliveryPoint, "deliveryPoint null");
         final Tour newTour;
-        newTour = tourService.addNewDeliveryProcess(tour, pickUpPoint,
-                deliveryPoint);
+        if (projectState == ProjectState.TOUR_LOADED) {
+            setAddDeliveryProcess();
+            DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
+                    deliveryPoint);
+            newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
+        } else {
+            setAddDeliveryProcess();
+            Graph graph = projectDataWrapper.getProject().getGraph();
+            newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
+                    deliveryPoint);
+        }
+
+
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
     }
@@ -157,7 +167,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         if (projectState == ProjectState.TOUR_LOADED) {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
-            newTour = TourService.deleteDpMapNotCalculated(tour, deliveryProcess);
+            newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
         } else {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
@@ -165,7 +175,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
         }
 
-        projectDataWrapper.loadTour(newTour);
+        projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
     }
 
@@ -215,12 +225,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
                                  Time actionTime) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
-        Validate.notNull(actionType,"actionType is null");
+        Validate.notNull(actionType, "actionType is null");
         Validate.notNull(actionTime, "actionTime is null");
-        final Graph graph=
+        final Graph graph =
                 projectDataWrapper.getProject().getGraph();
         final Point nearestPoint = GraphService.findNearestPoint(graph,
-          longitude, latitude);
+                longitude, latitude);
         final ActionPoint nearestActionPoint = new ActionPoint(actionTime,
                 nearestPoint, actionType);
         projectDataWrapper.findNearestPoint(nearestActionPoint);
@@ -244,17 +254,17 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED){
+        if (projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
         List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
         projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
     }
 
-    public void setMapLoaded(){
-        if(projectState != ProjectState.INITIALIZED &&
-                projectState != ProjectState.MAP_LOADED){
+    public void setMapLoaded() {
+        if (projectState != ProjectState.INITIALIZED &&
+                projectState != ProjectState.MAP_LOADED) {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.MAP_LOADED;

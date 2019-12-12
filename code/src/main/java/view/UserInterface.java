@@ -83,9 +83,6 @@ public class UserInterface implements Observer {
     }
 
 
-    public void addDeliveryProcess(DeliveryProcess deliveryProcess) {
-        //this.model.addDeliveryProcess(deliveryProcess);
-    }
 
     public void getNearPoint(double latitude, double longitude, ActionType actionType, Time time) {
         this.model.findNearestPoint(latitude, longitude, actionType, time);
@@ -102,5 +99,9 @@ public class UserInterface implements Observer {
 
     public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
         this.model.getJourneyList(journeyList, deliveryProcess);
+    }
+
+    public void addDeliveryProcess(Tour tourLoaded, ActionPoint newPickUpActionPoint, ActionPoint newDeliveryActionPoint) {
+        this.model.addDeliveryProcess(tourLoaded, newPickUpActionPoint,newDeliveryActionPoint);
     }
 }

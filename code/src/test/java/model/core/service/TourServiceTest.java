@@ -190,13 +190,15 @@ class TourServiceTest {
             ActionPoint actionPoint3 = new ActionPoint(xmlToGraph.durationToTime(180), XmlToGraph.getPointById(495424862), ActionType.DELIVERY);
             assertAll(
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.addNewDeliveryProcess(null, actionPoint2, actionPoint3)),
+                            () -> tourService.addNewDeliveryProcess(null, tourAfterCalculate, actionPoint2, actionPoint3)),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.addNewDeliveryProcess(tourAfterCalculate, null, actionPoint3)),
+                            () -> tourService.addNewDeliveryProcess(graph1, null, actionPoint2, actionPoint3)),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.addNewDeliveryProcess(tourAfterCalculate, actionPoint2, null)),
+                            () -> tourService.addNewDeliveryProcess(graph1, tourAfterCalculate, null, actionPoint3)),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.addNewDeliveryProcess(tourBeforeCalculate, actionPoint2, actionPoint3))
+                            () -> tourService.addNewDeliveryProcess(graph1, tourAfterCalculate, actionPoint2, null)),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> tourService.addNewDeliveryProcess(graph, tourBeforeCalculate, actionPoint2, actionPoint3))
             );
         }
 
@@ -204,7 +206,7 @@ class TourServiceTest {
         void correctUsage() {
             ActionPoint actionPoint2 = new ActionPoint(xmlToGraph.durationToTime(180), XmlToGraph.getPointById(479185309), ActionType.PICK_UP);
             ActionPoint actionPoint3 = new ActionPoint(xmlToGraph.durationToTime(180), XmlToGraph.getPointById(495424862), ActionType.DELIVERY);
-            Tour res = tourService.addNewDeliveryProcess(tourAfterCalculate, actionPoint2, actionPoint3);
+            Tour res = tourService.addNewDeliveryProcess(graph1, tourAfterCalculate, actionPoint2, actionPoint3);
             assertAll(
                     () -> assertEquals(actionPoint.getLocation(), res.getDeliveryProcesses().get(0).getPickUP().getLocation(),
                             "addNewDeliveryProcess should return a tour with new deliveryProcess added"),
