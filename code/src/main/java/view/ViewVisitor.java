@@ -52,7 +52,7 @@ public class ViewVisitor implements GenDataVisitor {
         dashBoardController.drawFullTour();
         dashBoardController.drawPolyline(dashBoardController.
                 getMCVPathFormJourneyList(listJourneyFromDeliveryProcess.
-                        getJourneyList()), 0.9, 4);
+                        getJourneyList()), 0.9, ColorOption.CUSTOM_COLOR_FROM_ID);
     }
 
     @Override

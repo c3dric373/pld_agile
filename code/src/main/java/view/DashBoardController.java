@@ -562,7 +562,7 @@ public class DashBoardController implements Initializable,
                 drawFullTour();
                 clearRectangleColor();
                 drawPolyline(getMCVPathFormJourneyList(journeyList),
-                        NORMAL_OPACITY, 2);
+                        NORMAL_OPACITY, ColorOption.FIRST_JOURNEY_COLOR);
             } else {
                 this.mainApp.getJourneyList(deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
@@ -638,7 +638,7 @@ public class DashBoardController implements Initializable,
             drawAllActionPoints();
             drawFullTour();
             drawPolyline(getMCVPathFormJourneyList(journeyList), NORMAL_OPACITY,
-                    3);
+                    ColorOption.LAST_JOURNEY_COLOR);
         } else {
             mainApp.getDeliveryProcessFromActionPoint(newValue, tourLoaded);
         }
@@ -694,7 +694,7 @@ public class DashBoardController implements Initializable,
         map.clearMarkers();
         drawAllActionPoints();
         drawPolyline(getMCVPathFormJourneyList(tourLoaded.getJourneyList()),
-                0.4, 1);
+                0.4, ColorOption.FULL_TOUR_COLOR);
     }
 
     /**
@@ -728,32 +728,29 @@ public class DashBoardController implements Initializable,
      *
      * @param mvcArray The path to follow to draw the line.
      * @param opacity  opacity of the line.
-     * @param type     int parameter to determine the colour of the line.
+     * @param colorOption  The Color Option to apply to the line.
      */
     void drawPolyline(final MVCArray mvcArray, final double opacity,
-                      final int type) {
+                      final ColorOption colorOption) {
 
         String color = "blue";
 
-        switch (type) {
-            // 1 = Draw Full tour
-            case 1:
+        switch (colorOption) {
+            case FULL_TOUR_COLOR:
                 color = "blue";
                 break;
-            // 2 = Draw First journey
-            case 2:
+            case FIRST_JOURNEY_COLOR:
                 color = "red";
                 break;
-            // 3 = Draw End journey
-            case 3:
+            case LAST_JOURNEY_COLOR:
                 color = "cyan";
                 break;
-            // 4 = Draw with Auto color
-            case 4:
+            case CUSTOM_COLOR_FROM_ID:
                 if (deliveryProcessLoaded != null)
                     color = Utils.pointToColour(deliveryProcessLoaded.
                             getPickUP());
                 break;
+            default: break;
         }
         setRectangleColor(color);
         PolylineOptions polyOpts =
