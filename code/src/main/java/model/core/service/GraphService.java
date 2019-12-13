@@ -163,7 +163,7 @@ public class GraphService {
         //if(minLength == Double.POSITIVE_INFINITY){
           //  ApplicationManagerImpl.sendMessage(ErrorMessage.CANT_REACH_POINT);
         //}
-       // Validate.isTrue(minLength != Double.POSITIVE_INFINITY, "can't reach from point " + idStart + " to point " + idArrive);
+        //Validate.isTrue(minLength != Double.POSITIVE_INFINITY, "can't reach from point " + idStart + " to point " + idArrive);
         // get the REVERSE order of the path one by one (start with the arrival point)
         while (true) {
             journeyPoints.add(points.get(curIndex));
