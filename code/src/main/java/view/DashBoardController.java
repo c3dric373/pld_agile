@@ -65,35 +65,6 @@ public class DashBoardController implements Initializable,
         clearRectangleColor();
     }
 
-    public void modifieDP() {
-        int result = showModifieDeliveryDialog(deliveryProcessLoaded);
-        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
-        if (result != -1) {
-            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
-            ActionPoint actionPoint = actionPoints.remove(index);
-            actionPoints.add(result, actionPoint);
-            this.mainApp.modifyOrder(actionPoints);
-        }
-    }
-
-    //Enum Marker Types.
-    @Getter
-    public enum MarkerType {
-        PICKUP("Pick-Up Point", "P", "icons/marker.png"),
-        DELIVERY("Delivery Point", "D", "flag.png"),
-        BASE("Base Point", "B", "home-icon-silhouette.png");
-
-        private String title = "";
-        private String firstLetter = "";
-        private String iconPath = "";
-
-        MarkerType(String title, String firstLetter, String iconPath) {
-            this.title = title;
-            this.firstLetter = firstLetter;
-            this.iconPath = iconPath;
-        }
-    }
-
     // Reference to the main application
     private UserInterface mainApp;
 
