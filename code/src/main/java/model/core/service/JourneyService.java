@@ -11,21 +11,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
+/**
+ * Utility class providing helper functions for tasks closely related to
+ * {@link Journey}.
+ */
 public class JourneyService {
-
     /**
      * Number of Seconds in a Hour.
      */
-    static final int NB_SEC_IN_HOUR = 3600;
+    private static final int NB_SEC_IN_HOUR = 3600;
     /**
      * Number of Seconds in a minute.
      */
-    static final int NB_SEC_IN_MIN = 60;
+    private static final int NB_SEC_IN_MIN = 60;
 
     /**
-     * Travel speed in m/s
+     * Division factor.
      */
-    final static double TRAVEL_SPEED = 15.0 / 3.6;
+   private static final long DIVISION_FACTOR = 1000L;
+
+    /**
+     * Travel speed in m/s.
+     */
+    static final double TRAVEL_SPEED = 15.0 / 3.6;
 
     /**
      * Calculate the finish time for each ActionPoints in each journeys.
@@ -37,7 +45,8 @@ public class JourneyService {
      * @return list of journeys
      */
     public static List<Journey> calculateTime(final List<Journey> journeys,
-                                              final List<ActionPoint> actionPoints,
+                                              final List<ActionPoint>
+                                                      actionPoints,
                                               final Time startTime) {
         Validate.notNull(journeys, "journeys is null");
         Validate.noNullElements(journeys,
@@ -67,18 +76,19 @@ public class JourneyService {
             int travelTimeInSec = (int) (length / TRAVEL_SPEED);
 
             LocalTime journeyLocalTime = journeyStartTime.toLocalTime();
-            LocalTime StartPlusTravelTime;
-            StartPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
+            LocalTime startPlusTravelTime;
+            startPlusTravelTime = journeyLocalTime.plusSeconds(travelTimeInSec);
 
             // get Action time in sec by getting the time in millisecond between
             // actionTime and the reference time
             long actionTimeInMillis =
                     actionTime.getTime() - referenceTime.getTime();
-            long actionTimeInSec = actionTimeInMillis / 1000L;
 
-            LocalTime StartPlusTravelPlusActionTime =
-                    StartPlusTravelTime.plusSeconds(actionTimeInSec);
-            Time arrivalTime = Time.valueOf(StartPlusTravelPlusActionTime);
+            long actionTimeInSec = actionTimeInMillis / DIVISION_FACTOR;
+
+            LocalTime startPlusTravelPlusActionTime =
+                    startPlusTravelTime.plusSeconds(actionTimeInSec);
+            Time arrivalTime = Time.valueOf(startPlusTravelPlusActionTime);
             journeyStartTime = arrivalTime;
             journey.setFinishTime(arrivalTime);
 
@@ -106,8 +116,8 @@ public class JourneyService {
                                                 final boolean endPoint) {
         Validate.notNull(journeys, "journeys can't be null");
         Validate.notEmpty(journeys, "journeys can't be empty");
-        Validate.noNullElements(journeys, "journeys can't contain null " +
-                "element");
+        Validate.noNullElements(journeys, "journeys can't contain null"
+                + "element");
         Validate.notNull(point, "point can't be null");
 
         if (endPoint) {
@@ -133,8 +143,8 @@ public class JourneyService {
      * @param actionPoints list of Action Points
      * @return the corresponding actionPoint
      */
-    static ActionPoint findActionPoint(Point point,
-                                       List<ActionPoint> actionPoints) {
+    static ActionPoint findActionPoint(final Point point,
+                                       final List<ActionPoint> actionPoints) {
         long id = point.getId();
         ActionPoint correspondingActionPoint = null;
         for (ActionPoint actionPoint : actionPoints) {
@@ -165,14 +175,14 @@ public class JourneyService {
         Validate.notNull(journeys, "journeys can't be null");
         Validate.notNull(startPoint, "startPoint can't be null");
         Validate.notNull(endPoint, "endPoint can't be null");
-        Validate.noNullElements(journeys, "journeys can't contain null " +
-                "element");
+        Validate.noNullElements(journeys, "journeys can't contain null "
+                + "element");
         Journey startJourney = null;
         Journey endJourney = null;
         List<Integer> result = new ArrayList<>();
         for (final Journey journey : journeys) {
-            Validate.notNull(journey.getFinishTime(), "journey finish time " +
-                    "null");
+            Validate.notNull(journey.getFinishTime(), "journey finish "
+                    + "time null");
             if (journey.getStartPoint().getId() == startPoint.getId()) {
                 startJourney = journey;
             }
@@ -186,11 +196,28 @@ public class JourneyService {
 
     }
 
-    public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
-        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
-        Validate.isTrue(indices.get(0) > 0 && indices.get(0) != null, "start journey can't be calculated");
-        Validate.isTrue(indices.get(1) > 0 && indices.get(1) != null, "end journey can't be calculated");
-        Validate.isTrue(indices.get(0) <= indices.get(1), "start journey index is bigger than end journey index");
+    /**
+     * Calculates the time between two points in the
+     * {@link model.data.Tour}. It does so by iterating about all the
+     * journeys between those 2 points ands sums the time of each
+     * journey.
+     *
+     * @param journeys   the complete list of journeys representing a
+     *                   {@link model.data.Tour}
+     * @param startPoint startPoint
+     * @param endPoint   endPoint
+     * @return time between the start and end point
+     */
+    public static Time calculateTimePointToPoint(final List<Journey> journeys
+            , final Point startPoint, final Point endPoint) {
+        List<Integer> indices = getStartEndJourney(journeys, startPoint,
+                endPoint);
+        Validate.isTrue(indices.get(0) != -1 && indices.get(0) != null,
+                "start journey null");
+        Validate.isTrue(indices.get(1) != -1 && indices.get(1) != null,
+                "end journey null");
+        Validate.isTrue(indices.get(0) <= indices.get(1),
+                "start journey index is bigger than end journey index");
         int sum = 0;
         for (int i = indices.get(0); i <= indices.get(1); i++) {
             long firstFinishTime = journeys.get(i).getFinishTime().getTime();
@@ -199,23 +226,35 @@ public class JourneyService {
             System.out.println(firstFinishTime);
             System.out.println(secondFinishTime);
             long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
-            journeyTime = journeyTime / 1000;
-
+            journeyTime = journeyTime / DIVISION_FACTOR;
             sum += journeyTime;
         }
-        System.out.println("Sum: " + sum);
         return durationToTime(sum);
     }
 
-    public static int lengthPointToPoint(final List<Journey> journeys,
-                                         final Point startPoint,
-                                         final Point endPoint) {
-        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
-        Validate.isTrue(indices.get(0) > 0 && indices.get(0) != null, "start journey can't be calculated");
-        Validate.isTrue(indices.get(1) > 0 && indices.get(1) != null, "end journey can't be calculated");
-        Validate.isTrue(indices.get(0) <= indices.get(1), "start journey index is bigger than end journey index");
+    /**
+     * Calculates the length between two points in the
+     * {@link model.data.Tour}. It does so by iterating about all the
+     * journeys between those 2 points ands sums the length of each journey.
+     *
+     * @param journeys   the complete list of journeys representing a
+     *                   {@link model.data.Tour}
+     * @param startPoint startPoint
+     * @param endPoint   endPoint
+     * @return distance between the start and end point
+     */
+    static int lengthPointToPoint(final List<Journey> journeys,
+                                  final Point startPoint,
+                                  final Point endPoint) {
+        List<Integer> indices = getStartEndJourney(journeys, startPoint,
+                endPoint);
+        Journey startJourney = journeys.get(indices.get(0));
+        Journey endJourney = journeys.get(indices.get(1));
+        Validate.notNull(startJourney, "start journey null");
+        Validate.notNull(endJourney, "end journey null");
         int sum = 0;
-        for (int i = indices.get(0); i <= indices.get(1); i++) {
+        for (int i = journeys.indexOf(startJourney);
+             i < journeys.indexOf(endJourney) + 1; i++) {
             sum += journeys.get(i).getMinLength();
         }
         return sum;
@@ -234,7 +273,6 @@ public class JourneyService {
         String durationString;
         durationString = String.format("%d:%02d:%02d", nbHour, nbMin, nbSec);
         Time duration = Time.valueOf(durationString);
-        System.out.println("duration = " + duration);
         return duration;
     }
 }
