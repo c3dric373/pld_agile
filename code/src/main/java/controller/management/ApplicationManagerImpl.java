@@ -133,7 +133,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
-            if (tour != null) {
+            if (tour != null && tour.getBase().getId() != 0) {
                 undoList.add(projectDataWrapper.getProject().getGraph());
                 projectDataWrapper.loadTour(tour);
                 setTourLoaded();
