@@ -35,16 +35,30 @@ public class DashBoardController implements Initializable,
      */
     private static final String EMPTY_STRING = "";
 
+    /**
+     * 0 String.
+     */
     private static final String ZERO_STRING = "0";
+
+    /**
+     * Opacity to draw Normal Polylines On Map.
+     */
+    private static final double NORMAL_OPACITY = 0.5;
+
+    /**
+     * Time to wait until reloading a new map after a click
+     * to avoid crash on the user spam click.
+     */
+    private static final long WAITING_SAFE_LOADING_TIME = 60;
 
     /**
      * The style of our map.
      */
-    private static String MAP_STYLE;
+    private static String mapStyle;
 
     static {
         try {
-            MAP_STYLE = Files.readString(Path.of(DashBoardController.class.
+            mapStyle = Files.readString(Path.of(DashBoardController.class.
                             getResource("map_style.txt").getPath()),
                     StandardCharsets.US_ASCII);
         } catch (IOException e) {
@@ -70,21 +84,49 @@ public class DashBoardController implements Initializable,
     private ObservableList<ActionPoint> actionPoints =
             FXCollections.observableArrayList();
 
-    // Manage New DeliveryProcess
+    /**
+     * Action Point Object that store
+     * info of new PickUpPoint while
+     * creating a new Delivery Process.
+     */
     private ActionPoint newPickUpActionPoint = null;
 
+    /**
+     * Action Point Object that store
+     * info of new DeliveryPoint while
+     * creating a new Delivery Process.
+     */
     private ActionPoint newDeliveryActionPoint = null;
 
-    // Markers of new DeliveryProcess
+    /**
+     * Marker Object that display on map
+     * the new PickUpPoint while creating
+     * a new Delivery Process.
+     */
     private Marker newPickUpPointMarker = null;
 
+    /**
+     * Marker Object that display on map the
+     * DeliveryPoint while creating a new
+     * Delivery Process.
+     */
     private Marker newDeliveryPointMarker = null;
 
-    private static double LYON_LATITUDE = 45.771606;
+    /**
+     * Latitude to set the latitude center of
+     * our map for initialization.
+     */
+    private static final double LYON_LATITUDE = 45.771606;
 
-    private static double LYON_LONGITUDE = 4.880959;
+    /**
+     * Longitude to set the longitude center of our map for initialization.
+     */
+    private static final double LYON_LONGITUDE = 4.880959;
 
-    private static double ZOOM_SETTING = 13;
+    /**
+     * Value of the zoom to set to our map for initialization.
+     */
+    private static final double ZOOM_SETTING = 13;
 
     /**
      * Store all the Actions Points on a table for the view.
@@ -128,31 +170,41 @@ public class DashBoardController implements Initializable,
     private Label labelDeliveryCoordinates;
 
     /**
-     * Reference to the label to display a Color Indicator for each DeliveryProcess in a rectangle.
+     * Reference to the label to display a Color
+     * Indicator for each DeliveryProcess in a
+     * rectangle.
      */
     @FXML
-    public Label rectangle;
+    private Label rectangle;
 
     /**
-     * Reference to the textField to set and display the time in hours of a New Delivery Action.
+     * Reference to the textField to set and
+     * display the time in hours
+     * of a New Delivery Action.
      */
     @FXML
     private TextField inputDeliveryTimeH;
 
     /**
-     * Reference to the textField to set and display the time in minutes of a New Delivery Action.
+     * Reference to the textField to set
+     * and display the time in minutes
+     * of a New Delivery Action.
      */
     @FXML
     private TextField inputDeliveryTimeM;
 
     /**
-     * Reference to the textField to set and display the time in hours of a New PickUp Action.
+     * Reference to the textField to set
+     * and display the time in hours
+     * of a New PickUp Action.
      */
     @FXML
     private TextField inputPickUpTimeH;
 
     /**
-     * Reference to the textField to set and display the time in minutes of a New PickUp Action.
+     * Reference to the textField to set
+     * and display the time in minutes
+     * of a New PickUp Action.
      */
     @FXML
     private TextField inputPickUpTimeM;
@@ -164,55 +216,69 @@ public class DashBoardController implements Initializable,
     private GoogleMapView mapView;
 
     /**
-     * Reference to the Label that describe the current Duration of deliveryProcess.
+     * Reference to the Label that describe
+     * the current Duration of deliveryProcess.
      */
     @FXML
     private Label dpDuration;
 
     /**
-     * Reference to the Label that describe the current Distance of deliveryProcess.
+     * Reference to the Label that describe
+     * the current Distance of deliveryProcess.
      */
     @FXML
     private Label dPDistance;
 
     /**
-     * Reference to the Label that describe the Name of PickUpPoint of current deliveryProcess.
+     * Reference to the Label that describe
+     * the Name of PickUpPoint
+     * of current deliveryProcess.
      */
     @FXML
     private Label dPPuPoint;
 
     /**
-     * Reference to the Label that describe the Name of DeliveryPoint of current deliveryProcess.
+     * Reference to the Label that describe
+     * the Name of DeliveryPoint
+     * of current deliveryProcess.
      */
     @FXML
     private Label dPDPoint;
 
     /**
-     * Reference to the Label that describe the duration of PickUp of current deliveryProcess.
+     * Reference to the Label that describe
+     * the duration of PickUp
+     * of current deliveryProcess.
      */
     @FXML
     private Label dpPUDuration;
 
     /**
-     * Reference to the Label that describe the duration of Delivery of current deliveryProcess.
+     * Reference to the Label that describe
+     * the duration of Delivery
+     * of current deliveryProcess.
      */
     @FXML
     private Label dpDDuration;
 
     /**
-     * Reference to the Label that describe the arivalTime of current Tour.
+     * Reference to the Label that describe
+     * the arivalTime of current Tour.
      */
     @FXML
     private Label arrivalTime;
 
     /**
-     * Reference to the Label that describe the number of total deliveries of current deliveryProcess.
+     * Reference to the Label that describe
+     * the number of total deliveries
+     * of current deliveryProcess.
      */
     @FXML
     private Label numberDeliveries;
 
     /**
-     * Reference to the Label that describe the startTime of current Tour.
+     * Reference to the Label that describe
+     * the startTime of current Tour.
      */
     @FXML
     private Label startTime;
@@ -223,17 +289,17 @@ public class DashBoardController implements Initializable,
     private GoogleMap map;
 
     /**
-     * Local Save of Tour
+     * Local Save of Tour.
      */
     private Tour tourLoaded;
 
     /**
-     * Local Save of current selected DeliveryProcess
+     * Local Save of current selected DeliveryProcess.
      */
     private DeliveryProcess deliveryProcessLoaded;
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(final URL url, final ResourceBundle rb) {
 
         // Initialize the actionPoints table with the 3 columns.
         actionPointTableView.setItems(null);
@@ -261,7 +327,7 @@ public class DashBoardController implements Initializable,
         //Set the initial properties of the map.
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(LYON_LATITUDE, LYON_LONGITUDE))
-                .styleString(MAP_STYLE).overviewMapControl(false)
+                .styleString(mapStyle).overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP).panControl(false)
                 .rotateControl(false).scaleControl(false)
                 .streetViewControl(false).zoomControl(false).zoom(ZOOM_SETTING);
@@ -321,10 +387,10 @@ public class DashBoardController implements Initializable,
         int result = showModifiedDeliveryDialog();
         int index = actionPointTableView.getSelectionModel().getFocusedIndex();
         if (result != -1) {
-            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
-            ActionPoint actionPoint = actionPoints.remove(index);
-            actionPoints.add(result, actionPoint);
-            this.mainApp.changeDeliveryOrder(actionPoints);
+            List<ActionPoint> actionPointsList = tourLoaded.getActionPoints();
+            ActionPoint actionPoint = actionPointsList.remove(index);
+            actionPointsList.add(result, actionPoint);
+            this.mainApp.changeDeliveryOrder(actionPointsList);
         }
     }
 
@@ -374,8 +440,8 @@ public class DashBoardController implements Initializable,
         listActionPoints.add(base);
         listActionPoints.add(end);
 
-        for (DeliveryProcess deliveryProcess :
-                tourLoaded.getDeliveryProcesses()) {
+        for (DeliveryProcess deliveryProcess
+                : tourLoaded.getDeliveryProcesses()) {
 
             final ActionPoint pickUp =
                     new ActionPoint(deliveryProcess.getPickUP().getTime(),
@@ -414,15 +480,17 @@ public class DashBoardController implements Initializable,
     private Marker createMarker(final ActionPoint actionPoint,
                                 final MarkerType mType) {
         String label = mType.firstLetter;
-        if (actionPoint.getActionType() != ActionType.BASE &&
-                actionPoint.getActionType() != ActionType.END) {
+        if (actionPoint.getActionType() != ActionType.BASE
+                && actionPoint.getActionType() != ActionType.END) {
             label += actionPoint.getId();
         }
-        ;
+
         MarkerOptions markerPoint = new MarkerOptions();
-        markerPoint.title(mType.getTitle() + " - " + label + "\n\r" +
-                "Passage Time: " + actionPoint.getPassageTime() + "\n" +
-                "Time of Action: " + actionPoint.getTime() + "\n").label(label).
+        markerPoint.title(mType.getTitle() + " - " + label + "\n\r"
+                + "Passage Time: " + actionPoint.getPassageTime()
+                + "\n"
+                + "Time of Action: "
+                + actionPoint.getTime() + "\n").label(label).
                 position(new LatLong(actionPoint.getLocation().getLatitude(),
                         actionPoint.getLocation().getLongitude()));
         return new Marker(markerPoint);
@@ -447,8 +515,8 @@ public class DashBoardController implements Initializable,
                         newPickUpActionPoint, newDeliveryActionPoint);
             } else {
                 showAlert("Action Impossible", "Error :",
-                        "The Delivery " +
-                                "Process is not created"
+                        "The Delivery "
+                                + "Process is not created"
                 );
             }
         } else {
@@ -494,7 +562,7 @@ public class DashBoardController implements Initializable,
                 drawFullTour();
                 clearRectangleColor();
                 drawPolyline(getMCVPathFormJourneyList(journeyList),
-                        0.5, 2);
+                        NORMAL_OPACITY, 2);
             } else {
                 this.mainApp.getJourneyList(deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
@@ -522,8 +590,8 @@ public class DashBoardController implements Initializable,
             if (selectedFile.getName().contains("xml")) {
                 this.mainApp.loadMap(selectedFile);
             } else {
-                showAlert("File Selection", "Error", "Error" +
-                        " Loading not xmFile");
+                showAlert("File Selection", "Error", "Error"
+                        + " Loading not xmFile");
             }
         }
     }
@@ -543,8 +611,8 @@ public class DashBoardController implements Initializable,
             if (selectedFile.getName().contains("xml")) {
                 this.mainApp.loadDeliveryRequest(selectedFile);
             } else {
-                showAlert("File Selection", "Error", "Error" +
-                        " Loading not xmFile");
+                showAlert("File Selection", "Error", "Error"
+                        + " Loading not xmFile");
             }
         }
     }
@@ -557,8 +625,8 @@ public class DashBoardController implements Initializable,
      */
     private void handelTableSelection(final ActionPoint newValue) {
         Utils.pointToColour(newValue);
-        if (newValue != null && newValue.getActionType() == ActionType.END &&
-                tourLoaded.getJourneyList() != null) {
+        if (newValue != null && newValue.getActionType() == ActionType.END
+                && tourLoaded.getJourneyList() != null) {
             // Manage the end of the tour.
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance())
@@ -569,7 +637,7 @@ public class DashBoardController implements Initializable,
             displayMap(newValue.getLocation());
             drawAllActionPoints();
             drawFullTour();
-            drawPolyline(getMCVPathFormJourneyList(journeyList), 0.5,
+            drawPolyline(getMCVPathFormJourneyList(journeyList), NORMAL_OPACITY,
                     3);
         } else {
             mainApp.getDeliveryProcessFromActionPoint(newValue, tourLoaded);
@@ -583,14 +651,14 @@ public class DashBoardController implements Initializable,
      */
     void displayMap(final Point center) {
         try {
-            Thread.sleep(60);
+            Thread.sleep(WAITING_SAFE_LOADING_TIME);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(center.getLatitude(),
-                center.getLongitude())).styleString(MAP_STYLE).
+                center.getLongitude())).styleString(mapStyle).
                 overviewMapControl(false).mapType(MapTypeIdEnum.ROADMAP).
                 panControl(false).rotateControl(false).scaleControl(false).
                 streetViewControl(false).zoomControl(false).zoom(12);
