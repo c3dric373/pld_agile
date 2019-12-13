@@ -177,6 +177,10 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             projectState = ProjectState.TOUR_LOADED;
             projectDataWrapper.getProject().setTour(tour);
             projectDataWrapper.loadTour(tour);
+        } else {
+            projectState = ProjectState.TOUR_CALCULATED;
+            projectDataWrapper.getProject().setTour(tour);
+            projectDataWrapper.modifyTour(tour);
         }
 
     }
@@ -200,7 +204,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         Tour newTour;
         final Tour tour = projectDataWrapper.getProject().getTour();
-        undoList.add(tour.deepClone());
+        Tour clone = tour.deepClone();
+        undoList.add(clone);
+        System.out.println(clone.getActionPoints().size());
         if (projectState == ProjectState.TOUR_LOADED) {
             setDeleteDeliveryProcess();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
@@ -214,6 +220,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             projectDataWrapper.loadTour(newTour);
         }
         projectState = mainProjectState;
+        System.out.println(clone);
     }
 
     private void updateInfo(final Tour newTour) {

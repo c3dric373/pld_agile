@@ -1,10 +1,12 @@
 package model.data;
 
+import com.rits.cloning.Cloner;
 import lombok.*;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
 import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * A tour consists of a list of DeliveryProcesses, a base point and a start
@@ -78,10 +80,8 @@ public class Tour implements GenData {
     }
 
     public Tour deepClone() {
-        return Tour.builder().actionPoints(actionPoints).base(base)
-                .completeTime(completeTime).deliveryProcesses(deliveryProcesses)
-                .journeyList(journeyList).startTime(startTime).
-                        totalDistance(totalDistance).build();
+        Cloner cloner = new Cloner();
+        return cloner.deepClone(this);
     }
 
 
