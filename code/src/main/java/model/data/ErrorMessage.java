@@ -144,8 +144,11 @@ public enum ErrorMessage implements GenData {
     /**
      * Cannot delete the Base.
      */
-    CANNOT_DELETE_BASE("Cannot delete Base Point");
+    CANNOT_DELETE_BASE("Cannot delete Base Point"),
 
+    /**
+     * Cannot reach Point.
+     */
     CANT_REACH_POINT("Point is unreachable ");
     /**
      * The Error message that can be displayed to the user.
