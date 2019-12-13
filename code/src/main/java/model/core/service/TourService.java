@@ -21,7 +21,7 @@ public class TourService {
     /**
      * Division Factor
      */
-    private static long DIVISION_FACTOR = 1000L;
+    private static final long DIVISION_FACTOR = 1000L;
 
     /**
      * Calculates from a tour the time at a given ActionPoint by searching
@@ -94,13 +94,15 @@ public class TourService {
     /**
      * Deletes a {@link DeliveryProcess} in a Tour where the optimal tour was
      * not yet calculated. This method simply deletes the
-     * {@link DeliveryProcess} from the list hol by the {@link Tour}
-     * @param tour
-     * @param deliveryProcess
-     * @return
+     * {@link DeliveryProcess} from the list hold by the {@link Tour}
+     *
+     * @param tour            the given tour.
+     * @param deliveryProcess the given deliveryProcess to delete.
+     * @return the new Tour with the deleted {@link DeliveryProcess}
      */
-    public static Tour deleteDpTourNotCalculated(final Tour tour
-            , final DeliveryProcess deliveryProcess) {
+    public static Tour deleteDpTourNotCalculated(final Tour tour,
+                                                 final DeliveryProcess
+                                                         deliveryProcess) {
         tour.getDeliveryProcesses().remove(deliveryProcess);
         if (tour.getActionPoints() != null) {
             tour.getActionPoints().remove(deliveryProcess.getPickUP());
@@ -109,8 +111,18 @@ public class TourService {
         return tour;
     }
 
-    public static Tour addDpTourNotCalculated(final Tour tour
-            , final DeliveryProcess deliveryProcess) {
+    /**
+     * Adds a {@link DeliveryProcess} in a Tour where the optimal tour was
+     * not yet calculated. This method simply adds the
+     * {@link DeliveryProcess} to the list hold by the {@link Tour}
+     *
+     * @param tour            the given tour.
+     * @param deliveryProcess the given deliveryProcess to add.
+     * @return the new Tour with the added {@link DeliveryProcess}
+     */
+    public static Tour addDpTourNotCalculated(final Tour tour,
+                                              final DeliveryProcess
+                                                      deliveryProcess) {
         tour.getDeliveryProcesses().add(deliveryProcess);
         if (tour.getActionPoints() != null) {
             tour.getActionPoints().add(deliveryProcess.getPickUP());
@@ -120,12 +132,23 @@ public class TourService {
 
     }
 
+    /**
+     * Checks whether the given actionPoints List contains a Delivery Point
+     * located before it's Pick up Point.
+     *
+     * @param tour         the tour giving the deliveryProcess list to get the
+     *                     deliveryProcess info about
+     * @param actionPoints the actionPoint list to check.
+     * @return true iff no deliveryPoint is before it's pick up point in the
+     * actionPoints list.
+     */
     private static boolean checkChangeOrder(
             final Tour tour,
             final List<ActionPoint> actionPoints) {
 
         for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
-            if (actionPoints.indexOf(deliveryProcess.getDelivery()) < actionPoints.indexOf(deliveryProcess.getPickUP())) {
+            if (actionPoints.indexOf(deliveryProcess.getDelivery())
+                    < actionPoints.indexOf(deliveryProcess.getPickUP())) {
                 return false;
             }
         }
@@ -136,6 +159,7 @@ public class TourService {
      * Adds 2 new action points to an ordered ActionPoint list.
      * The 2 points represent a deliveryProcess.
      *
+     * @param graph         the loaded graph
      * @param tour          Current Tour.
      * @param pickUpPoint   New PickUp point to add.
      * @param deliveryPoint New DeliveryPoint to add.
@@ -194,6 +218,7 @@ public class TourService {
     /**
      * delete the deliveryProcess from the tour.
      *
+     * @param graph           the loaded graph
      * @param tour            Tour
      * @param deliveryProcess DeliveryProcess
      * @return the tour with the deliveryProcess removed
@@ -222,10 +247,10 @@ public class TourService {
         List<Journey> journeys = tour.getJourneyList();
         JourneyService journeyService = new JourneyService();
         GraphService graphService = new GraphService();
-        int index1 = journeyService.findIndexPointInJourneys(
+        int index1 = JourneyService.findIndexPointInJourneys(
                 journeys, pickupPoint.getLocation(), true).getAsInt();
         Point pointBefore1 = journeys.get(index1).getStartPoint();
-        int index2 = journeyService.findIndexPointInJourneys(
+        int index2 = JourneyService.findIndexPointInJourneys(
                 journeys, pickupPoint.getLocation(), false).getAsInt();
         Point pointAfter1 = journeys.get(index2).getArrivePoint();
         Journey journey1 = graphService.getShortestPath(
@@ -234,10 +259,10 @@ public class TourService {
         journeys.remove(index2);
         journeys.remove(index1);
         journeys.add(index1, journey1);
-        index1 = journeyService.findIndexPointInJourneys(journeys,
+        index1 = JourneyService.findIndexPointInJourneys(journeys,
                 deliveryPoint.getLocation(), true).getAsInt();
         Point pointBefore2 = journeys.get(index1).getStartPoint();
-        index2 = journeyService.findIndexPointInJourneys(journeys,
+        index2 = JourneyService.findIndexPointInJourneys(journeys,
                 deliveryPoint.getLocation(), false).getAsInt();
         Point pointAfter2 = journeys.get(index2).getArrivePoint();
         Journey journey2 = graphService.getShortestPath(graph,
@@ -349,14 +374,14 @@ public class TourService {
         }
 
         // Finding the journeys from and to the old point
-        final boolean IS_ENDPOINT = true;
+        final boolean isEndPoint = true;
         final List<Journey> oldJourneys = tour.getJourneyList();
         final OptionalInt optOldPredecessorJ = JourneyService.
                 findIndexPointInJourneys(oldJourneys, oldPoint.getLocation(),
-                        IS_ENDPOINT);
+                        isEndPoint);
         final OptionalInt optOldSuccessorJ = JourneyService.
                 findIndexPointInJourneys(oldJourneys, oldPoint.getLocation(),
-                        !IS_ENDPOINT);
+                        !isEndPoint);
         if (optOldPredecessorJ.isEmpty()) {
             throw new IllegalArgumentException("Point isn't endPoint of any "
                     + "Journey");
