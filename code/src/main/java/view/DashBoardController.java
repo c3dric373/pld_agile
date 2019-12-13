@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 import lombok.Getter;
 import model.data.*;
 import model.data.Point;
@@ -119,6 +120,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private Label labelDeliveryCoordonates;
 
     @FXML
+    public Label rectangle;
+
+    @FXML
     private TextField inputDeliveryTimeH;
     @FXML
     private TextField inputDeliveryTimeM;
@@ -212,7 +216,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 .scaleControl(false)
                 .streetViewControl(false)
                 .zoomControl(false)
-                .zoom(12);
+                .zoom(13);
 
         /*
         InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
@@ -320,6 +324,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 displayMap(getSelectedActionPoint().getLocation());
                 drawAllActionPoints();
                 drawFullTour();
+                clearRectangleColor();
                 drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 2);
             } else {
                 this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
@@ -336,6 +341,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Display on Map
 
     public void displayMap(Point center) {
+        try {
+            Thread.sleep(60) ;
+        }  catch (InterruptedException e) {
+        }
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(center.getLatitude(),center.getLongitude()))
@@ -347,7 +356,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 .scaleControl(false)
                 .streetViewControl(false)
                 .zoomControl(false)
-                .zoom(13);
+                .zoom(12);
         // Add map to the view
         map = mapView.createMap(mapOptions);
     }
@@ -371,7 +380,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void drawFullTour() {
         setBigLabels();
         map.clearMarkers();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()),0.4,1);
+        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()),0.5,1);
         drawAllActionPoints();
     }
 
@@ -404,14 +413,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             case 2 : color = "red";
                      break;
             // 3 = Draw End journey
-            case 3 : color = "black";
+            case 3 : color = "cyan";
                     break;
             // 4 = Draw with Auto color
             case 4 : if(deliveryProcessLoaded != null) color = pointToColour(deliveryProcessLoaded.getPickUP());
                     break;
 
         }
-
+        setRectangleColor(color);
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvcArray)
                 .strokeColor(color)
@@ -444,7 +453,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (newDeliveryPointMarker != null)
             map.addMarker(newDeliveryPointMarker);
     }
-
+    void setRectangleColor(String color){
+        rectangle.setStyle("-fx-background-color:" + color + ";" +
+                "-fx-opacity: 0.5;");
+    }
     // Clear / Reset.
 
     public void clearNewDeliveryProcess() {
@@ -470,8 +482,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void clearAll() {
         displayMap(tourLoaded.getBase());
+        clearRectangleColor();
         clearNewDeliveryProcess();
     }
+
+    public void clearRectangleColor() {
+        rectangle.setStyle("-fx-background-color: #393e46;");
+    }
+
     // Utils
 
     public MVCArray getMCVPathFormJourneyListe(final List<Journey> journeyList) {
@@ -653,7 +671,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public String pointToColour(ActionPoint actionPoint) {
-        int numberFromId = (int)(actionPoint.getId() * 6.8 * 10000 * Math.pow(2,actionPoint.getId()));
+        int numberFromId = (int)(actionPoint.getId() * 3.8 * 100000 * Math.pow(2,actionPoint.getId()));
         Color color = new Color(numberFromId).brighter();
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }

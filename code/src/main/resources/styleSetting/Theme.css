@@ -101,6 +101,10 @@
     -fx-background-color: #393e46;
 }
 
+.rectangle {
+    -fx-background-radius: 30px ;
+}
+
 .button {
     -fx-padding: 2 5 2 5;
     -fx-border-color: transparent;
