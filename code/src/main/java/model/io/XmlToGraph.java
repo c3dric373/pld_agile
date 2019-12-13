@@ -1,6 +1,5 @@
 package model.io;
 
-import model.core.management.ApplicationManager;
 import model.core.management.ApplicationManagerImpl;
 import model.data.*;
 import org.w3c.dom.Document;
@@ -100,7 +99,7 @@ public class XmlToGraph {
             // Get the nodes tag and display the number of nodes.
             final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
-            if(nbNodeElements==0){
+            if (nbNodeElements == 0) {
                 ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
                 return nodes;
             }
@@ -121,7 +120,7 @@ public class XmlToGraph {
             // Get the segments tag and display the number of segments.
             final NodeList roadList = root.getElementsByTagName("troncon");
             final int nbRoadElements = roadList.getLength();
-            if(nbRoadElements == 0){
+            if (nbRoadElements == 0) {
                 ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
                 return null;
             }
@@ -190,13 +189,13 @@ public class XmlToGraph {
             // and display the number of DeliveryProcess.
             final NodeList start = root.getElementsByTagName("entrepot");
             final Element startPoint = (Element) start.item(0);
-            if(startPoint == null){
+            if (startPoint == null) {
                 ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
                 return fakeTour;
             }
             Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
             Point base = getPointById(idBase);
-            if(base == null){
+            if (base == null) {
                 return fakeTour;
             }
             System.out.println("entrepot :" + idBase);
@@ -209,7 +208,7 @@ public class XmlToGraph {
             final NodeList deliveryList;
             deliveryList = root.getElementsByTagName("livraison");
             final int nbDeliveryElements = deliveryList.getLength();
-            if(nbDeliveryElements == 0){
+            if (nbDeliveryElements == 0) {
                 ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
                 return fakeTour;
             }
@@ -222,28 +221,32 @@ public class XmlToGraph {
                 final Element deliveryXml;
                 deliveryXml = (Element) deliveryList.item(deliveryIndex);
                 String pickupIdString;
-                pickupIdString = deliveryXml.getAttribute("adresseEnlevement");
+                pickupIdString = deliveryXml.getAttribute(
+                        "adresseEnlevement");
                 Long pickupPointId = Long.parseLong(pickupIdString);
                 System.out.println("idPick " + pickupPointId);
                 Point pickupPoint = getPointById(pickupPointId);
-                if(pickupPoint == null){
+                if (pickupPoint == null) {
                     return fakeTour;
                 }
                 String deliveryIdString;
-                deliveryIdString = deliveryXml.getAttribute("adresseLivraison");
+                deliveryIdString = deliveryXml.getAttribute(
+                        "adresseLivraison");
                 Long deliveryPointId = Long.parseLong(deliveryIdString);
                 System.out.println("idDeliver "
                         + deliveryPointId);
                 Point deliveryPoint = getPointById(deliveryPointId);
-                if(deliveryPoint == null){
+                if (deliveryPoint == null) {
                     return fakeTour;
                 }
                 String pickupTimeString;
-                pickupTimeString = deliveryXml.getAttribute("dureeEnlevement");
+                pickupTimeString = deliveryXml.getAttribute(
+                        "dureeEnlevement");
                 int pickupTimeInt = Integer.parseInt(pickupTimeString);
                 Time pickupTime = durationToTime(pickupTimeInt);
                 String deliveryTimeString;
-                deliveryTimeString = deliveryXml.getAttribute("dureeLivraison");
+                deliveryTimeString = deliveryXml.getAttribute(
+                        "dureeLivraison");
                 int deliveryTimeInt = Integer.parseInt(deliveryTimeString);
                 Time deliveryTime = durationToTime(deliveryTimeInt);
                 ActionPoint pickupActionpoint;
