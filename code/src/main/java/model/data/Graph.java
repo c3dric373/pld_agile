@@ -31,7 +31,7 @@ public class Graph implements GenData {
     public Graph(final List<Point> pointlist) {
         Validate.notNull(pointlist, "point list of the graph can't be null");
         Validate.noNullElements(pointlist, "points of the graph can't be null");
-        this.nbPoints = points.size();
+        this.nbPoints = pointlist.size();
         this.points = pointlist;
         map = new HashMap<>();
         for (int i = 0; i < this.nbPoints; i++) {
