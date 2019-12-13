@@ -438,7 +438,7 @@ public class DashBoardController implements Initializable,
             drawFullTour();
             drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 3);
         } else {
-            mainApp.showDeliveryProcess(newValue, tourLoaded);
+            mainApp.getDeliveryProcessFromActionPoint(newValue, tourLoaded);
         }
     }
 
@@ -663,12 +663,12 @@ public class DashBoardController implements Initializable,
             LatLong latLong = event.getLatLong();
             if (id.contains("setPickUp") && editable(labelPickUpCoordinates)) {
                 System.out.println("this is a test");
-                this.mainApp.getNearPoint(latLong.getLatitude(),
+                this.mainApp.getNearestPoint(latLong.getLatitude(),
                         latLong.getLongitude(), ActionType.PICK_UP,
                         new Time(0, 0, 0));
             }
             if (id.contains("setDelivery") && editable(labelDeliveryCoordinates)) {
-                this.mainApp.getNearPoint(latLong.getLatitude(),
+                this.mainApp.getNearestPoint(latLong.getLatitude(),
                         latLong.getLongitude(), ActionType.DELIVERY,
                         new Time(0, 0, 0));
             }

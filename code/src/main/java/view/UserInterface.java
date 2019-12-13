@@ -22,7 +22,7 @@ public class UserInterface implements Observer {
      * Interface to the model.
      */
     @Setter
-    private ApplicationManager model;
+    private ApplicationManager controller;
 
     /**
      * The data as an observable list of Persons.
@@ -30,17 +30,17 @@ public class UserInterface implements Observer {
     // TODO Modifier ca en autre chose que string genre en liste de livraison
     private ObservableList<String> tourData =
             FXCollections.observableArrayList();
-    private DashBoardController controller;
+    private DashBoardController dashBoardController;
 
     /**
      * Constructor
      *
-     * @param model
+     * @param controller
      */
-    public UserInterface(final ApplicationManager model) {
+    public UserInterface(final ApplicationManager controller) {
         // Add some sample data List
         // tourData.addAll();
-        this.model = model;
+        this.controller = controller;
     }
 
     /**
@@ -52,46 +52,82 @@ public class UserInterface implements Observer {
         return tourData;
     }
 
-    public void setController(final DashBoardController controller) {
-        Validate.notNull(controller, "controller ist not null");
-        this.controller = controller;
-        this.viewVisitor.addController(controller);
+    /**
+     * Set's the {@link DashBoardController} for this interface, and the
+     * visitor.
+     *
+     * @param dashBoardController the given {@link DashBoardController}.
+     */
+    public void setDashBoardController(final DashBoardController dashBoardController) {
+        Validate.notNull(dashBoardController, "controller ist not null");
+        this.dashBoardController = dashBoardController;
+        this.viewVisitor.addController(dashBoardController);
     }
 
     @Override
     public void update(final GenData genData) {
-        System.out.println("Visitor User interface");
         genData.accept(viewVisitor);
     }
 
+    /**
+     * Invokes a Controller to load a map.
+     *
+     * @param selectedFile The selected file to load.
+     */
     public void loadMap(final File selectedFile) {
         Validate.notNull(selectedFile, "Selected File Is Null");
-        if (this.model != null) {
-            this.model.loadMap(selectedFile);
-        }
+        this.controller.loadMap(selectedFile);
     }
 
+    /**
+     * Invokes a Controller to load a delivery request.
+     *
+     * @param selectedFile The selected file to load.
+     */
     public void loadDeliveryRequest(final File selectedFile) {
         Validate.notNull(selectedFile, "Selected File Is Null");
-        if (this.model != null) {
-            this.model.loadTour(selectedFile);
-        }
+        this.controller.loadTour(selectedFile);
     }
 
+    /**
+     * Invokes a method on the controller to calculate an optimal Tour.
+     */
     public void calculateTour() {
-        this.model.calculateTour();
+        this.controller.calculateTour();
     }
 
-    public void getNearPoint(double latitude, double longitude,
-                             ActionType actionType, Time time) {
-        this.model.findNearestPoint(latitude, longitude, actionType, time);
+    /**
+     * Invokes the model to find the closest point to a given latitude and
+     * longitude  stored in the controller. The goal is to create an actionPoint
+     * from this information. Therefore more information is transmitted to
+     * the controller.
+     *
+     * @param latitude   the given latitude.
+     * @param longitude  the given longitude.
+     * @param actionType the type of Point it should be.
+     * @param time       the time it will take to comple the specific action
+     *                   at the
+     *                   point.
+     */
+    void getNearestPoint(double latitude, double longitude,
+                         ActionType actionType, Time time) {
+        this.controller.findNearestPoint(latitude, longitude, actionType, time);
     }
 
-    public void showDeliveryProcess(final ActionPoint oldValue,
-                                    final Tour tour) {
+    /**
+     * Invokes method to find the {@link DeliveryProcess} that matches a
+     * given {@link ActionPoint}.
+     *
+     * @param oldValue The given {@link ActionPoint}.
+     * @param tour     the {@link Tour} in which to find the fitting
+     *                 {@llink DeliveryProcess}
+     */
+    public void getDeliveryProcessFromActionPoint(final ActionPoint oldValue,
+                                                  final Tour tour) {
         Validate.notNull(oldValue, "oldValue null");
         Validate.notNull(tour, "tour null");
-        this.model.getDeliveryProcess(tour.getDeliveryProcesses(), oldValue);
+        this.controller.getDeliveryProcess(tour.getDeliveryProcesses(),
+                oldValue);
     }
 
     /**
@@ -101,7 +137,7 @@ public class UserInterface implements Observer {
      */
     public void deleteDp(final DeliveryProcess deliveryProcessLoaded) {
         Validate.notNull(deliveryProcessLoaded, "deliveryProcess null");
-        this.model.deleteDeliveryProcess(deliveryProcessLoaded);
+        this.controller.deleteDeliveryProcess(deliveryProcessLoaded);
     }
 
     /**
@@ -111,7 +147,8 @@ public class UserInterface implements Observer {
      * @param deliveryProcess
      */
     public void getJourneyList(final DeliveryProcess deliveryProcess) {
-        this.model.getJourneyList(deliveryProcess);
+        Validate.notNull(deliveryProcess, "deliveryProcess null");
+        this.controller.getJourneyList(deliveryProcess);
     }
 
     /**
@@ -123,7 +160,7 @@ public class UserInterface implements Observer {
      */
     public void addDeliveryProcess(final ActionPoint newPickUpActionPoint,
                                    final ActionPoint newDeliveryActionPoint) {
-        this.model.addDeliveryProcess(newPickUpActionPoint,
+        this.controller.addDeliveryProcess(newPickUpActionPoint,
                 newDeliveryActionPoint);
     }
 
@@ -133,13 +170,13 @@ public class UserInterface implements Observer {
      * @param actionPoints the newly sorted {@link ActionPoint}s.
      */
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
-        this.model.changeDeliveryOrder(actionPoints);
+        this.controller.changeDeliveryOrder(actionPoints);
     }
 
     /**
      * Invokes an undo on the model.
      */
     public void undo() {
-        this.model.undo();
+        this.controller.undo();
     }
 }

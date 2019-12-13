@@ -89,7 +89,7 @@ public class Starter extends Application {
             UserInterface view = new UserInterface(model);
             model.setObserver(view);
             controller.setMainApp(view);
-            view.setController(controller);
+            view.setDashBoardController(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }
