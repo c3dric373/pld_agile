@@ -218,9 +218,11 @@ public class XmlToGraph {
                 ActionPoint pickupActionpoint;
                 pickupActionpoint = new ActionPoint(pickupTime, pickupPoint,
                         ActionType.PICK_UP);
+                pickupActionpoint.setId(deliveryIndex + 1);
                 ActionPoint deliveryActionpoint;
                 deliveryActionpoint = new ActionPoint(deliveryTime,
                         deliveryPoint, ActionType.DELIVERY);
+                deliveryActionpoint.setId(deliveryIndex + 1);
                 DeliveryProcess deliv;
                 deliv = new DeliveryProcess(pickupActionpoint,
                         deliveryActionpoint);

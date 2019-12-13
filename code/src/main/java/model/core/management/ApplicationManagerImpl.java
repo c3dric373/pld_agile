@@ -116,12 +116,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
-        int completeDistance = TourService.getCompleteDistance(newTour);
-        Time completeTime = TourService.getCompleteTime(newTour);
-        newTour.setCompleteTime(completeTime);
-        newTour.setTotalDistance(completeDistance);
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
+        updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
@@ -145,21 +140,13 @@ public class ApplicationManagerImpl implements ApplicationManager {
             DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
                     deliveryPoint);
             newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
-            Graph graph = projectDataWrapper.getProject().getGraph();
-            System.out.println(graph.getPoints().contains(pickUpPoint.getLocation()));
-            System.out.println(graph.getPoints().contains(deliveryPoint.getLocation()));
-
+            DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
         } else {
             setAddDeliveryProcess();
             Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
                     deliveryPoint);
-            int completeDistance = TourService.getCompleteDistance(newTour);
-            Time completeTime = TourService.getCompleteTime(newTour);
-            newTour.setCompleteTime(completeTime);
-            newTour.setTotalDistance(completeDistance);
-            DeliveryProcessService.setDpInfo(newTour);
-            TourService.calculateTimeAtPoint(newTour);
+            updateInfo(newTour);
         }
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
@@ -171,28 +158,39 @@ public class ApplicationManagerImpl implements ApplicationManager {
                 && projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
+        if(deliveryProcess.getPickUP().getActionType() == ActionType.BASE){
+            //TODO
+           // projectDataWrapper.sendErrorMessage
+            return;
+        }
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         Tour newTour;
         if (projectState == ProjectState.TOUR_LOADED) {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+            DeliveryProcessService.delDeliveryProcessIdTourNotCalc(tour);
             projectDataWrapper.loadTour(newTour);
         } else {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
-            DeliveryProcessService.setDpInfo(newTour);
-            TourService.calculateTimeAtPoint(newTour);
-            int completeDistance = TourService.getCompleteDistance(newTour);
-            Time completeTime = TourService.getCompleteTime(newTour);
-            newTour.setCompleteTime(completeTime);
-            newTour.setTotalDistance(completeDistance);
+            updateInfo(newTour);
             projectDataWrapper.loadTour(newTour);
         }
 
         projectState = mainProjectState;
+    }
+
+    private void updateInfo(final Tour newTour) {
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
     }
 
     @Override
@@ -207,8 +205,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
+        updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
 

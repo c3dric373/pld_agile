@@ -123,6 +123,42 @@ public class DeliveryProcessService {
         }
         return Optional.empty();
     }
+
+    public static void addDeliveryProcessIdTourNotCalc(final Tour tour, final DeliveryProcess deliveryProcess) {
+        deliveryProcess.getPickUP().setId(tour.getDeliveryProcesses().size());
+        deliveryProcess.getDelivery().setId(tour.getDeliveryProcesses().size());
+    }
+
+    public static void delDeliveryProcessIdTourNotCalc(final Tour tour) {
+        int i = 1;
+        for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
+            if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
+                deliveryProcess.getPickUP().setId(0);
+                deliveryProcess.getDelivery().setId(0);
+            } else {
+                deliveryProcess.getDelivery().setId(i);
+                deliveryProcess.getPickUP().setId(i);
+                i++;
+            }
+
+        }
+    }
+
+    public static void resetDeliveryProcessIdTourCalculated(final Tour tour) {
+        int i = 1;
+        for (final ActionPoint actionPoint : tour.getActionPoints()) {
+            if (actionPoint.getActionType() == ActionType.PICK_UP) {
+                actionPoint.setId(i);
+                OptionalInt optionalInt = DeliveryProcessService.findActionPoint(tour.getDeliveryProcesses(), actionPoint);
+                if (optionalInt.isPresent()) {
+                    int index = optionalInt.getAsInt();
+                    final ActionPoint delivery = tour.getDeliveryProcesses().get(index).getDelivery();
+                    delivery.setId(i);
+                }
+                i++;
+            }
+        }
+    }
 }
 
 

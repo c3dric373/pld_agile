@@ -179,7 +179,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         actionPointTableView.setItems(null);
 
         deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty
-                (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
+                (String.valueOf(cellData.getValue().getId())));
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
 
@@ -239,10 +239,17 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         listActionPoints.add(base);
         listActionPoints.add(end);
         for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
-            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
+            final ActionPoint pickUp = new ActionPoint(deliveryProcess.getPickUP()
                     .getTime(), deliveryProcess.getPickUP().getLocation(),
-                    deliveryProcess.getPickUP().getActionType()));
-            listActionPoints.add(new ActionPoint(deliveryProcess.getDelivery().getTime(), deliveryProcess.getDelivery().getLocation(), deliveryProcess.getDelivery().getActionType()));
+                    deliveryProcess.getPickUP().getActionType());
+            pickUp.setId(deliveryProcess.getPickUP().getId());
+            listActionPoints.add(pickUp);
+            final ActionPoint delivery = new ActionPoint
+                    (deliveryProcess.getDelivery().getTime(),
+                            deliveryProcess.getDelivery().getLocation(),
+                            deliveryProcess.getDelivery().getActionType());
+            delivery.setId(deliveryProcess.getDelivery().getId());
+            listActionPoints.add(delivery);
         }
         tourLoaded.setActionPoints(listActionPoints);
     }
