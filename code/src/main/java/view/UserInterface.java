@@ -1,7 +1,5 @@
 package view;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import lombok.Setter;
 import model.core.management.ApplicationManager;
 import model.data.*;
@@ -14,7 +12,7 @@ import java.util.List;
 public class UserInterface implements Observer {
 
     /**
-     * ViewVisitor to handle changes from the model
+     * ViewVisitor to handle changes from the model.
      */
     private ViewVisitor viewVisitor = new ViewVisitor();
 
@@ -23,33 +21,31 @@ public class UserInterface implements Observer {
      */
     @Setter
     private ApplicationManager controller;
-
     /**
-     * The data as an observable list of Persons.
+     * The object to handle events fired by our java fx interface.
      */
-    private ObservableList<String> tourData =
-            FXCollections.observableArrayList();
-
     private DashBoardController dashBoardController;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param controller the controller of the application
+     * @param newController the controller of the application.
      */
-    public UserInterface(final ApplicationManager controller) {
-        this.controller = controller;
+    public UserInterface(final ApplicationManager newController) {
+        this.controller = newController;
     }
-    
+
     /**
      * Set's the {@link DashBoardController} for this interface, and the
      * visitor.
      *
-     * @param dashBoardController the given {@link DashBoardController}.
+     * @param newDashBoardController the given {@link DashBoardController}.
      */
-    public void setDashBoardController(final DashBoardController dashBoardController) {
-        Validate.notNull(dashBoardController, "controller ist not null");
-        this.dashBoardController = dashBoardController;
+    public void setDashBoardController(final DashBoardController
+                                               newDashBoardController) {
+        Validate.notNull(dashBoardController,
+                "controller ist not null");
+        this.dashBoardController = newDashBoardController;
         this.viewVisitor.addController(dashBoardController);
     }
 
@@ -98,8 +94,10 @@ public class UserInterface implements Observer {
      *                   at the
      *                   point.
      */
-    void getNearestPoint(double latitude, double longitude,
-                         ActionType actionType, Time time) {
+    void getNearestPoint(final double latitude, final
+
+    double longitude,
+                         final ActionType actionType, final Time time) {
         this.controller.findNearestPoint(latitude, longitude, actionType, time);
     }
 
@@ -133,7 +131,10 @@ public class UserInterface implements Observer {
      * Invokes the model to get a journeyList between the start and en point
      * of the delivery process.
      *
-     * @param deliveryProcess
+     * @param deliveryProcess the {@link DeliveryProcess} from which we want
+     *                        to retrieve the Journey list of the stored
+     *                        {@link Tour} that goes from his
+     *                        pick up point to his deliveryPoint.
      */
     public void getJourneyList(final DeliveryProcess deliveryProcess) {
         Validate.notNull(deliveryProcess, "deliveryProcess null");
