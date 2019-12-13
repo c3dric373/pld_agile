@@ -371,6 +371,7 @@ public class GraphService {
             List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
             tour.setJourneyList(journeys1);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("graph and tour are incompatible");
         }
         return tour;

@@ -166,10 +166,10 @@ public class JourneyService {
         List<Integer> result = new ArrayList<>();
         for (final Journey journey : journeys) {
             Validate.notNull(journey.getFinishTime(), "journey finish time null");
-            if (journey.getStartPoint() == startPoint) {
+            if (journey.getStartPoint().equals(startPoint)) {
                 startJourney = journey;
             }
-            if (journey.getArrivePoint() == endPoint) {
+            if (journey.getArrivePoint().equals((endPoint))) {
                 endJourney = journey;
             }
         }
