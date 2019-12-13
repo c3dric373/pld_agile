@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
+/**
+ * Utility class providing helper functions for tasks closely related to
+ * {@link Journey}.
+ */
 public class JourneyService {
     /**
      * Number of Seconds in a Hour.
@@ -20,6 +24,11 @@ public class JourneyService {
      * Number of Seconds in a minute.
      */
     private static final int NB_SEC_IN_MIN = 60;
+
+    /**
+     * Division factor.
+     */
+   private static final long DIVISION_FACTOR = 1000L;
 
     /**
      * Travel speed in m/s.
@@ -74,8 +83,8 @@ public class JourneyService {
             // actionTime and the reference time
             long actionTimeInMillis =
                     actionTime.getTime() - referenceTime.getTime();
-            long divisionFactor = 1000L;
-            long actionTimeInSec = actionTimeInMillis / divisionFactor;
+
+            long actionTimeInSec = actionTimeInMillis / DIVISION_FACTOR;
 
             LocalTime startPlusTravelPlusActionTime =
                     startPlusTravelTime.plusSeconds(actionTimeInSec);
@@ -210,7 +219,6 @@ public class JourneyService {
         Validate.isTrue(indices.get(0) <= indices.get(1),
                 "start journey index is bigger than end journey index");
         int sum = 0;
-        int divisionFactor = 1000;
         for (int i = indices.get(0); i <= indices.get(1); i++) {
             long firstFinishTime = journeys.get(i).getFinishTime().getTime();
             long secondFinishTime =
@@ -218,7 +226,7 @@ public class JourneyService {
             System.out.println(firstFinishTime);
             System.out.println(secondFinishTime);
             long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
-            journeyTime = journeyTime / divisionFactor;
+            journeyTime = journeyTime / DIVISION_FACTOR;
             sum += journeyTime;
         }
         return durationToTime(sum);

@@ -8,11 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
+/**
+ * Utility class providing helper functions for tasks closely related to
+ * {@link Tour}.
+ */
 public class TourService {
     /**
-     * empty string.
+     * Empty string.
      */
     private static final String EMPTY_STRING = "";
+
+    /**
+     * Division Factor
+     */
+    private static long DIVISION_FACTOR = 1000L;
 
     /**
      * Calculates from a tour the time at a given ActionPoint by searching
@@ -46,6 +55,14 @@ public class TourService {
 
     }
 
+    /**
+     * Get the complete distance of a tour by adding the distance of each
+     * {@link Journey} up.
+     *
+     * @param tour the {@code tour} from which we want to compute the total
+     *             distance
+     * @return the total distance.
+     */
     public static int getCompleteDistance(final Tour tour) {
         int completeDistance = 0;
         for (Journey journey : tour.getJourneyList()) {
@@ -54,6 +71,14 @@ public class TourService {
         return completeDistance;
     }
 
+    /**
+     * Get the complete time of a tour by adding the distance of each
+     * {@link Journey} up.
+     *
+     * @param tour the {@code tour} from which we want to compute the total
+     *             time.
+     * @return the total time.
+     */
     public static Time getCompleteTime(final Tour tour) {
         long firstFinishTime = tour.getStartTime().getTime();
         long secondFinishTime = tour.getJourneyList()
@@ -61,11 +86,19 @@ public class TourService {
                 .getFinishTime().getTime();
 
         long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
-        journeyTime = journeyTime / 1000;
+        journeyTime = journeyTime / DIVISION_FACTOR;
 
         return JourneyService.durationToTime(journeyTime);
     }
 
+    /**
+     * Deletes a {@link DeliveryProcess} in a Tour where the optimal tour was
+     * not yet calculated. This method simply deletes the
+     * {@link DeliveryProcess} from the list hol by the {@link Tour}
+     * @param tour
+     * @param deliveryProcess
+     * @return
+     */
     public static Tour deleteDpTourNotCalculated(final Tour tour
             , final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().remove(deliveryProcess);
