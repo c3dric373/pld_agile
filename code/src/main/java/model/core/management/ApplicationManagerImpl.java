@@ -374,7 +374,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      */
     public void setMapLoaded() {
         if (projectState != ProjectState.INITIALIZED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.MAP_LOADED;
@@ -386,7 +388,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      */
     public void setTourLoaded() {
         if (projectState != ProjectState.TOUR_LOADED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.TOUR_LOADED;
