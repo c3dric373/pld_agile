@@ -57,7 +57,8 @@ public class Tour implements GenData {
     private int totalDistance;
 
     /**
-     * Instantiates an empty Tour.
+     * Instantiates an empty fake Tour.
+     * The id of the point is an indicator for other methods
      */
     public Tour() {
         this.deliveryProcesses = new ArrayList<DeliveryProcess>();
