@@ -73,7 +73,7 @@ public class TourService {
     public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         Validate.notNull(tour, "tour can't be null");
         Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
-        Validate.isTrue(tour.getActionPoints() == null, "tour can't have actionPoint list");
+//        Validate.isTrue(tour.getActionPoints() == null, "tour can't have actionPoint list");
         tour.addDeliveryProcess(deliveryProcess);
         return tour;
 

@@ -126,10 +126,10 @@ class TourServiceTest {
             assertAll(
                     () -> assertThrows(IllegalArgumentException.class,
                             () -> tourService.addDpTourNotCalculated(null, tourBeforeCalculate.getDeliveryProcesses().get(0))),
+//                    () -> assertThrows(IllegalArgumentException.class,
+//                            () -> tourService.addDpTourNotCalculated(withActionPointList, withActionPointList.getDeliveryProcesses().get(0))),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.addDpTourNotCalculated(tourAfterCalculate, tourAfterCalculate.getDeliveryProcesses().get(0))),
-                    () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.addDpTourNotCalculated(withActionPointList, withActionPointList.getDeliveryProcesses().get(0)))
+                            () -> tourService.addDpTourNotCalculated(tourAfterCalculate, tourAfterCalculate.getDeliveryProcesses().get(0)))
             );
         }
 
@@ -176,26 +176,27 @@ class TourServiceTest {
             graph = new Graph(points);
             tourBeforeCalculate = xmlToGraph.getDeliveriesFromXml("resource/demandeGrand7.xml");
             Tour grandTour = graphService.calculateTour(tourBeforeCalculate, graph);
+            List<ActionPoint> newOrder1 = new ArrayList<>();
+            newOrder1.add(base);
+            newOrder1.add(actionPoint1);
+            newOrder1.add(actionPoint);
+            newOrder1.add(end);
             assertAll(
                     () -> assertThrows(IllegalArgumentException.class, () -> tourService.changeDeliveryOrder(graph1, tourAfterCalculate, newOrder)),
-                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.changeDeliveryOrder(graph1, grandTour, grandTour.getActionPoints()))
+                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.changeDeliveryOrder(graph1, grandTour, grandTour.getActionPoints())),
+                    () -> assertThrows(IllegalArgumentException.class, () -> tourService.changeDeliveryOrder(graph1, tourAfterCalculate, newOrder1))
             );
         }
 
         @Test
         void correctUsage() {
-            List<ActionPoint> newOrder = new ArrayList<>();
-            newOrder.add(base);
-            newOrder.add(actionPoint1);
-            newOrder.add(actionPoint);
-            newOrder.add(end);
-            Tour res = tourService.changeDeliveryOrder(graph1, tourAfterCalculate, newOrder);
+            Tour res = tourService.changeDeliveryOrder(graph1, tourAfterCalculate, tourAfterCalculate.getActionPoints());
             assertAll(
                     () -> assertEquals(base, res.getActionPoints().get(0),
                             "changeDeliveryOrder should return a tour with right actionPoint at index 0"),
-                    () -> assertEquals(actionPoint1, res.getActionPoints().get(1),
+                    () -> assertEquals(actionPoint, res.getActionPoints().get(1),
                             "changeDeliveryOrder should return a tour with right actionPoint at index 1"),
-                    () -> assertEquals(actionPoint, res.getActionPoints().get(2),
+                    () -> assertEquals(actionPoint1, res.getActionPoints().get(2),
                             "changeDeliveryOrder should return a tour with right actionPoint at index 2"),
                     () -> assertEquals(end, res.getActionPoints().get(3),
                             "changeDeliveryOrder should return a tour with right actionPoint at index 3")
