@@ -51,9 +51,6 @@ public class Segment {
     public Segment(final long idOriginPoint, final long idEndPoint,
                    final double segmentLength, final String segmentName) {
         Validate.notNull(segmentName, "name is null");
-       /* if (name.equals("")) {
-            throw new IllegalArgumentException("name is empty");
-        }*/
         if (segmentLength < MAX_NOT_ALLOWED_LENGTH) {
             throw new IllegalArgumentException("length is negative");
         }

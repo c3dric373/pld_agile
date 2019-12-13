@@ -22,7 +22,7 @@ public class Tour implements GenData {
 
     /**
      * List of all the action points delivered in this journey
-     * IN ORDER OF DELIVERY!!!
+     * IN ORDER OF DELIVERY.
      */
     private List<ActionPoint> actionPoints;
 
@@ -57,11 +57,11 @@ public class Tour implements GenData {
     private int totalDistance;
 
     /**
-     * Instantiates an empty Tour
+     * Instantiates an empty Tour.
      */
-    public Tour(){
+    public Tour() {
         this.deliveryProcesses = new ArrayList<DeliveryProcess>();
-        this.base = new Point(0,1,1);
+        this.base = new Point(0, 1, 1);
         this.startTime = new Time(0);
     }
 
@@ -88,11 +88,15 @@ public class Tour implements GenData {
         genDataVisitor.visit(this);
     }
 
+    /**
+     * Deep copy of a {@link Tour}, need for undo process.
+     *
+     * @return the deep copy.
+     */
     public Tour deepClone() {
         Cloner cloner = new Cloner();
         return cloner.deepClone(this);
     }
-
 
 }
 

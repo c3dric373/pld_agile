@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.commons.lang.Validate;
 import view.DashBoardController;
 import view.UserInterface;
 
@@ -32,12 +33,13 @@ public class Starter extends Application {
      * @param args Command line arguments that should be empty.
      */
     public static void main(final String[] args) {
+        Validate.notNull(args, "args null");
         launch(args);
     }
 
     @Override
-    public void start(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public void start(final Stage newPrimaryStage) {
+        this.primaryStage = newPrimaryStage;
         this.primaryStage.setTitle("Déli'Vélo");
 
         initRootLayout();
@@ -74,8 +76,8 @@ public class Starter extends Application {
         try {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(UserInterface.class.getResource("DashBoard" +
-                    ".fxml"));
+            loader.setLocation(UserInterface.class.getResource(
+                    "DashBoard.fxml"));
             AnchorPane dashboardOverview = loader.load();
 
             // Set person overview into the center of root layout
@@ -87,7 +89,7 @@ public class Starter extends Application {
             UserInterface view = new UserInterface(model);
             model.setObserver(view);
             controller.setMainApp(view);
-            view.setController(controller);
+            view.setDashBoardController(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }
