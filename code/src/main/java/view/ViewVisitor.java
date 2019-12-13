@@ -3,6 +3,9 @@ package view;
 import javafx.scene.control.Alert;
 import model.core.service.TourService;
 import model.data.*;
+import model.data.Point;
+
+import java.awt.*;
 
 public class ViewVisitor implements GenDataVisitor {
 
@@ -25,7 +28,7 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Graph graph) {
-        dashBoardController.displayMap();
+        dashBoardController.displayMap(graph.getPoints().get(0));
     }
 
     @Override
@@ -45,12 +48,12 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
-        dashBoardController.displayMap();
+        dashBoardController.displayMap(dashBoardController.getSelectedActionPoint().getLocation());
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
-        //dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),dashBoardController.pointToColour(listJourneyFromDeliveryProcess.getJourneyList().get(0).getPoints().get(0)),0.4);
-        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()), "red", 0.4);
+        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),0.9,4);
     }
+
 
     @Override
     public void visit(final ErrorMessage error) {
