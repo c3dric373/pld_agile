@@ -153,6 +153,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
             Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
                     deliveryPoint);
+            int completeDistance = TourService.getCompleteDistance(newTour);
+            Time completeTime = TourService.getCompleteTime(newTour);
+            newTour.setCompleteTime(completeTime);
+            newTour.setTotalDistance(completeDistance);
             DeliveryProcessService.setDpInfo(newTour);
             TourService.calculateTimeAtPoint(newTour);
         }
