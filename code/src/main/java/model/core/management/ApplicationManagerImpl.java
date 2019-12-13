@@ -88,16 +88,24 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     @Override
     public void loadMap(final File file) {
         if (projectState != ProjectState.INITIALIZED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
         } else if (file == null ) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
-            final Graph graph = new Graph(points);
-            projectDataWrapper.loadMap(graph);
-            setMapLoaded();
-            mainProjectState = ProjectState.MAP_LOADED;
+            if(!points.isEmpty()){
+                final Graph graph = new Graph(points);
+                projectDataWrapper.loadMap(graph);
+                if(projectDataWrapper.getProject().getTour() != null){
+                    Tour emptyTour = new Tour();
+                    projectDataWrapper.loadTour(emptyTour);
+                }
+                setMapLoaded();
+                mainProjectState = ProjectState.MAP_LOADED;
+            }
         }
     }
 
@@ -111,15 +119,17 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         if (projectState != ProjectState.MAP_LOADED
                 && projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
-            sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
+            sendMessage(ErrorMessage.MAP_NOT_LOADED);
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
-            undoList.add(projectDataWrapper.getProject().getGraph());
-            projectDataWrapper.loadTour(tour);
-            setTourLoaded();
-            mainProjectState = ProjectState.TOUR_LOADED;
+            if(tour != null) {
+                undoList.add(projectDataWrapper.getProject().getGraph());
+                projectDataWrapper.loadTour(tour);
+                setTourLoaded();
+                mainProjectState = ProjectState.TOUR_LOADED;
+            }
         }
     }
 
@@ -374,7 +384,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      */
     public void setMapLoaded() {
         if (projectState != ProjectState.INITIALIZED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.MAP_LOADED;
@@ -386,7 +398,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      */
     public void setTourLoaded() {
         if (projectState != ProjectState.TOUR_LOADED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.TOUR_LOADED;
