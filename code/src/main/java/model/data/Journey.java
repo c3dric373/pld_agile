@@ -52,8 +52,8 @@ public class Journey {
             throw new IllegalArgumentException("point list of the journey "
                     + "should have at least two points");
         }
-        Validate.noNullElements(newPoints, "points of the journey can't "
-                + "be null");
+        Validate.noNullElements(newPoints, "points of the journey can't"
+                + " be null");
         Validate.isTrue(newMinLength >= 0, "min length of the"
                 + " journey should be positive");
         this.startPoint = newPoints.get(newPoints.size() - 1);

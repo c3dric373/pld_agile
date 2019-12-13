@@ -160,19 +160,17 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     }
 
     @Override
-    public void addDeliveryProcess(final Tour tour,
-                                   final ActionPoint pickUpPoint,
+    public void addDeliveryProcess(final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
-        } else if (tour == null) {
-            sendMessage(ErrorMessage.TOUR_NULL);
         } else if (pickUpPoint == null) {
             sendMessage(ErrorMessage.PICKUP_POINT_NULL);
         } else if (deliveryPoint == null) {
             sendMessage(ErrorMessage.DELIVERY_POINT_NULL);
         } else {
+            Tour tour = projectDataWrapper.getProject().getTour();
             undoList.add(tour.deepClone());
             final Tour newTour;
             if (projectState == ProjectState.TOUR_LOADED) {
@@ -337,16 +335,16 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     /**
      * Get the journey List to make the delivery Provess.
      *
-     * @param journeyList     liste of journeys
      * @param deliveryProcess Delivery Process
      */
     @Override
-    public void getJourneyList(final List<Journey> journeyList,
-                               final DeliveryProcess deliveryProcess) {
+    public void getJourneyList(final DeliveryProcess deliveryProcess) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
+            List<Journey> journeyList =
+                    projectDataWrapper.getProject().getTour().getJourneyList();
             List<Journey> listJourneyFromDeliveryProcess =
                     graphService.getJourneysForDeliveryProcess(journeyList,
                             deliveryProcess);
@@ -382,8 +380,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     }
 
     @Override
-    public void undoGraph(Graph graph) {
-
+    public void undoGraph(final Graph graph) {
+        return;
     }
 
     private void updateInfo(final Tour newTour) {

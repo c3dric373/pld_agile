@@ -38,7 +38,7 @@
                   <Button fx:id="loadDeliveryDemand" layoutX="298.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleLoadTour" text="Load Delivery Demand" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="17.5" />
                   <ButtonBar layoutX="145.0" layoutY="469.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="350.0">
                     <buttons>
-                      <Button fx:id="modify" mnemonicParsing="false" onAction="#modifieDP" text="Modify" />
+                      <Button fx:id="modify" mnemonicParsing="false" onAction="#modifyDeliveryOrder" text="Modify" />
                         <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteDp" text="Delete" />
                     </buttons>
                   </ButtonBar>
@@ -146,8 +146,8 @@
                      <children>
                         <Button fx:id="setPickUp" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" prefHeight="22.0" prefWidth="22.0" text="P" GridPane.columnIndex="3" />
                         <Button fx:id="setDelivery" contentDisplay="TOP" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" prefHeight="22.0" prefWidth="22.0" text="D" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Label fx:id="labelPickUpCoordonates" GridPane.columnIndex="4" />
-                        <Label fx:id="labelDeliveryCoordonates" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label fx:id="labelPickUpCoordinates" GridPane.columnIndex="4" />
+                        <Label fx:id="labelDeliveryCoordinates" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Button fx:id="clearNPUP" mnemonicParsing="false" onAction="#clearNewPickUpPoint" text="Clear" GridPane.columnIndex="5" />
                         <Label text="Pick-Up Point " />
                         <Label prefHeight="16.0" prefWidth="44.0" text="Time :" GridPane.columnIndex="1" />

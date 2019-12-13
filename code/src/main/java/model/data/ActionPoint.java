@@ -11,7 +11,7 @@ import java.sql.Time;
 @EqualsAndHashCode
 public class ActionPoint implements GenData {
     /**
-     * empty String.
+     * Empty String.
      */
     private static final String EMPTY_STRING = "";
 
@@ -45,7 +45,7 @@ public class ActionPoint implements GenData {
     private ActionType actionType;
 
     /**
-     * Instatiates an ActionPoint.
+     * Instantiates an ActionPoint.
      *
      * @param actionTime     time of action.
      * @param actionLocation location of action.
@@ -65,13 +65,5 @@ public class ActionPoint implements GenData {
     @Override
     public void accept(final GenDataVisitor genDataVisitor) {
         genDataVisitor.visit(this);
-    }
-
-    public ActionPoint deepClone() {
-        ActionPoint result = new ActionPoint(this.time, this.location, this.actionType);
-        result.setId(this.id);
-        result.setPassageTime(this.passageTime);
-        return result;
-
     }
 }

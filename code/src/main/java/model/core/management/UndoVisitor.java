@@ -2,10 +2,23 @@ package model.core.management;
 
 import model.data.*;
 
+/**
+ * Visits all possible {@link GenData} that have the possiblility to generate
+ * an undo.
+ */
 public class UndoVisitor implements GenDataVisitor {
+
+    /**
+     * The model to which it should pass on the information.
+     */
     private final UndoHandler model;
 
-    UndoVisitor(UndoHandler applicationManager) {
+    /**
+     * Constructor.
+     *
+     * @param applicationManager the model to communicate with.
+     */
+    UndoVisitor(final UndoHandler applicationManager) {
         this.model = applicationManager;
     }
 
@@ -20,7 +33,7 @@ public class UndoVisitor implements GenDataVisitor {
     }
 
     @Override
-    public void visit(Point point) {
+    public void visit(final Point point) {
         throw new UnsupportedOperationException();
     }
 
@@ -31,19 +44,20 @@ public class UndoVisitor implements GenDataVisitor {
     }
 
     @Override
-    public void visit(ActionPoint actionPoint) {
+    public void visit(final ActionPoint actionPoint) {
         throw new UnsupportedOperationException();
 
     }
 
     @Override
-    public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
+    public void visit(final ListJourneyFromDeliveryProcess
+                                  listJourneyFromDeliveryProcess) {
         throw new UnsupportedOperationException();
 
     }
 
     @Override
-    public void visit(ErrorMessage error) {
+    public void visit(final ErrorMessage error) {
         throw new UnsupportedOperationException();
     }
 }

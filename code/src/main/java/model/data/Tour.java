@@ -26,7 +26,7 @@ public class Tour implements GenData {
 
     /**
      * List of all the action points delivered in this journey
-     * IN ORDER OF DELIVERY!!!
+     * IN ORDER OF DELIVERY.
      */
     private List<ActionPoint> actionPoints;
 
@@ -92,11 +92,15 @@ public class Tour implements GenData {
         genDataVisitor.visit(this);
     }
 
+    /**
+     * Deep copy of a {@link Tour}, need for undo process.
+     *
+     * @return the deep copy.
+     */
     public Tour deepClone() {
         Cloner cloner = new Cloner();
         return cloner.deepClone(this);
     }
-
 
 }
 

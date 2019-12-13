@@ -19,11 +19,11 @@ public class XmlToGraph {
     /**
      * Number of Seconds in a Hour.
      */
-    static final int NB_SEC_IN_HOUR = 3600;
+    private static final int NB_SEC_IN_HOUR = 3600;
     /**
      * Number of Seconds in a minute.
      */
-    static final int NB_SEC_IN_MIN = 60;
+    private static final int NB_SEC_IN_MIN = 60;
     /**
      * ArrayList that contains nodes that we'll send at the end of the reading.
      * Represents the graph
@@ -40,13 +40,9 @@ public class XmlToGraph {
     private static ArrayList<DeliveryProcess> deliveries;
 
     /**
-     * get the nodes parameter.
-     *
-     * @return nodes object
+     * Empty String.
      */
-    public static ArrayList<Point> getNodes() {
-        return nodes;
-    }
+    public static final String EMPTY_STRING = "";
 
     /**
      * get the tour parameter.
@@ -55,15 +51,6 @@ public class XmlToGraph {
      */
     public static Tour getTour() {
         return tour;
-    }
-
-    /**
-     * get the List of DeliveryProcess.
-     *
-     * @return List of DeliveryProcess
-     */
-    public static ArrayList<DeliveryProcess> getDeliveries() {
-        return deliveries;
     }
 
     /**
@@ -79,7 +66,7 @@ public class XmlToGraph {
             ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
             return nodes;
         }
-        if (path.equals("")) {
+        if (path.equals(EMPTY_STRING)) {
             ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_EMPTY);
             return nodes;
         }

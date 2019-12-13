@@ -26,13 +26,13 @@ public class Graph implements GenData {
     /**
      * Instantiates a Graph.
      *
-     * @param pointlist list of points
+     * @param pointList list of points
      */
-    public Graph(final List<Point> pointlist) {
-        Validate.notNull(pointlist, "point list of the graph can't be null");
-        Validate.noNullElements(pointlist, "points of the graph can't be null");
-        this.nbPoints = pointlist.size();
-        this.points = pointlist;
+    public Graph(final List<Point> pointList) {
+        Validate.notNull(pointList, "point list of the graph can't be null");
+        Validate.noNullElements(pointList, "points of the graph can't be null");
+        this.nbPoints = pointList.size();
+        this.points = pointList;
         map = new HashMap<>();
         for (int i = 0; i < this.nbPoints; i++) {
             map.put(points.get(i).getId(), i);

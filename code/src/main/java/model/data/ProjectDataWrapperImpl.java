@@ -1,6 +1,6 @@
 package model.data;
 
-import model.core.service.TourService;
+import org.apache.commons.lang.Validate;
 import view.Observer;
 
 import java.util.List;
@@ -29,7 +29,6 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
 
     @Override
     public void loadMap(final Graph graph) {
-        System.out.println("Test appl");
         projectData.setGraph(graph);
         notify(graph);
     }
@@ -51,42 +50,37 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         return projectData;
     }
 
-
-    @Override
-    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        Graph graph = projectData.getGraph();
-        Tour tour = projectData.getTour();
-        Tour newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
-        projectData.setTour(newTour);
-        notify(tour);
-    }
-
     @Override
     public void findNearestPoint(final ActionPoint newActionPoint) {
         notify(newActionPoint);
     }
 
-    public void addObserver(final Observer observer) {
-        this.observer = observer;
+    @Override
+    public void addObserver(final Observer newObserver) {
+        this.observer = newObserver;
     }
 
+    @Override
     public void selectDeliveryProcess(final DeliveryProcess deliveryProcess) {
         projectData.setSelectedDeliveryProcess(deliveryProcess);
         notify(deliveryProcess);
     }
 
     @Override
-    public void getJourneyList(List<Journey> journeyList) {
-        ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess = new ListJourneyFromDeliveryProcess();
+    public void getJourneyList(final List<Journey> journeyList) {
+        ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess =
+                new ListJourneyFromDeliveryProcess();
         listJourneyFromDeliveryProcess.setJourneyList(journeyList);
-        projectData.setJourneyListForDeliveryProcess(listJourneyFromDeliveryProcess);
+        projectData.setJourneyListForDeliveryProcess(
+                listJourneyFromDeliveryProcess);
         notify(listJourneyFromDeliveryProcess);
     }
 
-    public void sendErrorMessage (final ErrorMessage error){
+    @Override
+    public void sendErrorMessage(final ErrorMessage error) {
+        Validate.notNull(error, "error null");
         notify(error);
     }
-
 
     /**
      * Notifies the view of changes.
@@ -94,7 +88,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
      * @param genData the changed data to be updated to the view.
      */
     private void notify(final GenData genData) {
-        System.out.println("notify");
+        Validate.notNull(genData);
         observer.update(genData);
     }
 }
