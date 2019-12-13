@@ -5,6 +5,10 @@ import model.data.*;
 public class UndoVisitor implements GenDataVisitor {
     private final UndoHandler model;
 
+    UndoVisitor(UndoHandler applicationManager) {
+        this.model = applicationManager;
+    }
+
     @Override
     public void visit(final Tour tour) {
         this.model.undoTour(tour);
@@ -41,9 +45,5 @@ public class UndoVisitor implements GenDataVisitor {
     @Override
     public void visit(ErrorMessage error) {
         throw new UnsupportedOperationException();
-    }
-
-    UndoVisitor(UndoHandler applicationManager) {
-        this.model = applicationManager;
     }
 }

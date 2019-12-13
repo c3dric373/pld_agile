@@ -88,12 +88,14 @@ public abstract class TemplateTSP implements TSP {
                 lowestCost = currentCost;
             }
         } else if (currentCost + bound(currentNode, notSeen, cost, duration) < lowestCost) {
-            Iterator<Integer> it = iterator(currentNode, notSeen, cost, duration);
+            Iterator<Integer> it = iterator(currentNode, notSeen, cost,
+                    duration);
             while (it.hasNext()) {
                 Integer nextNode = it.next();
                 seen.add(nextNode);
                 notSeen.remove(nextNode);
-                branchAndBound(nextNode, notSeen, seen, currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
+                branchAndBound(nextNode, notSeen, seen,
+                        currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
                 seen.remove(nextNode);
                 notSeen.add(nextNode);
             }

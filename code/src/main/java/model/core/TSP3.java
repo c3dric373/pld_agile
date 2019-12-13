@@ -5,14 +5,28 @@ import java.util.Iterator;
 
 public class TSP3 implements TSP {
 
-    private Integer[] bestSolution;
-    private int lowestCost = 0;
-    private Boolean timeLimitExceeded = false;
     /**
-     * ex. records[29][2] represents the lowest cost so far to visit 0, 2, 3 and 4 (started with 0, end with 2)
+     * Table that represent the best Solution.
+     */
+    private Integer[] bestSolution;
+
+    /**
+     * lower cost.
+     */
+    private int lowestCost = 0;
+
+    /**
+     * boolean to know if the time limit has been eceeded.
+     */
+    private Boolean timeLimitExceeded = false;
+
+    /**
+     * ex. records[29][2] represents the lowest cost so far
+     * to visit 0, 2, 3 and 4 (started with 0, end with 2)
      * cuz 29 represents '11101' in binary, 2 represents the current index
      */
     private int[][] records;
+
     /**
      * the binary representation of the index already visited
      * ex. '11101' means 0, 2, 3 and 4 visited, 1 not visited yet
@@ -63,11 +77,15 @@ public class TSP3 implements TSP {
      *
      * @param currentNode current node
      * @param notSeen     table of nodes not seen yet
-     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
-     * @param duration    duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
+     * @param cost        cost[i][j] = the duration from i to j,
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration    duration[i] = duration to visit the i-th node,
+     *                    with 0 <= i < nbNodes
      * @return a lower bound of the cost
      */
-    protected int bound(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
+    protected int bound(final Integer currentNode,
+                        final ArrayList<Integer> notSeen, final int[][] cost,
+                        final int[] duration) {
         int costEstimation = Integer.MAX_VALUE;
         int durationEstimation = 0;
         int nbNodes = cost.length;
@@ -79,7 +97,9 @@ public class TSP3 implements TSP {
         for (Integer node1 : notSeen) {
             int min = Integer.MAX_VALUE;
             for (Integer node2 : notSeen) {
-                if (node1.equals(node2) || node2 + nbNodes / 2 == node1) continue;
+                if (node1.equals(node2) || node2 + nbNodes / 2 == node1) {
+                    continue;
+                }
                 min = Math.min(cost[node1][node2], min);
             }
             costEstimation += min;
@@ -89,32 +109,44 @@ public class TSP3 implements TSP {
     }
 
     /**
-     * Method to get an iterator which can iterate the permutation of the nodes not seen
+     * Method to get an iterator which can iterate the permutation
+     * of the nodes not seen.
      *
      * @param currentNode current node
      * @param notSeen     table of nodes not seen yet
-     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
-     * @param duration    duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
-     * @return an iterator which can iterate the permutation of the nodes not seen
+     * @param cost        cost[i][j] = the duration from i to j,
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration    duration[i] = duration to visit the i-th node,
+     *                    with 0 <= i < nbNodes
+     * @return an iterator which can iterate the permutation
+     * of the nodes not seen.
      */
-    protected Iterator<Integer> iterator(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
+    protected Iterator<Integer> iterator(final Integer currentNode,
+                                         final ArrayList<Integer> notSeen,
+                                         final int[][] cost,
+                                         final int[] duration) {
         return new IteratorSeq2(notSeen, currentNode, cost);
     }
 
     /**
-     * Recursive algorithm to calculate the best solution and the lowest cost (by using branch and bound) of the TSP
+     * Recursive algorithm to calculate the best solution
+     * and the lowest cost (by using branch and bound) of the TSP.
      *
      * @param currentNode the last visited node
      * @param notSeen     the list of visited nodes
      * @param seen        the list of nodes not visited
      * @param currentCost the sum of the cost so far (from 0 to currentNode)
-     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
-     * @param duration    duration[i] = duration to visit the i-th node, with 0 <= i < nbNodes
+     * @param cost        cost[i][j] = the duration from i to j,
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param duration    duration[i] = duration to visit the i-th node,
+     *                    with 0 <= i < nbNodes
      * @param startTime   start time of the resolution
      * @param timeLimit   time limit for the resolution
      */
-    void branchAndBound(int currentNode, ArrayList<Integer> notSeen, ArrayList<Integer> seen, int currentCost,
-                        int[][] cost, int[] duration, long startTime, int timeLimit) {
+    void branchAndBound(final int currentNode, final ArrayList<Integer> notSeen,
+                        final ArrayList<Integer> seen, int currentCost,
+                        final int[][] cost, final int[] duration,
+                        final long startTime, final int timeLimit) {
         if (System.currentTimeMillis() - startTime >= timeLimit) {
             timeLimitExceeded = true;
             return;
@@ -129,13 +161,15 @@ public class TSP3 implements TSP {
             }
         } else if (currentCost + bound(currentNode, notSeen, cost, duration) < lowestCost && records[seenInBinary][currentNode] > currentCost) {
             records[seenInBinary][currentNode] = currentCost;
-            Iterator<Integer> it = iterator(currentNode, notSeen, cost, duration);
+            Iterator<Integer> it;
+            it = iterator(currentNode, notSeen, cost, duration);
             while (it.hasNext()) {
                 Integer nextNode = it.next();
                 seen.add(nextNode);
                 notSeen.remove(nextNode);
                 seenInBinary += (1 << nextNode);
-                branchAndBound(nextNode, notSeen, seen, currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
+                branchAndBound(nextNode, notSeen, seen,
+                        currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
                 seen.remove(nextNode);
                 notSeen.add(nextNode);
                 seenInBinary -= (1 << nextNode);
