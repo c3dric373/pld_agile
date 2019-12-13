@@ -340,13 +340,13 @@ public class GraphService {
                               final Graph graph) {
         Validate.notNull(tour, "tour can't be null");
         Validate.notNull(graph, "graph can't be null");
-        Validate.isTrue(tour.getDeliveryProcesses().size() < 15,
+        Validate.isTrue(tour.getDeliveryProcesses().size() <= 15,
                 "calculateTour can't take more than 15 delivery process");
 
         // if we catch an IllegalArgumentException, it means tour and graph are incompatible
-        TSP tsp3 = new TSP4();
+        TSP tsp = new TSP4();
 //        int timeLimit = Integer.MAX_VALUE;
-        List<Journey> journeys = getListJourney(tour, graph, tsp3, 30000);
+        List<Journey> journeys = getListJourney(tour, graph, tsp, 30000);
         List<Point> points = new ArrayList<>();
         for (int i = 1; i < journeys.size(); i++)
             points.add(journeys.get(i).getStartPoint());

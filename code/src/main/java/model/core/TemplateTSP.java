@@ -14,15 +14,19 @@ public abstract class TemplateTSP implements TSP {
     }
 
     public void searchSolution(int timeLimit, int nbNodes, int[][] cost, int[] duration) {
-        timeLimitExceeded = false;
-        lowestCost = Integer.MAX_VALUE;
-        bestSolution = new Integer[nbNodes];
-        ArrayList<Integer> notSeen = new ArrayList<>();
-        for (int i = 1; i < nbNodes; i++) notSeen.add(i);
-        ArrayList<Integer> seen = new ArrayList<>(nbNodes);
-        // the first visited node is 0
-        seen.add(0);
-        branchAndBound(0, notSeen, seen, 0, cost, duration, System.currentTimeMillis(), timeLimit);
+        try {
+            timeLimitExceeded = false;
+            lowestCost = Integer.MAX_VALUE;
+            bestSolution = new Integer[nbNodes];
+            ArrayList<Integer> notSeen = new ArrayList<>();
+            for (int i = 1; i < nbNodes; i++) notSeen.add(i);
+            ArrayList<Integer> seen = new ArrayList<>(nbNodes);
+            // the first visited node is 0
+            seen.add(0);
+            branchAndBound(0, notSeen, seen, 0, cost, duration, System.currentTimeMillis(), timeLimit);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("searchSolution can't calculate");
+        }
     }
 
     public Integer getBestSolution(int i) {

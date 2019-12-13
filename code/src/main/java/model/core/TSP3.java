@@ -24,24 +24,28 @@ public class TSP3 implements TSP {
     }
 
     public void searchSolution(int timeLimit, int nbNodes, int[][] cost, int[] duration) {
-        timeLimitExceeded = false;
-        lowestCost = Integer.MAX_VALUE;
-        bestSolution = new Integer[nbNodes];
-        ArrayList<Integer> notSeen = new ArrayList<>();
-        for (int i = 1; i < nbNodes; i++) notSeen.add(i);
-        ArrayList<Integer> seen = new ArrayList<>(nbNodes);
-        // the first visited node is 0
-        seen.add(0);
-        seenInBinary = 1;
-        // initialize records
-        int length = (1 << nbNodes) - 1;
-        records = new int[length + 1][nbNodes];
-        for (int i = 0; i < length; i++)
-            for (int j = 0; j < nbNodes; j++)
-                records[i][j] = Integer.MAX_VALUE;
-        records[0][0] = 0;
+        try {
+            timeLimitExceeded = false;
+            lowestCost = Integer.MAX_VALUE;
+            bestSolution = new Integer[nbNodes];
+            ArrayList<Integer> notSeen = new ArrayList<>();
+            for (int i = 1; i < nbNodes; i++) notSeen.add(i);
+            ArrayList<Integer> seen = new ArrayList<>(nbNodes);
+            // the first visited node is 0
+            seen.add(0);
+            seenInBinary = 1;
+            // initialize records
+            int length = (1 << nbNodes) - 1;
+            records = new int[length + 1][nbNodes];
+            for (int i = 0; i < length; i++)
+                for (int j = 0; j < nbNodes; j++)
+                    records[i][j] = Integer.MAX_VALUE;
+            records[0][0] = 0;
 
-        branchAndBound(0, notSeen, seen, 0, cost, duration, System.currentTimeMillis(), timeLimit);
+            branchAndBound(0, notSeen, seen, 0, cost, duration, System.currentTimeMillis(), timeLimit);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("searchSolution can't calculate");
+        }
     }
 
     public Integer getBestSolution(int i) {

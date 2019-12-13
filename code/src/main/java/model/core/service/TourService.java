@@ -65,22 +65,22 @@ public class TourService {
     public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         Validate.notNull(tour, "tour can't be null");
         Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
-        if(tour.getActionPoints() !=null){
+        if (tour.getActionPoints() != null) {
             tour.getActionPoints().remove(deliveryProcess.getPickUP());
             tour.getActionPoints().remove(deliveryProcess.getDelivery());
         }
-        tour.deleteDeliveryProcess(deliveryProcess);
+        tour.getDeliveryProcesses().remove(deliveryProcess);
         return tour;
     }
 
     public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         Validate.notNull(tour, "tour can't be null");
         Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
-        if(tour.getActionPoints() !=null){
+        if (tour.getActionPoints() != null) {
             tour.getActionPoints().add(deliveryProcess.getPickUP());
             tour.getActionPoints().add(deliveryProcess.getDelivery());
         }
-        tour.addDeliveryProcess(deliveryProcess);
+        tour.getDeliveryProcesses().add(deliveryProcess);
         return tour;
 
     }
