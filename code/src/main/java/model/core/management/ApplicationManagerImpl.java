@@ -183,17 +183,21 @@ public class ApplicationManagerImpl implements ApplicationManager {
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
-            DeliveryProcessService.setDpInfo(newTour);
-            TourService.calculateTimeAtPoint(newTour);
-            int completeDistance = TourService.getCompleteDistance(newTour);
-            Time completeTime = TourService.getCompleteTime(newTour);
-            newTour.setCompleteTime(completeTime);
-            newTour.setTotalDistance(completeDistance);
-            DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
+            updateInfo(newTour);
             projectDataWrapper.loadTour(newTour);
         }
 
         projectState = mainProjectState;
+    }
+
+    private void updateInfo(final Tour newTour) {
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
     }
 
     @Override
