@@ -3,7 +3,6 @@ package model.core.service;
 import model.core.TSP;
 import model.core.TSP3;
 import model.data.*;
-import net.sf.saxon.expr.flwor.Tuple;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -15,24 +14,20 @@ public class GraphService {
 
 
     public static Point findNearestPoint(final Graph graph,
-                                  final double longitude,
-                                  final double latitude) {
+                                         final double longitude,
+                                         final double latitude) {
         Validate.notNull(graph, "graph null");
-        final Point nearestPoint;
-        long nearestId = 0;
-        double nearestLong = 0.0, nearestLat = 0.0;
-        double differenceLong = 100.0, differenceLat = 100.0;
+        Point nearestPoint = null;
+        double difference = Double.POSITIVE_INFINITY;
         for (final Point p : graph.getPoints()) {
-            if ((Math.abs(p.getLatitude() - latitude) <= differenceLat) &&
-                    (Math.abs(p.getLongitude() - longitude) <= differenceLong)) {
-                differenceLat = Math.abs(p.getLatitude() - latitude);
-                differenceLong = Math.abs(p.getLongitude() - longitude);
-                nearestLat = p.getLatitude();
-                nearestLong = p.getLongitude();
-                nearestId = p.getId();
+            double differenceLat = p.getLatitude() - latitude;
+            double differenceLong = p.getLongitude() - longitude;
+            if (differenceLat * differenceLat + differenceLong * differenceLong < difference) {
+                difference = differenceLat * differenceLat + differenceLong * differenceLong;
+                nearestPoint = p;
             }
         }
-        nearestPoint = new Point(nearestId, nearestLat, nearestLong);
+        Validate.notNull(nearestPoint, "findNearestPoint can't return null");
         return nearestPoint;
     }
 
