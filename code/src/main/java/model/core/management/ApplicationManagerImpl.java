@@ -26,7 +26,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     /**
      * Project Data wrapper for project.
      */
-    private ProjectDataWrapper projectDataWrapper;
+    private static ProjectDataWrapper projectDataWrapper;
 
     /**
      * State of the Project.
@@ -89,7 +89,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     public void loadMap(final File file) {
         if (projectState != ProjectState.INITIALIZED &&
                 projectState != ProjectState.MAP_LOADED) {
-            throw new IllegalStateException("Application not opened");
+            sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
         }
         Validate.notNull(file, "file is null");
 
@@ -110,7 +110,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         if (projectState != ProjectState.MAP_LOADED &&
                 projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("Map not loaded");
+            sendMessage(ErrorMessage.MAP_NOT_LOADED);
         }
         Validate.notNull(file, "file is null");
         final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
@@ -126,7 +126,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     public void calculateTour() {
         if (projectState != ProjectState.TOUR_LOADED &&
                 projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("tour not loaded");
+            sendMessage(ErrorMessage.TOUR_NOT_LOADED);
         }
         final Tour tour = projectDataWrapper.getProject().getTour();
         undoList.add(tour.deepClone());
@@ -145,7 +145,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                                    final ActionPoint deliveryPoint) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("Another action is in progress");
+            sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         }
         Validate.notNull(tour, "tour null");
         Validate.notNull(pickUpPoint, "pickUpPoint null");
@@ -194,7 +194,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("Another action is in progress");
+            sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         }
         if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
             //TODO
@@ -236,7 +236,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     @Override
     public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
         if (projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("Another action is in progress");
+            sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         }
         setChangeDeliveryOrder();
         Validate.notNull(actionPoints, "actionPoints null");
@@ -256,7 +256,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
-            throw new IllegalStateException("Another action is in progress");
+            sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         }
         setModifyDeliveryProcessPoint();
         Validate.notNull(oldPoint, "oldPoint is null");
@@ -299,7 +299,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         if (actionPoint == null) {
             return;
         }
-        OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
+        OptionalInt index = DeliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
         if (index.isPresent()) {
             DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
             projectDataWrapper.selectDeliveryProcess(deliveryProcess);
@@ -329,9 +329,10 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             genData.accept(undoVisitor);
         }
     }
-    public void setMapLoaded(){
-        if(projectState != ProjectState.INITIALIZED &&
-                projectState != ProjectState.MAP_LOADED){
+
+    public void setMapLoaded() {
+        if (projectState != ProjectState.INITIALIZED &&
+                projectState != ProjectState.MAP_LOADED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.MAP_LOADED;
@@ -391,7 +392,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         }
     }
 
-    public static void sendMessage(ErrorMessage message){
+    public static void sendMessage(ErrorMessage message) {
         projectDataWrapper.sendErrorMessage(message);
     }
 
