@@ -38,7 +38,8 @@ public class Utils {
     static String pointToString(final Point point) {
         if (point != null) {
             DecimalFormat numberFormat = new DecimalFormat("#.0000");
-            return numberFormat.format(point.getLatitude()) + ", " + numberFormat.format(point.getLongitude());
+            return numberFormat.format(point.getLatitude()) + ", "
+                    + numberFormat.format(point.getLongitude());
         } else {
             return "";
         }
@@ -57,10 +58,14 @@ public class Utils {
     static Time parseStringToTime(final String hours, final String minutes) {
         Validate.notNull(hours, "hours null");
         Validate.notNull(minutes, "minutes null");
-        Validate.isTrue(NumberUtils.isNumber(hours), "hours not a number");
-        Validate.isTrue(NumberUtils.isNumber(minutes), "minutes not a number");
-        Validate.isTrue(Integer.parseInt(hours) < 24 && Integer.parseInt(hours) >= 0, "not an hour");
-        Validate.isTrue(Integer.parseInt(minutes) < 59 && Integer.parseInt(minutes) >= 0, "not a minute");
+        Validate.isTrue(NumberUtils.isNumber(hours),
+                "hours not a number");
+        Validate.isTrue(NumberUtils.isNumber(minutes),
+                "minutes not a number");
+        Validate.isTrue(Integer.parseInt(hours)
+                < 24 && Integer.parseInt(hours) >= 0, "not an hour");
+        Validate.isTrue(Integer.parseInt(minutes)
+                < 59 && Integer.parseInt(minutes) >= 0, "not a minute");
         final String toParse = hours + ":" + minutes + ":00";
         return Time.valueOf(toParse);
     }

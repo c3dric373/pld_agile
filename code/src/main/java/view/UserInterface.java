@@ -7,7 +7,6 @@ import model.core.management.ApplicationManager;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
-import javax.swing.*;
 import java.io.File;
 import java.sql.Time;
 import java.util.List;
@@ -29,7 +28,8 @@ public class UserInterface implements Observer {
      * The data as an observable list of Persons.
      */
     // TODO Modifier ca en autre chose que string genre en liste de livraison
-    private ObservableList<String> tourData = FXCollections.observableArrayList();
+    private ObservableList<String> tourData =
+            FXCollections.observableArrayList();
     private DashBoardController controller;
 
     /**
@@ -82,14 +82,13 @@ public class UserInterface implements Observer {
         this.model.calculateTour();
     }
 
-
-
-    public void getNearPoint(double latitude, double longitude, ActionType actionType, Time time) {
+    public void getNearPoint(double latitude, double longitude,
+                             ActionType actionType, Time time) {
         this.model.findNearestPoint(latitude, longitude, actionType, time);
     }
 
     public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
-        this.model.getDeliveryProcess(tour.getDeliveryProcesses(),oldValue);
+        this.model.getDeliveryProcess(tour.getDeliveryProcesses(), oldValue);
     }
 
     public void deleteDp(final DeliveryProcess deliveryProcessLoaded) {
@@ -97,15 +96,19 @@ public class UserInterface implements Observer {
         this.model.deleteDeliveryProcess(deliveryProcessLoaded);
     }
 
-    public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
+    public void getJourneyList(List<Journey> journeyList,
+                               DeliveryProcess deliveryProcess) {
         this.model.getJourneyList(journeyList, deliveryProcess);
     }
 
-    public void addDeliveryProcess(Tour tourLoaded, ActionPoint newPickUpActionPoint, ActionPoint newDeliveryActionPoint) {
-        this.model.addDeliveryProcess(tourLoaded, newPickUpActionPoint,newDeliveryActionPoint);
+    public void addDeliveryProcess(Tour tourLoaded,
+                                   ActionPoint newPickUpActionPoint,
+                                   ActionPoint newDeliveryActionPoint) {
+        this.model.addDeliveryProcess(tourLoaded, newPickUpActionPoint,
+                newDeliveryActionPoint);
     }
 
-    public void modifyOrder(final List<ActionPoint> actionPoints){
+    public void modifyOrder(final List<ActionPoint> actionPoints) {
         this.model.changeDeliveryOrder(actionPoints);
     }
 

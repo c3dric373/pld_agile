@@ -612,7 +612,7 @@ public class DashBoardController implements Initializable,
         newDeliveryActionPoint = null;
     }
 
-}
+
 
     public void clearNewPickUpPoint() {
         labelPickUpCoordinates.setText("");
@@ -676,10 +676,11 @@ public class DashBoardController implements Initializable,
         });
     }
 
-    /** checks whether a label is empty or not
+    /**
+     * checks whether a label is empty or not
      *
      * @param label the label to check.
-     * @return true if the label is 
+     * @return true if the label is
      */
     public Boolean editable(Label label) {
         return label.getText() == "";
@@ -695,13 +696,13 @@ public class DashBoardController implements Initializable,
         return labelDeliveryCoordinates.getText() != "" && labelDeliveryCoordinates.getText() != "" && inputDeliveryTimeM.getText() != "" && inputPickUpTimeM.getText() != "";
     }
 
-
     /**
      * Alert Message to interact with the user and draw his attention to an
      * important message.
-     * @param title title of the message.
-     * @param header header of the message.
-     * @param msg message itself.
+     *
+     * @param title     title of the message.
+     * @param header    header of the message.
+     * @param msg       message itself.
      * @param alertType type of alert (ex.: logging or error)
      */
     void showAlert(final String title, final String header, final String msg,
@@ -716,6 +717,7 @@ public class DashBoardController implements Initializable,
     /**
      * Shows the user a confiramtion alert to be able to make sure he wants
      * to delete the seleted {@link DeliveryProcess}.
+     *
      * @param msg The message to  be shown to the user.
      * @return True if the user agrees to delete the {@link DeliveryProcess}
      * false otherwise.
@@ -741,6 +743,7 @@ public class DashBoardController implements Initializable,
 
     /**
      * Show a dialog to be able to change the order of the
+     *
      * @param deliveryProcess
      * @return
      */
