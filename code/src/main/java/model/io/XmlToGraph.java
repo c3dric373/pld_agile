@@ -1,5 +1,6 @@
 package model.io;
 
+import model.core.management.ApplicationManager;
 import model.core.management.ApplicationManagerImpl;
 import model.data.*;
 import org.w3c.dom.Document;
@@ -99,6 +100,10 @@ public class XmlToGraph {
             // Get the nodes tag and display the number of nodes.
             final NodeList nodeList = root.getElementsByTagName("noeud");
             final int nbNodeElements = nodeList.getLength();
+            if(nbNodeElements==0){
+                ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
+                return nodes;
+            }
             System.out.println("nbNodes :" + nbNodeElements);
 
             // Reading of all nodes in the fil and addition to the ArrayList.
@@ -116,6 +121,10 @@ public class XmlToGraph {
             // Get the segments tag and display the number of segments.
             final NodeList roadList = root.getElementsByTagName("troncon");
             final int nbRoadElements = roadList.getLength();
+            if(nbRoadElements == 0){
+                ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
+                return null;
+            }
             System.out.println("nbRoad :" + nbRoadElements);
 
             // Reading of all segments in the file.
@@ -180,6 +189,10 @@ public class XmlToGraph {
             // and display the number of DeliveryProcess.
             final NodeList start = root.getElementsByTagName("entrepot");
             final Element startPoint = (Element) start.item(0);
+            if(startPoint == null){
+                ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
+                return tour;
+            }
             Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
             Point base = getPointById(idBase);
             System.out.println("entrepot :" + idBase);
@@ -192,6 +205,10 @@ public class XmlToGraph {
             final NodeList deliveryList;
             deliveryList = root.getElementsByTagName("livraison");
             final int nbDeliveryElements = deliveryList.getLength();
+            if(nbDeliveryElements == 0){
+                ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
+                return tour;
+            }
             System.out.println("nbdeliveryelements :" + nbDeliveryElements);
 
             // Reading of all DeliveryProcess in the file

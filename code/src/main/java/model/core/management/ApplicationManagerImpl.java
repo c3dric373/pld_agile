@@ -94,10 +94,12 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
-            final Graph graph = new Graph(points);
-            projectDataWrapper.loadMap(graph);
-            setMapLoaded();
-            mainProjectState = ProjectState.MAP_LOADED;
+            if(!points.isEmpty()){
+                final Graph graph = new Graph(points);
+                projectDataWrapper.loadMap(graph);
+                setMapLoaded();
+                mainProjectState = ProjectState.MAP_LOADED;
+            }
         }
     }
 
@@ -116,10 +118,12 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
-            undoList.add(projectDataWrapper.getProject().getGraph());
-            projectDataWrapper.loadTour(tour);
-            setTourLoaded();
-            mainProjectState = ProjectState.TOUR_LOADED;
+            if(tour != null) {
+                undoList.add(projectDataWrapper.getProject().getGraph());
+                projectDataWrapper.loadTour(tour);
+                setTourLoaded();
+                mainProjectState = ProjectState.TOUR_LOADED;
+            }
         }
     }
 
