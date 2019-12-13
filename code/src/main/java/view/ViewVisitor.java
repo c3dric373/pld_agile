@@ -13,15 +13,20 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Tour tour) {
-        dashBoardController.setTour(tour);
-        if (tour.getJourneyList() == null) {
-            System.out.println("---load tour without journey list---");
-            dashBoardController.displayLoadedDeliveryProcess();
-        } else {
+        if(tour.getBase().getId() == 0){
+            dashBoardController.setTour(null);
+            dashBoardController.resetTour();
+        }else {
+            dashBoardController.setTour(tour);
+            if (tour.getJourneyList() == null) {
+                System.out.println("---load tour without journey list---");
+                dashBoardController.displayLoadedDeliveryProcess();
+            } else {
 
-            dashBoardController.clearAll();
-            dashBoardController.setActionPoints(tour);
-            dashBoardController.drawFullTour();
+                dashBoardController.clearAll();
+                dashBoardController.setActionPoints(tour);
+                dashBoardController.drawFullTour();
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import lombok.*;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
 
@@ -55,6 +56,15 @@ public class Tour implements GenData {
      * Total distance of the tour.
      */
     private int totalDistance;
+
+    /**
+     * Instantiates an empty Tour
+     */
+    public Tour(){
+        this.deliveryProcesses = new ArrayList<DeliveryProcess>();
+        this.base = new Point(0,1,1);
+        this.startTime = new Time(0);
+    }
 
     /**
      * Instantiates a Tour.

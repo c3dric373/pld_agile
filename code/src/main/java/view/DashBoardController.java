@@ -59,6 +59,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         actionPoints.addAll(tour.getActionPoints());
     }
 
+    public void resetTour(){
+        actionPointTableView.getItems().clear();
+        startTime.setText("");
+        numberDeliveries.setText("");
+        arrivalTime.setText("");
+    }
+
     public void modifieDP() {
         int result = showModifieDeliveryDialog(deliveryProcessLoaded);
         int index = actionPointTableView.getSelectionModel().getFocusedIndex();

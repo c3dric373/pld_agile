@@ -88,7 +88,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     @Override
     public void loadMap(final File file) {
         if (projectState != ProjectState.INITIALIZED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
         } else if (file == null ) {
             sendMessage(ErrorMessage.FILE_NULL);
@@ -97,6 +99,10 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             if(!points.isEmpty()){
                 final Graph graph = new Graph(points);
                 projectDataWrapper.loadMap(graph);
+                if(projectDataWrapper.getProject().getTour() != null){
+                    Tour emptyTour = new Tour();
+                    projectDataWrapper.loadTour(emptyTour);
+                }
                 setMapLoaded();
                 mainProjectState = ProjectState.MAP_LOADED;
             }

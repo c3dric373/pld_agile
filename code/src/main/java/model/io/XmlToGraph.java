@@ -195,6 +195,9 @@ public class XmlToGraph {
             }
             Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
             Point base = getPointById(idBase);
+            if(base == null){
+                return tour;
+            }
             System.out.println("entrepot :" + idBase);
             // Recup startTime
             String startTimeString = startPoint.getAttribute("heureDepart");
@@ -222,12 +225,18 @@ public class XmlToGraph {
                 Long pickupPointId = Long.parseLong(pickupIdString);
                 System.out.println("idPick " + pickupPointId);
                 Point pickupPoint = getPointById(pickupPointId);
+                if(pickupPoint == null){
+                    return tour;
+                }
                 String deliveryIdString;
                 deliveryIdString = deliveryXml.getAttribute("adresseLivraison");
                 Long deliveryPointId = Long.parseLong(deliveryIdString);
                 System.out.println("idDeliver "
                         + deliveryPointId);
                 Point deliveryPoint = getPointById(deliveryPointId);
+                if(deliveryPoint == null){
+                    return tour;
+                }
                 String pickupTimeString;
                 pickupTimeString = deliveryXml.getAttribute("dureeEnlevement");
                 int pickupTimeInt = Integer.parseInt(pickupTimeString);
