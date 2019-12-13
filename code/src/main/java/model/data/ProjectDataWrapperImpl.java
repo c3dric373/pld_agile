@@ -84,6 +84,10 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         notify(listJourneyFromDeliveryProcess);
     }
 
+    public void sendErrorMessage (final ErrorMessage error){
+        notify(error);
+    }
+
 
     /**
      * Notifies the view of changes.

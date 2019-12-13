@@ -42,4 +42,11 @@ public interface GenDataVisitor {
     void visit(final ActionPoint actionPoint);
 
     void visit(final ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess);
+
+    /**
+     * Calls the right methods to process a {@link ErrorMessage}.
+     *
+     * @param error the error
+     */
+    void visit(final ErrorMessage error);
 }

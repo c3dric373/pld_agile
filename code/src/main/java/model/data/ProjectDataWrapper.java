@@ -63,4 +63,11 @@ public interface ProjectDataWrapper {
     void selectDeliveryProcess(final DeliveryProcess deliveryProcess);
 
     void getJourneyList(List<Journey> journeyList);
+
+    /**
+     * Send error Message to the view.
+     *
+     * @param error error message
+     */
+    void sendErrorMessage (final ErrorMessage error);
 }
