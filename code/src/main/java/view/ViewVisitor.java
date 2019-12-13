@@ -51,7 +51,6 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final ErrorMessage error) {
-        //TODO inform the view that there is an error
         dashBoardController.showAlert("error", "An error has occured",
                 error.getMessage(), Alert.AlertType.ERROR);
         System.out.println(error.getMessage());

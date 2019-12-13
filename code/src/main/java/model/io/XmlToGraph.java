@@ -1,5 +1,7 @@
 package model.io;
 
+import model.core.management.ApplicationManager;
+import model.core.management.ApplicationManagerImpl;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
@@ -73,14 +75,16 @@ public class XmlToGraph {
      * @return List of Point
      */
     public ArrayList<Point> getGraphFromXml(final String path) {
-        Validate.notNull(path, "path is null");
-
-        if (path.equals("")) {
-            throw new IllegalArgumentException("path is empty");
-        }
-
         nodes = new ArrayList<Point>();
 
+        if (path == null ){
+            ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
+            return nodes;
+        }
+        if (path.equals("")) {
+            ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_EMPTY);
+            return nodes;
+        }
         // Get an instance of class "DocumentBuilderFactory".
         final DocumentBuilderFactory factory;
         factory = DocumentBuilderFactory.newInstance();
@@ -139,7 +143,7 @@ public class XmlToGraph {
 
         } catch (final ParserConfigurationException | SAXException
                 | IOException | NumberFormatException e) {
-            System.err.println(e.getMessage());
+            ApplicationManagerImpl.sendMessage(ErrorMessage.XML_LOAD_ERROR);
         }
         return nodes;
     }
@@ -151,13 +155,13 @@ public class XmlToGraph {
      * @return List of deliveries
      */
     public Tour getDeliveriesFromXml(final String path) {
-        Validate.notNull(path, "path is null");
-
-        if (path.equals("")) {
-            throw new IllegalArgumentException("path is empty");
-        }
-
         deliveries = new ArrayList<DeliveryProcess>();
+        if( path == null) {
+            ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
+        }
+        if (path.equals("")) {
+            ApplicationManagerImpl.sendMessage(ErrorMessage.XML_LOAD_ERROR);
+        }
 
         // Get an instance of class "DocumentBuilderFactory".
         final DocumentBuilderFactory factory;
@@ -230,7 +234,7 @@ public class XmlToGraph {
 
         } catch (final ParserConfigurationException | SAXException
                 | IOException | IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            ApplicationManagerImpl.sendMessage(ErrorMessage.XML_LOAD_ERROR);
         }
         return tour;
     }
@@ -249,7 +253,8 @@ public class XmlToGraph {
             }
         }
         if (point == null) {
-            throw new IllegalArgumentException("Point doesn't exist");
+            ApplicationManagerImpl.sendMessage(ErrorMessage.POINT_DOESNT_EXIST);
+            return point;
         }
         return point;
     }
