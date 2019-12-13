@@ -147,10 +147,10 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                 && projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
-        undoList.add(tour.deepClone());
         Validate.notNull(tour, "tour null");
         Validate.notNull(pickUpPoint, "pickUpPoint null");
         Validate.notNull(deliveryPoint, "deliveryPoint null");
+        undoList.add(tour.deepClone());
         final Tour newTour;
         if (projectState == ProjectState.TOUR_LOADED) {
             setAddDeliveryProcess();
