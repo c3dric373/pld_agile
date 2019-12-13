@@ -124,9 +124,14 @@ public class DashBoardController implements Initializable,
     private static final double LYON_LONGITUDE = 4.880959;
 
     /**
-     * Value of the zoom to set to our map for initialization.
+     * Value of the zoom Large to set to our map for initialization.
      */
-    private static final double ZOOM_SETTING = 13;
+    private static final double LARGE_ZOOM_SETTING = 13;
+
+    /**
+     * Value of the zoom narrow to set to our map for initialization.
+     */
+    private static final double NARROW_ZOOM_SETTING = 12;
 
     /**
      * Store all the Actions Points on a table for the view.
@@ -330,7 +335,7 @@ public class DashBoardController implements Initializable,
                 .styleString(mapStyle).overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP).panControl(false)
                 .rotateControl(false).scaleControl(false)
-                .streetViewControl(false).zoomControl(false).zoom(ZOOM_SETTING);
+                .streetViewControl(false).zoomControl(false).zoom(LARGE_ZOOM_SETTING);
     }
 
     /**
@@ -661,7 +666,7 @@ public class DashBoardController implements Initializable,
                 center.getLongitude())).styleString(mapStyle).
                 overviewMapControl(false).mapType(MapTypeIdEnum.ROADMAP).
                 panControl(false).rotateControl(false).scaleControl(false).
-                streetViewControl(false).zoomControl(false).zoom(12);
+                streetViewControl(false).zoomControl(false).zoom(NARROW_ZOOM_SETTING);
 
         // Add map to the view
         map = mapView.createMap(mapOptions);
@@ -694,7 +699,7 @@ public class DashBoardController implements Initializable,
         map.clearMarkers();
         drawAllActionPoints();
         drawPolyline(getMCVPathFormJourneyList(tourLoaded.getJourneyList()),
-                0.4, ColorOption.FULL_TOUR_COLOR);
+                NORMAL_OPACITY, ColorOption.FULL_TOUR_COLOR);
     }
 
     /**
