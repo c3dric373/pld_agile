@@ -2,7 +2,8 @@ package view;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.event.*;
+import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
+import com.lynden.gmapsfx.javascript.event.UIEventType;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
@@ -12,15 +13,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
 import lombok.Getter;
-import model.data.*;
 import model.data.Point;
+import model.data.*;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -29,8 +29,8 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DecimalFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
@@ -270,14 +270,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {
         String label = mType.firstLetter;
-        if(actionPoint.getActionType() != ActionType.BASE && actionPoint.getActionType() != ActionType.END) {
+        if (actionPoint.getActionType() != ActionType.BASE && actionPoint.getActionType() != ActionType.END) {
             label += actionPoint.getId();
-        };
+        }
+        ;
         MarkerOptions markerPoint = new MarkerOptions();
         markerPoint.title(mType.getTitle() + " - " + label + "\n\r" +
-                    "Passage Time: " + actionPoint.getPassageTime() + "\n" +
-                    "Time of Action: " + actionPoint.getTime() + "\n"
-                )
+                "Passage Time: " + actionPoint.getPassageTime() + "\n" +
+                "Time of Action: " + actionPoint.getTime() + "\n"
+        )
                 .label(label)
                 .position(new LatLong(actionPoint.getLocation().getLatitude(), actionPoint.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
@@ -348,12 +349,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void displayMap(Point center) {
         try {
-            Thread.sleep(60) ;
-        }  catch (InterruptedException e) {
+            Thread.sleep(60);
+        } catch (InterruptedException e) {
         }
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
-        mapOptions.center(new LatLong(center.getLatitude(),center.getLongitude()))
+        mapOptions.center(new LatLong(center.getLatitude(), center.getLongitude()))
                 .styleString(mapStyle)
                 .overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP)
@@ -368,7 +369,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
-        map.setCenter(new LatLong(tourLoaded.getBase().getLatitude(),tourLoaded.getBase().getLongitude()));
+        map.setCenter(new LatLong(tourLoaded.getBase().getLatitude(), tourLoaded.getBase().getLongitude()));
         setBigLabels();
         // Create a fake list of action Points To display.
         createFakeActionPointList();
@@ -387,7 +388,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         setBigLabels();
         map.clearMarkers();
         drawAllActionPoints();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
+        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), 0.4, 1);
 
     }
 
@@ -398,6 +399,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map.clearMarkers();
         if (poly != null) {
             poly.setVisible(false);
+            clearRectangleColor();
         }
         map.addMarker(createMarker(actionPoints.get(0), MarkerType.BASE));
 
@@ -411,27 +413,33 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
+    private Polyline poly;
+
+
     public void drawPolyline(final MVCArray mvcArray, double opacity, int type) {
 
         String color = "blue";
 
         switch (type) {
             // 1 = Draw Full tour
-            case 1 : color = "blue";
-                    break;
+            case 1:
+                color = "blue";
+                break;
             // 2 = Draw First journey
-            case 2 : color = "red";
-                     break;
+            case 2:
+                color = "red";
+                break;
             // 3 = Draw End journey
-            case 3 : color = "cyan";
-                    break;
+            case 3:
+                color = "cyan";
+                break;
             // 4 = Draw with Auto color
-            case 4 : if(deliveryProcessLoaded != null) color = pointToColour(deliveryProcessLoaded.getPickUP());
-                    break;
-
+            case 4:
+                if (deliveryProcessLoaded != null)
+                    color = pointToColour(deliveryProcessLoaded.getPickUP());
+                break;
         }
         setRectangleColor(color);
-    private Polyline poly;
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvcArray)
                 .strokeColor(color)
@@ -466,7 +474,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (newDeliveryPointMarker != null)
             map.addMarker(newDeliveryPointMarker);
     }
-    void setRectangleColor(String color){
+
+    void setRectangleColor(String color) {
         rectangle.setStyle("-fx-background-color:" + color + ";" +
                 "-fx-opacity: 0.5;");
     }
@@ -684,7 +693,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public String pointToColour(ActionPoint actionPoint) {
-        int numberFromId = (int)(actionPoint.getId() * 3.8 * 100000 * Math.pow(2,actionPoint.getId()));
+        int numberFromId = (int) (actionPoint.getId() * 3.8 * 100000 * Math.pow(2, actionPoint.getId()));
         Color color = new Color(numberFromId).brighter();
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
