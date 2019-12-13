@@ -31,7 +31,7 @@ public class TourService {
      * @param tourLoaded the tour to search through
      */
     public static void calculateTimeAtPoint(final Tour tourLoaded) {
-        if (tourLoaded == null || tourLoaded.getActionPoints() == null) {
+        if (tourLoaded == null || tourLoaded.getActionPoints() == null || tourLoaded.getJourneyList() == null) {
             return;
         }
         final List<Journey> journeys = tourLoaded.getJourneyList();
@@ -64,6 +64,8 @@ public class TourService {
      * @return the total distance.
      */
     public static int getCompleteDistance(final Tour tour) {
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(tour.getJourneyList(), "journey list of tour can't be null");
         int completeDistance = 0;
         for (Journey journey : tour.getJourneyList()) {
             completeDistance += journey.getMinLength();
@@ -80,12 +82,12 @@ public class TourService {
      * @return the total time.
      */
     public static Time getCompleteTime(final Tour tour) {
-        long firstFinishTime = tour.getStartTime().getTime();
-        long secondFinishTime = tour.getJourneyList()
-                .get(tour.getJourneyList().size() - 1)
-                .getFinishTime().getTime();
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(tour.getJourneyList(), "journey list of tour can't be null");
+        long startTime = tour.getStartTime().getTime();
+        long finishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
 
-        long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+        long journeyTime = Math.abs(startTime - finishTime);
         journeyTime = journeyTime / DIVISION_FACTOR;
 
         return JourneyService.durationToTime(journeyTime);
@@ -108,6 +110,7 @@ public class TourService {
             tour.getActionPoints().remove(deliveryProcess.getPickUP());
             tour.getActionPoints().remove(deliveryProcess.getDelivery());
         }
+        tour.getDeliveryProcesses().remove(deliveryProcess);
         return tour;
     }
 
@@ -128,6 +131,7 @@ public class TourService {
             tour.getActionPoints().add(deliveryProcess.getPickUP());
             tour.getActionPoints().add(deliveryProcess.getDelivery());
         }
+        tour.getDeliveryProcesses().add(deliveryProcess);
         return tour;
 
     }

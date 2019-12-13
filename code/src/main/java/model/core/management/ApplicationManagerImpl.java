@@ -154,7 +154,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
-
+        System.out.println("*************** After calculateTour, ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
+        System.out.println("*************** Expected: TOUR_CALCULATED ***************");
     }
 
     @Override

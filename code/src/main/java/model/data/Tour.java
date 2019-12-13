@@ -1,7 +1,11 @@
 package model.data;
 
 import com.rits.cloning.Cloner;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;

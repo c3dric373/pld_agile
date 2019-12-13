@@ -33,45 +33,81 @@ public class TSP3 implements TSP {
      */
     private int seenInBinary;
 
+    /**
+     * Return whether the time limit is exceeded or not.
+     *
+     * @return timeLimitExceeded
+     */
     public Boolean getTimeLimitExceeded() {
         return timeLimitExceeded;
     }
 
+    /**
+     * Search for a circle which has the lowest cost to visit every node.
+     * (between 0 and nbNodes - 1)
+     *
+     * @param timeLimit time limit for the resolution
+     * @param nbNodes   number of nodes
+     * @param cost      cost[i][j] = the duration from i to j, with 0 <= i <
+     *                  nbNodes and 0 <= j < nbNodes
+     * @param duration  duration[i] = duration to visit the i-th node, with 0
+     *                  <= i < nbNodes
+     */
     public void searchSolution(final int timeLimit, final int nbNodes,
                                final int[][] cost, final int[] duration) {
-        timeLimitExceeded = false;
-        lowestCost = Integer.MAX_VALUE;
-        bestSolution = new Integer[nbNodes];
-        ArrayList<Integer> notSeen = new ArrayList<>();
-        for (int i = 1; i < nbNodes; i++) notSeen.add(i);
-        ArrayList<Integer> seen = new ArrayList<>(nbNodes);
-        // the first visited node is 0
-        seen.add(0);
-        seenInBinary = 1;
-        // initialize records
-        int length = (1 << nbNodes) - 1;
-        records = new int[length + 1][nbNodes];
-        for (int i = 0; i < length; i++)
-            for (int j = 0; j < nbNodes; j++)
-                records[i][j] = Integer.MAX_VALUE;
-        records[0][0] = 0;
+        try {
+            timeLimitExceeded = false;
+            lowestCost = Integer.MAX_VALUE;
+            bestSolution = new Integer[nbNodes];
+            ArrayList<Integer> notSeen = new ArrayList<>();
+            for (int i = 1; i < nbNodes; i++) {
+                notSeen.add(i);
+            }
+            ArrayList<Integer> seen = new ArrayList<>(nbNodes);
+            // the first visited node is 0
+            seen.add(0);
+            seenInBinary = 1;
+            // initialize records
+            int length = (1 << nbNodes) - 1;
+            records = new int[length + 1][nbNodes];
+            for (int i = 0; i < length; i++) {
+                for (int j = 0; j < nbNodes; j++) {
+                    records[i][j] = Integer.MAX_VALUE;
+                }
+            }
+            records[0][0] = 0;
 
-        branchAndBound(0, notSeen, seen, 0, cost,
-                duration, System.currentTimeMillis(), timeLimit);
+            branchAndBound(0, notSeen, seen, 0,
+                    cost, duration, System.currentTimeMillis(), timeLimit);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("graph can't be calculated");
+        }
     }
 
-    public Integer getBestSolution(int i) {
-        if ((bestSolution == null) || (i < 0) || (i >= bestSolution.length))
+    /**
+     * Return the node visited on i-th position.
+     *
+     * @param i an index
+     * @return the node selected
+     */
+    public Integer getBestSolution(final int i) {
+        if ((bestSolution == null) || (i < 0) || (i >= bestSolution.length)) {
             return null;
+        }
         return bestSolution[i];
     }
 
+    /**
+     * Return the lowestCost.
+     *
+     * @return lowestCost
+     */
     public int getLowestCost() {
         return lowestCost;
     }
 
     /**
-     * Method to estimate future costs
+     * Method to estimate future costs.
      *
      * @param currentNode current node
      * @param notSeen     table of nodes not seen yet
@@ -88,8 +124,9 @@ public class TSP3 implements TSP {
         int durationEstimation = 0;
         int nbNodes = cost.length;
         for (Integer node : notSeen) {
-            if (cost[currentNode][node] < costEstimation)
+            if (cost[currentNode][node] < costEstimation) {
                 costEstimation = cost[currentNode][node];
+            }
             durationEstimation += duration[node];
         }
         for (Integer node1 : notSeen) {
@@ -157,7 +194,9 @@ public class TSP3 implements TSP {
                 seen.toArray(bestSolution);
                 lowestCost = currentCost;
             }
-        } else if (currentCost + bound(currentNode, notSeen, cost, duration) < lowestCost && records[seenInBinary][currentNode] > currentCost) {
+        } else if (currentCost
+                + bound(currentNode, notSeen, cost, duration) < lowestCost
+                && records[seenInBinary][currentNode] > currentCost) {
             records[seenInBinary][currentNode] = currentCost;
             Iterator<Integer> it;
             it = iterator(currentNode, notSeen, cost, duration);
@@ -167,7 +206,10 @@ public class TSP3 implements TSP {
                 notSeen.remove(nextNode);
                 seenInBinary += (1 << nextNode);
                 branchAndBound(nextNode, notSeen, seen,
-                        currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
+                        currentCost
+                                + cost[currentNode][nextNode]
+                                + duration[nextNode],
+                        cost, duration, startTime, timeLimit);
                 seen.remove(nextNode);
                 notSeen.add(nextNode);
                 seenInBinary -= (1 << nextNode);
