@@ -43,8 +43,6 @@ public class UserInterface implements Observer {
      */
     public void setDashBoardController(final DashBoardController
                                                newDashBoardController) {
-        Validate.notNull(dashBoardController,
-                "controller ist not null");
         this.dashBoardController = newDashBoardController;
         this.viewVisitor.addController(dashBoardController);
     }
