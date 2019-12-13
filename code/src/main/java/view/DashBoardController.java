@@ -2,8 +2,7 @@ package view;
 
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
-import com.lynden.gmapsfx.javascript.event.GMapMouseEvent;
-import com.lynden.gmapsfx.javascript.event.UIEventType;
+import com.lynden.gmapsfx.javascript.event.*;
 import com.lynden.gmapsfx.javascript.object.*;
 import com.lynden.gmapsfx.shapes.Polyline;
 import com.lynden.gmapsfx.shapes.PolylineOptions;
@@ -265,7 +264,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             label += actionPoint.getId();
         };
         MarkerOptions markerPoint = new MarkerOptions();
-        markerPoint.title(mType.title)
+        markerPoint.title(mType.getTitle() + " - " + label + "\n\r" +
+                    "Passage Time: " + actionPoint.getPassageTime() + "\n" +
+                    "Time of Action: " + actionPoint.getTime() + "\n"
+                )
                 .label(label)
                 .position(new LatLong(actionPoint.getLocation().getLatitude(), actionPoint.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
