@@ -159,7 +159,10 @@ public class GraphService {
         int curIndex = arriveIndex;
         double minLength = resDijkstra.get(arriveIndex).getDist();
         // if it is impossible to get from the start point to the arrival point, return null
-        Validate.isTrue(minLength != Double.POSITIVE_INFINITY, "can't reach from point " + idStart + " to point " + idArrive);
+        //if(minLength == Double.POSITIVE_INFINITY){
+          //  ApplicationManagerImpl.sendMessage(ErrorMessage.CANT_REACH_POINT);
+        //}
+        //Validate.isTrue(minLength != Double.POSITIVE_INFINITY, "can't reach from point " + idStart + " to point " + idArrive);
         // get the REVERSE order of the path one by one (start with the arrival point)
         while (true) {
             journeyPoints.add(points.get(curIndex));

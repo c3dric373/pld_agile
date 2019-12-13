@@ -130,7 +130,7 @@ public class JourneyService {
      * @param actionPoints list of Action Points
      * @return the corresponding actionPoint
      */
-    private static ActionPoint findActionPoint(Point point,
+     static ActionPoint findActionPoint(Point point,
                                                List<ActionPoint> actionPoints) {
         long id = point.getId();
         ActionPoint correspondingActionPoint = null;

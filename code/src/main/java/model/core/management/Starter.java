@@ -16,21 +16,29 @@ import static javafx.application.Application.launch;
 /**
  * Class responsible for starting the application.
  */
-public class Starter extends Application{
+public class Starter extends Application {
 
+    /**
+     * Stage needed to Start.
+     */
     private Stage primaryStage;
+
+    /**
+     * BorderPane needed to Start.
+     */
     private BorderPane rootLayout;
+
     /**
      * Entry point of the application. Starts Deli'Velov.
      *
      * @param args Command line arguments that should be empty.
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(final Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Déli'Vélo");
 
@@ -38,13 +46,16 @@ public class Starter extends Application{
         showDashboard();
     }
 
-    // Initialize main layout aka root layout
+    /**
+     * Initialize main layout aka root layout.
+     */
     private void initRootLayout() {
         try {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             System.out.println();
-            loader.setLocation(UserInterface.class.getResource("RootLayout.fxml"));
+            loader.setLocation(
+                    UserInterface.class.getResource("RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
             // Show the scene containing the root layout
@@ -58,7 +69,9 @@ public class Starter extends Application{
         }
     }
 
-    // Initialize show person
+    /**
+     * Initialize show person.
+     */
     private void showDashboard() {
         try {
             // Load root Layout from fxml file.

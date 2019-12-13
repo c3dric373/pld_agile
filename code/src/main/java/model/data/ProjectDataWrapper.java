@@ -17,18 +17,24 @@ public interface ProjectDataWrapper {
 
     /**
      * Loads a map to the view.
+     *
+     * @param graph Graph
      */
-    void loadMap(final Graph graph);
+    void loadMap(Graph graph);
 
     /**
-     * Loads a Tour to the view
+     * Loads a Tour to the view.
+     *
+     * @param tour Tour
      */
-    void loadTour(final Tour tour);
+    void loadTour(Tour tour);
 
     /**
      * Sends a modified Tour to the view.
+     *
+     * @param tour Tour
      */
-    void modifyTour(final Tour tour);
+    void modifyTour(Tour tour);
 
     /**
      * Returns the {@link ProjectData} object that is stored inside the wrapper.
@@ -43,7 +49,7 @@ public interface ProjectDataWrapper {
      *
      * @param deliveryProcess the delivery process to delete
      */
-    void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
+    void deleteDeliveryProcess(DeliveryProcess deliveryProcess);
 
     /**
      * Return the nearest Point from the param.
@@ -51,16 +57,33 @@ public interface ProjectDataWrapper {
      * @param newActionPoint the ActionPoint from which to find the nearest
      *                       point.
      */
-    void findNearestPoint(final ActionPoint newActionPoint);
-
-    void addObserver(final Observer observer);
+    void findNearestPoint(ActionPoint newActionPoint);
 
     /**
-     * Select a DeliveryProcess in the Tour
+     * Add an Observer to the ProjectDataWrapper.
+     *
+     * @param observer Observer
+     */
+    void addObserver(Observer observer);
+
+    /**
+     * Select a DeliveryProcess in the Tour.
      *
      * @param deliveryProcess the delivery process to select
      */
-    void selectDeliveryProcess(final DeliveryProcess deliveryProcess);
+    void selectDeliveryProcess(DeliveryProcess deliveryProcess);
 
+    /**
+     * Get the list of Journeys.
+     *
+     * @param journeyList Journey List
+     */
     void getJourneyList(List<Journey> journeyList);
+
+    /**
+     * Send error Message to the view.
+     *
+     * @param error error message
+     */
+    void sendErrorMessage(ErrorMessage error);
 }

@@ -19,27 +19,13 @@ public enum ActionType {
     DELIVERY,
 
     /**
-     * Start point of the cyclist
+     * Start point of the cyclist.
      */
     BASE,
 
     /**
-     * End point of the cyclist
+     * End point of the cyclist.
      */
     END;
-    
 
-    /**
-     * Returns the opposing actionType of an actionType.
-     *
-     * @param actionType the actionTtype
-     * @return the opposite
-     */
-//    public ActionType other(ActionType actionType) {
-//        if (actionType == ActionType.DELIVERY) {
-//            return PICK_UP;
-//        } else {
-//            return DELIVERY;
-//        }
-//    }
 }

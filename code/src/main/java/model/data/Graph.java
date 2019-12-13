@@ -14,23 +14,25 @@ public class Graph implements GenData {
      */
     private List<Point> points;
     /**
-     * Key: id point
+     * Key: id point.
      * Value: index in 'points'
      */
     private Map<Long, Integer> map;
     /**
-     * Number of points in the map
+     * Number of points in the map.
      */
     private int nbPoints;
 
     /**
      * Instantiates a Graph.
+     *
+     * @param pointlist list of points
      */
-    public Graph(final List<Point> points) {
-        Validate.notNull(points, "point list of the graph can't be null");
-        Validate.noNullElements(points, "points of the graph can't be null");
-        this.nbPoints = points.size();
-        this.points = points;
+    public Graph(final List<Point> pointlist) {
+        Validate.notNull(pointlist, "point list of the graph can't be null");
+        Validate.noNullElements(pointlist, "points of the graph can't be null");
+        this.nbPoints = pointlist.size();
+        this.points = pointlist;
         map = new HashMap<>();
         for (int i = 0; i < this.nbPoints; i++) {
             map.put(points.get(i).getId(), i);

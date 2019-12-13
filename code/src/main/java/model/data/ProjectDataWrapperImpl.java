@@ -38,7 +38,6 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     public void loadTour(final Tour tour) {
         projectData.setTour(tour);
         notify(tour);
-        System.out.println("loqd tour pdz");
     }
 
     @Override
@@ -82,6 +81,10 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         listJourneyFromDeliveryProcess.setJourneyList(journeyList);
         projectData.setJourneyListForDeliveryProcess(listJourneyFromDeliveryProcess);
         notify(listJourneyFromDeliveryProcess);
+    }
+
+    public void sendErrorMessage (final ErrorMessage error){
+        notify(error);
     }
 
 

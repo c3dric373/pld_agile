@@ -108,4 +108,8 @@ public class UserInterface implements Observer {
     public void modifyOrder(final List<ActionPoint> actionPoints){
         this.model.changeDeliveryOrder(actionPoints);
     }
+
+    public void undo() {
+        this.model.undo();
+    }
 }

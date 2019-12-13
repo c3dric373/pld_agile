@@ -65,7 +65,10 @@ public class TourService {
     public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         Validate.notNull(tour, "tour can't be null");
         Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
-//        Validate.isTrue(tour.getActionPoints() == null, "tour can't have actionPoint list");
+        if(tour.getActionPoints() !=null){
+            tour.getActionPoints().remove(deliveryProcess.getPickUP());
+            tour.getActionPoints().remove(deliveryProcess.getDelivery());
+        }
         tour.deleteDeliveryProcess(deliveryProcess);
         return tour;
     }
@@ -73,7 +76,10 @@ public class TourService {
     public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         Validate.notNull(tour, "tour can't be null");
         Validate.isTrue(tour.getJourneyList() == null, "tour can't have journey list");
-//        Validate.isTrue(tour.getActionPoints() == null, "tour can't have actionPoint list");
+        if(tour.getActionPoints() !=null){
+            tour.getActionPoints().add(deliveryProcess.getPickUP());
+            tour.getActionPoints().add(deliveryProcess.getDelivery());
+        }
         tour.addDeliveryProcess(deliveryProcess);
         return tour;
 
@@ -239,7 +245,7 @@ public class TourService {
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
      */
-    public static Tour  addNewDeliveryProcess(final Graph graph, final Tour tour,
+    public static Tour addNewDeliveryProcess(final Graph graph, final Tour tour,
                                              final ActionPoint pickUpPoint,
                                              final ActionPoint deliveryPoint) {
         Validate.notNull(graph, "graph is null");
@@ -333,4 +339,20 @@ public class TourService {
         return newTour;
     }
 
+
+    public static void recalculateOrder(final Tour tour) {
+        List<ActionPoint> actionPoints1 = tour.getActionPoints();
+        List<ActionPoint> result = new ArrayList<>();
+        for (Journey journey : tour.getJourneyList()) {
+            ActionPoint actionPoint = JourneyService.findActionPoint
+                    (journey.getStartPoint(), actionPoints1);
+            result.add(actionPoint);
+        }
+        for (ActionPoint actionPoint : actionPoints1) {
+            if (actionPoint.getActionType() == ActionType.END) {
+                result.add(actionPoint);
+            }
+        }
+        tour.setActionPoints(result);
+    }
 }

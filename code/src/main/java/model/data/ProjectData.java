@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface ProjectData {
     /**
-     * Returns the saved tour of the project
+     * Returns the saved tour of the project.
      *
      * @return tour of the project
      */
@@ -26,14 +26,14 @@ public interface ProjectData {
      *
      * @param newTour the tour to set.
      */
-    void setTour(final Tour newTour);
+    void setTour(Tour newTour);
 
     /**
      * Sets the graph of the project.
      *
      * @param graph the graph to be set.
      */
-    void setGraph(final Graph graph);
+    void setGraph(Graph graph);
 
     /**
      * Returns the graph of the project.
@@ -47,7 +47,7 @@ public interface ProjectData {
      *
      * @param deliveryProcess The delivery process to set.
      */
-    void setSelectedDeliveryProcess(final DeliveryProcess deliveryProcess);
+    void setSelectedDeliveryProcess(DeliveryProcess deliveryProcess);
 
     /**
      * Returns the selected delivery process of the project.
@@ -56,7 +56,18 @@ public interface ProjectData {
      */
     DeliveryProcess getSelectedDeliveryProcess();
 
-    void setJourneyListForDeliveryProcess(ListJourneyFromDeliveryProcess listForDeliveryProcess);
+    /**
+     *  Set the list of journeys needed to make a delivery Process.
+     *
+     * @param listForDeliveryProcess  list of journey for the delivery process
+     */
+    void setJourneyListForDeliveryProcess
+        (ListJourneyFromDeliveryProcess listForDeliveryProcess);
 
+    /**
+     * Get the list of journeys needed to make a delivery process.
+     *
+     * @return ListJourneyFromDeliveryProcess
+     */
     ListJourneyFromDeliveryProcess getSelectedJourneyList();
 }
