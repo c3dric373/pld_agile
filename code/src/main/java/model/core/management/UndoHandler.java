@@ -13,12 +13,12 @@ public interface UndoHandler {
      *
      * @param tour the tour to reload.
      */
-    void undoTour(final Tour tour);
+    void undoTour(Tour tour);
 
     /**
      * Handle a undo with a {@link Graph} as parameter.
      *
      * @param graph the tour to reload.
      */
-    void undoGraph(final Graph graph);
+    void undoGraph(Graph graph);
 }

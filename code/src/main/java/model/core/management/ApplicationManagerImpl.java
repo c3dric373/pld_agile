@@ -378,8 +378,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     }
 
     @Override
-    public void undoGraph(Graph graph) {
-
+    public void undoGraph(final Graph graph) {
+        return;
     }
 
     private void updateInfo(final Tour newTour) {

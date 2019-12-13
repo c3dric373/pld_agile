@@ -1,20 +1,22 @@
 package view;
 
-import javafx.scene.control.Alert;
+import lombok.Getter;
 import model.data.*;
 
+@Getter
 public class ViewVisitor implements GenDataVisitor {
 
-    DashBoardController dashBoardController;
+    /**
+     * The {@link DashBoardController} to notify about changes from the model.
+     */
+    private DashBoardController dashBoardController;
 
     @Override
-    public void visit(Tour tour) {
+    public void visit(final Tour tour) {
         dashBoardController.setTour(tour);
         if (tour.getJourneyList() == null) {
-            System.out.println("---load tour without journey list---");
             dashBoardController.displayTourWhenNotCalculated();
         } else {
-
             dashBoardController.clearAll();
             dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
@@ -22,44 +24,44 @@ public class ViewVisitor implements GenDataVisitor {
     }
 
     @Override
-    public void visit(Graph graph) {
+    public void visit(final Graph graph) {
         dashBoardController.displayMap(graph.getPoints().get(0));
     }
 
     @Override
-    public void visit(Point point) {
+    public void visit(final Point point) {
     }
 
     @Override
-    public void visit(DeliveryProcess deliveryProcess) {
+    public void visit(final DeliveryProcess deliveryProcess) {
         this.dashBoardController.showDeliveryProcess(deliveryProcess);
     }
 
     @Override
-    public void visit(ActionPoint actionPoint) {
+    public void visit(final ActionPoint actionPoint) {
         System.out.println("ViewVisitor action Point");
         dashBoardController.drawAndSaveNewActionPoint(actionPoint);
     }
 
     @Override
-    public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
+    public void visit(final ListJourneyFromDeliveryProcess
+                              listJourneyFromDeliveryProcess) {
         dashBoardController.displayMap(dashBoardController.
                 getSelectedActionPoint().getLocation());
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
         dashBoardController.drawPolyline(dashBoardController.
-                getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.
+                getMCVPathFormJourneyList(listJourneyFromDeliveryProcess.
                         getJourneyList()), 0.9, 4);
     }
 
     @Override
-    public void visit(ErrorMessage error) {
-        dashBoardController.showAlert("error", "An error has occured",
-                error.getMessage(), Alert.AlertType.ERROR);
-        System.out.println(error.getMessage());
+    public void visit(final ErrorMessage error) {
+        dashBoardController.showAlert("error",
+                "An error has occured", error.getMessage());
     }
 
-    public void addController(DashBoardController controller) {
+    void addController(final DashBoardController controller) {
         this.dashBoardController = controller;
     }
 }

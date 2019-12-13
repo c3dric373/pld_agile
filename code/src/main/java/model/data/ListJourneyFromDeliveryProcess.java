@@ -5,12 +5,14 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
-/** Container class, who's whole purpose is to pass a list of {@link Journey}
+/**
+ * Container class, who's whole purpose is to pass a list of {@link Journey}
  * s to the view.
  */
+@Getter
+@Setter
 public class ListJourneyFromDeliveryProcess implements GenData {
+
     /**
      * List of journeys to be send of to the view.
      */

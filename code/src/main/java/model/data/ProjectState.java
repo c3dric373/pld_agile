@@ -36,7 +36,7 @@ public enum ProjectState {
      * the corresponding ActionPoint will display. The user has to save to
      * delete the DeliveryProcess.
      */
-     DELETE_DELIVERY_PROCESS,
+    DELETE_DELIVERY_PROCESS,
 
     /**
      * State of the modification of an ActionPoint of a DeliveryProcess.
@@ -48,13 +48,11 @@ public enum ProjectState {
      */
     MODIFY_DELIVERY_PROCESS_POINT,
 
-
     /**
      * State of the modification of Delivery order.
      * Begins after the user click on the change order button.
      * The user then have to modify the order of the actionPoints and has to
      * save when he is done.
      */
-     CHANGE_DELIVERY_ORDER;
-     
+    CHANGE_DELIVERY_ORDER;
 }

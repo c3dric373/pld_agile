@@ -56,8 +56,8 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
     }
 
     @Override
-    public void addObserver(final Observer observer) {
-        this.observer = observer;
+    public void addObserver(final Observer newObserver) {
+        this.observer = newObserver;
     }
 
     @Override
@@ -71,13 +71,14 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess =
                 new ListJourneyFromDeliveryProcess();
         listJourneyFromDeliveryProcess.setJourneyList(journeyList);
-        projectData.setJourneyListForDeliveryProcess(listJourneyFromDeliveryProcess);
+        projectData.setJourneyListForDeliveryProcess(
+                listJourneyFromDeliveryProcess);
         notify(listJourneyFromDeliveryProcess);
     }
 
     @Override
     public void sendErrorMessage(final ErrorMessage error) {
-        Validate.notNull(error);
+        Validate.notNull(error, "error null");
         notify(error);
     }
 

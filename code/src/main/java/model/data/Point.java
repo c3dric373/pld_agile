@@ -69,7 +69,6 @@ public class Point implements GenData {
      */
     public Point(final long pointId, final double pointLatitude,
                  final double pointLongitude) {
-        Validate.notNull(pointId, "id is null");
         if (pointLatitude < MIN_LATITUDE) {
             throw new IllegalArgumentException("latitude is too small");
         }
@@ -104,15 +103,15 @@ public class Point implements GenData {
      * Get the distance from this point to another
      * if it's reachable via one segments.
      *
-     * @param id the id of the other point
+     * @param pointId the id of the other point
      * @return the distance from this point to another
      */
-    public double getLengthTo(final long id) {
-        if (this.id == id) {
+    public double getLengthTo(final long pointId) {
+        if (this.id == pointId) {
             return 0;
         }
         for (final Segment s : segments) {
-            if (s.getIdEnd() == id) {
+            if (s.getIdEnd() == pointId) {
                 return s.getLength();
             }
         }

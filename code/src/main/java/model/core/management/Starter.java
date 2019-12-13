@@ -38,8 +38,8 @@ public class Starter extends Application {
     }
 
     @Override
-    public void start(final Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public void start(final Stage newPrimaryStage) {
+        this.primaryStage = newPrimaryStage;
         this.primaryStage.setTitle("Déli'Vélo");
 
         initRootLayout();
@@ -76,8 +76,8 @@ public class Starter extends Application {
         try {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(UserInterface.class.getResource
-                    ("DashBoard.fxml"));
+            loader.setLocation(UserInterface.class.getResource(
+                    "DashBoard.fxml"));
             AnchorPane dashboardOverview = loader.load();
 
             // Set person overview into the center of root layout

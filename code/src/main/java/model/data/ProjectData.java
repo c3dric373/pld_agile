@@ -1,7 +1,5 @@
 package model.data;
 
-import java.util.List;
-
 /**
  * This class serves as a container for all data a project contains.
  * It offers getter and setter methods for all stored data classes.
@@ -42,13 +40,11 @@ public interface ProjectData {
      */
     void setSelectedDeliveryProcess(DeliveryProcess deliveryProcess);
 
-
     /**
      * Set the list of journeys needed to make a delivery Process.
      *
      * @param listForDeliveryProcess list of journey for the delivery process
      */
-    void setJourneyListForDeliveryProcess
-    (ListJourneyFromDeliveryProcess listForDeliveryProcess);
-
+    void setJourneyListForDeliveryProcess(ListJourneyFromDeliveryProcess
+                                                  listForDeliveryProcess);
 }

@@ -26,5 +26,4 @@ public enum ActionType {
      * End point of the cyclist.
      */
     END;
-
 }
