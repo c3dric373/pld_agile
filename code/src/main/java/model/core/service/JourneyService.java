@@ -72,10 +72,12 @@ public class JourneyService {
 
             // get Action time in sec by getting the time in millisecond between
             // actionTime and the reference time
-            long actionTimeInMillis = actionTime.getTime() - referenceTime.getTime();
+            long actionTimeInMillis =
+                    actionTime.getTime() - referenceTime.getTime();
             long actionTimeInSec = actionTimeInMillis / 1000L;
 
-            LocalTime StartPlusTravelPlusActionTime = StartPlusTravelTime.plusSeconds(actionTimeInSec);
+            LocalTime StartPlusTravelPlusActionTime =
+                    StartPlusTravelTime.plusSeconds(actionTimeInSec);
             Time arrivalTime = Time.valueOf(StartPlusTravelPlusActionTime);
             journeyStartTime = arrivalTime;
             journey.setFinishTime(arrivalTime);
@@ -104,7 +106,8 @@ public class JourneyService {
                                                 final boolean endPoint) {
         Validate.notNull(journeys, "journeys can't be null");
         Validate.notEmpty(journeys, "journeys can't be empty");
-        Validate.noNullElements(journeys, "journeys can't contain null element");
+        Validate.noNullElements(journeys, "journeys can't contain null " +
+                "element");
         Validate.notNull(point, "point can't be null");
 
         if (endPoint) {
@@ -130,8 +133,8 @@ public class JourneyService {
      * @param actionPoints list of Action Points
      * @return the corresponding actionPoint
      */
-     static ActionPoint findActionPoint(Point point,
-                                               List<ActionPoint> actionPoints) {
+    static ActionPoint findActionPoint(Point point,
+                                       List<ActionPoint> actionPoints) {
         long id = point.getId();
         ActionPoint correspondingActionPoint = null;
         for (ActionPoint actionPoint : actionPoints) {
@@ -156,16 +159,20 @@ public class JourneyService {
      * @return list of Integers corresponding to the found indices, null if not
      * found.
      */
-    static List<Integer> getStartEndJourney(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
+    static List<Integer> getStartEndJourney(final List<Journey> journeys,
+                                            final Point startPoint,
+                                            final Point endPoint) {
         Validate.notNull(journeys, "journeys can't be null");
         Validate.notNull(startPoint, "startPoint can't be null");
         Validate.notNull(endPoint, "endPoint can't be null");
-        Validate.noNullElements(journeys, "journeys can't contain null element");
+        Validate.noNullElements(journeys, "journeys can't contain null " +
+                "element");
         Journey startJourney = null;
         Journey endJourney = null;
         List<Integer> result = new ArrayList<>();
         for (final Journey journey : journeys) {
-            Validate.notNull(journey.getFinishTime(), "journey finish time null");
+            Validate.notNull(journey.getFinishTime(), "journey finish time " +
+                    "null");
             if (journey.getStartPoint().getId() == startPoint.getId()) {
                 startJourney = journey;
             }
@@ -179,15 +186,21 @@ public class JourneyService {
 
     }
 
-    public static Time calculateTimePointToPoint(final List<Journey> journeys, final Point startPoint, final Point endPoint) {
-        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
-        Validate.isTrue(indices.get(0) != -1 && indices.get(0) != null, "start journey null");
-        Validate.isTrue(indices.get(1) != -1 && indices.get(1) != null, "end journey null");
-        Validate.isTrue(indices.get(0) <= indices.get(1), "start journey index is bigger than end journey index");
+    public static Time calculateTimePointToPoint(final List<Journey> journeys
+            , final Point startPoint, final Point endPoint) {
+        List<Integer> indices = getStartEndJourney(journeys, startPoint,
+                endPoint);
+        Validate.isTrue(indices.get(0) != -1 && indices.get(0) != null,
+                "start journey null");
+        Validate.isTrue(indices.get(1) != -1 && indices.get(1) != null, "end " +
+                "journey null");
+        Validate.isTrue(indices.get(0) <= indices.get(1), "start journey " +
+                "index is bigger than end journey index");
         int sum = 0;
         for (int i = indices.get(0); i <= indices.get(1); i++) {
             long firstFinishTime = journeys.get(i).getFinishTime().getTime();
-            long secondFinishTime = journeys.get(i - 1).getFinishTime().getTime();
+            long secondFinishTime =
+                    journeys.get(i - 1).getFinishTime().getTime();
             System.out.println(firstFinishTime);
             System.out.println(secondFinishTime);
             long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
@@ -202,7 +215,8 @@ public class JourneyService {
     public static int lengthPointToPoint(final List<Journey> journeys,
                                          final Point startPoint,
                                          final Point endPoint) {
-        List<Integer> indices = getStartEndJourney(journeys, startPoint, endPoint);
+        List<Integer> indices = getStartEndJourney(journeys, startPoint,
+                endPoint);
         Journey startJourney = journeys.get(indices.get(0));
         Journey endJourney = journeys.get(indices.get(1));
         Validate.notNull(startJourney, "start journey null");

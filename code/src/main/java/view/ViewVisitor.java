@@ -15,9 +15,10 @@ public class ViewVisitor implements GenDataVisitor {
             dashBoardController.displayTourWhenNotCalculated();
         } else {
 
-            dashBoardController.clearAll();
-            dashBoardController.setActionPoints(tour);
-            dashBoardController.drawFullTour();
+                dashBoardController.clearAll();
+                dashBoardController.setActionPoints(tour);
+                dashBoardController.drawFullTour();
+            }
         }
     }
 

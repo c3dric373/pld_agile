@@ -19,15 +19,13 @@ import java.util.OptionalInt;
 public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
     /**
-     * Xml Converter for Project.
-     */
-    private XmlToGraph xmlToGraph;
-
-    /**
      * Project Data wrapper for project.
      */
     private static ProjectDataWrapper projectDataWrapper;
-
+    /**
+     * Xml Converter for Project.
+     */
+    private XmlToGraph xmlToGraph;
     /**
      * State of the Project.
      */
@@ -85,19 +83,36 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
     }
 
+    /**
+     * Send an error message to the view.
+     *
+     * @param message ErrorMessage
+     */
+    public static void sendMessage(final ErrorMessage message) {
+        projectDataWrapper.sendErrorMessage(message);
+    }
+
     @Override
     public void loadMap(final File file) {
         if (projectState != ProjectState.INITIALIZED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
-            final Graph graph = new Graph(points);
-            projectDataWrapper.loadMap(graph);
-            setMapLoaded();
-            mainProjectState = ProjectState.MAP_LOADED;
+            if (!points.isEmpty()) {
+                final Graph graph = new Graph(points);
+                projectDataWrapper.loadMap(graph);
+                if (projectDataWrapper.getProject().getTour() != null) {
+                    Tour emptyTour = new Tour();
+                    projectDataWrapper.loadTour(emptyTour);
+                }
+                setMapLoaded();
+                mainProjectState = ProjectState.MAP_LOADED;
+            }
         }
     }
 
@@ -111,15 +126,17 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         if (projectState != ProjectState.MAP_LOADED
                 && projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
-            sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
+            sendMessage(ErrorMessage.MAP_NOT_LOADED);
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
-            undoList.add(projectDataWrapper.getProject().getGraph());
-            projectDataWrapper.loadTour(tour);
-            setTourLoaded();
-            mainProjectState = ProjectState.TOUR_LOADED;
+            if (tour != null) {
+                undoList.add(projectDataWrapper.getProject().getGraph());
+                projectDataWrapper.loadTour(tour);
+                setTourLoaded();
+                mainProjectState = ProjectState.TOUR_LOADED;
+            }
         }
     }
 
@@ -177,28 +194,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     }
 
     @Override
-    public void undoTour(final Tour tour) {
-        System.out.println("test1");
-        if (tour.getJourneyList() == null) {
-            System.out.println("test2");
-            projectState = ProjectState.TOUR_LOADED;
-            projectDataWrapper.getProject().setTour(tour);
-            projectDataWrapper.loadTour(tour);
-        } else {
-            projectState = ProjectState.TOUR_CALCULATED;
-            TourService.recalculateOrder(tour);
-            projectDataWrapper.getProject().setTour(tour);
-            projectDataWrapper.modifyTour(tour);
-        }
-
-    }
-
-    @Override
-    public void undoGraph(Graph graph) {
-
-    }
-
-    @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
         ActionType actionType = deliveryProcess.getPickUP().getActionType();
         if (projectState != ProjectState.TOUR_LOADED
@@ -231,16 +226,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             projectState = mainProjectState;
             System.out.println(clone);
         }
-    }
-
-    private void updateInfo(final Tour newTour) {
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
-        int completeDistance = TourService.getCompleteDistance(newTour);
-        Time completeTime = TourService.getCompleteTime(newTour);
-        newTour.setCompleteTime(completeTime);
-        newTour.setTotalDistance(completeDistance);
-        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
     }
 
     @Override
@@ -289,8 +274,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
-            final Tour newTour = tourService.changePointPosition
-                    (graph, tour, oldPoint, newPoint);
+            final Tour newTour = tourService.changePointPosition(
+                    graph, tour, oldPoint, newPoint);
             DeliveryProcessService.setDpInfo(newTour);
             TourService.calculateTimeAtPoint(newTour);
             projectDataWrapper.modifyTour(newTour);
@@ -375,12 +360,46 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         }
     }
 
+    @Override
+    public void undoTour(final Tour tour) {
+        System.out.println("test1");
+        if (tour.getJourneyList() == null) {
+            System.out.println("test2");
+            projectState = ProjectState.TOUR_LOADED;
+            projectDataWrapper.getProject().setTour(tour);
+            projectDataWrapper.loadTour(tour);
+        } else {
+            projectState = ProjectState.TOUR_CALCULATED;
+            TourService.recalculateOrder(tour);
+            projectDataWrapper.getProject().setTour(tour);
+            projectDataWrapper.modifyTour(tour);
+        }
+
+    }
+
+    @Override
+    public void undoGraph(Graph graph) {
+
+    }
+
+    private void updateInfo(final Tour newTour) {
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
+    }
+
     /**
      * Set state to MAP_LOADED.
      */
     public void setMapLoaded() {
         if (projectState != ProjectState.INITIALIZED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.MAP_LOADED;
@@ -392,7 +411,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      */
     public void setTourLoaded() {
         if (projectState != ProjectState.TOUR_LOADED
-                && projectState != ProjectState.MAP_LOADED) {
+                && projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.TOUR_LOADED;
@@ -456,15 +476,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         } else {
             projectState = ProjectState.CHANGE_DELIVERY_ORDER;
         }
-    }
-
-    /**
-     * Send an error message to the view.
-     *
-     * @param message ErrorMessage
-     */
-    public static void sendMessage(final ErrorMessage message) {
-        projectDataWrapper.sendErrorMessage(message);
     }
 
 }

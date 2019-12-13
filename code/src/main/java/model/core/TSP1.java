@@ -6,13 +6,16 @@ import java.util.Iterator;
 public class TSP1 extends TemplateTSP {
 
     @Override
-    protected Iterator<Integer> iterator(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
-        return new IteratorSeq(notSeen, currentNode);
+    protected int bound(Integer currentNode, ArrayList<Integer> notSeen,
+                        int[][] cost, int[] duration) {
+        return 0;
     }
 
     @Override
-    protected int bound(Integer currentNode, ArrayList<Integer> notSeen, int[][] cost, int[] duration) {
-        return 0;
+    protected Iterator<Integer> iterator(Integer currentNode,
+                                         ArrayList<Integer> notSeen,
+                                         int[][] cost, int[] duration) {
+        return new IteratorSeq(notSeen, currentNode);
     }
 //
 //    public static void main(String[] args) {
