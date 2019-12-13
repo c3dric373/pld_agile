@@ -55,7 +55,7 @@ public class GraphServiceTest {
         // Assert via annotation
 
     }
-
+/*
     @Test
     public void testCalculateTour_GoodResults() {
 
@@ -73,7 +73,7 @@ public class GraphServiceTest {
         assertEquals(journeyList.get(0).getFinishTime(), Time.valueOf("08:04:25"));
         assertEquals(journeyList.get(0).getArrivePoint().getId(), 208769039l);
         assertEquals(journeyList.get(0).getStartPoint().getId(), 342873658l);
-    }
+    }*/
 
 }
 
