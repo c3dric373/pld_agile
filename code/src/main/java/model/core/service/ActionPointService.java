@@ -6,7 +6,12 @@ import java.util.List;
 
 public class ActionPointService {
 
-    public void setApInfo(List<Journey> journeys) {
+    /**
+     * Set information for actionPoint.
+     *
+     * @param journeys a list of journeys
+     */
+    public void setApInfo(final List<Journey> journeys) {
     }
 
 }

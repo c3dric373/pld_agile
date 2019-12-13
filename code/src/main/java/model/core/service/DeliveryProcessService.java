@@ -19,13 +19,14 @@ public class DeliveryProcessService {
      * @param newActionPoint  the new point to replace with.
      * @return the new delivery process.
      */
-    public static DeliveryProcess replacePoint(final DeliveryProcess
-                                                       deliveryProcess,
-                                               final ActionPoint newActionPoint) {
+    public static
+    DeliveryProcess replacePoint(final DeliveryProcess deliveryProcess,
+                                 final ActionPoint newActionPoint) {
         Validate.notNull(deliveryProcess, "delivery Process is null");
         Validate.notNull(newActionPoint, "newActionPoint is null");
-        Validate.isTrue(newActionPoint.getActionType() == ActionType.DELIVERY ||
-                newActionPoint.getActionType() == ActionType.PICK_UP,
+        Validate.isTrue(newActionPoint.getActionType()
+                        == ActionType.DELIVERY
+                        || newActionPoint.getActionType() == ActionType.PICK_UP,
                 "actionType should be DELIVERY or PICK_UP");
 
         DeliveryProcess newDeliveryProcess;
@@ -51,7 +52,8 @@ public class DeliveryProcessService {
                                                       deliveryProcesses,
                                               final ActionPoint actionPoint) {
         Validate.notNull(deliveryProcesses, "delivery Process list is null");
-        Validate.noNullElements(deliveryProcesses, "delivery Process list can't contain null element");
+        Validate.noNullElements(deliveryProcesses,
+                "delivery Process list can't contain null element");
         Validate.notNull(actionPoint, "newActionPoint is null");
         for (final DeliveryProcess deliveryProcess : deliveryProcesses) {
             if (deliveryProcess.getDelivery().equals(actionPoint)
@@ -77,11 +79,14 @@ public class DeliveryProcessService {
             final List<DeliveryProcess> deliveryProcesses,
             final ActionPoint pickUpPoint, final ActionPoint deliveryPoint) {
         Validate.notNull(deliveryProcesses, "delivery Process list is null");
-        Validate.noNullElements(deliveryProcesses, "delivery Process list can't contain null element");
+        Validate.noNullElements(deliveryProcesses,
+                "delivery Process list can't contain null element");
         Validate.notNull(pickUpPoint, "pickUpPoint is null");
         Validate.notNull(deliveryPoint, "deliveryPoint is null");
-        Validate.isTrue(pickUpPoint.getActionType() == ActionType.PICK_UP, "pickUpPoint should be PICK_UP");
-        Validate.isTrue(deliveryPoint.getActionType() == ActionType.DELIVERY, "deliveryPoint should be DELIVERY");
+        Validate.isTrue(pickUpPoint.getActionType() == ActionType.PICK_UP,
+                "pickUpPoint should be PICK_UP");
+        Validate.isTrue(deliveryPoint.getActionType() == ActionType.DELIVERY,
+                "deliveryPoint should be DELIVERY");
 
         List<DeliveryProcess> newDeliveryProcesses = deliveryProcesses;
         newDeliveryProcesses.add(deliveryProcesses.size(),
@@ -90,9 +95,15 @@ public class DeliveryProcessService {
         return newDeliveryProcesses;
     }
 
+    /**
+     * Set information for deliveryProcesses in tour.
+     *
+     * @param tour a specific tour
+     */
     public static void setDpInfo(final Tour tour) {
         Validate.notNull(tour, "tour can't be null");
-        Validate.notNull(tour.getJourneyList(), "journey list of the tour can't be null");
+        Validate.notNull(tour.getJourneyList(),
+                "journey list of the tour can't be null");
         final List<Journey> journeys = tour.getJourneyList();
         for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
             final Point startPoint = deliveryProcess.getPickUP().getLocation();
@@ -107,9 +118,16 @@ public class DeliveryProcessService {
         }
     }
 
+    /**
+     * Create a deliveryProcess from BASE to END.
+     *
+     * @param tour a specific tour
+     * @return a deliveryProcess
+     */
     public static Optional<DeliveryProcess> createDpBase(final Tour tour) {
         Validate.notNull(tour, "tour can't be null");
-        Validate.notNull(tour.getActionPoints(), "actionPoint list of the tour can't be null");
+        Validate.notNull(tour.getActionPoints(),
+                "actionPoint list of the tour can't be null");
         ActionPoint endAp = null;
         ActionPoint base = null;
         for (ActionPoint actionPoint1 : tour.getActionPoints()) {
@@ -126,16 +144,31 @@ public class DeliveryProcessService {
         return Optional.empty();
     }
 
-    public static void addDeliveryProcessIdTourNotCalc(final Tour tour,
-                                                       final DeliveryProcess deliveryProcess) {
+    /**
+     * Set index for deliveryProcess before calculate.
+     *
+     * @param tour            a specific tour
+     * @param deliveryProcess a deliveryProcess of the tour
+     */
+    public static void
+    addDeliveryProcessIdTourNotCalc(final Tour tour,
+                                    final DeliveryProcess deliveryProcess) {
         deliveryProcess.getPickUP().setId(tour.getDeliveryProcesses().size());
         deliveryProcess.getDelivery().setId(tour.getDeliveryProcesses().size());
     }
 
+    /**
+     * Set index for deliveryProcesses when delete a deliveryProcess
+     * before calculate.
+     *
+     * @param tour a specific tour
+     */
     public static void delDeliveryProcessIdTourNotCalc(final Tour tour) {
         int i = 1;
-        for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
-            if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
+        for (DeliveryProcess deliveryProcess
+                : tour.getDeliveryProcesses()) {
+            if (deliveryProcess.getPickUP().getActionType()
+                    == ActionType.BASE) {
                 deliveryProcess.getPickUP().setId(0);
                 deliveryProcess.getDelivery().setId(0);
             } else {
@@ -143,21 +176,28 @@ public class DeliveryProcessService {
                 deliveryProcess.getPickUP().setId(i);
                 i++;
             }
-
         }
     }
 
+    /**
+     * Reset index for deliveryProcesses after calculate.
+     *
+     * @param tour a specific tour
+     */
     public static void resetDeliveryProcessIdTourCalculated(final Tour tour) {
         int i = 1;
         for (final ActionPoint actionPoint : tour.getActionPoints()) {
             if (actionPoint.getActionType() == ActionType.PICK_UP) {
                 actionPoint.setId(i);
                 OptionalInt optionalInt =
-                        DeliveryProcessService.findActionPoint(tour.getDeliveryProcesses(), actionPoint);
+                        DeliveryProcessService.
+                                findActionPoint(tour.getDeliveryProcesses(),
+                                        actionPoint);
                 if (optionalInt.isPresent()) {
                     int index = optionalInt.getAsInt();
                     final ActionPoint delivery =
-                            tour.getDeliveryProcesses().get(index).getDelivery();
+                            tour.getDeliveryProcesses().
+                                    get(index).getDelivery();
                     delivery.setId(i);
                 }
                 i++;

@@ -13,12 +13,21 @@ import java.util.Map;
 public class GraphService {
 
     /**
+     * Time limit for the calculate of the tour.
+     */
+    static final int TIME_LIMIT = 15000;
+    /**
+     * Factor of conversion for ms to s.
+     */
+    static final int FACTOR_CONVERSION = 1000;
+
+    /**
      * To find the nearest point in the graph to the selected point.
      *
      * @param graph     a specific graph
      * @param longitude longitude of the point
      * @param latitude  latitude of the point
-     * @return
+     * @return the nearest point
      */
     public static Point findNearestPoint(final Graph graph,
                                          final double longitude,
@@ -281,10 +290,10 @@ public class GraphService {
                 }
                 int index = map.get(point.getId());
                 double distance = resDijkstra.get(i).get(index).getDist();
-                cost[i][j] = (distance == Double.POSITIVE_INFINITY) ?
-                        Integer.MAX_VALUE :
-                        (int) (resDijkstra.get(i).get(index).getDist()
-                                / JourneyService.TRAVEL_SPEED);
+                cost[i][j] = (distance == Double.POSITIVE_INFINITY)
+                        ? Integer.MAX_VALUE
+                        : (int) (resDijkstra.get(i).get(index).getDist()
+                        / JourneyService.TRAVEL_SPEED);
             }
         }
         return cost;
@@ -294,7 +303,7 @@ public class GraphService {
      * Get a list of duration for each point of the tour.
      *
      * @param tour A specific tour
-     * @return
+     * @return a list of duration
      */
     public int[] getDuration(final Tour tour) {
         Validate.notNull(tour, "tour can't be null");
@@ -313,7 +322,8 @@ public class GraphService {
                         get(i - nb - 1).getDelivery().getTime();
             }
             duration[i] =
-                    (int) ((time.getTime() - referenceTime.getTime()) / 1000);
+                    (int) ((time.getTime() - referenceTime.getTime())
+                            / FACTOR_CONVERSION);
         }
 
         return duration;
@@ -400,21 +410,23 @@ public class GraphService {
                               final Graph graph) {
         Validate.notNull(tour, "tour can't be null");
         Validate.notNull(graph, "graph can't be null");
-        Validate.isTrue(tour.getDeliveryProcesses().size() <= 15,
-                "calculateTour can't take more than 15 delivery process");
 
-        // if we catch an IllegalArgumentException, it means tour and graph are incompatible
+        // if we catch an IllegalArgumentException,
+        // it means tour and graph are incompatible
         TSP tsp = new TSP4();
-//        int timeLimit = Integer.MAX_VALUE;
-        List<Journey> journeys = getListJourney(tour, graph, tsp, 30000);
+        List<Journey> journeys = getListJourney(tour, graph, tsp, TIME_LIMIT);
         List<Point> points = new ArrayList<>();
-        for (int i = 1; i < journeys.size(); i++)
+        for (int i = 1; i < journeys.size(); i++) {
             points.add(journeys.get(i).getStartPoint());
+        }
         List<ActionPoint> actionPoints = new ArrayList<>();
-        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
-        for (Point point : points) {
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"),
+                tour.getBase(), ActionType.BASE));
+        for (Point point
+                : points) {
             boolean notFound = true;
-            for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
+            for (DeliveryProcess deliveryProcess
+                    : tour.getDeliveryProcesses()) {
                 if (deliveryProcess.getDelivery().getLocation() == point) {
                     actionPoints.add(deliveryProcess.getDelivery());
                     notFound = false;
@@ -422,34 +434,43 @@ public class GraphService {
                     actionPoints.add(deliveryProcess.getPickUP());
                     notFound = false;
                 }
-                if (!notFound) break;
+                if (!notFound) {
+                    break;
+                }
             }
         }
-        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"),
+                tour.getBase(), ActionType.END));
         tour.setActionPoints(actionPoints);
         // Calculate the finish time of each ActionPoints of each journeys
-        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
+        List<Journey> journeys1 = JourneyService.
+                calculateTime(journeys, actionPoints, tour.getStartTime());
         tour.setJourneyList(journeys1);
         return tour;
     }
 
     /**
-     * Get the list of journeys for a delivery process
+     * Get the list of journeys for a delivery process.
      *
      * @param journeys        List of journey for a tour
      * @param deliveryProcess A specific delivery process
      * @return List of journeys for a delivery process
      */
-    public List<Journey> getJourneysForDeliveryProcess(final List<Journey> journeys, final DeliveryProcess deliveryProcess) {
+    public List<Journey>
+    getJourneysForDeliveryProcess(final List<Journey> journeys,
+                                  final DeliveryProcess deliveryProcess) {
         Validate.notNull(journeys, "journeys can't be null");
-        Validate.notNull(deliveryProcess, "deliveryProcess can't be null");
+        Validate.notNull(deliveryProcess,
+                "deliveryProcess can't be null");
         long id1 = deliveryProcess.getPickUP().getLocation().getId();
         long id2 = deliveryProcess.getDelivery().getLocation().getId();
         int indexJourney1 = -1;
         int indexJourney2 = -1;
         // search for the index of the start journey and the end journey
         for (int i = 0; i < journeys.size(); i++) {
-            if (indexJourney1 != -1 && indexJourney2 != -1) break;
+            if (indexJourney1 != -1 && indexJourney2 != -1) {
+                break;
+            }
             // tsp1 makes no difference between points pick up and points
             // delivery
             if (indexJourney1 == -1 && indexJourney2 == -1) {
@@ -457,7 +478,9 @@ public class GraphService {
                     indexJourney1 = i;
                 } else if (journeys.get(i).getStartPoint().getId() == id2) {
                     indexJourney2 = i;
-                } else continue;
+                } else {
+                    continue;
+                }
             }
             if (indexJourney1 != -1) {
                 if (journeys.get(i).getArrivePoint().getId() == id1) {
@@ -488,31 +511,63 @@ public class GraphService {
 
     /**
      * this class contains the previous point index and the distance in the
-     * shortest path from the start point to each point
+     * shortest path from the start point to each point.
      */
     class Tuple {
+        /**
+         * Index of the previous point.
+         */
         private int prev;
+        /**
+         * Distance from the start point.
+         */
         private double dist;
 
-        Tuple(int prev, double dist) {
+        /**
+         * Constructor of tuple.
+         *
+         * @param newPrev index of the previous point
+         * @param newDist distance from the start point
+         */
+        Tuple(final int newPrev, final double newDist) {
             this.prev = prev;
             this.dist = dist;
         }
 
+        /**
+         * Getter of index of the previous point.
+         *
+         * @return index of the previous point
+         */
         public int getPrev() {
             return prev;
         }
 
-        public void setPrev(int prev) {
-            this.prev = prev;
+        /**
+         * Setter of index of the previous point.
+         *
+         * @param newPrev index of the previous point
+         */
+        public void setPrev(final int newPrev) {
+            this.prev = newPrev;
         }
 
+        /**
+         * Getter of the distance.
+         *
+         * @return distance
+         */
         public double getDist() {
             return dist;
         }
 
-        public void setDist(double dist) {
-            this.dist = dist;
+        /**
+         * Setter of the distance.
+         *
+         * @param newDist distance
+         */
+        public void setDist(final double newDist) {
+            this.dist = newDist;
         }
     }
 
