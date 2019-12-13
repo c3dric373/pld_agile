@@ -1,15 +1,15 @@
 package model.service;
 
-import model.data.ActionPoint;
-import model.data.ActionType;
-import model.data.DeliveryProcess;
-import model.data.Point;
+import model.genData.ActionPoint;
+import model.genData.ActionType;
+import model.genData.DeliveryProcess;
+import model.genData.Point;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static model.core.service.DeliveryProcessService.addNewDeliveryProcess;
+import static controller.service.DeliveryProcessService.addNewDeliveryProcess;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.Time;

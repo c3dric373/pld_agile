@@ -1,5 +1,7 @@
 package model.data;
 
+import model.genData.Journey;
+import model.genData.Point;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

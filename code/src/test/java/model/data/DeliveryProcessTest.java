@@ -1,5 +1,9 @@
 package model.data;
 
+import model.genData.ActionPoint;
+import model.genData.ActionType;
+import model.genData.DeliveryProcess;
+import model.genData.Point;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

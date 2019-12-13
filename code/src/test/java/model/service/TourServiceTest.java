@@ -1,6 +1,6 @@
 //package model.service;
 //
-//import model.core.service.TourService;
+//import controller.service.TourService;
 //import model.data.*;
 //import org.junit.Assert;
 //import org.junit.Before;
@@ -14,7 +14,7 @@
 //import java.util.ArrayList;
 //import java.util.List;
 //
-//import static model.core.service.TourService.addNewDeliveryProcess;
+//import static controller.service.TourService.addNewDeliveryProcess;
 //import static org.hamcrest.CoreMatchers.containsString;
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertThat;

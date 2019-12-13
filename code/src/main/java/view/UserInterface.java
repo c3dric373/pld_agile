@@ -1,8 +1,8 @@
 package view;
 
 import lombok.Setter;
-import model.core.management.ApplicationManager;
-import model.data.*;
+import controller.management.ApplicationManager;
+import model.genData.*;
 import org.apache.commons.lang.Validate;
 
 import java.io.File;

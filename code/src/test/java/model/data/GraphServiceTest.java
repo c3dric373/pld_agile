@@ -1,9 +1,10 @@
 package model.data;
 
-import model.core.TSP;
-import model.core.TSP3;
-import model.core.service.GraphService;
-import model.io.XmlToGraph;
+import controller.tsp.TSP;
+import controller.tsp.TSP3;
+import controller.service.GraphService;
+import controller.io.XmlToGraph;
+import model.genData.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -1,10 +1,10 @@
 package model.service;
 
-import model.core.service.JourneyService;
-import model.data.ActionPoint;
-import model.data.ActionType;
-import model.data.Journey;
-import model.data.Point;
+import controller.service.JourneyService;
+import model.genData.ActionPoint;
+import model.genData.ActionType;
+import model.genData.Journey;
+import model.genData.Point;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;

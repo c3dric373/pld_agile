@@ -1,7 +1,8 @@
 package model.data;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
+import model.genData.DeliveryProcess;
+import model.genData.Point;
+import model.genData.Tour;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;

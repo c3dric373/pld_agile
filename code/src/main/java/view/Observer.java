@@ -1,6 +1,6 @@
 package view;
 
-import model.data.GenData;
+import model.genData.GenData;
 
 /**
  * Interface for the observer in the Observer-Pattern.

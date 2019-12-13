@@ -1,8 +1,8 @@
 package model.service;
 
-import model.core.service.GraphService;
-import model.data.*;
-import model.io.XmlToGraph;
+import controller.service.GraphService;
+import controller.io.XmlToGraph;
+import model.genData.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -1,7 +1,7 @@
 package view;
 
-import model.data.ActionPoint;
-import model.data.Point;
+import model.genData.ActionPoint;
+import model.genData.Point;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 

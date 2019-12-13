@@ -1,10 +1,11 @@
 package view;
 
 import lombok.Getter;
+import model.genData.ActionPoint;
 
 /**
  * Enum to distinguish between the different possible Markers on our map.
- * These Markers will be used to display {@link model.data.ActionPoint}s.
+ * These Markers will be used to display {@link ActionPoint}s.
  */
 @Getter
 enum MarkerType {

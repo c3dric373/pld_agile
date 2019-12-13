@@ -1,7 +1,9 @@
 package model.data;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
+import model.genData.ActionPoint;
+import model.genData.ActionType;
+import model.genData.Point;
+import model.genData.Segment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Rule;

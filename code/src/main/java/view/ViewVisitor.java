@@ -1,7 +1,7 @@
 package view;
 
 import lombok.Getter;
-import model.data.*;
+import model.genData.*;
 
 @Getter
 public class ViewVisitor implements GenDataVisitor {
