@@ -263,10 +263,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 newDeliveryActionPoint.setTime(parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
                 this.mainApp.addDeliveryProcess(tourLoaded, newPickUpActionPoint, newDeliveryActionPoint);
             } else {
-                showAlert("Action Imposible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
+                showAlert("Action Impossible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
             }
         } else {
-            showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
+            showAlert("Action Impossible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
         }
     }
 
