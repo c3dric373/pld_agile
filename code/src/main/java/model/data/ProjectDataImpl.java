@@ -1,6 +1,5 @@
 package model.data;
 
-
 import java.util.List;
 
 /**
@@ -68,7 +67,8 @@ public class ProjectDataImpl implements ProjectData {
     }
 
     @Override
-    public void setJourneyListForDeliveryProcess(final ListJourneyFromDeliveryProcess listForDeliveryProcess) {
+    public void setJourneyListForDeliveryProcess(
+            final ListJourneyFromDeliveryProcess listForDeliveryProcess) {
         journeyList = listForDeliveryProcess;
     }
 

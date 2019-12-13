@@ -60,7 +60,8 @@ public enum ErrorMessage implements GenData {
     /**
      * list of ActionPoint contains null Elements.
      */
-    ACTION_POINT_LIST_NULL_ELEMENT("Action Point list's Elements should not be null"),
+    ACTION_POINT_LIST_NULL_ELEMENT("Action Point list's Elements should not " +
+            "be null"),
 
     /**
      * list of ActionPoint is empty.

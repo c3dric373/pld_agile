@@ -88,6 +88,10 @@ public class Tour implements GenData {
         genDataVisitor.visit(this);
     }
 
+    /**
+     * Deep copy of a {@link Tour}, need for undo process.
+     * @return the deep copy.
+     */
     public Tour deepClone() {
         Cloner cloner = new Cloner();
         return cloner.deepClone(this);

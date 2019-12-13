@@ -1,6 +1,5 @@
 package model.data;
 
-
 import view.Observer;
 
 import java.util.List;
@@ -45,13 +44,6 @@ public interface ProjectDataWrapper {
 
 
     /**
-     * Delete a DeliveryProcess to the current Tour.
-     *
-     * @param deliveryProcess the delivery process to delete
-     */
-    void deleteDeliveryProcess(DeliveryProcess deliveryProcess);
-
-    /**
      * Return the nearest Point from the param.
      *
      * @param newActionPoint the ActionPoint from which to find the nearest
@@ -85,5 +77,5 @@ public interface ProjectDataWrapper {
      *
      * @param error error message
      */
-    void sendErrorMessage(ErrorMessage error);
+    void sendErrorMessage( ErrorMessage error);
 }

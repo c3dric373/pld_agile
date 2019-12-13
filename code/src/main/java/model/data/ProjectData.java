@@ -57,12 +57,12 @@ public interface ProjectData {
     DeliveryProcess getSelectedDeliveryProcess();
 
     /**
-     *  Set the list of journeys needed to make a delivery Process.
+     * Set the list of journeys needed to make a delivery Process.
      *
-     * @param listForDeliveryProcess  list of journey for the delivery process
+     * @param listForDeliveryProcess list of journey for the delivery process
      */
     void setJourneyListForDeliveryProcess
-        (ListJourneyFromDeliveryProcess listForDeliveryProcess);
+    (ListJourneyFromDeliveryProcess listForDeliveryProcess);
 
     /**
      * Get the list of journeys needed to make a delivery process.

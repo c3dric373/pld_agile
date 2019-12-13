@@ -1,6 +1,5 @@
 package model.data;
 
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.Validate;
@@ -61,7 +60,6 @@ public class Point implements GenData {
      */
     static final int MIN_ID = 0;
 
-
     /**
      * Instantiates a Point.
      *
@@ -102,7 +100,6 @@ public class Point implements GenData {
         segments.add(segment);
     }
 
-
     /**
      * Get the distance from this point to another
      * if it's reachable via one segments.
@@ -129,6 +126,6 @@ public class Point implements GenData {
 
     @Override
     public String toString() {
-        return latitude + ", " + longitude  + "id: " + id;
+        return latitude + ", " + longitude + "id: " + id;
     }
 }
