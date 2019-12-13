@@ -116,13 +116,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
-        int completeDistance = TourService.getCompleteDistance(newTour);
-        Time completeTime = TourService.getCompleteTime(newTour);
-        newTour.setCompleteTime(completeTime);
-        newTour.setTotalDistance(completeDistance);
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
-        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
+        updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
@@ -152,13 +146,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
                     deliveryPoint);
-            int completeDistance = TourService.getCompleteDistance(newTour);
-            Time completeTime = TourService.getCompleteTime(newTour);
-            newTour.setCompleteTime(completeTime);
-            newTour.setTotalDistance(completeDistance);
-            DeliveryProcessService.setDpInfo(newTour);
-            DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
-            TourService.calculateTimeAtPoint(newTour);
+            updateInfo(newTour);
         }
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
@@ -169,6 +157,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
+        }
+        if(deliveryProcess.getPickUP().getActionType() == ActionType.BASE){
+            //TODO
+           // projectDataWrapper.sendErrorMessage
+            return;
         }
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         Tour newTour;
@@ -212,8 +205,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
+        updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
 
