@@ -6,7 +6,6 @@ import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
 import java.util.List;
-import java.util.OptionalInt;
 
 /**
  * A tour consists of a list of DeliveryProcesses, a base point and a start
@@ -32,7 +31,7 @@ public class Tour implements GenData {
     private List<Journey> journeyList;
 
     /**
-     * List of all the deliveries the cyclist has to do
+     * List of all the deliveries the cyclist has to do.
      */
     private List<DeliveryProcess> deliveryProcesses;
 

@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.OptionalInt;
 
 public class TourService {
-    private final static String EMPTY_STRING = "";
-
+    /**
+     * empty string.
+     */
+    private static final String EMPTY_STRING = "";
 
     /**
      * Calculates from a tour the time at a given ActionPoint by searching
@@ -19,7 +21,6 @@ public class TourService {
      * If the list of journeys is null  or the loadedTour the method return "".
      *
      * @param tourLoaded the tour to search through
-     * @return the time of passage or ""
      */
     public static void calculateTimeAtPoint(final Tour tourLoaded) {
         if (tourLoaded == null || tourLoaded.getActionPoints() == null) {
@@ -28,13 +29,17 @@ public class TourService {
         final List<Journey> journeys = tourLoaded.getJourneyList();
         for (ActionPoint actionPoint : tourLoaded.getActionPoints()) {
             if (actionPoint.getActionType() == ActionType.BASE) {
-                actionPoint.setPassageTime(tourLoaded.getStartTime().toString());
+                actionPoint.setPassageTime(
+                        tourLoaded.getStartTime().toString());
             } else if (actionPoint.getActionType() == ActionType.END) {
-                actionPoint.setPassageTime(journeys.get(journeys.size() - 1).getFinishTime().toString());
+                actionPoint.setPassageTime(journeys.get(journeys.size() - 1)
+                                .getFinishTime().toString());
             } else {
-                OptionalInt index = JourneyService.findIndexPointInJourneys(journeys, actionPoint.getLocation(), true);
+                OptionalInt index = JourneyService.findIndexPointInJourneys(
+                        journeys, actionPoint.getLocation(), true);
                 if (index.isPresent()) {
-                    actionPoint.setPassageTime(journeys.get(index.getAsInt()).getFinishTime().toString());
+                    actionPoint.setPassageTime(journeys.get(index.getAsInt())
+                            .getFinishTime().toString());
                 }
             }
 
@@ -54,7 +59,9 @@ public class TourService {
 
     public static Time getCompleteTime(final Tour tour) {
         long firstFinishTime = tour.getStartTime().getTime();
-        long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
+        long secondFinishTime = tour.getJourneyList()
+                .get(tour.getJourneyList().size() - 1)
+                .getFinishTime().getTime();
 
         long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
         journeyTime = journeyTime / 1000;
@@ -62,18 +69,20 @@ public class TourService {
         return JourneyService.durationToTime(journeyTime);
     }
 
-    public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+    public static Tour deleteDpTourNotCalculated(final Tour tour
+            , final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().remove(deliveryProcess);
-        if(tour.getActionPoints() !=null){
+        if (tour.getActionPoints() != null) {
             tour.getActionPoints().remove(deliveryProcess.getPickUP());
             tour.getActionPoints().remove(deliveryProcess.getDelivery());
         }
         return tour;
     }
 
-    public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+    public static Tour addDpTourNotCalculated(final Tour tour
+            , final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().add(deliveryProcess);
-        if(tour.getActionPoints() !=null){
+        if (tour.getActionPoints() != null) {
             tour.getActionPoints().add(deliveryProcess.getPickUP());
             tour.getActionPoints().add(deliveryProcess.getDelivery());
         }
@@ -95,10 +104,13 @@ public class TourService {
                                     final List<ActionPoint> actionPoints) {
         Validate.notNull(graph, "graph can't be null");
         Validate.notNull(tour, "tour can't be null");
-        Validate.notNull(tour.getActionPoints(), "list of actionPoints of tour can't be null");
-        Validate.notNull(actionPoints, "actionPoints can't be null");
+        Validate.notNull(tour.getActionPoints(),
+                "list of actionPoints of tour can't be null");
+        Validate.notNull(actionPoints,
+                "actionPoints can't be null");
         Validate.notEmpty(actionPoints, "actionPoints can' be empty");
-        Validate.noNullElements(actionPoints, "actionPoints can't contain null elements");
+        Validate.noNullElements(actionPoints,
+                "actionPoints can't contain null elements");
         final List<ActionPoint> oldActionPoints = tour.getActionPoints();
         if (oldActionPoints.size() != actionPoints.size()) {
             throw new IllegalArgumentException("actonPoints list not "
@@ -110,10 +122,12 @@ public class TourService {
         GraphService graphService = new GraphService();
         final List<Journey> newJourneys = new ArrayList<>();
         for (int i = 1; i < actionPoints.size(); i++) {
-            final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
+            final Point predecessorPoint;
+            predecessorPoint = oldActionPoints.get(i - 1).getLocation();
             final Point successorPoint = oldActionPoints.get(i).getLocation();
             final Journey newJourney = graphService.
-                    getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
+                    getShortestPath(graph, predecessorPoint.getId(),
+                            successorPoint.getId(), null);
             newJourneys.add(newJourney);
         }
         final Time startTime = tour.getStartTime();
@@ -124,7 +138,9 @@ public class TourService {
         return tour;
     }
 
-    private static boolean checkChangeOrder(final Tour tour, final List<ActionPoint> actionPoints) {
+    private static boolean checkChangeOrder(
+            final Tour tour,
+            final List<ActionPoint> actionPoints) {
 
         for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
             if (actionPoints.indexOf(deliveryProcess.getDelivery()) < actionPoints.indexOf(deliveryProcess.getPickUP())) {
@@ -149,7 +165,8 @@ public class TourService {
                                     final Point newPoint) {
         Validate.notNull(graph, "graph can't be null");
         Validate.notNull(tour, "tour can't be null");
-        Validate.notNull(tour.getActionPoints(), "list of actionPoints of tour can't be null");
+        Validate.notNull(tour.getActionPoints(),
+                "list of actionPoints of tour can't be null");
         Validate.notNull(oldPoint, "oldPoint can't be null");
         Validate.notNull(newPoint, "newPoint can't be null");
         // If point not in delivery processes throw exception
@@ -206,10 +223,12 @@ public class TourService {
         // the successor and the new Point
         GraphService graphService = new GraphService();
 
-        final Journey newPredecessorJourney = graphService.getShortestPath(graph,
-                predecessorPoint.getLocation().getId(), newPoint.getId(), null);
+        final Journey newPredecessorJourney = graphService.getShortestPath(
+                graph, predecessorPoint.getLocation().getId(),
+                newPoint.getId(), null);
         final Journey newSuccessorJourney = graphService.getShortestPath(graph,
-                newPoint.getId(), successorPoint.getLocation().getId(), null);
+                newPoint.getId(), successorPoint.getLocation().getId(),
+                null);
         //Replacing the old Journeys with the newly calculated ones
 
         tour.getJourneyList().set(optOldPredecessorJ.getAsInt(),
@@ -226,7 +245,8 @@ public class TourService {
                 tour.getStartTime());
 
         final List<Journey> calculatedJourneys = JourneyService.
-                calculateTime(newJourneys, tour.getActionPoints(), tour.getStartTime());
+                calculateTime(newJourneys, tour.getActionPoints(),
+                        tour.getStartTime());
         tour.setJourneyList(calculatedJourneys);
         return tour;
     }
@@ -248,14 +268,17 @@ public class TourService {
         Validate.notNull(tour, "tour is null");
         Validate.notNull(pickUpPoint, "pickUpPoint is null");
         Validate.notNull(deliveryPoint, "deliveryPoint is null");
-        Validate.notNull(tour.getActionPoints(), "actionPoints of tour is null");
+        Validate.notNull(tour.getActionPoints(),
+                "actionPoints of tour is null");
 
         Tour newTour = tour;
         List<DeliveryProcess> newDeliveryProcessList =
                 tour.getDeliveryProcesses();
         List<ActionPoint> newActionPointList = tour.getActionPoints();
-        newActionPointList.add(newActionPointList.size() - 1, pickUpPoint);
-        newActionPointList.add(newActionPointList.size() - 1, deliveryPoint);
+        newActionPointList
+                .add(newActionPointList.size() - 1, pickUpPoint);
+        newActionPointList
+                .add(newActionPointList.size() - 1, deliveryPoint);
         newDeliveryProcessList.add(new DeliveryProcess(pickUpPoint,
                 deliveryPoint));
         newTour.setDeliveryProcesses(newDeliveryProcessList);
@@ -265,15 +288,22 @@ public class TourService {
         Point pointBefore = journey.getStartPoint();
         Point pointAfter = journey.getArrivePoint();
         GraphService graphService = new GraphService();
-        Journey journey1 = graphService.getShortestPath(graph, pointBefore.getId(), pickUpPoint.getLocation().getId(), null);
-        Journey journey2 = graphService.getShortestPath(graph, pickUpPoint.getLocation().getId(), deliveryPoint.getLocation().getId(), null);
-        Journey journey3 = graphService.getShortestPath(graph, deliveryPoint.getLocation().getId(), pointAfter.getId(), null);
+        Journey journey1 = graphService.getShortestPath(
+                graph, pointBefore.getId(), pickUpPoint.getLocation().getId(),
+                null);
+        Journey journey2 = graphService.getShortestPath(
+                graph, pickUpPoint.getLocation().getId(),
+                deliveryPoint.getLocation().getId(), null);
+        Journey journey3 = graphService.getShortestPath(
+                graph, deliveryPoint.getLocation().getId(), pointAfter.getId(),
+                null);
         journeys.remove(journeys.size() - 1);
         journeys.add(journey1);
         journeys.add(journey2);
         journeys.add(journey3);
         final List<Journey> calculatedJourneys = JourneyService.
-                calculateTime(journeys, tour.getActionPoints(), tour.getStartTime());
+                calculateTime(journeys, tour.getActionPoints(),
+                        tour.getStartTime());
         newTour.setJourneyList(calculatedJourneys);
 
         return newTour;
@@ -281,7 +311,7 @@ public class TourService {
     }
 
     /**
-     * delete the deliveryProcess from the tour
+     * delete the deliveryProcess from the tour.
      *
      * @param tour            Tour
      * @param deliveryProcess DeliveryProcess
@@ -291,11 +321,13 @@ public class TourService {
                                              final DeliveryProcess deliveryProcess) {
         Validate.notNull(graph, "graph is null");
         Validate.notNull(tour, "tour is null");
-        Validate.notNull(tour.getJourneyList(), "journeyList of tour is null");
+        Validate.notNull(tour.getJourneyList(),
+                "journeyList of tour is null");
         Validate.notNull(deliveryProcess, "deliveryProcess is null");
 
         Tour newTour = tour;
-        List<DeliveryProcess> deliveryProcessesList = tour.getDeliveryProcesses();
+        List<DeliveryProcess> deliveryProcessesList;
+        deliveryProcessesList = tour.getDeliveryProcesses();
         List<ActionPoint> actionPointList = tour.getActionPoints();
         ActionPoint pickupPoint = deliveryProcess.getPickUP();
         ActionPoint deliveryPoint = deliveryProcess.getDelivery();
@@ -309,19 +341,26 @@ public class TourService {
         List<Journey> journeys = tour.getJourneyList();
         JourneyService journeyService = new JourneyService();
         GraphService graphService = new GraphService();
-        int index1 = journeyService.findIndexPointInJourneys(journeys, pickupPoint.getLocation(), true).getAsInt();
+        int index1 = journeyService.findIndexPointInJourneys(
+                journeys, pickupPoint.getLocation(), true).getAsInt();
         Point pointBefore1 = journeys.get(index1).getStartPoint();
-        int index2 = journeyService.findIndexPointInJourneys(journeys, pickupPoint.getLocation(), false).getAsInt();
+        int index2 = journeyService.findIndexPointInJourneys(
+                journeys, pickupPoint.getLocation(), false).getAsInt();
         Point pointAfter1 = journeys.get(index2).getArrivePoint();
-        Journey journey1 = graphService.getShortestPath(graph, pointBefore1.getId(), pointAfter1.getId(), null);
+        Journey journey1 = graphService.getShortestPath(
+                graph, pointBefore1.getId(), pointAfter1.getId(),
+                null);
         journeys.remove(index2);
         journeys.remove(index1);
         journeys.add(index1, journey1);
-        index1 = journeyService.findIndexPointInJourneys(journeys, deliveryPoint.getLocation(), true).getAsInt();
+        index1 = journeyService.findIndexPointInJourneys(journeys,
+                deliveryPoint.getLocation(), true).getAsInt();
         Point pointBefore2 = journeys.get(index1).getStartPoint();
-        index2 = journeyService.findIndexPointInJourneys(journeys, deliveryPoint.getLocation(), false).getAsInt();
+        index2 = journeyService.findIndexPointInJourneys(journeys,
+                deliveryPoint.getLocation(), false).getAsInt();
         Point pointAfter2 = journeys.get(index2).getArrivePoint();
-        Journey journey2 = graphService.getShortestPath(graph, pointBefore2.getId(), pointAfter2.getId(), null);
+        Journey journey2 = graphService.getShortestPath(graph,
+                pointBefore2.getId(), pointAfter2.getId(), null);
         journeys.remove(index2);
         journeys.remove(index1);
         journeys.add(index1, journey2);
@@ -329,7 +368,8 @@ public class TourService {
         newTour.setActionPoints(actionPointList);
 
         final List<Journey> calculatedJourneys = JourneyService.
-                calculateTime(journeys, tour.getActionPoints(), tour.getStartTime());
+                calculateTime(journeys, tour.getActionPoints(),
+                        tour.getStartTime());
         tour.setJourneyList(calculatedJourneys);
 
         return newTour;
@@ -340,8 +380,8 @@ public class TourService {
         List<ActionPoint> actionPoints1 = tour.getActionPoints();
         List<ActionPoint> result = new ArrayList<>();
         for (Journey journey : tour.getJourneyList()) {
-            ActionPoint actionPoint = JourneyService.findActionPoint
-                    (journey.getStartPoint(), actionPoints1);
+            ActionPoint actionPoint = JourneyService.findActionPoint(
+                    journey.getStartPoint(), actionPoints1);
             result.add(actionPoint);
         }
         for (ActionPoint actionPoint : actionPoints1) {

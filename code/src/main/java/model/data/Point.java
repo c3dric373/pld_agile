@@ -111,9 +111,13 @@ public class Point implements GenData {
      * @return the distance from this point to another
      */
     public double getLengthTo(final long id) {
-        if (this.id == id) return 0;
+        if (this.id == id) {
+            return 0;
+        }
         for (final Segment s : segments) {
-            if (s.getIdEnd() == id) return s.getLength();
+            if (s.getIdEnd() == id) {
+                return s.getLength();
+            }
         }
         return Double.POSITIVE_INFINITY;
     }
