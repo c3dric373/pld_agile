@@ -27,31 +27,20 @@ public class UserInterface implements Observer {
     /**
      * The data as an observable list of Persons.
      */
-    // TODO Modifier ca en autre chose que string genre en liste de livraison
     private ObservableList<String> tourData =
             FXCollections.observableArrayList();
+
     private DashBoardController dashBoardController;
 
     /**
      * Constructor
      *
-     * @param controller
+     * @param controller the controller of the application
      */
     public UserInterface(final ApplicationManager controller) {
-        // Add some sample data List
-        // tourData.addAll();
         this.controller = controller;
     }
-
-    /**
-     * Returns the data as an observable list of Delivery from Tour.
-     *
-     * @return
-     */
-    public ObservableList<String> getTour() {
-        return tourData;
-    }
-
+    
     /**
      * Set's the {@link DashBoardController} for this interface, and the
      * visitor.
