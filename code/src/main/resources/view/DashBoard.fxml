@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Line?>
-<?import com.lynden.gmapsfx.GoogleMapView?>
+<?import com.lynden.gmapsfx.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1000.0" styleClass="background" stylesheets="@../styleSetting/Theme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashBoardController">
+<AnchorPane prefHeight="650.0" prefWidth="1000.0" styleClass="background" stylesheets="@../styleSetting/Theme.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DashBoardController">
    <children>
       <SplitPane dividerPositions="0.4" prefHeight="530.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -78,6 +68,7 @@
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="82.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="94.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="0.0" prefWidth="108.0" />
+                        <ColumnConstraints />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
@@ -118,9 +109,11 @@
                            </image>
                         </ImageView>
                         <Label id="depTime" fx:id="startTime" styleClass="label-bright" GridPane.columnIndex="1" />
-                        <Label fx:id="numberDeliveries" GridPane.columnIndex="1" styleClass="label-bright" GridPane.rowIndex="1" />
+                        <Label fx:id="numberDeliveries" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="arrivalTime" styleClass="label-bright" GridPane.columnIndex="3" />
                         <Button fx:id="calculateTour" defaultButton="true" mnemonicParsing="false" onAction="#calculateTour" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                         <Button fx:id="UNDO" defaultButton="true" mnemonicParsing="false" onAction="#undo" prefHeight="26.0" prefWidth="114.0" text="UNDO" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+
                      </children>
                   </GridPane>
                   <GridPane layoutX="34.0" layoutY="215.0" prefHeight="110.0" prefWidth="421.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="20.0">
@@ -160,8 +153,8 @@
                           </rowConstraints>
                            <children>
                               <Label text="h" GridPane.columnIndex="1" />
-                              <TextField promptText="hh" fx:id="inputDeliveryTimeH" styleClass="text-field" />
-                              <TextField promptText="mm" fx:id="inputDeliveryTimeM" styleClass="text-field" GridPane.columnIndex="2" />
+                              <TextField fx:id="inputDeliveryTimeH" promptText="hh" styleClass="text-field" />
+                              <TextField fx:id="inputDeliveryTimeM" promptText="mm" styleClass="text-field" GridPane.columnIndex="2" />
                            </children>
                         </GridPane>
                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -172,9 +165,12 @@
                            </columnConstraints>
                            <children>
                               <Label text="h" GridPane.columnIndex="1" />
-                              <TextField promptText="hh" fx:id="inputPickUpTimeH" styleClass="text-field" />
-                              <TextField promptText="mm" fx:id="inputPickUpTimeM" styleClass="text-field" GridPane.columnIndex="2" />
+                              <TextField fx:id="inputPickUpTimeH" promptText="hh" styleClass="text-field" />
+                              <TextField fx:id="inputPickUpTimeM" promptText="mm" styleClass="text-field" GridPane.columnIndex="2" />
                            </children>
+                           <rowConstraints>
+                              <RowConstraints />
+                           </rowConstraints>
                         </GridPane>
                      </children>
                   </GridPane>
@@ -184,7 +180,7 @@
                </children>
             </AnchorPane>
              <AnchorPane id="mapPane" fx:id="anchorMap" styleClass="background">
-                 <GoogleMapView fx:id="mapView" prefHeight="750.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                 <GoogleMapView fx:id="mapView" prefHeight="750.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
              </AnchorPane>
          </items>
       </SplitPane>
