@@ -64,6 +64,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         startTime.setText("");
         numberDeliveries.setText("");
         arrivalTime.setText("");
+        clearRectangleColor();
     }
 
     public void modifieDP() {

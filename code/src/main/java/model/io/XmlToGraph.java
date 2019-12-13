@@ -163,6 +163,7 @@ public class XmlToGraph {
      */
     public Tour getDeliveriesFromXml(final String path) {
         deliveries = new ArrayList<DeliveryProcess>();
+        Tour fakeTour = new Tour();
         if (path == null) {
             ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
             return tour;
@@ -191,12 +192,12 @@ public class XmlToGraph {
             final Element startPoint = (Element) start.item(0);
             if(startPoint == null){
                 ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
-                return tour;
+                return fakeTour;
             }
             Long idBase = Long.parseLong(startPoint.getAttribute("adresse"));
             Point base = getPointById(idBase);
             if(base == null){
-                return tour;
+                return fakeTour;
             }
             System.out.println("entrepot :" + idBase);
             // Recup startTime
@@ -210,7 +211,7 @@ public class XmlToGraph {
             final int nbDeliveryElements = deliveryList.getLength();
             if(nbDeliveryElements == 0){
                 ApplicationManagerImpl.sendMessage(ErrorMessage.FILE_CORRUPTED);
-                return tour;
+                return fakeTour;
             }
             System.out.println("nbdeliveryelements :" + nbDeliveryElements);
 
@@ -226,7 +227,7 @@ public class XmlToGraph {
                 System.out.println("idPick " + pickupPointId);
                 Point pickupPoint = getPointById(pickupPointId);
                 if(pickupPoint == null){
-                    return tour;
+                    return fakeTour;
                 }
                 String deliveryIdString;
                 deliveryIdString = deliveryXml.getAttribute("adresseLivraison");
@@ -235,7 +236,7 @@ public class XmlToGraph {
                         + deliveryPointId);
                 Point deliveryPoint = getPointById(deliveryPointId);
                 if(deliveryPoint == null){
-                    return tour;
+                    return fakeTour;
                 }
                 String pickupTimeString;
                 pickupTimeString = deliveryXml.getAttribute("dureeEnlevement");
