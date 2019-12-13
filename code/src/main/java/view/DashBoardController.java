@@ -254,8 +254,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         tourLoaded.setActionPoints(listActionPoints);
     }
 
-    public void undo(){
-this.mainApp.undo();
+    public void undo() {
+        this.mainApp.undo();
     }
 
     public Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {

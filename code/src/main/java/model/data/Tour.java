@@ -1,8 +1,6 @@
 package model.data;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.lang.Validate;
 
 import java.sql.Time;
@@ -16,6 +14,8 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
+@Builder
+@AllArgsConstructor
 public class Tour implements GenData {
 
     /**
@@ -53,6 +53,7 @@ public class Tour implements GenData {
      * Total distance of the tour.
      */
     private int totalDistance;
+
     /**
      * Instantiates a Tour.
      *
@@ -76,22 +77,13 @@ public class Tour implements GenData {
         genDataVisitor.visit(this);
     }
 
-    /**
-     * Adds a deliverProcess to the list of existing delivery processes
-     *
-     * @param deliveryProcess the delivery process to add
-     */
-    public void addDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        deliveryProcesses.add(deliveryProcess);
+    public Tour deepClone() {
+        return Tour.builder().actionPoints(actionPoints).base(base)
+                .completeTime(completeTime).deliveryProcesses(deliveryProcesses)
+                .journeyList(journeyList).startTime(startTime).
+                        totalDistance(totalDistance).build();
     }
 
-    /**
-     * Deletes a deliverProcess to the list of existing delivery processes
-     *
-     * @param deliveryProcess the delivery process to delete
-     */
-    public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
-        deliveryProcesses.remove(deliveryProcess);
-    }
 
 }
+

@@ -96,7 +96,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
         final Graph graph = new Graph(points);
         projectDataWrapper.loadMap(graph);
-        undoList.add(graph);
         setMapLoaded();
         mainProjectState = ProjectState.MAP_LOADED;
     }
@@ -116,7 +115,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         Validate.notNull(file, "file is null");
         final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
 
-        undoList.add(tour);
+        undoList.add(projectDataWrapper.getProject().getGraph());
         projectDataWrapper.loadTour(tour);
         setTourLoaded();
         mainProjectState = ProjectState.TOUR_LOADED;
@@ -130,11 +129,11 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             throw new IllegalStateException("tour not loaded");
         }
         final Tour tour = projectDataWrapper.getProject().getTour();
+        undoList.add(tour.deepClone());
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
         updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
-        undoList.add(tour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
 
@@ -158,7 +157,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                     deliveryPoint);
             newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
             DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
-            undoList.add(newTour);
         } else {
             setAddDeliveryProcess();
             Graph graph = projectDataWrapper.getProject().getGraph();
@@ -166,8 +164,26 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                     deliveryPoint);
             updateInfo(newTour);
         }
+        undoList.add(tour.deepClone());
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
+    }
+
+    @Override
+    public void undoTour(final Tour tour) {
+        System.out.println("test1");
+        if (tour.getJourneyList() == null) {
+            System.out.println("test2");
+            projectState = ProjectState.TOUR_LOADED;
+            projectDataWrapper.getProject().setTour(tour);
+            projectDataWrapper.loadTour(tour);
+        }
+
+    }
+
+    @Override
+    public void undoGraph(Graph graph) {
+
     }
 
     @Override
@@ -183,22 +199,21 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         }
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         Tour newTour;
+        final Tour tour = projectDataWrapper.getProject().getTour();
+
         if (projectState == ProjectState.TOUR_LOADED) {
             setDeleteDeliveryProcess();
-            final Tour tour = projectDataWrapper.getProject().getTour();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
             DeliveryProcessService.delDeliveryProcessIdTourNotCalc(newTour);
-            undoList.add(newTour);
             projectDataWrapper.loadTour(newTour);
         } else {
             setDeleteDeliveryProcess();
-            final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
             newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
             updateInfo(newTour);
             projectDataWrapper.loadTour(newTour);
         }
-
+        undoList.add(tour.deepClone());
         projectState = mainProjectState;
     }
 
@@ -210,7 +225,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         newTour.setCompleteTime(completeTime);
         newTour.setTotalDistance(completeDistance);
         DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
-        undoList.add(newTour);
     }
 
     @Override
@@ -227,6 +241,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                 actionPoints);
         updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
+        undoList.add(tour.deepClone());
         projectState = mainProjectState;
 
     }
@@ -301,7 +316,12 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
     @Override
     public void undo() {
-
+        if (undoList.isEmpty()) {
+            return;
+        } else {
+            final GenData genData = undoList.remove(undoList.size() - 1);
+            genData.accept(undoVisitor);
+        }
     }
 
     public void setMapLoaded() {
@@ -360,13 +380,4 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     }
 
 
-    @Override
-    public void undoTour(Tour tour) {
-
-    }
-
-    @Override
-    public void undoGraph(Graph graph) {
-
-    }
 }
