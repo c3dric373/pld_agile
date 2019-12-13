@@ -18,15 +18,37 @@ import javafx.stage.FileChooser;
 import lombok.Getter;
 import model.data.*;
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.math.NumberUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Time;
 import java.util.*;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
+    /**
+     * Empty String.
+     */
+    private static final String EMPTY_STRING = "";
+
+    /**
+     * The style of our map.
+     */
+    private static String MAP_STYLE;
+
+    static {
+        try {
+            MAP_STYLE = Files.readString(Path.of(DashBoardController.class.
+                            getResource("map_style.txt").getPath()),
+                    StandardCharsets.US_ASCII);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private TableView<ActionPoint> actionPointTableView;
@@ -41,10 +63,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private TableColumn<ActionPoint, String> timeAtPoint;
 
     @FXML
-    private Label labelPickUpCoordonates;
+    private Label labelPickUpCoordinates;
 
     @FXML
-    private Label labelDeliveryCoordonates;
+    private Label labelDeliveryCoordinates;
 
     @FXML
     public Label rectangle;
@@ -92,42 +114,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label startTime;
 
-    // Map Style.
-    private static final String mapStyle = "[{\"featureType\":\"administrative\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#e9e5dc\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100},{\"lightness\":99}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54},{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#767676\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":43},{\"lightness\":-11},{\"color\":\"#89cada\"}]}]";
-
-    // Local Save of Tour.
-    private Tour tourLoaded;
-    private DeliveryProcess deliveryProcessLoaded;
-
-    // Manage Local Storage.
-    public void setTour(Tour tour) {
-        tourLoaded = tour;
-
-    }
-
-    public void deleteDp() {
-        if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
-            this.mainApp.deleteDp(deliveryProcessLoaded);
-        }
-    }
-
-    public void setActionPoints(final Tour tour) {
-        actionPointTableView.getSelectionModel().clearSelection();
-        actionPoints.remove(0, actionPoints.size());
-        actionPoints.addAll(tour.getActionPoints());
-    }
-
-    public void modifieDP() {
-        int result = showModifiedDeliveryDialog(deliveryProcessLoaded);
-        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
-        if (result != -1) {
-            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
-            ActionPoint actionPoint = actionPoints.remove(index);
-            actionPoints.add(result, actionPoint);
-            this.mainApp.modifyOrder(actionPoints);
-        }
-    }
-
 
     // Reference to the main application
     private UserInterface mainApp;
@@ -137,28 +123,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // Manage New DeliveryProcess
     private ActionPoint newPickUpActionPoint = null;
+
     private ActionPoint newDeliveryActionPoint = null;
+
     // Markers of new DeliveryProcess
     private Marker newPickUpPointMarker = null;
+
     private Marker newDeliveryPointMarker = null;
-
-
-    private void setBigLabels() {
-        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
-        startTime.setText(tourLoaded.getStartTime().toString());
-        if (tourLoaded.getCompleteTime() != null) {
-            final List<Journey> journeys = tourLoaded.getJourneyList();
-            final int journeysLength = journeys.size();
-            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
-        } else {
-            arrivalTime.setText("");
-        }
-    }
 
     private GoogleMap map;
 
-    public DashBoardController() {
-    }
+
+    // Local Save of Tour.
+    private Tour tourLoaded;
+
+    private DeliveryProcess deliveryProcessLoaded;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -188,7 +167,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
         //TODO Create a graph center and pass it to display Map;
         mapOptions.center(new LatLong(45.771606, 4.880959))
-                .styleString(mapStyle)
+                .styleString(MAP_STYLE)
                 .overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .panControl(false)
@@ -197,6 +176,52 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 .streetViewControl(false)
                 .zoomControl(false)
                 .zoom(13);
+    }
+
+
+    // Manage Local Storage.
+    public void setTour(Tour tour) {
+        tourLoaded = tour;
+
+    }
+
+    public void deleteDp() {
+        if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
+            this.mainApp.deleteDp(deliveryProcessLoaded);
+        }
+    }
+
+    public void setActionPoints(final Tour tour) {
+        actionPointTableView.getSelectionModel().clearSelection();
+        actionPoints.remove(0, actionPoints.size());
+        actionPoints.addAll(tour.getActionPoints());
+    }
+
+    public void modifyDeliveryProcess() {
+        int result = showModifiedDeliveryDialog(deliveryProcessLoaded);
+        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
+        if (result != -1) {
+            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
+            ActionPoint actionPoint = actionPoints.remove(index);
+            actionPoints.add(result, actionPoint);
+            this.mainApp.modifyOrder(actionPoints);
+        }
+    }
+
+
+    private void setBigLabels() {
+        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
+        startTime.setText(tourLoaded.getStartTime().toString());
+
+        // Checking whether the tour was calculated or not, if yes set the
+        // corresponding labels if not set an empty string as a placeholder.
+        if (tourLoaded.getCompleteTime() != null) {
+            final List<Journey> journeys = tourLoaded.getJourneyList();
+            final int journeysLength = journeys.size();
+            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+        } else {
+            arrivalTime.setText(EMPTY_STRING);
+        }
     }
 
 
@@ -269,7 +294,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // Update view
 
-     void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+    void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
         deliveryProcessLoaded = deliveryProcess;
         final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
         final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
@@ -314,7 +339,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(center.getLatitude(), center.getLongitude()))
-                .styleString(mapStyle)
+                .styleString(MAP_STYLE)
                 .overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .panControl(false)
@@ -420,12 +445,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (actionPoint.getActionType() == ActionType.PICK_UP) {
             newPickUpActionPoint = actionPoint;
             newPickUpPointMarker = createMarker(actionPoint, MarkerType.PICKUP);
-            labelPickUpCoordonates.setText(Utils.pointToString(actionPoint.getLocation()));
+            labelPickUpCoordinates.setText(Utils.pointToString(actionPoint.getLocation()));
         }
         if (actionPoint.getActionType() == ActionType.DELIVERY) {
             newDeliveryActionPoint = actionPoint;
             newDeliveryPointMarker = createMarker(actionPoint, MarkerType.DELIVERY);
-            labelDeliveryCoordonates.setText(Utils.pointToString(actionPoint.getLocation()));
+            labelDeliveryCoordinates.setText(Utils.pointToString(actionPoint.getLocation()));
         }
 
         // Eventually draw newPickUp and Delivery Point
@@ -454,11 +479,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void clearNewPickUpPoint() {
-        labelPickUpCoordonates.setText("");
+        labelPickUpCoordinates.setText("");
     }
 
     public void clearNewDeliveryPoint() {
-        labelDeliveryCoordonates.setText("");
+        labelDeliveryCoordinates.setText("");
     }
 
     public void clearAll() {
@@ -500,11 +525,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         System.out.println(id);
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
-            if (id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
+            if (id.contains("setPickUp") && editable(labelPickUpCoordinates)) {
                 System.out.println("this is a test");
                 this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP, new Time(0, 0, 0));
             }
-            if (id.contains("setDelivery") && editable(labelDeliveryCoordonates)) {
+            if (id.contains("setDelivery") && editable(labelDeliveryCoordinates)) {
                 this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.DELIVERY, new Time(0, 0, 0));
             }
         });
@@ -522,8 +547,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (inputDeliveryTimeH.getText().equals("")) {
             inputDeliveryTimeH.setText("0");
         }
-        return labelDeliveryCoordonates.getText() != ""
-                && labelDeliveryCoordonates.getText() != ""
+        return labelDeliveryCoordinates.getText() != ""
+                && labelDeliveryCoordinates.getText() != ""
                 && inputDeliveryTimeM.getText() != ""
                 && inputPickUpTimeM.getText() != "";
     }

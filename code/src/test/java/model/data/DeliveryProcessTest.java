@@ -6,6 +6,7 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import view.DashBoardController;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,6 +37,11 @@ public class DeliveryProcessTest {
 
         // Assert via annotation
 
+    }
+
+    @Test
+    public void test(){
+        System.out.println(DashBoardController.class.getResource("map_style.txt").getFile());
     }
 
     @Test
