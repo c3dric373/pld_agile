@@ -58,10 +58,15 @@ public class DashBoardController implements Initializable,
      */
     private Polyline poly;
 
-    // Reference to the main application
+    /**
+     *  Reference to the main application.
+     */
     private UserInterface mainApp;
 
-    // List des ActionPoints en Observable pour la view
+    /**
+     * List of ActionPoints to share with the table view
+     * this need to be an Observable to work.
+     */
     private ObservableList<ActionPoint> actionPoints =
             FXCollections.observableArrayList();
 
@@ -81,74 +86,150 @@ public class DashBoardController implements Initializable,
 
     private static double ZOOM_SETTING = 13;
 
+    /**
+     * Store all the Actions Points on a table for the view.
+     */
     @FXML
     private TableView<ActionPoint> actionPointTableView;
 
+    /**
+     * Is a column of actionPointTableView
+     * that define the id of the deliveryProcess
+     * Linked to this actionPoint.
+     */
     @FXML
     private TableColumn<ActionPoint, String> deliveryRank;
 
+    /**
+     * Is a column of actionPointTableView
+     * That definie the Type of the ActionPoint.
+     */
     @FXML
     private TableColumn<ActionPoint, String> deliveryType;
 
+    /**
+     * Is a column of actionPointTableView
+     * that define the time when the action
+     * will happend.
+     */
     @FXML
     private TableColumn<ActionPoint, String> timeAtPoint;
 
+    /**
+     * Reference to the label to display PickUpCoordonates.
+     */
     @FXML
     private Label labelPickUpCoordinates;
 
+    /**
+     * Reference to the label to display DeliveryCoordonates.
+     */
     @FXML
     private Label labelDeliveryCoordinates;
 
+    /**
+     * Reference to the label to display a Color Indicator for each DeliveryProcess in a rectangle.
+     */
     @FXML
     public Label rectangle;
 
+    /**
+     * Reference to the textField to set and display the time in hours of a New Delivery Action.
+     */
     @FXML
     private TextField inputDeliveryTimeH;
 
+    /**
+     * Reference to the textField to set and display the time in minutes of a New Delivery Action.
+     */
     @FXML
     private TextField inputDeliveryTimeM;
 
+    /**
+     * Reference to the textField to set and display the time in hours of a New PickUp Action.
+     */
     @FXML
     private TextField inputPickUpTimeH;
 
+    /**
+     * Reference to the textField to set and display the time in minutes of a New PickUp Action.
+     */
     @FXML
     private TextField inputPickUpTimeM;
 
+    /**
+     * Reference the map in view.
+     */
     @FXML
     private GoogleMapView mapView;
 
+    /**
+     * Reference to the Label that describe the current Duration of deliveryProcess.
+     */
     @FXML
     private Label dpDuration;
 
+    /**
+     * Reference to the Label that describe the current Distance of deliveryProcess.
+     */
     @FXML
     private Label dPDistance;
 
+    /**
+     * Reference to the Label that describe the Name of PickUpPoint of current deliveryProcess.
+     */
     @FXML
     private Label dPPuPoint;
 
+    /**
+     * Reference to the Label that describe the Name of DeliveryPoint of current deliveryProcess.
+     */
     @FXML
     private Label dPDPoint;
 
+    /**
+     * Reference to the Label that describe the duration of PickUp of current deliveryProcess.
+     */
     @FXML
     private Label dpPUDuration;
 
+    /**
+     * Reference to the Label that describe the duration of Delivery of current deliveryProcess.
+     */
     @FXML
     private Label dpDDuration;
 
+    /**
+     * Reference to the Label that describe the arivalTime of current Tour.
+     */
     @FXML
     private Label arrivalTime;
 
+    /**
+     * Reference to the Label that describe the number of total deliveries of current deliveryProcess.
+     */
     @FXML
     private Label numberDeliveries;
 
+    /**
+     * Reference to the Label that describe the startTime of current Tour.
+     */
     @FXML
     private Label startTime;
 
+    /**
+     * gogoleMap Object that we use to show a map.
+     */
     private GoogleMap map;
 
-    // Local Save of Tour.
+    /**
+     * Local Save of Tour
+     */
     private Tour tourLoaded;
 
+    /**
+     * Local Save of current selected DeliveryProcess
+     */
     private DeliveryProcess deliveryProcessLoaded;
 
     @Override
