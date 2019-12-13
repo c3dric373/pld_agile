@@ -14,17 +14,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import model.data.*;
+import model.data.Point;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.List;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
@@ -313,7 +319,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 displayMap();
                 drawAllActionPoints();
                 drawFullTour();
-                drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
+                drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 2);
             } else {
                 this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
@@ -364,7 +370,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void drawFullTour() {
         setBigLabels();
         map.clearMarkers();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
+        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()),0.4,1);
         drawAllActionPoints();
     }
 
@@ -385,7 +391,26 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    public void drawPolyline(final MVCArray mvcArray, String color, double opacity) {
+    public void drawPolyline(final MVCArray mvcArray, double opacity, int type) {
+
+        String color = "blue";
+
+        switch (type) {
+            // 1 = Draw Full tour
+            case 1 : color = "blue";
+                    break;
+            // 2 = Draw First journey
+            case 2 : color = "red";
+                     break;
+            // 3 = Draw End journey
+            case 3 : color = "black";
+                    break;
+            // 4 = Draw with Auto color
+            case 4 : if(deliveryProcessLoaded != null) color = pointToColour(deliveryProcessLoaded.getPickUP());
+                    break;
+
+        }
+
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvcArray)
                 .strokeColor(color)
@@ -558,7 +583,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     private void handelTableSelection(ActionPoint newValue) {
+        pointToColour(newValue);
         if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
+            // Manage the end of the tour.
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
             List<Journey> journeyList = new ArrayList<Journey>();
@@ -566,7 +593,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             displayMap();
             drawAllActionPoints();
             drawFullTour();
-            drawPolyline(getMCVPathFormJourneyListe(journeyList), "black", 0.5);
+            drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 3);
         } else {
             mainApp.showDeliveryProcess(newValue, tourLoaded);
         }
@@ -628,22 +655,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public String pointToColour(Point point) {
-
-        //TODO MARCHE PAS
-
-        String pointString = String.valueOf(point.getId());
-        int hash = 0;
-        for (int i = 0; i < pointString.length(); i++) {
-            hash = pointString.charAt(i) + ((hash << 5) - hash);
-        }
-        String colour = "#";
-        for (int i = 0; i < 3; i++) {
-            int value = (hash >> (i * 8)) & 0xFF;
-            colour += ("00" + value).substring(-2);
-        }
-        return "red";
+    public String pointToColour(ActionPoint actionPoint) {
+        int numberFromId = (int)(actionPoint.getId() * 6.8 * 10000 * Math.pow(2,actionPoint.getId()));
+        Color color = new Color(numberFromId).brighter();
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
-
 
 }
