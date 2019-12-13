@@ -67,4 +67,11 @@ public class ActionPoint implements GenData {
         genDataVisitor.visit(this);
     }
 
+    public ActionPoint deepClone() {
+        ActionPoint result = new ActionPoint(this.time, this.location, this.actionType);
+        result.setId(this.id);
+        result.setPassageTime(this.passageTime);
+        return result;
+
+    }
 }

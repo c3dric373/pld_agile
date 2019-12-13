@@ -1,5 +1,6 @@
 package model.data;
 
+import com.rits.cloning.Cloner;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.Validate;
@@ -61,5 +62,4 @@ public class Journey {
         this.points = newPoints;
         this.minLength = newMinLength;
     }
-
 }
