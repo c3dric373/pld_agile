@@ -54,11 +54,21 @@ public class IteratorSeq2 implements Iterator<Integer> {
         }
     }
 
+    /**
+     * To verify whether the permutation is finished or not.
+     *
+     * @return hasNext
+     */
     @Override
     public boolean hasNext() {
         return nbCandidates > 0;
     }
 
+    /**
+     * To get the next permutation.
+     *
+     * @return the next permutation
+     */
     @Override
     public Integer next() {
         return candidates[--nbCandidates];

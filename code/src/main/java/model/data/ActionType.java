@@ -1,6 +1,5 @@
 package model.data;
 
-
 /**
  * This Enum serves to differentiate between picking a package up before the
  * delivery and delivering the package.

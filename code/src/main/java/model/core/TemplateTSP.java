@@ -9,10 +9,26 @@ public abstract class TemplateTSP implements TSP {
     private int lowestCost = 0;
     private Boolean timeLimitExceeded = false;
 
+    /**
+     * Return whether the time limit is exceeded or not.
+     *
+     * @return timeLimitExceeded
+     */
     public Boolean getTimeLimitExceeded() {
         return timeLimitExceeded;
     }
 
+    /**
+     * Search for a circle which has the lowest cost to visit every node.
+     * (between 0 and nbNodes - 1)
+     *
+     * @param timeLimit time limit for the resolution
+     * @param nbNodes   number of nodes
+     * @param cost      cost[i][j] = the duration from i to j, with 0 <= i <
+     *                  nbNodes and 0 <= j < nbNodes
+     * @param duration  duration[i] = duration to visit the i-th node, with 0
+     *                  <= i < nbNodes
+     */
     public void searchSolution(int timeLimit, int nbNodes, int[][] cost, int[] duration) {
         try {
             timeLimitExceeded = false;
@@ -29,12 +45,23 @@ public abstract class TemplateTSP implements TSP {
         }
     }
 
+    /**
+     * Return the node visited on i-th position.
+     *
+     * @param i an index
+     * @return the node selected
+     */
     public Integer getBestSolution(int i) {
         if ((bestSolution == null) || (i < 0) || (i >= bestSolution.length))
             return null;
         return bestSolution[i];
     }
 
+    /**
+     * Return the lowestCost.
+     *
+     * @return lowestCost
+     */
     public int getLowestCost() {
         return lowestCost;
     }
