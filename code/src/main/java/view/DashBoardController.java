@@ -569,7 +569,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    private void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
+    public void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
