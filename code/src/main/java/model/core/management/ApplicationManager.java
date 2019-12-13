@@ -85,4 +85,7 @@ public interface ApplicationManager {
      * @param deliveryProcess
      */
     void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess);
+
+    void undo();
+
 }

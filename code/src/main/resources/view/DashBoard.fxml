@@ -80,6 +80,7 @@
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="82.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="94.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="0.0" prefWidth="108.0" />
+                        <ColumnConstraints />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
@@ -123,6 +124,8 @@
                         <Label fx:id="numberDeliveries" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="arrivalTime" styleClass="label-bright" GridPane.columnIndex="3" />
                         <Button fx:id="calculateTour" defaultButton="true" mnemonicParsing="false" onAction="#calculateTour" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                         <Button fx:id="UNDO" defaultButton="true" mnemonicParsing="false" onAction="#undo" prefHeight="26.0" prefWidth="114.0" text="UNDO" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+
                      </children>
                   </GridPane>
                   <GridPane layoutX="34.0" layoutY="215.0" prefHeight="110.0" prefWidth="421.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="20.0">
@@ -193,7 +196,7 @@
                </children>
             </AnchorPane>
              <AnchorPane id="mapPane" fx:id="anchorMap" styleClass="background">
-                 <GoogleMapView fx:id="mapView" prefHeight="750.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                 <GoogleMapView fx:id="mapView" prefHeight="750.0" prefWidth="761.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
              </AnchorPane>
          </items>
       </SplitPane>

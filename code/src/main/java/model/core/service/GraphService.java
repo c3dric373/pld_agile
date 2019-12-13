@@ -2,6 +2,8 @@ package model.core.service;
 
 import model.core.TSP;
 import model.core.TSP3;
+import model.core.management.ApplicationManager;
+import model.core.management.ApplicationManagerImpl;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
@@ -158,7 +160,10 @@ public class GraphService {
         int curIndex = arriveIndex;
         double minLength = resDijkstra.get(arriveIndex).getDist();
         // if it is impossible to get from the start point to the arrival point, return null
-        Validate.isTrue(minLength != Double.POSITIVE_INFINITY, "can't reach from point " + idStart + " to point " + idArrive);
+        //if(minLength == Double.POSITIVE_INFINITY){
+          //  ApplicationManagerImpl.sendMessage(ErrorMessage.CANT_REACH_POINT);
+        //}
+       // Validate.isTrue(minLength != Double.POSITIVE_INFINITY, "can't reach from point " + idStart + " to point " + idArrive);
         // get the REVERSE order of the path one by one (start with the arrival point)
         while (true) {
             journeyPoints.add(points.get(curIndex));
@@ -350,10 +355,10 @@ public class GraphService {
             for (Point point : points) {
                 boolean notFound = true;
                 for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
-                    if (deliveryProcess.getDelivery().getLocation() == point) {
+                    if (deliveryProcess.getDelivery().getLocation().getId() == point.getId()) {
                         actionPoints.add(deliveryProcess.getDelivery());
                         notFound = false;
-                    } else if (deliveryProcess.getPickUP().getLocation() == point) {
+                    } else if (deliveryProcess.getPickUP().getLocation().getId() == point.getId()) {
                         actionPoints.add(deliveryProcess.getPickUP());
                         notFound = false;
                     }
@@ -367,7 +372,7 @@ public class GraphService {
             tour.setJourneyList(journeys1);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("graph and tour are incompatible");
+
         }
         return tour;
     }

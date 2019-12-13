@@ -1,4 +1,5 @@
 package model.data;
+
 import lombok.Getter;
 
 /**
@@ -119,8 +120,9 @@ public enum ErrorMessage implements GenData {
 
     GRAPH_TOUR_INCOMPATIBLE("Graph and Tour are incompatible"),
 
-    CANNOT_DELETE_BASE("Cannot delete Base Point");
+    CANNOT_DELETE_BASE("Cannot delete Base Point"),
 
+    CANT_REACH_POINT("Point is unreachable ");
     /**
      * The Error message that can be displayed to the user.
      */

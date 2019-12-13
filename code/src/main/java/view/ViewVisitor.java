@@ -1,6 +1,7 @@
 package view;
 
 import javafx.scene.control.Alert;
+import model.core.service.TourService;
 import model.data.*;
 import model.data.Point;
 
@@ -14,9 +15,10 @@ public class ViewVisitor implements GenDataVisitor {
     public void visit(final Tour tour) {
         dashBoardController.setTour(tour);
         if (tour.getJourneyList() == null) {
-            System.out.println("---load tour wihtout journey list---");
+            System.out.println("---load tour without journey list---");
             dashBoardController.displayLoadedDeliveryProcess();
         } else {
+
             dashBoardController.clearAll();
             dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
