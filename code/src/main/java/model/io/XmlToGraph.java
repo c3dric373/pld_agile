@@ -1,9 +1,7 @@
 package model.io;
 
-import model.core.management.ApplicationManager;
 import model.core.management.ApplicationManagerImpl;
 import model.data.*;
-import org.apache.commons.lang.Validate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -77,7 +75,7 @@ public class XmlToGraph {
     public ArrayList<Point> getGraphFromXml(final String path) {
         nodes = new ArrayList<Point>();
 
-        if (path == null ){
+        if (path == null) {
             ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
             return nodes;
         }
@@ -156,7 +154,7 @@ public class XmlToGraph {
      */
     public Tour getDeliveriesFromXml(final String path) {
         deliveries = new ArrayList<DeliveryProcess>();
-        if( path == null) {
+        if (path == null) {
             ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
             return tour;
         }

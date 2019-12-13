@@ -9,10 +9,15 @@ import java.sql.Time;
 
 @Getter
 @EqualsAndHashCode
-public class ActionPoint implements GenData{
+public class ActionPoint implements GenData {
+    /**
+     * empty String.
+     */
+    private static final String EMPTY_STRING = "";
 
-    private final String EMPTY_STRING = "";
-
+    /**
+     * id of the ActionPoint.
+     */
     @Setter
     private int id;
 
