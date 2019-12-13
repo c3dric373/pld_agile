@@ -1,7 +1,6 @@
 package model.core.service;
 
 import model.core.TSP;
-import model.core.TSP3;
 import model.core.TSP4;
 import model.data.*;
 import org.apache.commons.lang.Validate;
@@ -13,6 +12,14 @@ import java.util.Map;
 
 public class GraphService {
 
+    /**
+     * To find the nearest point in the graph to the selected point.
+     *
+     * @param graph     a specific graph
+     * @param longitude longitude of the point
+     * @param latitude  latitude of the point
+     * @return
+     */
     public static Point findNearestPoint(final Graph graph,
                                          final double longitude,
                                          final double latitude) {
@@ -22,18 +29,20 @@ public class GraphService {
         for (final Point p : graph.getPoints()) {
             double differenceLat = p.getLatitude() - latitude;
             double differenceLong = p.getLongitude() - longitude;
-            if (differenceLat * differenceLat + differenceLong * differenceLong < difference) {
-                difference =
-                        differenceLat * differenceLat + differenceLong * differenceLong;
+            if (differenceLat * differenceLat
+                    + differenceLong * differenceLong < difference) {
+                difference = differenceLat * differenceLat
+                        + differenceLong * differenceLong;
                 nearestPoint = p;
             }
         }
-        Validate.notNull(nearestPoint, "findNearestPoint can't return null");
+        Validate.notNull(nearestPoint,
+                "findNearestPoint can't return null");
         return nearestPoint;
     }
 
     /**
-     * Find the center of the graph thanks to itself
+     * Find the center of the graph thanks to itself.
      *
      * @param graph The graph
      * @return the center for the points
@@ -62,12 +71,16 @@ public class GraphService {
 
         double latitudeCenter = (latitudeMax + latitudeMin) / 2;
         double longitudeCenter = (longitudeMax + longitudeMin) / 2;
-        Point centerPoint = new Point(1, latitudeCenter, longitudeCenter);
-        System.out.println(latitudeCenter + "  " + longitudeCenter);
 
         return new Point(1, latitudeCenter, longitudeCenter);
     }
 
+    /**
+     * Verify whether a point is in the graph or not.
+     *
+     * @param newPoint the selected point
+     * @return whether a point is in the graph or not
+     */
     public static boolean isInMap(final Point newPoint) {
         //todo
         return false;
@@ -75,7 +88,7 @@ public class GraphService {
 
     /**
      * Dijkstra shortest path
-     * the shortest path from start point to other points
+     * the shortest path from start point to other points.
      *
      * @param graph   Map which contains a list of points with segments
      *                connect to each of them
@@ -126,7 +139,9 @@ public class GraphService {
             for (Segment s : curPoint.getSegments()) {
                 long idOther = s.getIdEnd();
                 int indexOther = map.get(idOther);
-                if (flag[indexOther]) continue;
+                if (flag[indexOther]) {
+                    continue;
+                }
                 double tmp = curPoint.getLengthTo(idOther);
                 tmp = (tmp == Double.POSITIVE_INFINITY) ? tmp : tmp + min;
                 if (tmp < tuples.get(indexOther).getDist()) {
@@ -139,7 +154,7 @@ public class GraphService {
     }
 
     /**
-     * Create the shortest path from one point to another
+     * Create the shortest path from one point to another.
      *
      * @param graph       Map which contains a list of points with segments
      *                    connect to each of them
@@ -178,7 +193,9 @@ public class GraphService {
         // arrival point)
         while (true) {
             journeyPoints.add(points.get(curIndex));
-            if (curIndex == startIndex) break;
+            if (curIndex == startIndex) {
+                break;
+            }
             curIndex = resDijkstra.get(curIndex).getPrev();
         }
 //        System.out.printf("Shortest Path from %d to %d in REVERSE
@@ -194,11 +211,11 @@ public class GraphService {
     }
 
     /**
-     * Apply dijkstra to all the points in the tour
+     * Apply dijkstra to all the points in the tour.
      *
      * @param tour  A specific tour
      * @param graph Map which contains a list of points with segments connect
-     *             to each of them
+     *              to each of them
      * @return List of a number of lists of tuple which contains the previous
      * point index and the distance
      * in the shortest path from the start point to each point
@@ -216,10 +233,12 @@ public class GraphService {
                 point = tour.getBase();
             } else if (i < nb + 1) {
                 // points pick up
-                point = tour.getDeliveryProcesses().get(i - 1).getPickUP().getLocation();
+                point = tour.getDeliveryProcesses().
+                        get(i - 1).getPickUP().getLocation();
             } else {
                 // points delivery
-                point = tour.getDeliveryProcesses().get(i - nb - 1).getDelivery().getLocation();
+                point = tour.getDeliveryProcesses().
+                        get(i - nb - 1).getDelivery().getLocation();
             }
             resDijkstra.add(dijkstra(graph, point.getId()));
         }
@@ -227,7 +246,7 @@ public class GraphService {
     }
 
     /**
-     * Get a matrix of costs between each two points of the tour
+     * Get a matrix of costs between each two points of the tour.
      *
      * @param tour        A specific tour
      * @param graph       Map which contains a list of points with segments
@@ -242,34 +261,37 @@ public class GraphService {
         Validate.notNull(graph, "graph can't be null");
         Validate.notNull(resDijkstra, "resDijkstra can't be null");
         Map<Long, Integer> map = graph.getMap();
-        int nbDeliveryProcesses = tour.getDeliveryProcesses().size();
+        int nbDP = tour.getDeliveryProcesses().size();
         int[][] cost =
-                new int[2 * nbDeliveryProcesses + 1][2 * nbDeliveryProcesses + 1];
-        for (int i = 0; i < 2 * nbDeliveryProcesses + 1; i++) {
-            for (int j = 0; j < 2 * nbDeliveryProcesses + 1; j++) {
+                new int[2 * nbDP + 1][2 * nbDP + 1];
+        for (int i = 0; i < 2 * nbDP + 1; i++) {
+            for (int j = 0; j < 2 * nbDP + 1; j++) {
                 Point point;
                 if (j == 0) {
                     // point base
                     point = tour.getBase();
-                } else if (j < nbDeliveryProcesses + 1) {
+                } else if (j < nbDP + 1) {
                     // points pick up
-                    point = tour.getDeliveryProcesses().get(j - 1).getPickUP().getLocation();
+                    point = tour.getDeliveryProcesses().
+                            get(j - 1).getPickUP().getLocation();
                 } else {
                     // points delivery
-                    point = tour.getDeliveryProcesses().get(j - nbDeliveryProcesses - 1).getDelivery().getLocation();
+                    point = tour.getDeliveryProcesses().
+                            get(j - nbDP - 1).getDelivery().getLocation();
                 }
                 int index = map.get(point.getId());
                 double distance = resDijkstra.get(i).get(index).getDist();
                 cost[i][j] = (distance == Double.POSITIVE_INFINITY) ?
                         Integer.MAX_VALUE :
-                        (int) (resDijkstra.get(i).get(index).getDist() / JourneyService.TRAVEL_SPEED);
+                        (int) (resDijkstra.get(i).get(index).getDist()
+                                / JourneyService.TRAVEL_SPEED);
             }
         }
         return cost;
     }
 
     /**
-     * Get a list of duration for each point of the tour
+     * Get a list of duration for each point of the tour.
      *
      * @param tour A specific tour
      * @return
@@ -283,10 +305,12 @@ public class GraphService {
             Time time;
             if (i < nb + 1) {
                 // points pick up
-                time = tour.getDeliveryProcesses().get(i - 1).getPickUP().getTime();
+                time = tour.getDeliveryProcesses().
+                        get(i - 1).getPickUP().getTime();
             } else {
                 // points delivery
-                time = tour.getDeliveryProcesses().get(i - nb - 1).getDelivery().getTime();
+                time = tour.getDeliveryProcesses().
+                        get(i - nb - 1).getDelivery().getTime();
             }
             duration[i] =
                     (int) ((time.getTime() - referenceTime.getTime()) / 1000);
@@ -296,7 +320,7 @@ public class GraphService {
     }
 
     /**
-     * Get the list of journeys for a tour
+     * Get the list of journeys for a tour.
      *
      * @param tour      A specific tour
      * @param graph     Map which contains a list of points with segments
@@ -330,11 +354,15 @@ public class GraphService {
             } else if (indexStartTour < nbNode / 2 + 1) {
                 // points pick up
                 idStart =
-                        tour.getDeliveryProcesses().get(indexStartTour - 1).getPickUP().getLocation().getId();
+                        tour.getDeliveryProcesses().
+                                get(indexStartTour - 1).
+                                getPickUP().getLocation().getId();
             } else {
                 // points delivery
                 idStart =
-                        tour.getDeliveryProcesses().get(indexStartTour - 1 - nbNode / 2).getDelivery().getLocation().getId();
+                        tour.getDeliveryProcesses().
+                                get(indexStartTour - 1 - nbNode / 2).
+                                getDelivery().getLocation().getId();
             }
             long idArrive;
             if (indexArriveTour == 0) {
@@ -343,11 +371,15 @@ public class GraphService {
             } else if (indexArriveTour < nbNode / 2 + 1) {
                 // points pick up
                 idArrive =
-                        tour.getDeliveryProcesses().get(indexArriveTour - 1).getPickUP().getLocation().getId();
+                        tour.getDeliveryProcesses().
+                                get(indexArriveTour - 1).
+                                getPickUP().getLocation().getId();
             } else {
                 // points delivery
                 idArrive =
-                        tour.getDeliveryProcesses().get(indexArriveTour - 1 - nbNode / 2).getDelivery().getLocation().getId();
+                        tour.getDeliveryProcesses().
+                                get(indexArriveTour - 1 - nbNode / 2).
+                                getDelivery().getLocation().getId();
             }
             Journey journey = getShortestPath(graph, idStart, idArrive,
                     resDijkstra.get(indexStartTour));
@@ -357,11 +389,11 @@ public class GraphService {
     }
 
     /**
-     * Calculate the shortest path for the the tour
+     * Calculate the shortest path for the the tour.
      *
      * @param tour  A specific tour
      * @param graph Map which contains a list of points with segments connect
-     *             to each of them
+     *              to each of them
      * @return A tour with a list of Journey and a list of actionPoint
      */
     public Tour calculateTour(final Tour tour,
