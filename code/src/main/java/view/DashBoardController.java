@@ -83,10 +83,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private GoogleMapView mapView;
 
-
-    @FXML
-    private Label dpNumber;
-
     @FXML
     private Label dpDuration;
 
