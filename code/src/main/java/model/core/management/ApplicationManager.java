@@ -18,35 +18,44 @@ public interface ApplicationManager {
      *
      * @param file The map uploaded by the user.
      */
-    void loadMap(final File file);
+    void loadMap(File file);
 
-    void setObserver(final UserInterface userInterface);
+    /**
+     * Set the Observer.
+     *
+     * @param userInterface UserInterface
+     */
+    void setObserver(UserInterface userInterface);
 
     /**
      * Loads a tour and creates all necessary components for the project.
      *
      * @param file The tour uploaded by the user.
      */
-    void loadTour(final File file);
+    void loadTour(File file);
 
+    /**
+     * Calculate the Tour.
+     */
     void calculateTour();
 
     /**
-     * Adds a new DeliveryProcess to a Tour
+     * Adds a new DeliveryProcess to a Tour.
+     *
      * @param tour current tour
      * @param pickUpPoint pickUp Point of the new DeliveryProcess to add
      * @param deliveryPoint Delivery Point of the new DeliveryProcess to add
      */
-    void addDeliveryProcess(final Tour tour,
-                                   final ActionPoint pickUpPoint,
-                                   final ActionPoint deliveryPoint);
+    void addDeliveryProcess(Tour tour,
+                                   ActionPoint pickUpPoint,
+                                   ActionPoint deliveryPoint);
 
     /**
      * Deletes a {@link  DeliveryProcess}to an already uploaded tour.
      *
      * @param deliveryProcess the {@link DeliveryProcess} to delete.
      */
-    void deleteDeliveryProcess(final DeliveryProcess deliveryProcess);
+    void deleteDeliveryProcess(DeliveryProcess deliveryProcess);
 
     /**
      * Changes the delivery order of the actionPoints.
@@ -54,7 +63,7 @@ public interface ApplicationManager {
      * @param actionPoints the whole list of actionPoints of the tour stored in
      *                     the {@link model.data.ProjectData}
      */
-    void changeDeliveryOrder(final List<ActionPoint> actionPoints);
+    void changeDeliveryOrder(List<ActionPoint> actionPoints);
 
     /**
      * Changes the position of a point in a tour showed in the map.
@@ -62,27 +71,33 @@ public interface ApplicationManager {
      * @param oldPoint the old position
      * @param newPoint the new position
      */
-    void changePointPosition(final ActionPoint oldPoint, final Point newPoint);
+    void changePointPosition(ActionPoint oldPoint, Point newPoint);
 
     /**
      * Finds nearest point of a given point with lat and long.
      *
      * @param latitude  latitude of the point
      * @param longitude longitude of the point
+     * @param actionType Action Type of the Point
+     * @param actionTime Action Time of the Point
      */
-    void findNearestPoint(final double latitude, final double longitude,
-                          final ActionType actionType, final Time actionTime);
+    void findNearestPoint(double latitude, double longitude,
+                          ActionType actionType, Time actionTime);
 
     /**
      * Get the delivery process correspondent to the given action point.
+     *
      * @param actionPoint a pick up point or a delivery point.
+     * @param deliveryProcesses list of Delivery Process.
      */
-    void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint);
+    void getDeliveryProcess(List<DeliveryProcess> deliveryProcesses,
+                            ActionPoint actionPoint);
 
     /**
-     * Get the journeyList of a deliveryProcess
-     * @param journeyList
-     * @param deliveryProcess
+     * Get the journeyList of a deliveryProcess.
+     *
+     * @param journeyList List of journey
+     * @param deliveryProcess Delivery Process
      */
     void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess);
 

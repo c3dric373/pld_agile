@@ -9,7 +9,7 @@ import java.sql.Time;
 import java.util.List;
 
 /**
- * This class represent the shortest path from one point to another
+ * This class represent the shortest path from one point to another.
  */
 @Getter
 @Setter
