@@ -96,7 +96,7 @@ public class TourService {
             throw new IllegalArgumentException("actonPoints list not "
                     + "of same size");
         }
-        if (TourService.checkChangeOrder(tour, actionPoints)) {
+        if (!TourService.checkChangeOrder(tour, actionPoints)) {
             throw new IllegalArgumentException("illegal order change");
         }
         GraphService graphService = new GraphService();
