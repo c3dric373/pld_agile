@@ -158,9 +158,11 @@ public class XmlToGraph {
         deliveries = new ArrayList<DeliveryProcess>();
         if( path == null) {
             ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_NULL);
+            return tour;
         }
         if (path.equals("")) {
-            ApplicationManagerImpl.sendMessage(ErrorMessage.XML_LOAD_ERROR);
+            ApplicationManagerImpl.sendMessage(ErrorMessage.PATH_EMPTY);
+            return tour;
         }
 
         // Get an instance of class "DocumentBuilderFactory".

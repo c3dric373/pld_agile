@@ -60,7 +60,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Instantiates an Application Manager.
      */
-    ApplicationManagerImpl() {
+    public ApplicationManagerImpl() {
         xmlToGraph = new XmlToGraph();
         projectState = ProjectState.INITIALIZED;
         journeyService = new JourneyService();
