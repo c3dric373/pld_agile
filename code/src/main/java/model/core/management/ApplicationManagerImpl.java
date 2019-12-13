@@ -195,13 +195,16 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        if (deliveryProcess == null) {
+            sendMessage(ErrorMessage.CANNOT_DELETE_BASE);
+
+        }
         ActionType actionType = deliveryProcess.getPickUP().getActionType();
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
-        } else if (deliveryProcess == null) {
-            sendMessage(ErrorMessage.DELIVERY_PROCESS_NULL);
-        } else if (actionType == ActionType.BASE) {
+        } else if (actionType == ActionType.BASE
+                || actionType == ActionType.END) {
             sendMessage(ErrorMessage.CANNOT_DELETE_BASE);
         } else {
             Tour newTour;
