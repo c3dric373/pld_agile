@@ -15,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import lombok.Getter;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
@@ -35,6 +34,8 @@ public class DashBoardController implements Initializable,
      * Empty String.
      */
     private static final String EMPTY_STRING = "";
+
+    private static final String ZERO_STRING = "0";
 
     /**
      * The style of our map.
@@ -57,26 +58,28 @@ public class DashBoardController implements Initializable,
      */
     private Polyline poly;
 
-    public void resetTour(){
-        actionPointTableView.getItems().clear();
-        startTime.setText("");
-        numberDeliveries.setText("");
-        arrivalTime.setText("");
-        clearRectangleColor();
-    }
-
     // Reference to the main application
     private UserInterface mainApp;
 
     // List des ActionPoints en Observable pour la view
-    private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
+    private ObservableList<ActionPoint> actionPoints =
+            FXCollections.observableArrayList();
 
     // Manage New DeliveryProcess
     private ActionPoint newPickUpActionPoint = null;
+
     private ActionPoint newDeliveryActionPoint = null;
+
     // Markers of new DeliveryProcess
     private Marker newPickUpPointMarker = null;
+
     private Marker newDeliveryPointMarker = null;
+
+    private static double LYON_LATITUDE = 45.771606;
+
+    private static double LYON_LONGITUDE = 4.880959;
+
+    private static double ZOOM_SETTING = 13;
 
     @FXML
     private TableView<ActionPoint> actionPointTableView;
@@ -141,23 +144,6 @@ public class DashBoardController implements Initializable,
     @FXML
     private Label startTime;
 
-    // Reference to the main application
-    private UserInterface mainApp;
-
-    // List des ActionPoints en Observable pour la view
-    private ObservableList<ActionPoint> actionPoints =
-            FXCollections.observableArrayList();
-
-    // Manage New DeliveryProcess
-    private ActionPoint newPickUpActionPoint = null;
-
-    private ActionPoint newDeliveryActionPoint = null;
-
-    // Markers of new DeliveryProcess
-    private Marker newPickUpPointMarker = null;
-
-    private Marker newDeliveryPointMarker = null;
-
     private GoogleMap map;
 
     // Local Save of Tour.
@@ -171,12 +157,19 @@ public class DashBoardController implements Initializable,
         // Initialize the actionPoints table with the 3 columns.
         actionPointTableView.setItems(null);
 
-        deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getId())));
-        deliveryType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
+        deliveryRank.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(cellData.
+                        getValue().getId())));
+        deliveryType.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getActionType().
+                        toString()));
 
-        timeAtPoint.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
+        timeAtPoint.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPassageTime()));
 
-        actionPointTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> handelTableSelection(newValue));
+        actionPointTableView.getSelectionModel().selectedItemProperty().
+                addListener((observable, oldValue, newValue) ->
+                        handelTableSelection(newValue));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -186,9 +179,23 @@ public class DashBoardController implements Initializable,
     public void mapInitialized() {
         //Set the initial properties of the map.
         MapOptions mapOptions = new MapOptions();
+        mapOptions.center(new LatLong(LYON_LATITUDE, LYON_LONGITUDE))
+                .styleString(MAP_STYLE).overviewMapControl(false)
+                .mapType(MapTypeIdEnum.ROADMAP).panControl(false)
+                .rotateControl(false).scaleControl(false)
+                .streetViewControl(false).zoomControl(false).zoom(ZOOM_SETTING);
+    }
 
-        //TODO Create a graph center and pass it to display Map;
-        mapOptions.center(new LatLong(45.771606, 4.880959)).styleString(MAP_STYLE).overviewMapControl(false).mapType(MapTypeIdEnum.ROADMAP).panControl(false).rotateControl(false).scaleControl(false).streetViewControl(false).zoomControl(false).zoom(13);
+    /**
+     * Resets the information to be displayed to zero. Should be called after
+     * a new map was loaded.
+     */
+    void resetTour() {
+        actionPointTableView.getItems().clear();
+        startTime.setText(EMPTY_STRING);
+        numberDeliveries.setText(EMPTY_STRING);
+        arrivalTime.setText(EMPTY_STRING);
+        clearRectangleColor();
     }
 
     /**
@@ -206,8 +213,7 @@ public class DashBoardController implements Initializable,
      * confirmed the {@link UserInterface} is invoked.
      */
     public void deleteDp() {
-        if (showConfirmationAlert("Are you sur you want to delete this " +
-                "Delivery Process ?")) {
+        if (showConfirmationAlert()) {
             this.mainApp.deleteDp(deliveryProcessLoaded);
         }
     }
@@ -231,7 +237,7 @@ public class DashBoardController implements Initializable,
      * {@link UserInterface} will be invoked.
      */
     public void modifyDeliveryOrder() {
-        int result = showModifiedDeliveryDialog(deliveryProcessLoaded);
+        int result = showModifiedDeliveryDialog();
         int index = actionPointTableView.getSelectionModel().getFocusedIndex();
         if (result != -1) {
             List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
@@ -245,7 +251,8 @@ public class DashBoardController implements Initializable,
      * Sets the important labels on the top of the view.
      */
     private void setBigLabels() {
-        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
+        numberDeliveries.setText(String.valueOf(tourLoaded
+                .getDeliveryProcesses().size()));
         startTime.setText(tourLoaded.getStartTime().toString());
 
         // Checking whether the tour was calculated or not, if yes set the
@@ -253,7 +260,8 @@ public class DashBoardController implements Initializable,
         if (tourLoaded.getCompleteTime() != null) {
             final List<Journey> journeys = tourLoaded.getJourneyList();
             final int journeysLength = journeys.size();
-            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime()
+                    .toString());
         } else {
             arrivalTime.setText(EMPTY_STRING);
         }
@@ -273,7 +281,7 @@ public class DashBoardController implements Initializable,
      * In order to display the ActionPoints of a Tour, before the latter was
      * optimized, we need to acces those. This is done by this methods. The Ac
      */
-    public void createFakeActionPointList() {
+    void createFakeActionPointList() {
         List<ActionPoint> listActionPoints = new ArrayList<>();
 
         // Create a BASE and END actionPoint.
@@ -322,7 +330,8 @@ public class DashBoardController implements Initializable,
      * @param mType       the {@link MarkerType}.
      * @return the created {@link Marker}
      */
-    Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {
+    private Marker createMarker(final ActionPoint actionPoint,
+                                final MarkerType mType) {
         String label = mType.firstLetter;
         if (actionPoint.getActionType() != ActionType.BASE &&
                 actionPoint.getActionType() != ActionType.END) {
@@ -345,19 +354,27 @@ public class DashBoardController implements Initializable,
      */
     public void addNewDeliveryProcess() {
         if (canAddDeliveryProcess()) {
-            if (newPickUpActionPoint != null && newDeliveryActionPoint != null) {
-                newPickUpActionPoint.setTime(Utils.parseStringToTime(inputPickUpTimeH.getText(), inputPickUpTimeM.getText()));
-                newDeliveryActionPoint.setTime(Utils.parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
-                this.mainApp.addDeliveryProcess(tourLoaded,
+            if (newPickUpActionPoint != null
+                    && newDeliveryActionPoint != null) {
+                newPickUpActionPoint.setTime(Utils.parseStringToTime(
+                        inputPickUpTimeH.getText(),
+                        inputPickUpTimeM.getText()));
+                newDeliveryActionPoint.setTime(Utils.parseStringToTime(
+                        inputDeliveryTimeH.getText(),
+                        inputDeliveryTimeM.getText()));
+                this.mainApp.addDeliveryProcess(
                         newPickUpActionPoint, newDeliveryActionPoint);
             } else {
-                showAlert("Action Impossible", "Error :", "The Delivery " +
-                        "Process is not created", Alert.AlertType.ERROR);
+                showAlert("Action Impossible", "Error :",
+                        "The Delivery " +
+                                "Process is not created"
+                );
             }
         } else {
-            showAlert("Action Impossible", "Error :", "All the fields to " +
-                            "create a delivery process are " + "not completes",
-                    Alert.AlertType.ERROR);
+            showAlert("Action Impossible", "Error :",
+                    "All the fields to create a delivery process are "
+                            + "not completes"
+            );
         }
     }
 
@@ -365,7 +382,7 @@ public class DashBoardController implements Initializable,
      * Displays a selected {@link DeliveryProcess} to the User. First useful
      * information is set and displayed.
      *
-     * @param deliveryProcess
+     * @param deliveryProcess the {@link DeliveryProcess} to sho
      */
     void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
         deliveryProcessLoaded = deliveryProcess;
@@ -395,11 +412,10 @@ public class DashBoardController implements Initializable,
                 drawAllActionPoints();
                 drawFullTour();
                 clearRectangleColor();
-                drawPolyline(getMCVPathFormJourneyListe(journeyList),
+                drawPolyline(getMCVPathFormJourneyList(journeyList),
                         0.5, 2);
             } else {
-                this.mainApp.getJourneyList(tourLoaded.getJourneyList(),
-                        deliveryProcess);
+                this.mainApp.getJourneyList(deliveryProcess);
                 if (deliveryProcess.getTime() != null) {
                     dpDuration.setText(deliveryProcess.getTime().toString());
                 }
@@ -410,54 +426,70 @@ public class DashBoardController implements Initializable,
         }
     }
 
+    /**
+     * Handles the tasks after the user clicked on the button load map:
+     * presents a file chooser to the user and hands accordingly.
+     */
     public void handleLoadMap() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Map XML");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.
+                ExtensionFilter("XML", "*.xml"));
         final File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
             if (selectedFile.getName().contains("xml")) {
-                System.out.println("File selected: " + selectedFile.getName());
                 this.mainApp.loadMap(selectedFile);
             } else {
-                System.out.println("Error Loading not xml File");
+                showAlert("File Selection", "Error", "Error" +
+                        " Loading not xmFile");
             }
-        } else {
-            System.out.println("File selection cancelled.");
         }
     }
 
+    /**
+     * Handles the tasks after the user clicked on the button load tour:
+     * presents a file chooser to the user and hands accordingly.
+     */
     public void handleLoadTour() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a Tour XML");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.
+                ExtensionFilter("XML", "*.xml"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
             if (selectedFile.getName().contains("xml")) {
-                System.out.println("File selected: " + selectedFile.getName());
                 this.mainApp.loadDeliveryRequest(selectedFile);
             } else {
-                System.out.println("Error Loading not xml File");
+                showAlert("File Selection", "Error", "Error" +
+                        " Loading not xmFile");
             }
-        } else {
-            System.out.println("File selection cancelled.");
         }
     }
 
+    /**
+     * Handles the ActionPoint Selection on the tableView. The goal is to
+     * display information about the corresponding {@link DeliveryProcess}.
+     *
+     * @param newValue the selected {@link ActionPoint}
+     */
     private void handelTableSelection(final ActionPoint newValue) {
         Utils.pointToColour(newValue);
-        if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
+        if (newValue != null && newValue.getActionType() == ActionType.END &&
+                tourLoaded.getJourneyList() != null) {
             // Manage the end of the tour.
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
-            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance())
+                    + " m");
             List<Journey> journeyList = new ArrayList<Journey>();
-            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
+            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.
+                    getJourneyList().size() - 1));
             displayMap(newValue.getLocation());
             drawAllActionPoints();
             drawFullTour();
-            drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 3);
+            drawPolyline(getMCVPathFormJourneyList(journeyList), 0.5,
+                    3);
         } else {
             mainApp.getDeliveryProcessFromActionPoint(newValue, tourLoaded);
         }
@@ -466,7 +498,7 @@ public class DashBoardController implements Initializable,
     /**
      * Displays the map by setting the correct Marker options.
      *
-     * @param center
+     * @param center the wished center of the map
      */
     void displayMap(final Point center) {
         try {
@@ -512,7 +544,7 @@ public class DashBoardController implements Initializable,
         setBigLabels();
         map.clearMarkers();
         drawAllActionPoints();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()),
+        drawPolyline(getMCVPathFormJourneyList(tourLoaded.getJourneyList()),
                 0.4, 1);
     }
 
@@ -542,7 +574,7 @@ public class DashBoardController implements Initializable,
     }
 
     /**
-     * Draws a Polylyne on the map, following the path that is displayed in
+     * Draws a PolyLine on the map, following the path that is displayed in
      * the {@link MVCArray}.
      *
      * @param mvcArray The path to follow to draw the line.
@@ -570,12 +602,15 @@ public class DashBoardController implements Initializable,
             // 4 = Draw with Auto color
             case 4:
                 if (deliveryProcessLoaded != null)
-                    color = Utils.pointToColour(deliveryProcessLoaded.getPickUP());
+                    color = Utils.pointToColour(deliveryProcessLoaded.
+                            getPickUP());
                 break;
         }
         setRectangleColor(color);
         PolylineOptions polyOpts =
-                new PolylineOptions().path(mvcArray).strokeColor(color).clickable(false).strokeOpacity(opacity).strokeWeight(4).visible(true);
+                new PolylineOptions().path(mvcArray).strokeColor(color).
+                        clickable(false).strokeOpacity(opacity).
+                        strokeWeight(4).visible(true);
         poly = new Polyline(polyOpts);
         poly.setVisible(true);
         map.addMapShape(poly);
@@ -597,64 +632,93 @@ public class DashBoardController implements Initializable,
         if (actionPoint.getActionType() == ActionType.PICK_UP) {
             newPickUpActionPoint = actionPoint;
             newPickUpPointMarker = createMarker(actionPoint, MarkerType.PICKUP);
-            labelPickUpCoordinates.setText(Utils.pointToString(actionPoint.getLocation()));
+            labelPickUpCoordinates.setText(Utils.pointToString(actionPoint.
+                    getLocation()));
         }
         if (actionPoint.getActionType() == ActionType.DELIVERY) {
             newDeliveryActionPoint = actionPoint;
             newDeliveryPointMarker = createMarker(actionPoint,
                     MarkerType.DELIVERY);
-            labelDeliveryCoordinates.setText(Utils.pointToString(actionPoint.getLocation()));
+            labelDeliveryCoordinates.setText(Utils.pointToString(actionPoint.
+                    getLocation()));
         }
 
         // Eventually draw newPickUp and Delivery Point
-        if (newPickUpPointMarker != null) map.addMarker(newPickUpPointMarker);
-        if (newDeliveryPointMarker != null)
+        if (newPickUpPointMarker != null) {
+            map.addMarker(newPickUpPointMarker);
+        }
+        if (newDeliveryPointMarker != null) {
             map.addMarker(newDeliveryPointMarker);
+        }
     }
 
-    void setRectangleColor(final String color) {
+    /**
+     * Sets the field that indicates the color of the shown delivery process
+     * to the user.
+     *
+     * @param color the shown color.
+     */
+    private void setRectangleColor(final String color) {
         rectangle.setStyle("-fx-background-color:" + color + ";" + "-fx" +
                 "-opacity: 0.5;");
     }
-    // Clear / Reset.
 
     /**
      * Sets the about the selected {@link DeliveryProcess} back to zero.
      */
-    public void clearNewDeliveryProcess() {
+    private void clearNewDeliveryProcess() {
         clearNewDeliveryPoint();
         clearNewPickUpPoint();
-        inputDeliveryTimeM.setText("");
-        inputPickUpTimeM.setText("");
-        inputPickUpTimeH.setText("");
-        inputDeliveryTimeH.setText("");
+        inputDeliveryTimeM.setText(EMPTY_STRING);
+        inputPickUpTimeM.setText(EMPTY_STRING);
+        inputPickUpTimeH.setText(EMPTY_STRING);
+        inputDeliveryTimeH.setText(EMPTY_STRING);
         newPickUpPointMarker = null;
         newDeliveryPointMarker = null;
         newPickUpActionPoint = null;
         newDeliveryActionPoint = null;
     }
 
+    /**
+     * Clears new pick up point field.
+     */
     public void clearNewPickUpPoint() {
-        labelPickUpCoordinates.setText("");
+        labelPickUpCoordinates.setText(EMPTY_STRING);
     }
 
+    /**
+     * Clears new delivery point field.
+     */
     public void clearNewDeliveryPoint() {
-        labelDeliveryCoordinates.setText("");
+        labelDeliveryCoordinates.setText(EMPTY_STRING);
     }
 
-    public void clearAll() {
+    /**
+     * Displays map freshly loaded, centered around the base of the loaded
+     * tour. The fields necessary to it are cleared.
+     */
+    void clearAll() {
         displayMap(tourLoaded.getBase());
         clearRectangleColor();
         clearNewDeliveryProcess();
     }
 
-    public void clearRectangleColor() {
+    /**
+     * Puts the color indicator back to it's background color, should be
+     * called when no {@link DeliveryProcess} is selected.
+     */
+    private void clearRectangleColor() {
         rectangle.setStyle("-fx-background-color: #393e46;");
     }
 
-    // Utils
-
-    public MVCArray getMCVPathFormJourneyListe(final List<Journey> journeyList) {
+    /**
+     * Calculates an {@link MVCArray} from a list of journey. The goal is to
+     * have a list of points that will be drawn on the map.
+     *
+     * @param journeyList the given list of journey.
+     * @return the {@link MVCArray} corresponding to the list of journey
+     */
+    MVCArray getMCVPathFormJourneyList(final List<Journey> journeyList) {
         int count = 0;
         LinkedList<Point> fullListOfPoints = new LinkedList<Point>();
         for (Journey journey : journeyList) {
@@ -672,23 +736,27 @@ public class DashBoardController implements Initializable,
                     point.getLongitude());
             ary[i++] = latLong;
         }
-        MVCArray mvc = new MVCArray(ary);
-        return mvc;
+        return new MVCArray(ary);
     }
 
-    public void handelMouseClickOnPoint(ActionEvent actionEvent) {
+    /**
+     * Handles a MouseClick of a user to add a new delivery or pick up point.
+     *
+     * @param actionEvent event sent by clicking on th point.
+     */
+    public void handelMouseClickOnPoint(final ActionEvent actionEvent) {
         Button btn = (Button) actionEvent.getSource();
         String id = btn.getId();
         System.out.println(id);
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
             if (id.contains("setPickUp") && editable(labelPickUpCoordinates)) {
-                System.out.println("this is a test");
                 this.mainApp.getNearestPoint(latLong.getLatitude(),
                         latLong.getLongitude(), ActionType.PICK_UP,
                         new Time(0, 0, 0));
             }
-            if (id.contains("setDelivery") && editable(labelDeliveryCoordinates)) {
+            if (id.contains("setDelivery")
+                    && editable(labelDeliveryCoordinates)) {
                 this.mainApp.getNearestPoint(latLong.getLatitude(),
                         latLong.getLongitude(), ActionType.DELIVERY,
                         new Time(0, 0, 0));
@@ -702,32 +770,39 @@ public class DashBoardController implements Initializable,
      * @param label the label to check.
      * @return true if the label is
      */
-    public Boolean editable(Label label) {
-        return label.getText() == "";
+    private Boolean editable(final Label label) {
+        return label.getText().equals(EMPTY_STRING);
     }
 
-    public Boolean canAddDeliveryProcess() {
-        if (inputPickUpTimeH.getText().equals("")) {
-            inputPickUpTimeH.setText("0");
+    /**
+     * Checks whether a delivery process can be added to the tour, i.e the
+     * user has given us enough information.
+     *
+     * @return true iff the {@link DeliveryProcess} can be added to the list.
+     */
+    private Boolean canAddDeliveryProcess() {
+        if (inputPickUpTimeH.getText().equals(EMPTY_STRING)) {
+            inputPickUpTimeH.setText(ZERO_STRING);
         }
-        if (inputDeliveryTimeH.getText().equals("")) {
-            inputDeliveryTimeH.setText("0");
+        if (inputDeliveryTimeH.getText().equals(EMPTY_STRING)) {
+            inputDeliveryTimeH.setText(ZERO_STRING);
         }
-        return labelDeliveryCoordinates.getText() != "" && labelDeliveryCoordinates.getText() != "" && inputDeliveryTimeM.getText() != "" && inputPickUpTimeM.getText() != "";
+        return !labelDeliveryCoordinates.getText().equals(EMPTY_STRING)
+                && !labelDeliveryCoordinates.getText().equals(EMPTY_STRING)
+                && !inputDeliveryTimeM.getText().equals(EMPTY_STRING)
+                && !inputPickUpTimeM.getText().equals(EMPTY_STRING);
     }
 
     /**
      * Alert Message to interact with the user and draw his attention to an
      * important message.
      *
-     * @param title     title of the message.
-     * @param header    header of the message.
-     * @param msg       message itself.
-     * @param alertType type of alert (ex.: logging or error)
+     * @param title  title of the message.
+     * @param header header of the message.
+     * @param msg    message itself.
      */
-    void showAlert(final String title, final String header, final String msg,
-                   final Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
+    void showAlert(final String title, final String header, final String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(msg);
@@ -738,14 +813,14 @@ public class DashBoardController implements Initializable,
      * Shows the user a confiramtion alert to be able to make sure he wants
      * to delete the seleted {@link DeliveryProcess}.
      *
-     * @param msg The message to  be shown to the user.
      * @return True if the user agrees to delete the {@link DeliveryProcess}
      * false otherwise.
      */
-    private Boolean showConfirmationAlert(final String msg) {
+    private Boolean showConfirmationAlert() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
-        alert.setHeaderText(msg);
+        alert.setHeaderText("Are you sur you want to delete this Delivery " +
+                "Process ?");
 
         ButtonType buttonTypeOne = new ButtonType("Yes");
         ButtonType buttonTypeCancel = new ButtonType("Cancel",
@@ -754,38 +829,30 @@ public class DashBoardController implements Initializable,
         alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == buttonTypeOne) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.get() == buttonTypeOne;
     }
 
     /**
      * Show a dialog to be able to change the order of the
      *
-     * @param deliveryProcess
-     * @return
+     * @return the chosen index at which the selected {@link ActionPoint}
+     * should be relocated.
      */
-    private int showModifiedDeliveryDialog(final DeliveryProcess deliveryProcess) {
+    private int showModifiedDeliveryDialog() {
         List<Integer> choices = new ArrayList<>();
         for (int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
             choices.add(i);
         }
 
         ChoiceDialog<Integer> dialog =
-                new ChoiceDialog<Integer>(actionPointTableView.getSelectionModel().
-                        getFocusedIndex(), choices);
+                new ChoiceDialog<Integer>(actionPointTableView
+                        .getSelectionModel().getFocusedIndex(), choices);
         dialog.setTitle("Modify Order");
         dialog.setHeaderText("Change Order");
         dialog.setContentText("Choose the new N°:");
 
         Optional<Integer> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            return result.get();
-        } else {
-            return -1;
-        }
+        return result.orElse(-1);
 
     }
 
@@ -808,22 +875,6 @@ public class DashBoardController implements Initializable,
 
 }
 
-//Enum Marker Types.
-@Getter
-enum MarkerType {
-    PICKUP("Pick-Up Point", "P", "icons/marker.png"), DELIVERY("Delivery "
-            + "Point", "D", "flag.png"), BASE("Base Point", "B", "home" +
-            "-icon" + "-silhouette.png");
 
-    private String title = "";
-    public String firstLetter = "";
-    private String iconPath = "";
-
-    MarkerType(String title, String firstLetter, String iconPath) {
-        this.title = title;
-        this.firstLetter = firstLetter;
-        this.iconPath = iconPath;
-    }
-}
 
 
