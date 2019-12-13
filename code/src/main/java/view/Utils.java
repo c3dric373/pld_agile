@@ -41,12 +41,21 @@ public class Utils {
      * @return the colour assigned to the {@link ActionPoint}.
      */
     static String pointToColour(ActionPoint actionPoint) {
-        int numberFromId = (int) (actionPoint.getId()
-                * RANDOM_MULTIPLICATION_FACTOR
-                * Math.pow(2, actionPoint.getId()));
-        Color color = new Color(numberFromId).brighter();
-        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(),
-                color.getBlue());
+        if (actionPoint == null) {
+            Color color = new Color(594949494).brighter();
+            return String.format("#%02x%02x%02x", color.getRed(),
+                    color.getGreen(),
+                    color.getBlue());
+        } else {
+            int numberFromId = (int) (actionPoint.getId()
+                    * RANDOM_MULTIPLICATION_FACTOR
+                    * Math.pow(2, actionPoint.getId()));
+            Color color = new Color(numberFromId).brighter();
+            return String.format("#%02x%02x%02x", color.getRed(),
+                    color.getGreen(),
+                    color.getBlue());
+        }
+
     }
 
     /**
