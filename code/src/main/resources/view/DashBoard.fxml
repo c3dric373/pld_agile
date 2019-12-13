@@ -8,7 +8,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,7 +23,7 @@
          <items>
             <AnchorPane id="DeliveryPane" styleClass="background">
                <children>
-                  <TableView fx:id="actionPointTableView" maxHeight="400.0" maxWidth="225.0" minHeight="342.0" minWidth="225.0" prefHeight="342.0" prefWidth="225.0" AnchorPane.bottomAnchor="150.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
+                  <TableView fx:id="actionPointTableView" maxHeight="400.0" maxWidth="225.0" minHeight="327.0" minWidth="225.0" prefHeight="332.0" prefWidth="225.0" AnchorPane.bottomAnchor="197.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
                     <columns>
                         <TableColumn fx:id="deliveryRank" minWidth="50.0" prefWidth="50.0" text="N°" />
                         <TableColumn fx:id="deliveryType" minWidth="75.0" prefWidth="75.0" text="Type" />
@@ -35,10 +34,10 @@
                   <Label layoutX="13.0" layoutY="34.0" text="Tour :" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="20.0" />
                   <Button fx:id="loadMap" layoutX="97.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleLoadMap" prefHeight="15.0" prefWidth="80.0" text="Load Map" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="17.5" />
                   <Button fx:id="loadDeliveryDemand" layoutX="298.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleLoadTour" text="Load Delivery Demand" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="17.5" />
-                  <ButtonBar layoutX="145.0" layoutY="469.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="330.0">
+                  <ButtonBar layoutX="145.0" layoutY="469.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="350.0">
                     <buttons>
-                      <Button fx:id="modify" mnemonicParsing="false" text="Modify" />
-                        <Button fx:id="delete" onAction="#deleteDp" mnemonicParsing="false" text="Delete" />
+                      <Button fx:id="modify" mnemonicParsing="false" onAction="#modifieDP" text="Modify" />
+                        <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteDp" text="Delete" />
                     </buttons>
                   </ButtonBar>
                   <Label layoutX="183.0" layoutY="135.0" styleClass="label-bright" text="Delivery Process :" AnchorPane.leftAnchor="240.0" AnchorPane.topAnchor="130.0" />
@@ -58,7 +57,6 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                         <Label text="N° :" />
                          <Label text="Total Duration :" GridPane.rowIndex="1" />
                         <Label text="Total Distance :" GridPane.rowIndex="2" />
                          <Label text="PickUp Point :" GridPane.rowIndex="4" />
@@ -71,7 +69,6 @@
                         <Label fx:id="dPDPoint" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label fx:id="dpPUDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                          <Label fx:id="dpDDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                         <Label fx:id="dpNumber" styleClass="label-bright" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                   <Line endX="100.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />
@@ -121,45 +118,69 @@
                            </image>
                         </ImageView>
                         <Label id="depTime" fx:id="startTime" styleClass="label-bright" GridPane.columnIndex="1" />
-                        <Label fx:id="numberDeliveries" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="arrivalTime" GridPane.columnIndex="3" />
+                        <Label fx:id="numberDeliveries" GridPane.columnIndex="1" styleClass="label-bright" GridPane.rowIndex="1" />
+                        <Label fx:id="arrivalTime" styleClass="label-bright" GridPane.columnIndex="3" />
                         <Button fx:id="calculateTour" defaultButton="true" mnemonicParsing="false" onAction="#calculateTour" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <GridPane layoutX="34.0" layoutY="215.0" prefHeight="110.0" prefWidth="421.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="32.0">
+                  <GridPane layoutX="34.0" layoutY="215.0" prefHeight="110.0" prefWidth="421.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="20.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="30.0" prefWidth="90.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="0.0" prefWidth="45.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="17.0" prefWidth="71.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="19.0" prefWidth="21.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="2.0" prefWidth="147.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="30.0" prefWidth="91.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="0.0" prefWidth="47.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="17.0" prefWidth="108.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="7.0" prefWidth="30.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="2.0" prefWidth="97.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="29.0" prefWidth="46.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" />
                       <RowConstraints />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="setPickUp" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" text="P" GridPane.columnIndex="3" />
-                        <Button fx:id="setDelivery" contentDisplay="TOP" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" text="D" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Button fx:id="setPickUp" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" prefHeight="22.0" prefWidth="22.0" text="P" GridPane.columnIndex="3" />
+                        <Button fx:id="setDelivery" contentDisplay="TOP" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" prefHeight="22.0" prefWidth="22.0" text="D" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Label fx:id="labelPickUpCoordonates" GridPane.columnIndex="4" />
                         <Label fx:id="labelDeliveryCoordonates" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Button fx:id="clearNPUP" mnemonicParsing="false" onAction="#clearNewPickUpPoint" text="Clear" GridPane.columnIndex="5" />
-                        <Label text="PickUp Point " />
-                        <Label text="Time :" GridPane.columnIndex="1" />
-                        <TextField fx:id="inputPickUpTime" styleClass="text-field" GridPane.columnIndex="2" />
+                        <Label text="Pick-Up Point " />
+                        <Label prefHeight="16.0" prefWidth="44.0" text="Time :" GridPane.columnIndex="1" />
                         <Label text="Delivery Point" GridPane.rowIndex="1" />
                         <Label text="Time :" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="inputDeliveryTime" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <Button fx:id="clearNDP" layoutX="385.0" layoutY="13.0" mnemonicParsing="false" onAction="#clearNewDeliveryPoint" text="Clear" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <GridPane GridPane.columnIndex="2">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="h" GridPane.columnIndex="1" />
+                              <TextField promptText="hh" fx:id="inputDeliveryTimeH" styleClass="text-field" />
+                              <TextField promptText="mm" fx:id="inputDeliveryTimeM" styleClass="text-field" GridPane.columnIndex="2" />
+                           </children>
+                        </GridPane>
+                        <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="8.0" prefWidth="8.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <children>
+                              <Label text="h" GridPane.columnIndex="1" />
+                              <TextField promptText="hh" fx:id="inputPickUpTimeH" styleClass="text-field" />
+                              <TextField promptText="mm" fx:id="inputPickUpTimeM" styleClass="text-field" GridPane.columnIndex="2" />
+                           </children>
+                        </GridPane>
                      </children>
                   </GridPane>
-                  <Line endX="320.0" layoutX="351.0" layoutY="164.0" startX="-100.0" stroke="#ededed99" AnchorPane.bottomAnchor="130.0" AnchorPane.leftAnchor="30.0" />
-                  <Label layoutX="31.0" layoutY="499.0" styleClass="label-bright" text="Add Delivery Process :" AnchorPane.bottomAnchor="135.0" AnchorPane.leftAnchor="30.0" />
-                   <Button fx:id="addDeliveryProcess" mnemonicParsing="false" onAction="#addNewDeliveryProcess" prefHeight="22.0" prefWidth="183.0" text="Add Delivery Process" AnchorPane.bottomAnchor="135.0" AnchorPane.rightAnchor="20"/>
+                  <Line endX="320.0" layoutX="351.0" layoutY="164.0" startX="-100.0" stroke="#ededed99" AnchorPane.bottomAnchor="160.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" />
+                  <Label layoutX="31.0" layoutY="499.0" styleClass="label-bright" text="Add Delivery Process :" AnchorPane.bottomAnchor="170.0" AnchorPane.leftAnchor="30.0" />
+                   <Button fx:id="addDeliveryProcess" mnemonicParsing="false" onAction="#addNewDeliveryProcess" prefHeight="22.0" prefWidth="183.0" text="Add Delivery Process" AnchorPane.bottomAnchor="170.0" AnchorPane.rightAnchor="20" />
                </children>
             </AnchorPane>
              <AnchorPane id="mapPane" fx:id="anchorMap" styleClass="background">

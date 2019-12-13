@@ -53,7 +53,7 @@ public class TourService {
     }
 
     public static Time getCompleteTime(final Tour tour) {
-        long firstFinishTime = tour.getJourneyList().get(0).getFinishTime().getTime();
+        long firstFinishTime = tour.getStartTime().getTime();
         long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
 
         long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
@@ -62,9 +62,15 @@ public class TourService {
         return JourneyService.durationToTime(journeyTime);
     }
 
-    public static Tour deleteDpMapNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+    public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().remove(deliveryProcess);
         return tour;
+    }
+
+    public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
+        tour.getDeliveryProcesses().add(deliveryProcess);
+        return tour;
+
     }
 
     /**
@@ -90,26 +96,34 @@ public class TourService {
             throw new IllegalArgumentException("actonPoints list not "
                     + "of same size");
         }
-
-        GraphService graphService = new GraphService();
-        try {
-            final List<Journey> newJourneys = new ArrayList<>();
-            for (int i = 1; i < actionPoints.size(); i++) {
-                final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
-                final Point successorPoint = oldActionPoints.get(i).getLocation();
-                final Journey newJourney = graphService.
-                        getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
-                newJourneys.add(newJourney);
-            }
-            final Time startTime = tour.getStartTime();
-            final List<Journey> calculatedJourneys = JourneyService.
-                    calculateTime(newJourneys, actionPoints, startTime);
-            tour.setJourneyList(calculatedJourneys);
-            tour.setActionPoints(actionPoints);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
+        if (!TourService.checkChangeOrder(tour, actionPoints)) {
+            throw new IllegalArgumentException("illegal order change");
         }
+        GraphService graphService = new GraphService();
+        final List<Journey> newJourneys = new ArrayList<>();
+        for (int i = 1; i < actionPoints.size(); i++) {
+            final Point predecessorPoint = oldActionPoints.get(i - 1).getLocation();
+            final Point successorPoint = oldActionPoints.get(i).getLocation();
+            final Journey newJourney = graphService.
+                    getShortestPath(graph, predecessorPoint.getId(), successorPoint.getId(), null);
+            newJourneys.add(newJourney);
+        }
+        final Time startTime = tour.getStartTime();
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(newJourneys, actionPoints, startTime);
+        tour.setJourneyList(calculatedJourneys);
+        tour.setActionPoints(actionPoints);
         return tour;
+    }
+
+    private static boolean checkChangeOrder(final Tour tour, final List<ActionPoint> actionPoints) {
+
+        for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
+            if (actionPoints.indexOf(deliveryProcess.getDelivery()) < actionPoints.indexOf(deliveryProcess.getPickUP())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -202,7 +216,10 @@ public class TourService {
         final List<Journey> newJourneys = JourneyService.calculateTime(
                 tour.getJourneyList(), tour.getActionPoints(),
                 tour.getStartTime());
-        tour.setJourneyList(newJourneys);
+
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(newJourneys, tour.getActionPoints(), tour.getStartTime());
+        tour.setJourneyList(calculatedJourneys);
         return tour;
     }
 
@@ -216,16 +233,16 @@ public class TourService {
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
      */
-    public static Tour addNewDeliveryProcess(final Tour tour,
+    public static Tour  addNewDeliveryProcess(final Graph graph, final Tour tour,
                                              final ActionPoint pickUpPoint,
                                              final ActionPoint deliveryPoint) {
-
+        Validate.notNull(graph, "graph is null");
         Validate.notNull(tour, "tour is null");
         Validate.notNull(pickUpPoint, "pickUpPoint is null");
         Validate.notNull(deliveryPoint, "deliveryPoint is null");
         Validate.notNull(tour.getActionPoints(), "actionPoints of tour is null");
 
-        Tour newTour;
+        Tour newTour = tour;
         List<DeliveryProcess> newDeliveryProcessList =
                 tour.getDeliveryProcesses();
         List<ActionPoint> newActionPointList = tour.getActionPoints();
@@ -233,9 +250,24 @@ public class TourService {
         newActionPointList.add(newActionPointList.size() - 1, deliveryPoint);
         newDeliveryProcessList.add(new DeliveryProcess(pickUpPoint,
                 deliveryPoint));
-        newTour = new Tour(newDeliveryProcessList, tour.getBase(),
-                tour.getStartTime());
+        newTour.setDeliveryProcesses(newDeliveryProcessList);
         newTour.setActionPoints(newActionPointList);
+        List<Journey> journeys = newTour.getJourneyList();
+        Journey journey = journeys.get(journeys.size() - 1);
+        Point pointBefore = journey.getStartPoint();
+        Point pointAfter = journey.getArrivePoint();
+        GraphService graphService = new GraphService();
+        Journey journey1 = graphService.getShortestPath(graph, pointBefore.getId(), pickUpPoint.getLocation().getId(), null);
+        Journey journey2 = graphService.getShortestPath(graph, pickUpPoint.getLocation().getId(), deliveryPoint.getLocation().getId(), null);
+        Journey journey3 = graphService.getShortestPath(graph, deliveryPoint.getLocation().getId(), pointAfter.getId(), null);
+        journeys.remove(journeys.size() - 1);
+        journeys.add(journey1);
+        journeys.add(journey2);
+        journeys.add(journey3);
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(journeys, tour.getActionPoints(), tour.getStartTime());
+        newTour.setJourneyList(calculatedJourneys);
+
         return newTour;
 
     }
@@ -287,6 +319,10 @@ public class TourService {
         journeys.add(index1, journey2);
         // change actionPointList
         newTour.setActionPoints(actionPointList);
+
+        final List<Journey> calculatedJourneys = JourneyService.
+                calculateTime(journeys, tour.getActionPoints(), tour.getStartTime());
+        tour.setJourneyList(calculatedJourneys);
 
         return newTour;
     }

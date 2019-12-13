@@ -96,15 +96,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
     public void loadTour(final File file) {
         if (projectState != ProjectState.MAP_LOADED &&
                 projectState != ProjectState.TOUR_LOADED) {
-            sendMessage(ErrorMessage.MAP_NOT_LOADED);
+                projectState != ProjectState.TOUR_CALCULATED) {
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
-            final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
-
-            projectDataWrapper.loadTour(tour);
-            setTourLoaded();
-            mainProjectState = ProjectState.TOUR_LOADED;
         }
 
     }
@@ -118,12 +113,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         final Tour tour = projectDataWrapper.getProject().getTour();
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
-        int completeDistance = TourService.getCompleteDistance(newTour);
-        Time completeTime = TourService.getCompleteTime(newTour);
-        newTour.setCompleteTime(completeTime);
-        newTour.setTotalDistance(completeDistance);
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
+        updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
@@ -136,21 +126,31 @@ public class ApplicationManagerImpl implements ApplicationManager {
                                    final ActionPoint deliveryPoint) {
         if (projectState != projectState.TOUR_LOADED
                 && projectState != projectState.TOUR_CALCULATED) {
-            sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else if ( tour == null){
-            sendMessage(ErrorMessage.TOUR_NULL);
         } else if (pickUpPoint == null ) {
-            sendMessage(ErrorMessage.PICKUP_POINT_NULL);
-        } else if (deliveryPoint == null) {
             sendMessage(ErrorMessage.DELIVERY_POINT_NULL);
         } else {
-            setAddDeliveryProcess();
-            final Tour newTour;
-            newTour = tourService.addNewDeliveryProcess(tour, pickUpPoint,
-                    deliveryPoint);
-            projectDataWrapper.modifyTour(newTour);
-            projectState = mainProjectState;
+        } else if (deliveryPoint == null) {
+            sendMessage(ErrorMessage.PICKUP_POINT_NULL);
+            sendMessage(ErrorMessage.TOUR_NULL);
+            sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         }
+        final Tour newTour;
+        if (projectState == ProjectState.TOUR_LOADED) {
+            setAddDeliveryProcess();
+            DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
+            newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
+                    deliveryPoint);
+            DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
+        } else {
+            Graph graph = projectDataWrapper.getProject().getGraph();
+            setAddDeliveryProcess();
+            newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
+            updateInfo(newTour);
+                    deliveryPoint);
+        }
+        projectDataWrapper.modifyTour(newTour);
+        projectState = mainProjectState;
     }
 
     @Override
@@ -160,22 +160,41 @@ public class ApplicationManagerImpl implements ApplicationManager {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else if ( deliveryProcess == null){
             sendMessage(ErrorMessage.DELIVERY_PROCESS_NULL);
-        } else {
-            Tour newTour;
-            if (projectState == ProjectState.TOUR_LOADED) {
-                setDeleteDeliveryProcess();
-                final Tour tour = projectDataWrapper.getProject().getTour();
-                newTour = TourService.deleteDpMapNotCalculated(tour, deliveryProcess);
-            } else {
-                setDeleteDeliveryProcess();
-                final Tour tour = projectDataWrapper.getProject().getTour();
-                final Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
-            }
-
-            projectDataWrapper.loadTour(newTour);
-            projectState = mainProjectState;
+            throw new IllegalStateException("Another action is in progress");
         }
+        if(deliveryProcess.getPickUP().getActionType() == ActionType.BASE){
+            //TODO
+           // projectDataWrapper.sendErrorMessage
+            return;
+        }
+        Validate.notNull(deliveryProcess, "deliveryProcess null");
+        Tour newTour;
+        if (projectState == ProjectState.TOUR_LOADED) {
+            setDeleteDeliveryProcess();
+            final Tour tour = projectDataWrapper.getProject().getTour();
+            newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+            DeliveryProcessService.delDeliveryProcessIdTourNotCalc(tour);
+            projectDataWrapper.loadTour(newTour);
+        } else {
+            setDeleteDeliveryProcess();
+            final Tour tour = projectDataWrapper.getProject().getTour();
+            final Graph graph = projectDataWrapper.getProject().getGraph();
+            newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+            updateInfo(newTour);
+            projectDataWrapper.loadTour(newTour);
+        }
+
+        projectState = mainProjectState;
+    }
+
+    private void updateInfo(final Tour newTour) {
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
     }
 
     @Override
@@ -195,6 +214,16 @@ public class ApplicationManagerImpl implements ApplicationManager {
             projectDataWrapper.modifyTour(newTour);
             projectState = mainProjectState;
         }
+        setChangeDeliveryOrder();
+        Validate.notNull(actionPoints, "actionPoints null");
+        Validate.notEmpty(actionPoints, "actionPointsEmpty");
+        final Tour tour = projectDataWrapper.getProject().getTour();
+        final Graph graph = projectDataWrapper.getProject().getGraph();
+        final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
+                actionPoints);
+        updateInfo(newTour);
+        projectDataWrapper.modifyTour(newTour);
+        projectState = mainProjectState;
 
     }
 
@@ -222,6 +251,22 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
             projectState = mainProjectState;
         }
+        setModifyDeliveryProcessPoint();
+        Validate.notNull(oldPoint, "oldPoint is null");
+        Validate.notNull(newPoint, "newPoint is null");
+        if (!GraphService.isInMap(newPoint)) {
+            throw new IllegalArgumentException("newPoint not on map");
+        }
+
+        final Tour tour = projectDataWrapper.getProject().getTour();
+        final Graph graph = projectDataWrapper.getProject().getGraph();
+        final Tour newTour = tourService.changePointPosition
+                (graph, tour, oldPoint, newPoint);
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
+        projectDataWrapper.modifyTour(newTour);
+
+        projectState = mainProjectState;
     }
 
     @Override
@@ -231,12 +276,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
                                  Time actionTime) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
-        Validate.notNull(actionType,"actionType is null");
+        Validate.notNull(actionType, "actionType is null");
         Validate.notNull(actionTime, "actionTime is null");
-        final Graph graph=
+        final Graph graph =
                 projectDataWrapper.getProject().getGraph();
         final Point nearestPoint = GraphService.findNearestPoint(graph,
-          longitude, latitude);
+                longitude, latitude);
         final ActionPoint nearestActionPoint = new ActionPoint(actionTime,
                 nearestPoint, actionType);
         projectDataWrapper.findNearestPoint(nearestActionPoint);

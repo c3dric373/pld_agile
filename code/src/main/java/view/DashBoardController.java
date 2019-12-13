@@ -18,17 +18,15 @@ import javafx.stage.FileChooser;
 import lombok.Getter;
 import model.data.*;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.math.NumberUtils;
 
 import java.io.File;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
-public class DashBoardController implements Initializable, MapComponentInitializedListener  {
+public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
     // Map Style.
     private static final String mapStyle = "[{\"featureType\":\"administrative\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#e9e5dc\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100},{\"lightness\":99}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54},{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#767676\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":43},{\"lightness\":-11},{\"color\":\"#89cada\"}]}]";
@@ -42,21 +40,35 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         tourLoaded = tour;
 
     }
-    public void deleteDp(){
-        this.mainApp.deleteDp(deliveryProcessLoaded);
+
+    public void deleteDp() {
+        if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
+            this.mainApp.deleteDp(deliveryProcessLoaded);
+        }
     }
 
     public void setActionPoints(final Tour tour) {
+        actionPointTableView.getSelectionModel().clearSelection();
         actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tour.getActionPoints());
+    }
 
+    public void modifieDP() {
+        int result = showModifieDeliveryDialog(deliveryProcessLoaded);
+        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
+        if (result != -1) {
+            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
+            ActionPoint actionPoint = actionPoints.remove(index);
+            actionPoints.add(result, actionPoint);
+            this.mainApp.modifyOrder(actionPoints);
+        }
     }
 
 
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
-        PICKUP("Pick-Up Point", "P","icons/marker.png"),
+        PICKUP("Pick-Up Point", "P", "icons/marker.png"),
         DELIVERY("Delivery Point", "D", "flag.png"),
         BASE("Base Point", "B", "home-icon-silhouette.png");
 
@@ -78,7 +90,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
 
     // Manage New DeliveryProcess
-    private DeliveryProcess newDeliveryProcess = null;
     private ActionPoint newPickUpActionPoint = null;
     private ActionPoint newDeliveryActionPoint = null;
     // Markers of new DeliveryProcess
@@ -104,10 +115,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private Label labelDeliveryCoordonates;
 
     @FXML
-    private TextField inputDeliveryTime;
-
+    private TextField inputDeliveryTimeH;
     @FXML
-    private TextField inputPickUpTime;
+    private TextField inputDeliveryTimeM;
+    @FXML
+    private TextField inputPickUpTimeH;
+    @FXML
+    private TextField inputPickUpTimeM;
 
     @FXML
     private Label dpNumber;
@@ -130,6 +144,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label dpDDuration;
 
+    @FXML
+    private Label arrivalTime;
+
+    @FXML
+    private Label numberDeliveries;
+
+    @FXML
+    private Label startTime;
+
+    private void setBigLabels() {
+        numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
+        startTime.setText(tourLoaded.getStartTime().toString());
+        if (tourLoaded.getCompleteTime() != null) {
+            final List<Journey> journeys = tourLoaded.getJourneyList();
+            final int journeysLength = journeys.size();
+            arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+        }
+    }
+
 
     @FXML
     private GoogleMapView mapView;
@@ -146,7 +179,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         actionPointTableView.setItems(null);
 
         deliveryRank.setCellValueFactory(cellData -> new SimpleStringProperty
-                (String.valueOf(actionPoints.indexOf(cellData.getValue()))));
+                (String.valueOf(cellData.getValue().getId())));
         deliveryType.setCellValueFactory(
                 cellData -> new SimpleStringProperty(cellData.getValue().getActionType().toString()));
 
@@ -154,7 +187,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 cellData -> new SimpleStringProperty(cellData.getValue().getPassageTime()));
 
         actionPointTableView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> mainApp.showDeliveryProcess(newValue, tourLoaded));
+                (observable, oldValue, newValue) -> handelTableSelection(newValue));
 
         mapView.addMapInializedListener(this);
         mapView.setKey("AIzaSyDJDcPFKsYMTHWJUxVzoP0W7ERsx3Bhdgc");
@@ -198,16 +231,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Create / Update
 
     public void createFakeActionPointList() {
-        List<ActionPoint> listActionPoints = new ArrayList<ActionPoint>();
+        List<ActionPoint> listActionPoints = new ArrayList<>();
         // Create a base actionPoint.
-        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(),tourLoaded.getBase(),ActionType.BASE);
+        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.BASE);
+        ActionPoint end = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.END);
 
         listActionPoints.add(base);
+        listActionPoints.add(end);
         for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
-            listActionPoints.add(new ActionPoint(deliveryProcess.getPickUP()
+            final ActionPoint pickUp = new ActionPoint(deliveryProcess.getPickUP()
                     .getTime(), deliveryProcess.getPickUP().getLocation(),
-                    deliveryProcess.getPickUP().getActionType()));
-            listActionPoints.add(new ActionPoint(deliveryProcess.getDelivery().getTime(), deliveryProcess.getDelivery().getLocation(), deliveryProcess.getDelivery().getActionType()));
+                    deliveryProcess.getPickUP().getActionType());
+            pickUp.setId(deliveryProcess.getPickUP().getId());
+            listActionPoints.add(pickUp);
+            final ActionPoint delivery = new ActionPoint
+                    (deliveryProcess.getDelivery().getTime(),
+                            deliveryProcess.getDelivery().getLocation(),
+                            deliveryProcess.getDelivery().getActionType());
+            delivery.setId(deliveryProcess.getDelivery().getId());
+            listActionPoints.add(delivery);
         }
         tourLoaded.setActionPoints(listActionPoints);
     }
@@ -222,15 +264,29 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void addNewDeliveryProcess() {
-        if(canAdd()) {
-            //TODO Generate new DP
-            if(newDeliveryProcess != null) {
+        if (canAddDeliveryProcess()) {
+            if (newPickUpActionPoint != null && newDeliveryActionPoint != null) {
+                newPickUpActionPoint.setTime(parseStringToTime(inputPickUpTimeH.getText(), inputPickUpTimeM.getText()));
+                newDeliveryActionPoint.setTime(parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
+                this.mainApp.addDeliveryProcess(tourLoaded, newPickUpActionPoint, newDeliveryActionPoint);
+            } else {
+                showAlert("Action Impossible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
             }
         } else {
-            showAlert("Action Imposible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
+            showAlert("Action Impossible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
         }
     }
 
+    private Time parseStringToTime(final String hours, final String minutes) {
+        Validate.notNull(hours, "hours null");
+        Validate.notNull(minutes, "minutes null");
+        Validate.isTrue(NumberUtils.isNumber(hours), "hours not a number");
+        Validate.isTrue(NumberUtils.isNumber(minutes), "minutes not a number");
+        Validate.isTrue(Integer.parseInt(hours) < 24 && Integer.parseInt(hours) >= 0, "not an hour");
+        Validate.isTrue(Integer.parseInt(minutes) < 59 && Integer.parseInt(minutes) >= 0, "not a minute");
+        final String toParse = hours + ":" + minutes + ":00";
+        return Time.valueOf(toParse);
+    }
     // Update view
 
     public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
@@ -244,23 +300,25 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         dpDDuration.setText(deliveryDuration);
         dpPUDuration.setText(pickUpDuration);
         // actionPointTableView.setItems(null);
-        if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
-            dpDuration.setText(tourLoaded.getCompleteTime().toString());
-            List<Journey>  journeyList = new ArrayList<Journey>();
-            journeyList.add(tourLoaded.getJourneyList().get(0));
-            displayMap();
-            drawAllActionPoints();
-            drawFullTour();
-            drawPolyline(getMCVPathFormJourneyListe(journeyList),"green",0.5);
-            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()));
-        } else {
-            // DISPLAY POLYLINE.
-            this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
-            if (deliveryProcess.getTime() != null) {
-                dpDuration.setText(deliveryProcess.getTime().toString());
-            }
-            if (deliveryProcess.getDistance() != null) {
-                dPDistance.setText(String.valueOf(deliveryProcess.getDistance()));
+        // DISPLAY POLYLINE.
+        if (tourLoaded.getJourneyList() != null) {
+            if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
+                dpDuration.setText(tourLoaded.getCompleteTime().toString());
+                dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
+                List<Journey> journeyList = new ArrayList<Journey>();
+                journeyList.add(tourLoaded.getJourneyList().get(0));
+                displayMap();
+                drawAllActionPoints();
+                drawFullTour();
+                drawPolyline(getMCVPathFormJourneyListe(journeyList), "green", 0.5);
+            } else {
+                this.mainApp.getJourneyList(tourLoaded.getJourneyList(), deliveryProcess);
+                if (deliveryProcess.getTime() != null) {
+                    dpDuration.setText(deliveryProcess.getTime().toString());
+                }
+                if (deliveryProcess.getDistance() != null) {
+                    dPDistance.setText(String.valueOf(deliveryProcess.getDistance()) + " m");
+                }
             }
         }
     }
@@ -285,11 +343,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
+        setBigLabels();
+
         // Create a fake list of action Points To display.
         createFakeActionPointList();
-
+        actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tourLoaded.getActionPoints());
 
+        System.out.println(actionPoints.size() + " action point size");
         // Add observable list data to the table
         actionPointTableView.setItems(actionPoints);
         drawAllActionPoints();
@@ -298,10 +359,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     // Draw
 
     public void drawFullTour() {
+        setBigLabels();
         map.clearMarkers();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()),"blue",0.4);
+        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
         drawAllActionPoints();
     }
+
 
     public void drawAllActionPoints() {
 
@@ -336,20 +399,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         // Draw all tour Action point
         drawAllActionPoints();
 
-        if(actionPoint.getActionType() == ActionType.PICK_UP) {
+        if (actionPoint.getActionType() == ActionType.PICK_UP) {
             newPickUpActionPoint = actionPoint;
             newPickUpPointMarker = createMarker(actionPoint, MarkerType.PICKUP);
             labelPickUpCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
-        if(actionPoint.getActionType() == ActionType.DELIVERY) {
-            newPickUpActionPoint = actionPoint;
+        if (actionPoint.getActionType() == ActionType.DELIVERY) {
+            newDeliveryActionPoint = actionPoint;
             newDeliveryPointMarker = createMarker(actionPoint, MarkerType.DELIVERY);
             labelDeliveryCoordonates.setText(stringFormater(actionPoint.getLocation()));
         }
 
         // Eventually draw newPickUp and Delivery Point
-        if(newPickUpPointMarker !=null) map.addMarker(newPickUpPointMarker);
-        if(newDeliveryPointMarker !=null) map.addMarker(newDeliveryPointMarker);
+        if (newPickUpPointMarker != null) map.addMarker(newPickUpPointMarker);
+        if (newDeliveryPointMarker != null)
+            map.addMarker(newDeliveryPointMarker);
     }
 
     // Clear / Reset.
@@ -357,13 +421,14 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void clearNewDeliveryProcess() {
         clearNewDeliveryPoint();
         clearNewPickUpPoint();
-        inputDeliveryTime.setText("");
-        inputPickUpTime.setText("");
+        inputDeliveryTimeM.setText("");
+        inputPickUpTimeM.setText("");
+        inputPickUpTimeH.setText("");
+        inputDeliveryTimeH.setText("");
         newPickUpPointMarker = null;
         newDeliveryPointMarker = null;
         newPickUpActionPoint = null;
         newDeliveryActionPoint = null;
-        newDeliveryProcess = null;
     }
 
     public void clearNewPickUpPoint() {
@@ -380,6 +445,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     public void clearAll() {
         displayMap();
+        clearNewDeliveryProcess();
     }
     // Utils
 
@@ -410,21 +476,21 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         System.out.println(id);
         map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
             LatLong latLong = event.getLatLong();
-            if(id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
+            if (id.contains("setPickUp") && editable(labelPickUpCoordonates)) {
                 System.out.println("this is a test");
-                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP,new Time(0,0,0));
+                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.PICK_UP, new Time(0, 0, 0));
             }
-            if(id.contains("setDelivery") && editable(labelDeliveryCoordonates)){
-                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.DELIVERY,new Time(0,0,0));
+            if (id.contains("setDelivery") && editable(labelDeliveryCoordonates)) {
+                this.mainApp.getNearPoint(latLong.getLatitude(), latLong.getLongitude(), ActionType.DELIVERY, new Time(0, 0, 0));
             }
         });
     }
 
     public String stringFormater(final Point point) {
-        if(point != null) {
+        if (point != null) {
             DecimalFormat numberFormat = new DecimalFormat("#.0000");
             return numberFormat.format(point.getLatitude()) + ", " + numberFormat.format(point.getLongitude());
-        }else {
+        } else {
             return "";
         }
     }
@@ -433,11 +499,17 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         return label.getText() == "";
     }
 
-    public Boolean canAdd() {
+    public Boolean canAddDeliveryProcess() {
+        if (inputPickUpTimeH.getText().equals("")) {
+            inputPickUpTimeH.setText("0");
+        }
+        if (inputDeliveryTimeH.getText().equals("")) {
+            inputDeliveryTimeH.setText("0");
+        }
         return labelDeliveryCoordonates.getText() != ""
                 && labelDeliveryCoordonates.getText() != ""
-                && inputPickUpTime.getText() != ""
-                && inputDeliveryTime.getText() != "";
+                && inputDeliveryTimeM.getText() != ""
+                && inputPickUpTimeM.getText() != "";
     }
 
     // Utils Pop Up
@@ -482,12 +554,65 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    public void showAlert(String title,String header, String msg, Alert.AlertType alertType) {
+    private void handelTableSelection(ActionPoint newValue) {
+        if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
+            dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
+            List<Journey> journeyList = new ArrayList<Journey>();
+            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
+            displayMap();
+            drawAllActionPoints();
+            drawFullTour();
+            drawPolyline(getMCVPathFormJourneyListe(journeyList), "black", 0.5);
+        } else {
+            mainApp.showDeliveryProcess(newValue, tourLoaded);
+        }
+    }
+
+    private void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private Boolean showConfirmationAlert(String msg) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(msg);
+
+        ButtonType buttonTypeOne = new ButtonType("Yes");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOne) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private int showModifieDeliveryDialog(final DeliveryProcess deliveryProcess) {
+        List<Integer> choices = new ArrayList<Integer>();
+        for (int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
+            choices.add(i);
+        }
+
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<Integer>(actionPointTableView.getSelectionModel().getFocusedIndex(), choices);
+        dialog.setTitle("Modify Order");
+        dialog.setHeaderText("Change Order");
+        dialog.setContentText("Choose the new N°:");
+
+        Optional<Integer> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            return -1;
+        }
+
     }
 
     /**
@@ -500,7 +625,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public String pointToColour (Point point) {
+    public String pointToColour(Point point) {
 
         //TODO MARCHE PAS
 

@@ -13,9 +13,13 @@ public class ActionPoint implements GenData{
 
     private final String EMPTY_STRING = "";
 
+    @Setter
+    private int id;
+
     /**
      * Time it takes to complete the action.
      */
+    @Setter
     private Time time;
 
     /**

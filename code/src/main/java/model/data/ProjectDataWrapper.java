@@ -38,7 +38,6 @@ public interface ProjectDataWrapper {
     ProjectData getProject();
 
 
-
     /**
      * Delete a DeliveryProcess to the current Tour.
      *
@@ -58,6 +57,7 @@ public interface ProjectDataWrapper {
 
     /**
      * Select a DeliveryProcess in the Tour
+     *
      * @param deliveryProcess the delivery process to select
      */
     void selectDeliveryProcess(final DeliveryProcess deliveryProcess);

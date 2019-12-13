@@ -10,9 +10,10 @@ public class ViewVisitor implements GenDataVisitor {
     @Override
     public void visit(final Tour tour) {
         dashBoardController.setTour(tour);
-        if (tour.getActionPoints() == null) {
+        if (tour.getJourneyList() == null) {
+            System.out.println("---load tour wihtout journey list---");
             dashBoardController.displayLoadedDeliveryProcess();
-        }else {
+        } else {
             dashBoardController.clearAll();
             dashBoardController.setActionPoints(tour);
             dashBoardController.drawFullTour();
@@ -35,7 +36,7 @@ public class ViewVisitor implements GenDataVisitor {
     }
 
     @Override
-    public void visit(ActionPoint actionPoint) {
+    public void visit(final ActionPoint actionPoint) {
         System.out.println("ViewVisitor action Point");
         dashBoardController.drawAndSaveNewActionPoint(actionPoint);
     }
@@ -46,7 +47,7 @@ public class ViewVisitor implements GenDataVisitor {
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
         //dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),dashBoardController.pointToColour(listJourneyFromDeliveryProcess.getJourneyList().get(0).getPoints().get(0)),0.4);
-        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),"red",0.4);
+        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()), "red", 0.4);
     }
 
     @Override

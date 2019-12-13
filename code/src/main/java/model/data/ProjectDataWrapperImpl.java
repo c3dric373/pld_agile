@@ -1,6 +1,5 @@
 package model.data;
 
-import model.core.service.GraphService;
 import model.core.service.TourService;
 import view.Observer;
 
@@ -68,7 +67,7 @@ public class ProjectDataWrapperImpl implements ProjectDataWrapper {
         notify(newActionPoint);
     }
 
-    public void addObserver(final Observer observer){
+    public void addObserver(final Observer observer) {
         this.observer = observer;
     }
 
