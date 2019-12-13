@@ -53,7 +53,7 @@ public class TourService {
     }
 
     public static Time getCompleteTime(final Tour tour) {
-        long firstFinishTime = tour.getJourneyList().get(0).getFinishTime().getTime();
+        long firstFinishTime = tour.getStartTime().getTime();
         long secondFinishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
 
         long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
@@ -233,7 +233,7 @@ public class TourService {
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
      */
-    public static Tour addNewDeliveryProcess(final Graph graph, final Tour tour,
+    public static Tour  addNewDeliveryProcess(final Graph graph, final Tour tour,
                                              final ActionPoint pickUpPoint,
                                              final ActionPoint deliveryPoint) {
         Validate.notNull(graph, "graph is null");

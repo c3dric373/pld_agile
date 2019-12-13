@@ -35,7 +35,7 @@ public class ViewVisitor implements GenDataVisitor {
     }
 
     @Override
-    public void visit(ActionPoint actionPoint) {
+    public void visit(final ActionPoint actionPoint) {
         System.out.println("ViewVisitor action Point");
         dashBoardController.drawAndSaveNewActionPoint(actionPoint);
     }
