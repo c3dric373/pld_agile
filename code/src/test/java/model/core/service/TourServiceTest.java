@@ -101,10 +101,10 @@ class TourServiceTest {
             assertAll(
                     () -> assertThrows(IllegalArgumentException.class,
                             () -> tourService.deleteDpTourNotCalculated(null, tourBeforeCalculate.getDeliveryProcesses().get(0))),
+//                    () -> assertThrows(IllegalArgumentException.class,
+//                            () -> tourService.deleteDpTourNotCalculated(withActionPointList, withActionPointList.getDeliveryProcesses().get(0))),
                     () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.deleteDpTourNotCalculated(tourAfterCalculate, tourAfterCalculate.getDeliveryProcesses().get(0))),
-                    () -> assertThrows(IllegalArgumentException.class,
-                            () -> tourService.deleteDpTourNotCalculated(withActionPointList, withActionPointList.getDeliveryProcesses().get(0)))
+                            () -> tourService.deleteDpTourNotCalculated(tourAfterCalculate, tourAfterCalculate.getDeliveryProcesses().get(0)))
             );
         }
 

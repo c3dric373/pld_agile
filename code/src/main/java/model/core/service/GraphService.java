@@ -336,39 +336,36 @@ public class GraphService {
                               final Graph graph) {
         Validate.notNull(tour, "tour can't be null");
         Validate.notNull(graph, "graph can't be null");
+        Validate.isTrue(tour.getDeliveryProcesses().size() < 15,
+                "calculateTour can't take more than 15 delivery process");
 
         // if we catch an IllegalArgumentException, it means tour and graph are incompatible
-        try {
-            TSP tsp3 = new TSP3();
-            int timeLimit = Integer.MAX_VALUE;
-            List<Journey> journeys = getListJourney(tour, graph, tsp3, timeLimit);
-            List<Point> points = new ArrayList<>();
-            for (int i = 1; i < journeys.size(); i++)
-                points.add(journeys.get(i).getStartPoint());
-            List<ActionPoint> actionPoints = new ArrayList<>();
-            actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
-            for (Point point : points) {
-                boolean notFound = true;
-                for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
-                    if (deliveryProcess.getDelivery().getLocation() == point) {
-                        actionPoints.add(deliveryProcess.getDelivery());
-                        notFound = false;
-                    } else if (deliveryProcess.getPickUP().getLocation() == point) {
-                        actionPoints.add(deliveryProcess.getPickUP());
-                        notFound = false;
-                    }
-                    if (!notFound) break;
+        TSP tsp3 = new TSP3();
+//        int timeLimit = Integer.MAX_VALUE;
+        List<Journey> journeys = getListJourney(tour, graph, tsp3, 30000);
+        List<Point> points = new ArrayList<>();
+        for (int i = 1; i < journeys.size(); i++)
+            points.add(journeys.get(i).getStartPoint());
+        List<ActionPoint> actionPoints = new ArrayList<>();
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.BASE));
+        for (Point point : points) {
+            boolean notFound = true;
+            for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
+                if (deliveryProcess.getDelivery().getLocation() == point) {
+                    actionPoints.add(deliveryProcess.getDelivery());
+                    notFound = false;
+                } else if (deliveryProcess.getPickUP().getLocation() == point) {
+                    actionPoints.add(deliveryProcess.getPickUP());
+                    notFound = false;
                 }
+                if (!notFound) break;
             }
-            actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
-            tour.setActionPoints(actionPoints);
-            // Calculate the finish time of each ActionPoints of each journeys
-            List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
-            tour.setJourneyList(journeys1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("graph and tour are incompatible");
         }
+        actionPoints.add(new ActionPoint(Time.valueOf("0:0:0"), tour.getBase(), ActionType.END));
+        tour.setActionPoints(actionPoints);
+        // Calculate the finish time of each ActionPoints of each journeys
+        List<Journey> journeys1 = JourneyService.calculateTime(journeys, actionPoints, tour.getStartTime());
+        tour.setJourneyList(journeys1);
         return tour;
     }
 
