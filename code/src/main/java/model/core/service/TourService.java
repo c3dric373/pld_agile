@@ -87,7 +87,7 @@ public class TourService {
         long startTime = tour.getStartTime().getTime();
         long finishTime = tour.getJourneyList().get(tour.getJourneyList().size() - 1).getFinishTime().getTime();
 
-        long journeyTime = Math.abs(firstFinishTime - secondFinishTime);
+        long journeyTime = Math.abs(startTime - finishTime);
         journeyTime = journeyTime / DIVISION_FACTOR;
 
         return JourneyService.durationToTime(journeyTime);
