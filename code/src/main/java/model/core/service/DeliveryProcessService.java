@@ -24,6 +24,9 @@ public class DeliveryProcessService {
                                                final ActionPoint newActionPoint) {
         Validate.notNull(deliveryProcess, "delivery Process is null");
         Validate.notNull(newActionPoint, "newActionPoint is null");
+        Validate.isTrue(newActionPoint.getActionType() == ActionType.DELIVERY ||
+                newActionPoint.getActionType() == ActionType.PICK_UP,
+                "actionType should be DELIVERY or PICK_UP");
 
         DeliveryProcess newDeliveryProcess;
         if (newActionPoint.getActionType() == ActionType.DELIVERY) {
@@ -47,6 +50,9 @@ public class DeliveryProcessService {
     public static OptionalInt findActionPoint(final List<DeliveryProcess>
                                                       deliveryProcesses,
                                               final ActionPoint actionPoint) {
+        Validate.notNull(deliveryProcesses, "delivery Process list is null");
+        Validate.noNullElements(deliveryProcesses, "delivery Process list can't contain null element");
+        Validate.notNull(actionPoint, "newActionPoint is null");
         for (final DeliveryProcess deliveryProcess : deliveryProcesses) {
             if (deliveryProcess.getDelivery().equals(actionPoint)
                     || deliveryProcess.getPickUP().equals(actionPoint)) {
@@ -70,8 +76,12 @@ public class DeliveryProcessService {
     public static List<DeliveryProcess> addNewDeliveryProcess(
             final List<DeliveryProcess> deliveryProcesses,
             final ActionPoint pickUpPoint, final ActionPoint deliveryPoint) {
+        Validate.notNull(deliveryProcesses, "delivery Process list is null");
+        Validate.noNullElements(deliveryProcesses, "delivery Process list can't contain null element");
         Validate.notNull(pickUpPoint, "pickUpPoint is null");
         Validate.notNull(deliveryPoint, "deliveryPoint is null");
+        Validate.isTrue(pickUpPoint.getActionType() == ActionType.PICK_UP, "pickUpPoint should be PICK_UP");
+        Validate.isTrue(deliveryPoint.getActionType() == ActionType.DELIVERY, "deliveryPoint should be DELIVERY");
 
         List<DeliveryProcess> newDeliveryProcesses = deliveryProcesses;
         newDeliveryProcesses.add(deliveryProcesses.size(),
@@ -81,6 +91,8 @@ public class DeliveryProcessService {
     }
 
     public static void setDpInfo(final Tour tour) {
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(tour.getJourneyList(), "journey list of the tour can't be null");
         final List<Journey> journeys = tour.getJourneyList();
         for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
             final Point startPoint = deliveryProcess.getPickUP().getLocation();
@@ -90,7 +102,6 @@ public class DeliveryProcessService {
             deliveryProcess.setDistance(distance);
             deliveryProcess.setTime(duration);
         }
-
     }
 
 
