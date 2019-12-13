@@ -7,11 +7,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.commons.lang.Validate;
-import view.*;
+import view.DashBoardController;
+import view.UserInterface;
 
 import java.io.IOException;
-
-import static javafx.application.Application.launch;
 
 /**
  * Class responsible for starting the application.
@@ -34,6 +33,7 @@ public class Starter extends Application {
      * @param args Command line arguments that should be empty.
      */
     public static void main(final String[] args) {
+        Validate.notNull(args, "args null");
         launch(args);
     }
 
@@ -76,7 +76,8 @@ public class Starter extends Application {
         try {
             // Load root Layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(UserInterface.class.getResource("DashBoard.fxml"));
+            loader.setLocation(UserInterface.class.getResource
+                    ("DashBoard.fxml"));
             AnchorPane dashboardOverview = loader.load();
 
             // Set person overview into the center of root layout

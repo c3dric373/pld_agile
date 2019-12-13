@@ -73,10 +73,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     @FXML
     private TextField inputDeliveryTimeH;
+
     @FXML
     private TextField inputDeliveryTimeM;
+
     @FXML
     private TextField inputPickUpTimeH;
+
     @FXML
     private TextField inputPickUpTimeM;
 
@@ -175,25 +178,40 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
 
-    // Manage Local Storage.
     public void setTour(Tour tour) {
         tourLoaded = tour;
 
     }
 
+    /**
+     * Asks the user if he wants to delete a selected DeliveryProcess. If
+     * confirmed the {@link UserInterface} is invoked.
+     */
     public void deleteDp() {
         if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
             this.mainApp.deleteDp(deliveryProcessLoaded);
         }
     }
 
+    /**
+     * Sets the actionPoints represented by the views. The table needs to be
+     * cleaned before the new {@link ActionPoint}s can be displayed.
+     *
+     * @param tour the {@link} from which the {@link ActionPoint} should be
+     *             displayed.
+     */
     public void setActionPoints(final Tour tour) {
         actionPointTableView.getSelectionModel().clearSelection();
         actionPoints.remove(0, actionPoints.size());
         actionPoints.addAll(tour.getActionPoints());
     }
 
-    public void modifyDeliveryProcess() {
+    /**
+     * Interaction with the user when he desires to change the order of certain
+     * ActionPoints. If the user chooses a valid number, the
+     * {@link UserInterface} will be invoked.
+     */
+    public void modifyDeliveryOrder() {
         int result = showModifiedDeliveryDialog(deliveryProcessLoaded);
         int index = actionPointTableView.getSelectionModel().getFocusedIndex();
         if (result != -1) {
@@ -204,7 +222,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-
+    /**
+     * Sets the important labels on the top of the view.
+     */
     private void setBigLabels() {
         numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
         startTime.setText(tourLoaded.getStartTime().toString());
@@ -220,28 +240,41 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-
+    /**
+     * Clears the Information stored about the current delivery Process, to
+     * reduce conflict with the future incoming information. Invokes the
+     * {@link UserInterface} to calculate the tour.
+     */
     public void calculateTour() {
         clearNewDeliveryProcess();
         this.mainApp.calculateTour();
     }
 
-    // Create / Update
-
+    /**
+     * In order to display the ActionPoints of a Tour, before the latter was
+     * optimized, we need to acces those. This is done by this methods. The Ac
+     */
     public void createFakeActionPointList() {
         List<ActionPoint> listActionPoints = new ArrayList<>();
-        // Create a base actionPoint.
-        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.BASE);
-        ActionPoint end = new ActionPoint(tourLoaded.getStartTime(), tourLoaded.getBase(), ActionType.END);
+
+        // Create a BASE and END actionPoint.
+        ActionPoint base = new ActionPoint(tourLoaded.getStartTime(),
+                tourLoaded.getBase(), ActionType.BASE);
+        ActionPoint end = new ActionPoint(tourLoaded.getStartTime(),
+                tourLoaded.getBase(), ActionType.END);
 
         listActionPoints.add(base);
         listActionPoints.add(end);
-        for (DeliveryProcess deliveryProcess : tourLoaded.getDeliveryProcesses()) {
+
+        for (DeliveryProcess deliveryProcess :
+                tourLoaded.getDeliveryProcesses()) {
+
             final ActionPoint pickUp = new ActionPoint(deliveryProcess.getPickUP()
                     .getTime(), deliveryProcess.getPickUP().getLocation(),
                     deliveryProcess.getPickUP().getActionType());
             pickUp.setId(deliveryProcess.getPickUP().getId());
             listActionPoints.add(pickUp);
+
             final ActionPoint delivery = new ActionPoint
                     (deliveryProcess.getDelivery().getTime(),
                             deliveryProcess.getDelivery().getLocation(),
@@ -252,11 +285,15 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         tourLoaded.setActionPoints(listActionPoints);
     }
 
+    /**
+     * Invokes the {@link UserInterface} after a click on the undo button was
+     * made.
+     */
     public void undo() {
         this.mainApp.undo();
     }
 
-    public Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {
+    Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {
         String label = mType.firstLetter;
         if (actionPoint.getActionType() != ActionType.BASE && actionPoint.getActionType() != ActionType.END) {
             label += actionPoint.getId();
@@ -273,22 +310,36 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         return pointMarker;
     }
 
+    /**
+     * Checks whether the necessary information to add a {@link DeliveryProcess}
+     * to the {@code loadedTour}. If it is the cas the {@link UserInterface} is
+     * invoked, if not an error message is displayed.
+     */
     public void addNewDeliveryProcess() {
         if (canAddDeliveryProcess()) {
             if (newPickUpActionPoint != null && newDeliveryActionPoint != null) {
-                newPickUpActionPoint.setTime(Utils.parseStringToTime(inputPickUpTimeH.getText(), inputPickUpTimeM.getText()));
-                newDeliveryActionPoint.setTime(Utils.parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
-                this.mainApp.addDeliveryProcess(tourLoaded, newPickUpActionPoint, newDeliveryActionPoint);
+                newPickUpActionPoint.setTime(Utils.parseStringToTime
+                        (inputPickUpTimeH.getText(),
+                                inputPickUpTimeM.getText()));
+                newDeliveryActionPoint.setTime(Utils.parseStringToTime
+                        (inputDeliveryTimeH.getText(),
+                                inputDeliveryTimeM.getText()));
+                this.mainApp.addDeliveryProcess
+                        (tourLoaded, newPickUpActionPoint,
+                                newDeliveryActionPoint);
             } else {
-                showAlert("Action Impossible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
+                showAlert("Action Impossible", "Error :",
+                        "The Delivery Process is not created",
+                        Alert.AlertType.ERROR);
             }
         } else {
-            showAlert("Action Impossible", "Error :", "All the fields to create a delivery process are not completes", Alert.AlertType.ERROR);
+            showAlert("Action Impossible", "Error :",
+                    "All the fields to create a delivery process are "
+                            + "not completes", Alert.AlertType.ERROR);
         }
     }
 
 
-    // Update view
 
     void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
         deliveryProcessLoaded = deliveryProcess;
