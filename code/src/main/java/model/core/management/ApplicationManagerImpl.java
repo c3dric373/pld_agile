@@ -121,6 +121,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
         newTour.setTotalDistance(completeDistance);
         DeliveryProcessService.setDpInfo(newTour);
         TourService.calculateTimeAtPoint(newTour);
+        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
@@ -144,10 +145,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
                     deliveryPoint);
             newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
-            Graph graph = projectDataWrapper.getProject().getGraph();
-            System.out.println(graph.getPoints().contains(pickUpPoint.getLocation()));
-            System.out.println(graph.getPoints().contains(deliveryPoint.getLocation()));
-
+            DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
         } else {
             setAddDeliveryProcess();
             Graph graph = projectDataWrapper.getProject().getGraph();
@@ -158,6 +156,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             newTour.setCompleteTime(completeTime);
             newTour.setTotalDistance(completeDistance);
             DeliveryProcessService.setDpInfo(newTour);
+            DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
             TourService.calculateTimeAtPoint(newTour);
         }
         projectDataWrapper.modifyTour(newTour);
@@ -176,6 +175,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             setDeleteDeliveryProcess();
             final Tour tour = projectDataWrapper.getProject().getTour();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+            DeliveryProcessService.delDeliveryProcessIdTourNotCalc(tour);
             projectDataWrapper.loadTour(newTour);
         } else {
             setDeleteDeliveryProcess();
@@ -188,6 +188,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
             Time completeTime = TourService.getCompleteTime(newTour);
             newTour.setCompleteTime(completeTime);
             newTour.setTotalDistance(completeDistance);
+            DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
             projectDataWrapper.loadTour(newTour);
         }
 
