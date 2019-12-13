@@ -147,6 +147,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                 && projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Another action is in progress");
         }
+        undoList.add(tour.deepClone());
         Validate.notNull(tour, "tour null");
         Validate.notNull(pickUpPoint, "pickUpPoint null");
         Validate.notNull(deliveryPoint, "deliveryPoint null");
@@ -164,7 +165,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                     deliveryPoint);
             updateInfo(newTour);
         }
-        undoList.add(tour.deepClone());
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
     }
@@ -200,7 +200,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         Validate.notNull(deliveryProcess, "deliveryProcess null");
         Tour newTour;
         final Tour tour = projectDataWrapper.getProject().getTour();
-
+        undoList.add(tour.deepClone());
         if (projectState == ProjectState.TOUR_LOADED) {
             setDeleteDeliveryProcess();
             newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
@@ -213,7 +213,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             updateInfo(newTour);
             projectDataWrapper.loadTour(newTour);
         }
-        undoList.add(tour.deepClone());
         projectState = mainProjectState;
     }
 
