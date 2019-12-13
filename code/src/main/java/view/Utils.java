@@ -15,14 +15,35 @@ import java.text.DecimalFormat;
 public class Utils {
 
     /**
+     * Max number allowed for an hour.
+     */
+    private static final int MAX_HOURS = 23;
+
+    /**
+     * Max number allowed to be a minute.
+     */
+    private static final int MAX_MINUTES = 59;
+
+    /**
+     * Empty String.
+     */
+    private static final String EMPTY_STRING = "";
+
+    /**
+     * Random Multiplication Factor
+     */
+    private static final int RANDOM_MULTIPLICATION_FACTOR = 380000;
+
+    /**
      * Transforms an actionPoint to a colour, returned in the form of a String.
      *
      * @param actionPoint the actionPoint to assign a colour.
      * @return the colour assigned to the {@link ActionPoint}.
      */
     static String pointToColour(ActionPoint actionPoint) {
-        int numberFromId = (int) (actionPoint.getId() * 3.8 * 100000 *
-                Math.pow(2, actionPoint.getId()));
+        int numberFromId = (int) (actionPoint.getId()
+                * RANDOM_MULTIPLICATION_FACTOR
+                * Math.pow(2, actionPoint.getId()));
         Color color = new Color(numberFromId).brighter();
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(),
                 color.getBlue());
@@ -41,7 +62,7 @@ public class Utils {
             return numberFormat.format(point.getLatitude()) + ", "
                     + numberFormat.format(point.getLongitude());
         } else {
-            return "";
+            return EMPTY_STRING;
         }
     }
 
@@ -63,9 +84,10 @@ public class Utils {
         Validate.isTrue(NumberUtils.isNumber(minutes),
                 "minutes not a number");
         Validate.isTrue(Integer.parseInt(hours)
-                < 24 && Integer.parseInt(hours) >= 0, "not an hour");
+                < MAX_HOURS && Integer.parseInt(hours) >= 0, "not an hour");
         Validate.isTrue(Integer.parseInt(minutes)
-                < 59 && Integer.parseInt(minutes) >= 0, "not a minute");
+                < MAX_MINUTES && Integer.parseInt(minutes) >= 0, "not a " +
+                "minute");
         final String toParse = hours + ":" + minutes + ":00";
         return Time.valueOf(toParse);
     }

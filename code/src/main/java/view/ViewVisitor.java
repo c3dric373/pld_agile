@@ -6,6 +6,10 @@ import model.data.*;
 @Getter
 public class ViewVisitor implements GenDataVisitor {
 
+    private final static double OPACITY_FACTOR = 0.9;
+
+    private final static int TYPE = 4;
+
     /**
      * The {@link DashBoardController} to notify about changes from the model.
      */
@@ -39,7 +43,6 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final ActionPoint actionPoint) {
-        System.out.println("ViewVisitor action Point");
         dashBoardController.drawAndSaveNewActionPoint(actionPoint);
     }
 
