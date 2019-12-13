@@ -25,7 +25,7 @@ public enum ErrorMessage implements GenData {
     /**
      * Point doesn't exist.
      */
-    POINT_DOESNT_EXIST("Point doesn't exist"),
+    POINT_DOESNT_EXIST("Point doesn't exist, you should load a bigger map"),
 
     /**
      * ActionType is null.
@@ -121,7 +121,8 @@ public enum ErrorMessage implements GenData {
     /**
      * Point doesn't belong to the map.
      */
-    POINT_NOT_ON_MAP("Point does not belong to the map"),
+    POINT_NOT_ON_MAP("Point does not belong to the map, you should load a " +
+            "bigger map"),
 
     /**
      * Impossible to remove delivery.
