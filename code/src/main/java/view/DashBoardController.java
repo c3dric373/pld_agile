@@ -160,6 +160,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             final List<Journey> journeys = tourLoaded.getJourneyList();
             final int journeysLength = journeys.size();
             arrivalTime.setText(journeys.get(journeysLength - 1).getFinishTime().toString());
+        } else {
+            arrivalTime.setText("");
         }
     }
 
@@ -365,8 +367,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void drawFullTour() {
         setBigLabels();
         map.clearMarkers();
-        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
         drawAllActionPoints();
+        drawPolyline(getMCVPathFormJourneyListe(tourLoaded.getJourneyList()), "blue", 0.4);
+
     }
 
 
@@ -374,6 +377,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
         // First Action Point is the Base
         map.clearMarkers();
+        if (poly != null) {
+            poly.setVisible(false);
+        }
         map.addMarker(createMarker(actionPoints.get(0), MarkerType.BASE));
 
         //According to ActionType set the good MarkerType
@@ -386,14 +392,18 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
+    private Polyline poly;
+
     public void drawPolyline(final MVCArray mvcArray, String color, double opacity) {
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvcArray)
                 .strokeColor(color)
                 .clickable(false)
                 .strokeOpacity(opacity)
-                .strokeWeight(4);
-        Polyline poly = new Polyline(polyOpts);
+                .strokeWeight(4)
+                .visible(true);
+        poly = new Polyline(polyOpts);
+        poly.setVisible(true);
         map.addMapShape(poly);
     }
 
