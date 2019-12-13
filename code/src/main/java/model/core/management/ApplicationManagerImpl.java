@@ -111,7 +111,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         if (projectState != ProjectState.MAP_LOADED
                 && projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
-            sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
+            sendMessage(ErrorMessage.MAP_NOT_LOADED);
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
