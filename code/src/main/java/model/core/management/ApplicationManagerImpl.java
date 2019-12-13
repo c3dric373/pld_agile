@@ -84,6 +84,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.loadMap(graph);
         setMapLoaded();
         mainProjectState = ProjectState.MAP_LOADED;
+        System.out.println("*************** After loadMap, ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
+        System.out.println("*************** Expected: MAP_LOADED ***************");
     }
 
     @Override
@@ -104,7 +107,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.loadTour(tour);
         setTourLoaded();
         mainProjectState = ProjectState.TOUR_LOADED;
-
+        System.out.println("*************** After loadTour, ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
+        System.out.println("*************** Expected: TOUR_LOADED ***************");
     }
 
     @Override
@@ -120,7 +125,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
         mainProjectState = ProjectState.TOUR_CALCULATED;
-
+        System.out.println("*************** After calculateTour, ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
+        System.out.println("*************** Expected: TOUR_CALCULATED ***************");
     }
 
     @Override
@@ -150,6 +157,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
+        System.out.println("*************** After addDeliveryProcess, ***************");
+        System.out.println("*************** projectState: " + projectState + " ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
     }
 
     @Override
@@ -181,6 +191,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
 
         projectState = mainProjectState;
+        System.out.println("*************** After deleteDeliveryProcess, ***************");
+        System.out.println("*************** projectState: " + projectState + " ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
     }
 
     private void updateInfo(final Tour newTour) {
@@ -208,6 +221,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
+        System.out.println("*************** After changeDeliveryOrder, ***************");
+        System.out.println("*************** projectState: " + projectState + " ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
 
     }
 
@@ -233,6 +249,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.modifyTour(newTour);
 
         projectState = mainProjectState;
+        System.out.println("*************** After changePointPosition, ***************");
+        System.out.println("*************** projectState: " + projectState + " ***************");
+        System.out.println("*************** mainProjectState: " + mainProjectState + " ***************");
     }
 
     @Override

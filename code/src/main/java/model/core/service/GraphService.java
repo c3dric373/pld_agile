@@ -2,6 +2,7 @@ package model.core.service;
 
 import model.core.TSP;
 import model.core.TSP3;
+import model.core.TSP4;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 
@@ -340,7 +341,7 @@ public class GraphService {
                 "calculateTour can't take more than 15 delivery process");
 
         // if we catch an IllegalArgumentException, it means tour and graph are incompatible
-        TSP tsp3 = new TSP3();
+        TSP tsp3 = new TSP4();
 //        int timeLimit = Integer.MAX_VALUE;
         List<Journey> journeys = getListJourney(tour, graph, tsp3, 30000);
         List<Point> points = new ArrayList<>();
