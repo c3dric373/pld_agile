@@ -70,7 +70,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-
     //Enum Marker Types.
     @Getter
     public enum MarkerType {
@@ -316,7 +315,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
                 List<Journey> journeyList = new ArrayList<Journey>();
                 journeyList.add(tourLoaded.getJourneyList().get(0));
-                displayMap();
+                displayMap(getSelectedActionPoint().getLocation());
                 drawAllActionPoints();
                 drawFullTour();
                 drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 2);
@@ -334,10 +333,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // Display on Map
 
-    public void displayMap() {
+    public void displayMap(Point center) {
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
-        mapOptions.center(new LatLong(45.771606, 4.880959))
+        mapOptions.center(new LatLong(center.getLatitude(),center.getLongitude()))
                 .styleString(mapStyle)
                 .overviewMapControl(false)
                 .mapType(MapTypeIdEnum.ROADMAP)
@@ -346,7 +345,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 .scaleControl(false)
                 .streetViewControl(false)
                 .zoomControl(false)
-                .zoom(12);
+                .zoom(13);
         // Add map to the view
         map = mapView.createMap(mapOptions);
     }
@@ -467,12 +466,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         labelDeliveryCoordonates.setText("");
     }
 
-    public void clearPolyline() {
-
-    }
-
     public void clearAll() {
-        displayMap();
+        displayMap(tourLoaded.getBase());
         clearNewDeliveryProcess();
     }
     // Utils
@@ -590,7 +585,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
             List<Journey> journeyList = new ArrayList<Journey>();
             journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
-            displayMap();
+            displayMap(newValue.getLocation());
             drawAllActionPoints();
             drawFullTour();
             drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 3);
@@ -659,6 +654,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         int numberFromId = (int)(actionPoint.getId() * 6.8 * 10000 * Math.pow(2,actionPoint.getId()));
         Color color = new Color(numberFromId).brighter();
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+    }
+
+    public ActionPoint getSelectedActionPoint() {
+        return actionPointTableView.getSelectionModel().getSelectedItem();
     }
 
 }

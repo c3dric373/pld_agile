@@ -26,7 +26,7 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final Graph graph) {
-        dashBoardController.displayMap();
+        dashBoardController.displayMap(graph.getPoints().get(0));
     }
 
     @Override
@@ -46,11 +46,12 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
-        dashBoardController.displayMap();
+        dashBoardController.displayMap(dashBoardController.getSelectedActionPoint().getLocation());
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
         dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),0.9,4);
     }
+
 
     @Override
     public void visit(final ErrorMessage error) {
