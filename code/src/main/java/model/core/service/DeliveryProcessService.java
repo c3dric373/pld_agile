@@ -106,6 +106,8 @@ public class DeliveryProcessService {
 
 
     public static Optional<DeliveryProcess> createDpBase(final Tour tour) {
+        Validate.notNull(tour, "tour can't be null");
+        Validate.notNull(tour.getActionPoints(), "actionPoint list of the tour can't be null");
         ActionPoint endAp = null;
         ActionPoint base = null;
         for (ActionPoint actionPoint1 : tour.getActionPoints()) {

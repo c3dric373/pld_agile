@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -203,7 +204,36 @@ class DeliveryProcessServiceTest {
         }
     }
 
-    @Test
-    void createDpBase() {
+    @Nested
+    class createDpBase {
+        @Test
+        void nullParameter() {
+            assertAll(
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> deliveryProcessService.createDpBase(null)),
+                    () -> assertThrows(IllegalArgumentException.class,
+                            () -> deliveryProcessService.createDpBase(tour))
+            );
+        }
+
+        @Test
+        void correctUsage() {
+            List<DeliveryProcess> deliveryProcesses1 = new ArrayList<>();
+            deliveryProcesses1.add(deliveryProcess);
+            Tour tour = new Tour(deliveryProcesses1, base.getLocation(), Time.valueOf("0:0:0"));
+            List<ActionPoint> actionPoints = new ArrayList<>();
+            actionPoints.add(base);
+            actionPoints.add(pickUp);
+            actionPoints.add(delivery);
+            actionPoints.add(end);
+            tour.setActionPoints(actionPoints);
+            Optional<DeliveryProcess> res = deliveryProcessService.createDpBase(tour);
+            assertAll(
+                    () -> assertEquals(base, res.get().getPickUP(),
+                            "createDpBase should return a fake deliveryProcesses with base as pickUp point"),
+                    () -> assertEquals(end, res.get().getDelivery(),
+                            "createDpBase should return a fake deliveryProcesses with end as delivery point")
+            );
+        }
     }
 }
