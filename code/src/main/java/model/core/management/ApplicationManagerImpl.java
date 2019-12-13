@@ -33,7 +33,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     private ProjectState projectState;
 
     /**
-     * Main State of the Project
+     * Main State of the Project.
      */
     private ProjectState mainProjectState;
 
@@ -53,7 +53,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     private TourService tourService;
 
     /**
-     * DeliveryProcessService of the Project
+     * DeliveryProcessService of the Project.
      */
     private DeliveryProcessService deliveryProcessService;
 
@@ -73,8 +73,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadMap(final File file) {
-        if (projectState != ProjectState.INITIALIZED &&
-                projectState != ProjectState.MAP_LOADED) {
+        if (projectState != ProjectState.INITIALIZED
+                && projectState != ProjectState.MAP_LOADED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
@@ -94,9 +94,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void loadTour(final File file) {
-        if (projectState != ProjectState.MAP_LOADED &&
-                projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.MAP_LOADED
+                && projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
         } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
@@ -110,8 +110,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void calculateTour() {
-        if (projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.TOUR_NOT_LOADED);
         }
         final Tour tour = projectDataWrapper.getProject().getTour();
@@ -130,9 +130,9 @@ public class ApplicationManagerImpl implements ApplicationManager {
         if (projectState != projectState.TOUR_LOADED
                 && projectState != projectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
-        } else if ( tour == null){
+        } else if (tour == null) {
             sendMessage(ErrorMessage.TOUR_NULL);
-        } else if (pickUpPoint == null ) {
+        } else if (pickUpPoint == null) {
             sendMessage(ErrorMessage.PICKUP_POINT_NULL);
         } else if (deliveryPoint == null) {
             sendMessage(ErrorMessage.DELIVERY_POINT_NULL);
@@ -140,14 +140,18 @@ public class ApplicationManagerImpl implements ApplicationManager {
             final Tour newTour;
             if (projectState == ProjectState.TOUR_LOADED) {
                 setAddDeliveryProcess();
-                DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
+                DeliveryProcess deliveryProcess;
+                deliveryProcess = new DeliveryProcess(pickUpPoint,
                         deliveryPoint);
-                newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
-                DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
+                newTour = TourService
+                        .addDpTourNotCalculated(tour, deliveryProcess);
+                DeliveryProcessService
+                        .addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
             } else {
                 setAddDeliveryProcess();
                 Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
+                newTour = TourService
+                        .addNewDeliveryProcess(graph, tour, pickUpPoint,
                         deliveryPoint);
                 updateInfo(newTour);
             }
@@ -158,26 +162,30 @@ public class ApplicationManagerImpl implements ApplicationManager {
 
     @Override
     public void deleteDeliveryProcess(final DeliveryProcess deliveryProcess) {
+        ActionType actionType = deliveryProcess.getPickUP().getActionType();
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
-        } else if ( deliveryProcess == null){
+        } else if (deliveryProcess == null) {
             sendMessage(ErrorMessage.DELIVERY_PROCESS_NULL);
-        } else if(deliveryProcess.getPickUP().getActionType() == ActionType.BASE){
+
+        } else if (actionType == ActionType.BASE) {
             sendMessage(ErrorMessage.CANNOT_DELETE_BASE);
         } else {
             Tour newTour;
             if (projectState == ProjectState.TOUR_LOADED) {
                 setDeleteDeliveryProcess();
                 final Tour tour = projectDataWrapper.getProject().getTour();
-                newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+                newTour = TourService
+                        .deleteDpTourNotCalculated(tour, deliveryProcess);
                 DeliveryProcessService.delDeliveryProcessIdTourNotCalc(tour);
                 projectDataWrapper.loadTour(newTour);
             } else {
                 setDeleteDeliveryProcess();
                 final Tour tour = projectDataWrapper.getProject().getTour();
                 final Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+                newTour = TourService
+                        .deleteDeliveryProcess(graph, tour, deliveryProcess);
                 updateInfo(newTour);
                 projectDataWrapper.loadTour(newTour);
             }
@@ -216,7 +224,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
     }
 
     @Override
-    public void changePointPosition(final ActionPoint oldPoint, final Point newPoint) {
+    public void changePointPosition(final ActionPoint oldPoint,
+                                    final Point newPoint) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
@@ -231,8 +240,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
             setModifyDeliveryProcessPoint();
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
-            final Tour newTour = tourService.changePointPosition
-                    (graph, tour, oldPoint, newPoint);
+            final Tour newTour = tourService.changePointPosition(graph, tour,
+                    oldPoint, newPoint);
             DeliveryProcessService.setDpInfo(newTour);
             TourService.calculateTimeAtPoint(newTour);
             projectDataWrapper.modifyTour(newTour);
@@ -244,8 +253,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
     @Override
     public void findNearestPoint(final double latitude,
                                  final double longitude,
-                                 ActionType actionType,
-                                 Time actionTime) {
+                                 final ActionType actionType,
+                                 final Time actionTime) {
         Validate.notNull(latitude, "latitude is null");
         Validate.notNull(longitude, "longitude is null");
         Validate.notNull(actionType, "actionType is null");
@@ -259,87 +268,130 @@ public class ApplicationManagerImpl implements ApplicationManager {
         projectDataWrapper.findNearestPoint(nearestActionPoint);
     }
 
-    public void getDeliveryProcess(final List<DeliveryProcess> deliveryProcesses, final ActionPoint actionPoint) {
-        //Validate.isTrue(projectState == ProjectState.TOUR_CALCULATED, "tour not calculated");
+    /**
+     * Get the deliveryProcess that contains the ActionPoint.
+     *
+     * @param deliveryProcesses list of delivery Process
+     * @param actionPoint a pick up point or a delivery point.
+     */
+    public void getDeliveryProcess(
+            final List<DeliveryProcess> deliveryProcesses,
+            final ActionPoint actionPoint) {
         if (actionPoint == null) {
             return;
         }
-        OptionalInt index = deliveryProcessService.findActionPoint(deliveryProcesses, actionPoint);
+        OptionalInt index = deliveryProcessService
+                .findActionPoint(deliveryProcesses, actionPoint);
         if (index.isPresent()) {
-            DeliveryProcess deliveryProcess = deliveryProcesses.get(index.getAsInt());
+            DeliveryProcess deliveryProcess;
+            deliveryProcess = deliveryProcesses.get(index.getAsInt());
             projectDataWrapper.selectDeliveryProcess(deliveryProcess);
         } else {
             Tour tour = projectDataWrapper.getProject().getTour();
-            Optional<DeliveryProcess> completeDp = DeliveryProcessService.createDpBase(tour);
-            completeDp.ifPresent(deliveryProcess -> projectDataWrapper.selectDeliveryProcess(deliveryProcess));
+            Optional<DeliveryProcess> completeDp;
+            completeDp = DeliveryProcessService.createDpBase(tour);
+            completeDp.ifPresent(deliveryProcess
+                    -> projectDataWrapper
+                    .selectDeliveryProcess(deliveryProcess));
         }
     }
 
+    /**
+     * Get the journey List to make the delivery Provess.
+     *
+     * @param journeyList liste of journeys
+     * @param deliveryProcess Delivery Process
+     */
     @Override
-    public void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess) {
-        if(projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED){
+    public void getJourneyList(final List<Journey> journeyList,
+                               final DeliveryProcess deliveryProcess) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
-            List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
+            List<Journey> listJourneyFromDeliveryProcess;
+            listJourneyFromDeliveryProcess = graphService
+                    .getJourneysForDeliveryProcess(
+                            journeyList, deliveryProcess);
             projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
         }
     }
 
-    public void setMapLoaded(){
-        if(projectState != ProjectState.INITIALIZED &&
-                projectState != ProjectState.MAP_LOADED){
+    /**
+     * Set state to MAP_LOADED.
+     */
+    public void setMapLoaded() {
+        if (projectState != ProjectState.INITIALIZED
+                && projectState != ProjectState.MAP_LOADED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.MAP_LOADED;
         }
     }
 
+    /**
+     * Set State to TOUR_LOADED.
+     */
     public void setTourLoaded() {
-        if (projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.MAP_LOADED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.MAP_LOADED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.TOUR_LOADED;
         }
     }
 
+    /**
+     * Set State to TOUR_CALCULATED.
+     */
     public void setTourCalculated() {
-        if (projectState != ProjectState.TOUR_LOADED &&
-                projectState != projectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != projectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = projectState.TOUR_CALCULATED;
         }
     }
 
+    /**
+     * Set State to ADD_DELIVERY_PROCESS.
+     */
     public void setAddDeliveryProcess() {
-        if (projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.ADD_DELIVERY_PROCESS;
         }
     }
 
+    /**
+     * Set State to DELETE_DELIVERY_PROCESS.
+     */
     public void setDeleteDeliveryProcess() {
-        if (projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.DELETE_DELIVERY_PROCESS;
         }
     }
 
+    /**
+     * Set State to MODIFY_DELIVERY_PROCESS_POINT.
+     */
     public void setModifyDeliveryProcessPoint() {
-        if (projectState != ProjectState.TOUR_LOADED &&
-                projectState != ProjectState.TOUR_CALCULATED) {
+        if (projectState != ProjectState.TOUR_LOADED
+                && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
             projectState = ProjectState.MODIFY_DELIVERY_PROCESS_POINT;
         }
     }
 
+    /**
+     * Set State to CHANGE_DELIVERY_ORDER.
+     */
     public void setChangeDeliveryOrder() {
         if (projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
@@ -348,7 +400,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
     }
 
-    public static void sendMessage(ErrorMessage message){
+    /**
+     * Send an error message to the view.
+     *
+     * @param message ErrorMessage
+     */
+    public static void sendMessage(final ErrorMessage message) {
         projectDataWrapper.sendErrorMessage(message);
     }
 
