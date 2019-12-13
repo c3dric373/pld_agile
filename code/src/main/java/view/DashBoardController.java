@@ -255,9 +255,13 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public Marker createMarker(final ActionPoint actionPoint, final MarkerType mType) {
+        String label = mType.firstLetter;
+        if(actionPoint.getActionType() != ActionType.BASE && actionPoint.getActionType() != ActionType.END) {
+            label += actionPoint.getId();
+        };
         MarkerOptions markerPoint = new MarkerOptions();
         markerPoint.title(mType.title)
-                .label(mType.firstLetter)
+                .label(label)
                 .position(new LatLong(actionPoint.getLocation().getLatitude(), actionPoint.getLocation().getLongitude()));
         Marker pointMarker = new Marker(markerPoint);
         return pointMarker;
@@ -300,7 +304,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         dpDDuration.setText(deliveryDuration);
         dpPUDuration.setText(pickUpDuration);
         // actionPointTableView.setItems(null);
-        // DISPLAY POLYLINE.
         if (tourLoaded.getJourneyList() != null) {
             if (deliveryProcess.getPickUP().getActionType() == ActionType.BASE) {
                 dpDuration.setText(tourLoaded.getCompleteTime().toString());
