@@ -25,7 +25,7 @@ public class ApplicationManagerImpl implements ApplicationManager {
     /**
      * Project Data wrapper for project.
      */
-    private ProjectDataWrapper projectDataWrapper;
+    private static ProjectDataWrapper projectDataWrapper;
 
     /**
      * State of the Project.
@@ -305,6 +305,10 @@ public class ApplicationManagerImpl implements ApplicationManager {
             throw new IllegalStateException("Another action is in progress");
         }
         projectState = ProjectState.CHANGE_DELIVERY_ORDER;
+    }
+
+    public static void sendMessage(ErrorMessage message){
+        projectDataWrapper.sendErrorMessage(message);
     }
 
 

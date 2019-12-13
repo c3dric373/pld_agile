@@ -1,5 +1,6 @@
 package view;
 
+import javafx.scene.control.Alert;
 import model.data.*;
 
 public class ViewVisitor implements GenDataVisitor {
@@ -46,6 +47,14 @@ public class ViewVisitor implements GenDataVisitor {
         dashBoardController.drawFullTour();
         //dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),dashBoardController.pointToColour(listJourneyFromDeliveryProcess.getJourneyList().get(0).getPoints().get(0)),0.4);
         dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),"red",0.4);
+    }
+
+    @Override
+    public void visit(final ErrorMessage error) {
+        //TODO inform the view that there is an error
+        dashBoardController.showAlert("error", "An error has occured",
+                error.getMessage(), Alert.AlertType.ERROR);
+        System.out.println(error.getMessage());
     }
 
 
