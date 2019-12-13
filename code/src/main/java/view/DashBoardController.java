@@ -353,8 +353,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     public void displayLoadedDeliveryProcess() {
+        map.setCenter(new LatLong(tourLoaded.getBase().getLatitude(),tourLoaded.getBase().getLongitude()));
         setBigLabels();
-
         // Create a fake list of action Points To display.
         createFakeActionPointList();
         actionPoints.remove(0, actionPoints.size());
