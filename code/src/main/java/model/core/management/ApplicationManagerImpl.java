@@ -132,9 +132,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         undoList.add(tour.deepClone());
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
-        System.out.println("t");
-        //TourService.recalculateOrder(newTour);
-        System.out.println("i");
         updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
@@ -182,6 +179,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             projectDataWrapper.loadTour(tour);
         } else {
             projectState = ProjectState.TOUR_CALCULATED;
+            TourService.recalculateOrder(tour);
             projectDataWrapper.getProject().setTour(tour);
             projectDataWrapper.modifyTour(tour);
         }
@@ -251,6 +249,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
         updateInfo(newTour);
+        //TourService.recalculateOrder(newTour);
+
         projectDataWrapper.modifyTour(newTour);
         projectState = mainProjectState;
 

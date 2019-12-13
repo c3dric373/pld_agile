@@ -64,11 +64,19 @@ public class TourService {
 
     public static Tour deleteDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().remove(deliveryProcess);
+        if(tour.getActionPoints() !=null){
+            tour.getActionPoints().remove(deliveryProcess.getPickUP());
+            tour.getActionPoints().remove(deliveryProcess.getDelivery());
+        }
         return tour;
     }
 
     public static Tour addDpTourNotCalculated(final Tour tour, final DeliveryProcess deliveryProcess) {
         tour.getDeliveryProcesses().add(deliveryProcess);
+        if(tour.getActionPoints() !=null){
+            tour.getActionPoints().add(deliveryProcess.getPickUP());
+            tour.getActionPoints().add(deliveryProcess.getDelivery());
+        }
         return tour;
 
     }
@@ -335,6 +343,11 @@ public class TourService {
             ActionPoint actionPoint = JourneyService.findActionPoint
                     (journey.getStartPoint(), actionPoints1);
             result.add(actionPoint);
+        }
+        for (ActionPoint actionPoint : actionPoints1) {
+            if (actionPoint.getActionType() == ActionType.END) {
+                result.add(actionPoint);
+            }
         }
         tour.setActionPoints(result);
     }
