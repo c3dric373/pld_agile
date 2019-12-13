@@ -319,7 +319,7 @@ public class DashBoardController implements Initializable,
 
     /**
      * Checks whether the necessary information to add a {@link DeliveryProcess}
-     * to the {@code loadedTour}. If it is the cas the {@link UserInterface} is
+     * to the {@code loadedTour}. If it is the case the {@link UserInterface} is
      * invoked, if not an error message is displayed.
      */
     public void addNewDeliveryProcess() {
@@ -389,6 +389,59 @@ public class DashBoardController implements Initializable,
         }
     }
 
+    public void handleLoadMap() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a Map XML");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
+        final File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            if (selectedFile.getName().contains("xml")) {
+                System.out.println("File selected: " + selectedFile.getName());
+                this.mainApp.loadMap(selectedFile);
+            } else {
+                System.out.println("Error Loading not xml File");
+            }
+        } else {
+            System.out.println("File selection cancelled.");
+        }
+    }
+
+    public void handleLoadTour() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a Tour XML");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            if (selectedFile.getName().contains("xml")) {
+                System.out.println("File selected: " + selectedFile.getName());
+                this.mainApp.loadDeliveryRequest(selectedFile);
+            } else {
+                System.out.println("Error Loading not xml File");
+            }
+        } else {
+            System.out.println("File selection cancelled.");
+        }
+    }
+
+    private void handelTableSelection(ActionPoint newValue) {
+        Utils.pointToColour(newValue);
+        if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
+            // Manage the end of the tour.
+            dpDuration.setText(tourLoaded.getCompleteTime().toString());
+            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
+            List<Journey> journeyList = new ArrayList<Journey>();
+            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
+            displayMap(newValue.getLocation());
+            drawAllActionPoints();
+            drawFullTour();
+            drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 3);
+        } else {
+            mainApp.showDeliveryProcess(newValue, tourLoaded);
+        }
+    }
+
     /**
      * Displays the map by setting the correct Marker options.
      *
@@ -413,9 +466,9 @@ public class DashBoardController implements Initializable,
     }
 
     /**
-     * Displays a loaded DeliveryProcess.
+     * Displays the {@link DeliveryProcess}s of a given tour.
      */
-    void displayLoadedDeliveryProcess() {
+    void displayTourWhenNotCalculated() {
         map.setCenter(new LatLong(tourLoaded.getBase().getLatitude(),
                 tourLoaded.getBase().getLongitude()));
         setBigLabels();
@@ -430,12 +483,9 @@ public class DashBoardController implements Initializable,
         drawAllActionPoints();
     }
 
-    // Draw
-
     /**
      * Draws  a complete tour by clearing markers, drawing {@link ActionPoint}
-     * and
-     * the necessery Polyline (connection the different Points)
+     * and the necessary Polyline (connection the different Points).
      */
     void drawFullTour() {
         setBigLabels();
@@ -445,6 +495,11 @@ public class DashBoardController implements Initializable,
                 0.4, 1);
     }
 
+    /**
+     * Draws all the {@link ActionPoint} of the loaded {@link Tour} on the map.
+     * Sets the Marker according to the type of the {@link ActionPoint} and
+     * it's {@code id}.
+     */
     void drawAllActionPoints() {
 
         // First Action Point is the Base
@@ -465,6 +520,14 @@ public class DashBoardController implements Initializable,
         }
     }
 
+    /**
+     * Draws a Polylyne on the map, following the path that is displayed in
+     * the {@link MVCArray}.
+     *
+     * @param mvcArray The path to follow to draw the line.
+     * @param opacity  opacity of the line.
+     * @param type     int parameter to determine the colour of the line.
+     */
     void drawPolyline(final MVCArray mvcArray, double opacity, int type) {
 
         String color = "blue";
@@ -496,7 +559,14 @@ public class DashBoardController implements Initializable,
         map.addMapShape(poly);
     }
 
-    public void drawAndSaveNewActionPoint(ActionPoint actionPoint) {
+    /**
+     * Displays an {@link ActionPoint} that was previosuly selected by the
+     * user. It will also save the information about the coordinates of the
+     * point, to later inform the model.
+     *
+     * @param actionPoint The actionPoint to save and draw.
+     */
+    void drawAndSaveNewActionPoint(final ActionPoint actionPoint) {
         //Clear past Markers
         map.clearMarkers();
         // Draw all tour Action point
@@ -526,6 +596,9 @@ public class DashBoardController implements Initializable,
     }
     // Clear / Reset.
 
+    /**
+     * Sets the about the selected {@link DeliveryProcess} back to zero.
+     */
     public void clearNewDeliveryProcess() {
         clearNewDeliveryPoint();
         clearNewPickUpPoint();
@@ -538,6 +611,8 @@ public class DashBoardController implements Initializable,
         newPickUpActionPoint = null;
         newDeliveryActionPoint = null;
     }
+
+}
 
     public void clearNewPickUpPoint() {
         labelPickUpCoordinates.setText("");
@@ -601,6 +676,11 @@ public class DashBoardController implements Initializable,
         });
     }
 
+    /** checks whether a label is empty or not
+     *
+     * @param label the label to check.
+     * @return true if the label is 
+     */
     public Boolean editable(Label label) {
         return label.getText() == "";
     }
@@ -615,63 +695,17 @@ public class DashBoardController implements Initializable,
         return labelDeliveryCoordinates.getText() != "" && labelDeliveryCoordinates.getText() != "" && inputDeliveryTimeM.getText() != "" && inputPickUpTimeM.getText() != "";
     }
 
-    // Utils Pop Up
 
-    public void handleLoadMap() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a Map XML");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
-        final File selectedFile = fileChooser.showOpenDialog(null);
-
-        if (selectedFile != null) {
-            if (selectedFile.getName().contains("xml")) {
-                System.out.println("File selected: " + selectedFile.getName());
-                this.mainApp.loadMap(selectedFile);
-            } else {
-                System.out.println("Error Loading not xml File");
-            }
-        } else {
-            System.out.println("File selection cancelled.");
-        }
-    }
-
-    public void handleLoadTour() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a Tour XML");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML", "*.xml"));
-        File selectedFile = fileChooser.showOpenDialog(null);
-
-        if (selectedFile != null) {
-            if (selectedFile.getName().contains("xml")) {
-                System.out.println("File selected: " + selectedFile.getName());
-                this.mainApp.loadDeliveryRequest(selectedFile);
-            } else {
-                System.out.println("Error Loading not xml File");
-            }
-        } else {
-            System.out.println("File selection cancelled.");
-        }
-    }
-
-    private void handelTableSelection(ActionPoint newValue) {
-        Utils.pointToColour(newValue);
-        if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
-            // Manage the end of the tour.
-            dpDuration.setText(tourLoaded.getCompleteTime().toString());
-            dPDistance.setText(String.valueOf(tourLoaded.getTotalDistance()) + " m");
-            List<Journey> journeyList = new ArrayList<Journey>();
-            journeyList.add(tourLoaded.getJourneyList().get(tourLoaded.getJourneyList().size() - 1));
-            displayMap(newValue.getLocation());
-            drawAllActionPoints();
-            drawFullTour();
-            drawPolyline(getMCVPathFormJourneyListe(journeyList), 0.5, 3);
-        } else {
-            mainApp.showDeliveryProcess(newValue, tourLoaded);
-        }
-    }
-
-    void showAlert(String title, String header, String msg,
-                   Alert.AlertType alertType) {
+    /**
+     * Alert Message to interact with the user and draw his attention to an
+     * important message.
+     * @param title title of the message.
+     * @param header header of the message.
+     * @param msg message itself.
+     * @param alertType type of alert (ex.: logging or error)
+     */
+    void showAlert(final String title, final String header, final String msg,
+                   final Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
@@ -679,7 +713,14 @@ public class DashBoardController implements Initializable,
         alert.showAndWait();
     }
 
-    private Boolean showConfirmationAlert(String msg) {
+    /**
+     * Shows the user a confiramtion alert to be able to make sure he wants
+     * to delete the seleted {@link DeliveryProcess}.
+     * @param msg The message to  be shown to the user.
+     * @return True if the user agrees to delete the {@link DeliveryProcess}
+     * false otherwise.
+     */
+    private Boolean showConfirmationAlert(final String msg) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         alert.setHeaderText(msg);
@@ -698,6 +739,11 @@ public class DashBoardController implements Initializable,
         }
     }
 
+    /**
+     * Show a dialog to be able to change the order of the
+     * @param deliveryProcess
+     * @return
+     */
     private int showModifiedDeliveryDialog(final DeliveryProcess deliveryProcess) {
         List<Integer> choices = new ArrayList<>();
         for (int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
@@ -705,7 +751,8 @@ public class DashBoardController implements Initializable,
         }
 
         ChoiceDialog<Integer> dialog =
-                new ChoiceDialog<Integer>(actionPointTableView.getSelectionModel().getFocusedIndex(), choices);
+                new ChoiceDialog<Integer>(actionPointTableView.getSelectionModel().
+                        getFocusedIndex(), choices);
         dialog.setTitle("Modify Order");
         dialog.setHeaderText("Change Order");
         dialog.setContentText("Choose the new N°:");
@@ -722,32 +769,38 @@ public class DashBoardController implements Initializable,
     /**
      * Is called by the main application to give a reference back to itself.
      *
-     * @param mainApp
+     * @param mainApp the mainApp.
      */
     public void setMainApp(final UserInterface mainApp) {
         Validate.notNull(mainApp);
         this.mainApp = mainApp;
     }
 
+    /**
+     * @return the selected actionPoint by the use
+     */
     ActionPoint getSelectedActionPoint() {
         return actionPointTableView.getSelectionModel().getSelectedItem();
     }
 
-    //Enum Marker Types.
-    @Getter
-    public enum MarkerType {
-        PICKUP("Pick-Up Point", "P", "icons/marker.png"), DELIVERY("Delivery "
-                + "Point", "D", "flag.png"), BASE("Base Point", "B", "home" +
-                "-icon" + "-silhouette.png");
+}
 
-        private String title = "";
-        private String firstLetter = "";
-        private String iconPath = "";
+//Enum Marker Types.
+@Getter
+enum MarkerType {
+    PICKUP("Pick-Up Point", "P", "icons/marker.png"), DELIVERY("Delivery "
+            + "Point", "D", "flag.png"), BASE("Base Point", "B", "home" +
+            "-icon" + "-silhouette.png");
 
-        MarkerType(String title, String firstLetter, String iconPath) {
-            this.title = title;
-            this.firstLetter = firstLetter;
-            this.iconPath = iconPath;
-        }
+    private String title = "";
+    public String firstLetter = "";
+    private String iconPath = "";
+
+    MarkerType(String title, String firstLetter, String iconPath) {
+        this.title = title;
+        this.firstLetter = firstLetter;
+        this.iconPath = iconPath;
     }
 }
+
+
