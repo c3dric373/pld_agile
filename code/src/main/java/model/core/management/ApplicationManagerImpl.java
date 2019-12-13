@@ -58,6 +58,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
     private DeliveryProcessService deliveryProcessService;
 
     /**
+     * List of Tours and Graphs to make undo possible.
+     */
+    private List<GenData> undoList;
+
+    /**
      * Instantiates an Application Manager.
      */
     ApplicationManagerImpl() {
@@ -277,6 +282,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
         }
         List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
         projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
+    }
+
+    @Override
+    public void undo() {
+
     }
 
     public void setMapLoaded() {
