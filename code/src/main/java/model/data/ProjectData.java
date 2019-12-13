@@ -15,13 +15,6 @@ public interface ProjectData {
     Tour getTour();
 
     /**
-     * The list representing the map.
-     *
-     * @return the map
-     */
-    List<Point> getPointList();
-
-    /**
      * Sets the tour of the project.
      *
      * @param newTour the tour to set.
@@ -49,12 +42,6 @@ public interface ProjectData {
      */
     void setSelectedDeliveryProcess(DeliveryProcess deliveryProcess);
 
-    /**
-     * Returns the selected delivery process of the project.
-     *
-     * @return The delivery process to be returned.
-     */
-    DeliveryProcess getSelectedDeliveryProcess();
 
     /**
      * Set the list of journeys needed to make a delivery Process.
@@ -64,10 +51,4 @@ public interface ProjectData {
     void setJourneyListForDeliveryProcess
     (ListJourneyFromDeliveryProcess listForDeliveryProcess);
 
-    /**
-     * Get the list of journeys needed to make a delivery process.
-     *
-     * @return ListJourneyFromDeliveryProcess
-     */
-    ListJourneyFromDeliveryProcess getSelectedJourneyList();
 }

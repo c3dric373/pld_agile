@@ -12,5 +12,5 @@ public interface GenData {
      *
      * @param genDataVisitor The visitor instance to be called.
      */
-    void accept(final GenDataVisitor genDataVisitor);
+    void accept(GenDataVisitor genDataVisitor);
 }
