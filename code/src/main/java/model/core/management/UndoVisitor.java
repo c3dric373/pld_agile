@@ -38,6 +38,11 @@ public class UndoVisitor implements GenDataVisitor {
 
     }
 
+    @Override
+    public void visit(ErrorMessage error) {
+        throw new UnsupportedOperationException();
+    }
+
     UndoVisitor(UndoHandler applicationManager) {
         this.model = applicationManager;
     }

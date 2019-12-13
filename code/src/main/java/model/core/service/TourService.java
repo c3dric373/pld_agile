@@ -233,7 +233,7 @@ public class TourService {
      * @return Returns the new ActionPoint list with the new DeliveryProcess
      * added.
      */
-    public static Tour  addNewDeliveryProcess(final Graph graph, final Tour tour,
+    public static Tour addNewDeliveryProcess(final Graph graph, final Tour tour,
                                              final ActionPoint pickUpPoint,
                                              final ActionPoint deliveryPoint) {
         Validate.notNull(graph, "graph is null");
@@ -327,4 +327,15 @@ public class TourService {
         return newTour;
     }
 
+
+    public static void recalculateOrder(final Tour tour) {
+        List<ActionPoint> actionPoints1 = tour.getActionPoints();
+        List<ActionPoint> result = new ArrayList<>();
+        for (Journey journey : tour.getJourneyList()) {
+            ActionPoint actionPoint = JourneyService.findActionPoint
+                    (journey.getStartPoint(), actionPoints1);
+            result.add(actionPoint);
+        }
+        tour.setActionPoints(result);
+    }
 }

@@ -72,7 +72,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     /**
      * Instantiates an Application Manager.
      */
-    ApplicationManagerImpl() {
+    public ApplicationManagerImpl() {
         xmlToGraph = new XmlToGraph();
         projectState = ProjectState.INITIALIZED;
         journeyService = new JourneyService();
@@ -132,6 +132,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         undoList.add(tour.deepClone());
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = graphService.calculateTour(tour, graph);
+        System.out.println("t");
+        //TourService.recalculateOrder(newTour);
+        System.out.println("i");
         updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
         setTourCalculated();
@@ -242,12 +245,13 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         Validate.notNull(actionPoints, "actionPoints null");
         Validate.notEmpty(actionPoints, "actionPointsEmpty");
         final Tour tour = projectDataWrapper.getProject().getTour();
+        Tour clone = tour.deepClone();
+        undoList.add(clone);
         final Graph graph = projectDataWrapper.getProject().getGraph();
         final Tour newTour = tourService.changeDeliveryOrder(graph, tour,
                 actionPoints);
         updateInfo(newTour);
         projectDataWrapper.modifyTour(newTour);
-        undoList.add(tour.deepClone());
         projectState = mainProjectState;
 
     }
