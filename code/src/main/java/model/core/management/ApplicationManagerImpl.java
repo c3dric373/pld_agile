@@ -94,7 +94,8 @@ public class ApplicationManagerImpl implements ApplicationManager {
     @Override
     public void loadTour(final File file) {
         if (projectState != ProjectState.MAP_LOADED &&
-                projectState != ProjectState.TOUR_LOADED) {
+                projectState != ProjectState.TOUR_LOADED &&
+                projectState != ProjectState.TOUR_CALCULATED) {
             throw new IllegalStateException("Map not loaded");
         }
         Validate.notNull(file, "file is null");
