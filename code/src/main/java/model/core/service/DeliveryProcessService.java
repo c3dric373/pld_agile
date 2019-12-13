@@ -85,14 +85,16 @@ public class DeliveryProcessService {
         for (DeliveryProcess deliveryProcess : tour.getDeliveryProcesses()) {
             final Point startPoint = deliveryProcess.getPickUP().getLocation();
             final Point endPoint = deliveryProcess.getDelivery().getLocation();
-            final int distance = JourneyService.lengthPointToPoint(journeys, startPoint, endPoint);
-            final Time duration = JourneyService.calculateTimePointToPoint(journeys, startPoint, endPoint);
+            final int distance = JourneyService.lengthPointToPoint(journeys,
+                    startPoint, endPoint);
+            final Time duration =
+                    JourneyService.calculateTimePointToPoint(journeys,
+                            startPoint, endPoint);
             deliveryProcess.setDistance(distance);
             deliveryProcess.setTime(duration);
         }
 
     }
-
 
     public static Optional<DeliveryProcess> createDpBase(final Tour tour) {
         ActionPoint endAp = null;
@@ -111,7 +113,8 @@ public class DeliveryProcessService {
         return Optional.empty();
     }
 
-    public static void addDeliveryProcessIdTourNotCalc(final Tour tour, final DeliveryProcess deliveryProcess) {
+    public static void addDeliveryProcessIdTourNotCalc(final Tour tour,
+                                                       final DeliveryProcess deliveryProcess) {
         deliveryProcess.getPickUP().setId(tour.getDeliveryProcesses().size());
         deliveryProcess.getDelivery().setId(tour.getDeliveryProcesses().size());
     }
@@ -136,10 +139,12 @@ public class DeliveryProcessService {
         for (final ActionPoint actionPoint : tour.getActionPoints()) {
             if (actionPoint.getActionType() == ActionType.PICK_UP) {
                 actionPoint.setId(i);
-                OptionalInt optionalInt = DeliveryProcessService.findActionPoint(tour.getDeliveryProcesses(), actionPoint);
+                OptionalInt optionalInt =
+                        DeliveryProcessService.findActionPoint(tour.getDeliveryProcesses(), actionPoint);
                 if (optionalInt.isPresent()) {
                     int index = optionalInt.getAsInt();
-                    final ActionPoint delivery = tour.getDeliveryProcesses().get(index).getDelivery();
+                    final ActionPoint delivery =
+                            tour.getDeliveryProcesses().get(index).getDelivery();
                     delivery.setId(i);
                 }
                 i++;

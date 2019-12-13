@@ -42,13 +42,13 @@ public interface ApplicationManager {
     /**
      * Adds a new DeliveryProcess to a Tour.
      *
-     * @param tour current tour
-     * @param pickUpPoint pickUp Point of the new DeliveryProcess to add
+     * @param tour          current tour
+     * @param pickUpPoint   pickUp Point of the new DeliveryProcess to add
      * @param deliveryPoint Delivery Point of the new DeliveryProcess to add
      */
     void addDeliveryProcess(Tour tour,
-                                   ActionPoint pickUpPoint,
-                                   ActionPoint deliveryPoint);
+                            ActionPoint pickUpPoint,
+                            ActionPoint deliveryPoint);
 
     /**
      * Deletes a {@link  DeliveryProcess}to an already uploaded tour.
@@ -76,8 +76,8 @@ public interface ApplicationManager {
     /**
      * Finds nearest point of a given point with lat and long.
      *
-     * @param latitude  latitude of the point
-     * @param longitude longitude of the point
+     * @param latitude   latitude of the point
+     * @param longitude  longitude of the point
      * @param actionType Action Type of the Point
      * @param actionTime Action Time of the Point
      */
@@ -87,7 +87,7 @@ public interface ApplicationManager {
     /**
      * Get the delivery process correspondent to the given action point.
      *
-     * @param actionPoint a pick up point or a delivery point.
+     * @param actionPoint       a pick up point or a delivery point.
      * @param deliveryProcesses list of Delivery Process.
      */
     void getDeliveryProcess(List<DeliveryProcess> deliveryProcesses,
@@ -96,10 +96,11 @@ public interface ApplicationManager {
     /**
      * Get the journeyList of a deliveryProcess.
      *
-     * @param journeyList List of journey
+     * @param journeyList     List of journey
      * @param deliveryProcess Delivery Process
      */
-    void getJourneyList(List<Journey> journeyList, DeliveryProcess deliveryProcess);
+    void getJourneyList(List<Journey> journeyList,
+                        DeliveryProcess deliveryProcess);
 
     void undo();
 

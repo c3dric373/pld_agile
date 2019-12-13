@@ -68,7 +68,7 @@ public class ProjectDataImpl implements ProjectData {
     }
 
     @Override
-    public void setJourneyListForDeliveryProcess(ListJourneyFromDeliveryProcess listForDeliveryProcess) {
+    public void setJourneyListForDeliveryProcess(final ListJourneyFromDeliveryProcess listForDeliveryProcess) {
         journeyList = listForDeliveryProcess;
     }
 
