@@ -90,7 +90,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         if (projectState != ProjectState.INITIALIZED
                 && projectState != ProjectState.MAP_LOADED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
-        } else if (file == null ) {
+        } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
@@ -141,31 +141,33 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     }
 
     @Override
-    public void addDeliveryProcess(final Tour tour,
-                                   final ActionPoint pickUpPoint,
+    public void addDeliveryProcess(final ActionPoint pickUpPoint,
                                    final ActionPoint deliveryPoint) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
-        } else if (tour == null) {
-            sendMessage(ErrorMessage.TOUR_NULL);
         } else if (pickUpPoint == null) {
             sendMessage(ErrorMessage.PICKUP_POINT_NULL);
         } else if (deliveryPoint == null) {
             sendMessage(ErrorMessage.DELIVERY_POINT_NULL);
         } else {
+            Tour tour = projectDataWrapper.getProject().getTour();
             undoList.add(tour.deepClone());
             final Tour newTour;
             if (projectState == ProjectState.TOUR_LOADED) {
                 setAddDeliveryProcess();
-                DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
-                        deliveryPoint);
-                newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
-                DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
+                DeliveryProcess deliveryProcess =
+                        new DeliveryProcess(pickUpPoint,
+                                deliveryPoint);
+                newTour = TourService.addDpTourNotCalculated(tour,
+                        deliveryProcess);
+                DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour,
+                        deliveryProcess);
             } else {
                 setAddDeliveryProcess();
                 Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
+                newTour = TourService.addNewDeliveryProcess(graph, tour,
+                        pickUpPoint,
                         deliveryPoint);
                 updateInfo(newTour);
             }
@@ -214,13 +216,15 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             System.out.println(clone.getActionPoints().size());
             if (projectState == ProjectState.TOUR_LOADED) {
                 setDeleteDeliveryProcess();
-                newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+                newTour = TourService.deleteDpTourNotCalculated(tour,
+                        deliveryProcess);
                 DeliveryProcessService.delDeliveryProcessIdTourNotCalc(newTour);
                 projectDataWrapper.loadTour(newTour);
             } else {
                 setDeleteDeliveryProcess();
                 final Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+                newTour = TourService.deleteDeliveryProcess(graph, tour,
+                        deliveryProcess);
                 updateInfo(newTour);
                 projectDataWrapper.loadTour(newTour);
             }
@@ -317,7 +321,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      * Get the deliveryProcess that contains the ActionPoint.
      *
      * @param deliveryProcesses list of delivery Process
-     * @param actionPoint a pick up point or a delivery point.
+     * @param actionPoint       a pick up point or a delivery point.
      */
     public void getDeliveryProcess(
             final List<DeliveryProcess> deliveryProcesses,
@@ -344,17 +348,19 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     /**
      * Get the journey List to make the delivery Provess.
      *
-     * @param journeyList liste of journeys
      * @param deliveryProcess Delivery Process
      */
     @Override
-    public void getJourneyList(final List<Journey> journeyList,
-                               final DeliveryProcess deliveryProcess) {
+    public void getJourneyList(final DeliveryProcess deliveryProcess) {
         if (projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
-            List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
+            List<Journey> journeyList =
+                    projectDataWrapper.getProject().getTour().getJourneyList();
+            List<Journey> listJourneyFromDeliveryProcess =
+                    graphService.getJourneysForDeliveryProcess(journeyList,
+                            deliveryProcess);
             projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
         }
     }

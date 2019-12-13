@@ -52,7 +52,7 @@ public class UserInterface implements Observer {
         return tourData;
     }
 
-    public void setController(DashBoardController controller) {
+    public void setController(final DashBoardController controller) {
         Validate.notNull(controller, "controller ist not null");
         this.controller = controller;
         this.viewVisitor.addController(controller);
@@ -87,31 +87,58 @@ public class UserInterface implements Observer {
         this.model.findNearestPoint(latitude, longitude, actionType, time);
     }
 
-    public void showDeliveryProcess(ActionPoint oldValue, Tour tour) {
+    public void showDeliveryProcess(final ActionPoint oldValue,
+                                    final Tour tour) {
+        Validate.notNull(oldValue, "oldValue null");
+        Validate.notNull(tour, "tour null");
         this.model.getDeliveryProcess(tour.getDeliveryProcesses(), oldValue);
     }
 
+    /**
+     * Invokes the model to delete a specific deliveryProcess.
+     *
+     * @param deliveryProcessLoaded the {@link DeliveryProcess} to delete.
+     */
     public void deleteDp(final DeliveryProcess deliveryProcessLoaded) {
-        System.out.println("Send message to delete dp");
+        Validate.notNull(deliveryProcessLoaded, "deliveryProcess null");
         this.model.deleteDeliveryProcess(deliveryProcessLoaded);
     }
 
-    public void getJourneyList(List<Journey> journeyList,
-                               DeliveryProcess deliveryProcess) {
-        this.model.getJourneyList(journeyList, deliveryProcess);
+    /**
+     * Invokes the model to get a journeyList between the start and en point
+     * of the delivery process.
+     *
+     * @param deliveryProcess
+     */
+    public void getJourneyList(final DeliveryProcess deliveryProcess) {
+        this.model.getJourneyList(deliveryProcess);
     }
 
-    public void addDeliveryProcess(Tour tourLoaded,
-                                   ActionPoint newPickUpActionPoint,
-                                   ActionPoint newDeliveryActionPoint) {
-        this.model.addDeliveryProcess(tourLoaded, newPickUpActionPoint,
+    /**
+     * Invokes the model to add a DeliveryProcess to the {@Tour} object stored
+     * in the model.
+     *
+     * @param newPickUpActionPoint   new Pick up point to add.
+     * @param newDeliveryActionPoint new delivery point to add.
+     */
+    public void addDeliveryProcess(final ActionPoint newPickUpActionPoint,
+                                   final ActionPoint newDeliveryActionPoint) {
+        this.model.addDeliveryProcess(newPickUpActionPoint,
                 newDeliveryActionPoint);
     }
 
-    public void modifyOrder(final List<ActionPoint> actionPoints) {
+    /**
+     * Invokes the model foa a change of the delivery order.
+     *
+     * @param actionPoints the newly sorted {@link ActionPoint}s.
+     */
+    public void changeDeliveryOrder(final List<ActionPoint> actionPoints) {
         this.model.changeDeliveryOrder(actionPoints);
     }
 
+    /**
+     * Invokes an undo on the model.
+     */
     public void undo() {
         this.model.undo();
     }

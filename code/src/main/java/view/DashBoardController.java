@@ -176,7 +176,7 @@ public class DashBoardController implements Initializable,
      *
      * @param tour the {@link} tour to be set.
      */
-    public void setTour(Tour tour) {
+    public void setTour(final Tour tour) {
         tourLoaded = tour;
     }
 
@@ -216,7 +216,7 @@ public class DashBoardController implements Initializable,
             List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
             ActionPoint actionPoint = actionPoints.remove(index);
             actionPoints.add(result, actionPoint);
-            this.mainApp.modifyOrder(actionPoints);
+            this.mainApp.changeDeliveryOrder(actionPoints);
         }
     }
 
@@ -425,7 +425,7 @@ public class DashBoardController implements Initializable,
         }
     }
 
-    private void handelTableSelection(ActionPoint newValue) {
+    private void handelTableSelection(final ActionPoint newValue) {
         Utils.pointToColour(newValue);
         if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
             // Manage the end of the tour.
@@ -528,7 +528,8 @@ public class DashBoardController implements Initializable,
      * @param opacity  opacity of the line.
      * @param type     int parameter to determine the colour of the line.
      */
-    void drawPolyline(final MVCArray mvcArray, double opacity, int type) {
+    void drawPolyline(final MVCArray mvcArray, final double opacity,
+                      final int type) {
 
         String color = "blue";
 
@@ -590,7 +591,7 @@ public class DashBoardController implements Initializable,
             map.addMarker(newDeliveryPointMarker);
     }
 
-    void setRectangleColor(String color) {
+    void setRectangleColor(final String color) {
         rectangle.setStyle("-fx-background-color:" + color + ";" + "-fx" +
                 "-opacity: 0.5;");
     }
@@ -611,8 +612,6 @@ public class DashBoardController implements Initializable,
         newPickUpActionPoint = null;
         newDeliveryActionPoint = null;
     }
-
-
 
     public void clearNewPickUpPoint() {
         labelPickUpCoordinates.setText("");
