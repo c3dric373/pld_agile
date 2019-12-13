@@ -5,29 +5,43 @@ import java.util.Iterator;
 
 public class IteratorSeq2 implements Iterator<Integer> {
 
+    /**
+     * Integer table of candidates.
+     */
     private Integer[] candidates;
+
+    /**
+     * Number of candidates.
+     */
     private int nbCandidates;
 
     /**
-     * Create an iterator which can iterate the permutation of the nodes not seen
+     * Create an iterator which can iterate the permutation
+     * of the nodes not seen.
      *
      * @param notSeen     table of nodes not seen yet
      * @param currentNode current node
-     * @param cost        cost[i][j] = the duration from i to j, with 0 <= i < nbNodes and 0 <= j < nbNodes
+     * @param cost        cost[i][j] = the duration from i to j,
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
      */
-    public IteratorSeq2(Collection<Integer> notSeen, int currentNode, int[][] cost) {
+    public IteratorSeq2(final Collection<Integer> notSeen,
+                        final int currentNode, final int[][] cost) {
         int nb = cost.length / 2;
         boolean pickUp = true;
         if (currentNode > nb) {
-            // if current node is a delivery point, we have to verify whether its pick up point is visited or not
-            for (Integer i : notSeen)
+            // if current node is a delivery point,
+            // we have to verify whether its pick up point is visited or not
+            for (Integer i : notSeen) {
                 if (i == currentNode - nb) {
                     pickUp = false;
                     break;
                 }
+            }
         }
         if (!pickUp) {
-            // if current node is a delivery point and its pick up point hasn't been visited, we create an empty iterator
+            // if current node is a delivery point
+            // and its pick up point hasn't been visited,
+            // we create an empty iterator
             this.candidates = new Integer[0];
             this.nbCandidates = 0;
         } else {

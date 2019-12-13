@@ -20,6 +20,11 @@ public interface ApplicationManager {
      */
     void loadMap(File file);
 
+    /**
+     * Set the Observer.
+     *
+     * @param userInterface UserInterface
+     */
     void setObserver(UserInterface userInterface);
 
     /**
@@ -29,6 +34,9 @@ public interface ApplicationManager {
      */
     void loadTour(File file);
 
+    /**
+     * Calculate the Tour.
+     */
     void calculateTour();
 
     /**
@@ -70,6 +78,8 @@ public interface ApplicationManager {
      *
      * @param latitude  latitude of the point
      * @param longitude longitude of the point
+     * @param actionType Action Type of the Point
+     * @param actionTime Action Time of the Point
      */
     void findNearestPoint(double latitude, double longitude,
                           ActionType actionType, Time actionTime);
@@ -78,6 +88,7 @@ public interface ApplicationManager {
      * Get the delivery process correspondent to the given action point.
      *
      * @param actionPoint a pick up point or a delivery point.
+     * @param deliveryProcesses list of Delivery Process.
      */
     void getDeliveryProcess(List<DeliveryProcess> deliveryProcesses,
                             ActionPoint actionPoint);
@@ -85,8 +96,8 @@ public interface ApplicationManager {
     /**
      * Get the journeyList of a deliveryProcess.
      *
-     * @param journeyList
-     * @param deliveryProcess
+     * @param journeyList List of journey
+     * @param deliveryProcess Delivery Process
      */
     void getJourneyList(List<Journey> journeyList,
                         DeliveryProcess deliveryProcess);
