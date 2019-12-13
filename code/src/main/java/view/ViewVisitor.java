@@ -6,9 +6,10 @@ import model.data.*;
 @Getter
 public class ViewVisitor implements GenDataVisitor {
 
+    /**
+     * Opacity factor for polyline
+     */
     private final static double OPACITY_FACTOR = 0.9;
-
-    private final static int TYPE = 4;
 
     /**
      * The {@link DashBoardController} to notify about changes from the model.
@@ -55,7 +56,8 @@ public class ViewVisitor implements GenDataVisitor {
         dashBoardController.drawFullTour();
         dashBoardController.drawPolyline(dashBoardController.
                 getMCVPathFormJourneyList(listJourneyFromDeliveryProcess.
-                        getJourneyList()), 0.9, ColorOption.CUSTOM_COLOR_FROM_ID);
+                        getJourneyList()), OPACITY_FACTOR,
+                ColorOption.CUSTOM_COLOR_FROM_ID);
     }
 
     @Override
