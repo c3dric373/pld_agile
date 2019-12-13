@@ -13,93 +13,20 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import lombok.Getter;
-import model.data.Point;
 import model.data.*;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 
-import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.sql.Time;
-import java.text.DecimalFormat;
-import java.util.List;
 import java.util.*;
 
 public class DashBoardController implements Initializable, MapComponentInitializedListener {
 
-    // Map Style.
-    private static final String mapStyle = "[{\"featureType\":\"administrative\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#e9e5dc\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100},{\"lightness\":99}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54},{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#767676\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":43},{\"lightness\":-11},{\"color\":\"#89cada\"}]}]";
-
-    // Local Save of Tour.
-    private Tour tourLoaded;
-    private DeliveryProcess deliveryProcessLoaded;
-
-    // Manage Local Storage.
-    public void setTour(Tour tour) {
-        tourLoaded = tour;
-
-    }
-
-    public void deleteDp() {
-        if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
-            this.mainApp.deleteDp(deliveryProcessLoaded);
-        }
-    }
-
-    public void setActionPoints(final Tour tour) {
-        actionPointTableView.getSelectionModel().clearSelection();
-        actionPoints.remove(0, actionPoints.size());
-        actionPoints.addAll(tour.getActionPoints());
-    }
-
-    public void modifieDP() {
-        int result = showModifieDeliveryDialog(deliveryProcessLoaded);
-        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
-        if (result != -1) {
-            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
-            ActionPoint actionPoint = actionPoints.remove(index);
-            actionPoints.add(result, actionPoint);
-            this.mainApp.modifyOrder(actionPoints);
-        }
-    }
-
-    //Enum Marker Types.
-    @Getter
-    public enum MarkerType {
-        PICKUP("Pick-Up Point", "P", "icons/marker.png"),
-        DELIVERY("Delivery Point", "D", "flag.png"),
-        BASE("Base Point", "B", "home-icon-silhouette.png");
-
-        private String title = "";
-        private String firstLetter = "";
-        private String iconPath = "";
-
-        MarkerType(String title, String firstLetter, String iconPath) {
-            this.title = title;
-            this.firstLetter = firstLetter;
-            this.iconPath = iconPath;
-        }
-    }
-
-    // Reference to the main application
-    private UserInterface mainApp;
-
-    // List des ActionPoints en Observable pour la view
-    private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
-
-    // Manage New DeliveryProcess
-    private ActionPoint newPickUpActionPoint = null;
-    private ActionPoint newDeliveryActionPoint = null;
-    // Markers of new DeliveryProcess
-    private Marker newPickUpPointMarker = null;
-    private Marker newDeliveryPointMarker = null;
 
     @FXML
     private TableView<ActionPoint> actionPointTableView;
@@ -132,6 +59,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private TextField inputPickUpTimeM;
 
     @FXML
+    private GoogleMapView mapView;
+
+
+    @FXML
     private Label dpNumber;
 
     @FXML
@@ -161,6 +92,57 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     @FXML
     private Label startTime;
 
+    // Map Style.
+    private static final String mapStyle = "[{\"featureType\":\"administrative\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#e9e5dc\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100},{\"lightness\":99}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54},{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#767676\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":43},{\"lightness\":-11},{\"color\":\"#89cada\"}]}]";
+
+    // Local Save of Tour.
+    private Tour tourLoaded;
+    private DeliveryProcess deliveryProcessLoaded;
+
+    // Manage Local Storage.
+    public void setTour(Tour tour) {
+        tourLoaded = tour;
+
+    }
+
+    public void deleteDp() {
+        if (showConfirmationAlert("Are you sur you want to delete this Delivery Process ?")) {
+            this.mainApp.deleteDp(deliveryProcessLoaded);
+        }
+    }
+
+    public void setActionPoints(final Tour tour) {
+        actionPointTableView.getSelectionModel().clearSelection();
+        actionPoints.remove(0, actionPoints.size());
+        actionPoints.addAll(tour.getActionPoints());
+    }
+
+    public void modifieDP() {
+        int result = showModifiedDeliveryDialog(deliveryProcessLoaded);
+        int index = actionPointTableView.getSelectionModel().getFocusedIndex();
+        if (result != -1) {
+            List<ActionPoint> actionPoints = tourLoaded.getActionPoints();
+            ActionPoint actionPoint = actionPoints.remove(index);
+            actionPoints.add(result, actionPoint);
+            this.mainApp.modifyOrder(actionPoints);
+        }
+    }
+
+
+    // Reference to the main application
+    private UserInterface mainApp;
+
+    // List des ActionPoints en Observable pour la view
+    private ObservableList<ActionPoint> actionPoints = FXCollections.observableArrayList();
+
+    // Manage New DeliveryProcess
+    private ActionPoint newPickUpActionPoint = null;
+    private ActionPoint newDeliveryActionPoint = null;
+    // Markers of new DeliveryProcess
+    private Marker newPickUpPointMarker = null;
+    private Marker newDeliveryPointMarker = null;
+
+
     private void setBigLabels() {
         numberDeliveries.setText(String.valueOf(tourLoaded.getDeliveryProcesses().size()));
         startTime.setText(tourLoaded.getStartTime().toString());
@@ -172,10 +154,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             arrivalTime.setText("");
         }
     }
-
-
-    @FXML
-    private GoogleMapView mapView;
 
     private GoogleMap map;
 
@@ -219,17 +197,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
                 .streetViewControl(false)
                 .zoomControl(false)
                 .zoom(13);
-
-        /*
-        InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-        infoWindowOptions.content("<h2>Fred Wilkie</h2>"
-                + "Current Location: Safeway<br>"
-                + "ETA: 45 minutes" );
-
-        InfoWindow bobUnderwoodWindow = new InfoWindow(infoWindowOptions);
-        bobUnderwoodWindow.open(map, bobUnderwoodMarker);
-        map.addMarker( bobUnderwoodMarker );
-         */
     }
 
 
@@ -288,8 +255,8 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     public void addNewDeliveryProcess() {
         if (canAddDeliveryProcess()) {
             if (newPickUpActionPoint != null && newDeliveryActionPoint != null) {
-                newPickUpActionPoint.setTime(parseStringToTime(inputPickUpTimeH.getText(), inputPickUpTimeM.getText()));
-                newDeliveryActionPoint.setTime(parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
+                newPickUpActionPoint.setTime(Utils.parseStringToTime(inputPickUpTimeH.getText(), inputPickUpTimeM.getText()));
+                newDeliveryActionPoint.setTime(Utils.parseStringToTime(inputDeliveryTimeH.getText(), inputDeliveryTimeM.getText()));
                 this.mainApp.addDeliveryProcess(tourLoaded, newPickUpActionPoint, newDeliveryActionPoint);
             } else {
                 showAlert("Action Impossible", "Error :", "The Delivery Process is not created", Alert.AlertType.ERROR);
@@ -299,19 +266,10 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    private Time parseStringToTime(final String hours, final String minutes) {
-        Validate.notNull(hours, "hours null");
-        Validate.notNull(minutes, "minutes null");
-        Validate.isTrue(NumberUtils.isNumber(hours), "hours not a number");
-        Validate.isTrue(NumberUtils.isNumber(minutes), "minutes not a number");
-        Validate.isTrue(Integer.parseInt(hours) < 24 && Integer.parseInt(hours) >= 0, "not an hour");
-        Validate.isTrue(Integer.parseInt(minutes) < 59 && Integer.parseInt(minutes) >= 0, "not a minute");
-        final String toParse = hours + ":" + minutes + ":00";
-        return Time.valueOf(toParse);
-    }
+
     // Update view
 
-    public void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
+     void showDeliveryProcess(final DeliveryProcess deliveryProcess) {
         deliveryProcessLoaded = deliveryProcess;
         final String pickUpDuration = deliveryProcess.getPickUP().getTime().toString();
         final String deliveryDuration = deliveryProcess.getDelivery().getTime().toString();
@@ -347,10 +305,11 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // Display on Map
 
-    public void displayMap(Point center) {
+    void displayMap(Point center) {
         try {
             Thread.sleep(60);
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         //  Set new center for the map
         MapOptions mapOptions = new MapOptions();
@@ -368,7 +327,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         map = mapView.createMap(mapOptions);
     }
 
-    public void displayLoadedDeliveryProcess() {
+    void displayLoadedDeliveryProcess() {
         map.setCenter(new LatLong(tourLoaded.getBase().getLatitude(), tourLoaded.getBase().getLongitude()));
         setBigLabels();
         // Create a fake list of action Points To display.
@@ -384,7 +343,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
 
     // Draw
 
-    public void drawFullTour() {
+    void drawFullTour() {
         setBigLabels();
         map.clearMarkers();
         drawAllActionPoints();
@@ -393,7 +352,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
 
-    public void drawAllActionPoints() {
+    void drawAllActionPoints() {
 
         // First Action Point is the Base
         map.clearMarkers();
@@ -416,7 +375,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     private Polyline poly;
 
 
-    public void drawPolyline(final MVCArray mvcArray, double opacity, int type) {
+    void drawPolyline(final MVCArray mvcArray, double opacity, int type) {
 
         String color = "blue";
 
@@ -436,7 +395,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
             // 4 = Draw with Auto color
             case 4:
                 if (deliveryProcessLoaded != null)
-                    color = pointToColour(deliveryProcessLoaded.getPickUP());
+                    color = Utils.pointToColour(deliveryProcessLoaded.getPickUP());
                 break;
         }
         setRectangleColor(color);
@@ -461,12 +420,12 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         if (actionPoint.getActionType() == ActionType.PICK_UP) {
             newPickUpActionPoint = actionPoint;
             newPickUpPointMarker = createMarker(actionPoint, MarkerType.PICKUP);
-            labelPickUpCoordonates.setText(stringFormater(actionPoint.getLocation()));
+            labelPickUpCoordonates.setText(Utils.pointToString(actionPoint.getLocation()));
         }
         if (actionPoint.getActionType() == ActionType.DELIVERY) {
             newDeliveryActionPoint = actionPoint;
             newDeliveryPointMarker = createMarker(actionPoint, MarkerType.DELIVERY);
-            labelDeliveryCoordonates.setText(stringFormater(actionPoint.getLocation()));
+            labelDeliveryCoordonates.setText(Utils.pointToString(actionPoint.getLocation()));
         }
 
         // Eventually draw newPickUp and Delivery Point
@@ -551,14 +510,6 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         });
     }
 
-    public String stringFormater(final Point point) {
-        if (point != null) {
-            DecimalFormat numberFormat = new DecimalFormat("#.0000");
-            return numberFormat.format(point.getLatitude()) + ", " + numberFormat.format(point.getLongitude());
-        } else {
-            return "";
-        }
-    }
 
     public Boolean editable(Label label) {
         return label.getText() == "";
@@ -620,7 +571,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
     }
 
     private void handelTableSelection(ActionPoint newValue) {
-        pointToColour(newValue);
+        Utils.pointToColour(newValue);
         if (newValue != null && newValue.getActionType() == ActionType.END && tourLoaded.getJourneyList() != null) {
             // Manage the end of the tour.
             dpDuration.setText(tourLoaded.getCompleteTime().toString());
@@ -636,7 +587,7 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    public void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
+    void showAlert(String title, String header, String msg, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
@@ -662,8 +613,9 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         }
     }
 
-    private int showModifieDeliveryDialog(final DeliveryProcess deliveryProcess) {
-        List<Integer> choices = new ArrayList<Integer>();
+
+    private int showModifiedDeliveryDialog(final DeliveryProcess deliveryProcess) {
+        List<Integer> choices = new ArrayList<>();
         for (int i = 1; i < tourLoaded.getActionPoints().size() - 1; i++) {
             choices.add(i);
         }
@@ -692,14 +644,26 @@ public class DashBoardController implements Initializable, MapComponentInitializ
         this.mainApp = mainApp;
     }
 
-    public String pointToColour(ActionPoint actionPoint) {
-        int numberFromId = (int) (actionPoint.getId() * 3.8 * 100000 * Math.pow(2, actionPoint.getId()));
-        Color color = new Color(numberFromId).brighter();
-        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-    }
 
-    public ActionPoint getSelectedActionPoint() {
+    ActionPoint getSelectedActionPoint() {
         return actionPointTableView.getSelectionModel().getSelectedItem();
     }
 
+    //Enum Marker Types.
+    @Getter
+    public enum MarkerType {
+        PICKUP("Pick-Up Point", "P", "icons/marker.png"),
+        DELIVERY("Delivery Point", "D", "flag.png"),
+        BASE("Base Point", "B", "home-icon-silhouette.png");
+
+        private String title = "";
+        private String firstLetter = "";
+        private String iconPath = "";
+
+        MarkerType(String title, String firstLetter, String iconPath) {
+            this.title = title;
+            this.firstLetter = firstLetter;
+            this.iconPath = iconPath;
+        }
+    }
 }
