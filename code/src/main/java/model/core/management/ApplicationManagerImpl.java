@@ -19,15 +19,13 @@ import java.util.OptionalInt;
 public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
     /**
-     * Xml Converter for Project.
-     */
-    private XmlToGraph xmlToGraph;
-
-    /**
      * Project Data wrapper for project.
      */
     private static ProjectDataWrapper projectDataWrapper;
-
+    /**
+     * Xml Converter for Project.
+     */
+    private XmlToGraph xmlToGraph;
     /**
      * State of the Project.
      */
@@ -85,6 +83,15 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
     }
 
+    /**
+     * Send an error message to the view.
+     *
+     * @param message ErrorMessage
+     */
+    public static void sendMessage(final ErrorMessage message) {
+        projectDataWrapper.sendErrorMessage(message);
+    }
+
     @Override
     public void loadMap(final File file) {
         if (projectState != ProjectState.INITIALIZED
@@ -92,14 +99,14 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                 && projectState != ProjectState.TOUR_LOADED
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.APPLICATION_NOT_OPENED);
-        } else if (file == null ) {
+        } else if (file == null) {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             List<Point> points = xmlToGraph.getGraphFromXml(file.getPath());
-            if(!points.isEmpty()){
+            if (!points.isEmpty()) {
                 final Graph graph = new Graph(points);
                 projectDataWrapper.loadMap(graph);
-                if(projectDataWrapper.getProject().getTour() != null){
+                if (projectDataWrapper.getProject().getTour() != null) {
                     Tour emptyTour = new Tour();
                     projectDataWrapper.loadTour(emptyTour);
                 }
@@ -124,7 +131,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             sendMessage(ErrorMessage.FILE_NULL);
         } else {
             final Tour tour = xmlToGraph.getDeliveriesFromXml(file.getPath());
-            if(tour != null) {
+            if (tour != null) {
                 undoList.add(projectDataWrapper.getProject().getGraph());
                 projectDataWrapper.loadTour(tour);
                 setTourLoaded();
@@ -168,42 +175,24 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             final Tour newTour;
             if (projectState == ProjectState.TOUR_LOADED) {
                 setAddDeliveryProcess();
-                DeliveryProcess deliveryProcess = new DeliveryProcess(pickUpPoint,
-                        deliveryPoint);
-                newTour = TourService.addDpTourNotCalculated(tour, deliveryProcess);
-                DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour, deliveryProcess);
+                DeliveryProcess deliveryProcess =
+                        new DeliveryProcess(pickUpPoint,
+                                deliveryPoint);
+                newTour = TourService.addDpTourNotCalculated(tour,
+                        deliveryProcess);
+                DeliveryProcessService.addDeliveryProcessIdTourNotCalc(tour,
+                        deliveryProcess);
             } else {
                 setAddDeliveryProcess();
                 Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.addNewDeliveryProcess(graph, tour, pickUpPoint,
+                newTour = TourService.addNewDeliveryProcess(graph, tour,
+                        pickUpPoint,
                         deliveryPoint);
                 updateInfo(newTour);
             }
             projectDataWrapper.modifyTour(newTour);
             projectState = mainProjectState;
         }
-    }
-
-    @Override
-    public void undoTour(final Tour tour) {
-        System.out.println("test1");
-        if (tour.getJourneyList() == null) {
-            System.out.println("test2");
-            projectState = ProjectState.TOUR_LOADED;
-            projectDataWrapper.getProject().setTour(tour);
-            projectDataWrapper.loadTour(tour);
-        } else {
-            projectState = ProjectState.TOUR_CALCULATED;
-            TourService.recalculateOrder(tour);
-            projectDataWrapper.getProject().setTour(tour);
-            projectDataWrapper.modifyTour(tour);
-        }
-
-    }
-
-    @Override
-    public void undoGraph(Graph graph) {
-
     }
 
     @Override
@@ -224,29 +213,21 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             System.out.println(clone.getActionPoints().size());
             if (projectState == ProjectState.TOUR_LOADED) {
                 setDeleteDeliveryProcess();
-                newTour = TourService.deleteDpTourNotCalculated(tour, deliveryProcess);
+                newTour = TourService.deleteDpTourNotCalculated(tour,
+                        deliveryProcess);
                 DeliveryProcessService.delDeliveryProcessIdTourNotCalc(newTour);
                 projectDataWrapper.loadTour(newTour);
             } else {
                 setDeleteDeliveryProcess();
                 final Graph graph = projectDataWrapper.getProject().getGraph();
-                newTour = TourService.deleteDeliveryProcess(graph, tour, deliveryProcess);
+                newTour = TourService.deleteDeliveryProcess(graph, tour,
+                        deliveryProcess);
                 updateInfo(newTour);
                 projectDataWrapper.loadTour(newTour);
             }
             projectState = mainProjectState;
             System.out.println(clone);
         }
-    }
-
-    private void updateInfo(final Tour newTour) {
-        DeliveryProcessService.setDpInfo(newTour);
-        TourService.calculateTimeAtPoint(newTour);
-        int completeDistance = TourService.getCompleteDistance(newTour);
-        Time completeTime = TourService.getCompleteTime(newTour);
-        newTour.setCompleteTime(completeTime);
-        newTour.setTotalDistance(completeDistance);
-        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
     }
 
     @Override
@@ -295,8 +276,8 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
 
             final Tour tour = projectDataWrapper.getProject().getTour();
             final Graph graph = projectDataWrapper.getProject().getGraph();
-            final Tour newTour = tourService.changePointPosition
-                    (graph, tour, oldPoint, newPoint);
+            final Tour newTour = tourService.changePointPosition(
+                    graph, tour, oldPoint, newPoint);
             DeliveryProcessService.setDpInfo(newTour);
             TourService.calculateTimeAtPoint(newTour);
             projectDataWrapper.modifyTour(newTour);
@@ -327,7 +308,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
      * Get the deliveryProcess that contains the ActionPoint.
      *
      * @param deliveryProcesses list of delivery Process
-     * @param actionPoint a pick up point or a delivery point.
+     * @param actionPoint       a pick up point or a delivery point.
      */
     public void getDeliveryProcess(
             final List<DeliveryProcess> deliveryProcesses,
@@ -354,7 +335,7 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
     /**
      * Get the journey List to make the delivery Provess.
      *
-     * @param journeyList liste of journeys
+     * @param journeyList     liste of journeys
      * @param deliveryProcess Delivery Process
      */
     @Override
@@ -364,7 +345,9 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
                 && projectState != ProjectState.TOUR_CALCULATED) {
             sendMessage(ErrorMessage.ANOTHER_ACTION_IN_PROGRESS);
         } else {
-            List<Journey> listJourneyFromDeliveryProcess = graphService.getJourneysForDeliveryProcess(journeyList, deliveryProcess);
+            List<Journey> listJourneyFromDeliveryProcess =
+                    graphService.getJourneysForDeliveryProcess(journeyList,
+                            deliveryProcess);
             projectDataWrapper.getJourneyList(listJourneyFromDeliveryProcess);
         }
     }
@@ -377,6 +360,38 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
             final GenData genData = undoList.remove(undoList.size() - 1);
             genData.accept(undoVisitor);
         }
+    }
+
+    @Override
+    public void undoTour(final Tour tour) {
+        System.out.println("test1");
+        if (tour.getJourneyList() == null) {
+            System.out.println("test2");
+            projectState = ProjectState.TOUR_LOADED;
+            projectDataWrapper.getProject().setTour(tour);
+            projectDataWrapper.loadTour(tour);
+        } else {
+            projectState = ProjectState.TOUR_CALCULATED;
+            TourService.recalculateOrder(tour);
+            projectDataWrapper.getProject().setTour(tour);
+            projectDataWrapper.modifyTour(tour);
+        }
+
+    }
+
+    @Override
+    public void undoGraph(Graph graph) {
+
+    }
+
+    private void updateInfo(final Tour newTour) {
+        DeliveryProcessService.setDpInfo(newTour);
+        TourService.calculateTimeAtPoint(newTour);
+        int completeDistance = TourService.getCompleteDistance(newTour);
+        Time completeTime = TourService.getCompleteTime(newTour);
+        newTour.setCompleteTime(completeTime);
+        newTour.setTotalDistance(completeDistance);
+        DeliveryProcessService.resetDeliveryProcessIdTourCalculated(newTour);
     }
 
     /**
@@ -463,15 +478,6 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         } else {
             projectState = ProjectState.CHANGE_DELIVERY_ORDER;
         }
-    }
-
-    /**
-     * Send an error message to the view.
-     *
-     * @param message ErrorMessage
-     */
-    public static void sendMessage(final ErrorMessage message) {
-        projectDataWrapper.sendErrorMessage(message);
     }
 
 }

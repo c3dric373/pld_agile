@@ -76,9 +76,9 @@ public class TSP3 implements TSP {
      * @param currentNode current node
      * @param notSeen     table of nodes not seen yet
      * @param cost        cost[i][j] = the duration from i to j,
-     *                   with 0 <= i < nbNodes and 0 <= j < nbNodes
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
      * @param duration    duration[i] = duration to visit the i-th node,
-     *                   with 0 <= i < nbNodes
+     *                    with 0 <= i < nbNodes
      * @return a lower bound of the cost
      */
     protected int bound(final Integer currentNode,
@@ -113,9 +113,9 @@ public class TSP3 implements TSP {
      * @param currentNode current node
      * @param notSeen     table of nodes not seen yet
      * @param cost        cost[i][j] = the duration from i to j,
-     *                   with 0 <= i < nbNodes and 0 <= j < nbNodes
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
      * @param duration    duration[i] = duration to visit the i-th node,
-     *                   with 0 <= i < nbNodes
+     *                    with 0 <= i < nbNodes
      * @return an iterator which can iterate the permutation
      * of the nodes not seen.
      */
@@ -135,9 +135,9 @@ public class TSP3 implements TSP {
      * @param seen        the list of nodes not visited
      * @param currentCost the sum of the cost so far (from 0 to currentNode)
      * @param cost        cost[i][j] = the duration from i to j,
-     *                   with 0 <= i < nbNodes and 0 <= j < nbNodes
+     *                    with 0 <= i < nbNodes and 0 <= j < nbNodes
      * @param duration    duration[i] = duration to visit the i-th node,
-     *                   with 0 <= i < nbNodes
+     *                    with 0 <= i < nbNodes
      * @param startTime   start time of the resolution
      * @param timeLimit   time limit for the resolution
      */
@@ -166,7 +166,8 @@ public class TSP3 implements TSP {
                 seen.add(nextNode);
                 notSeen.remove(nextNode);
                 seenInBinary += (1 << nextNode);
-                branchAndBound(nextNode, notSeen, seen, currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
+                branchAndBound(nextNode, notSeen, seen,
+                        currentCost + cost[currentNode][nextNode] + duration[nextNode], cost, duration, startTime, timeLimit);
                 seen.remove(nextNode);
                 notSeen.add(nextNode);
                 seenInBinary -= (1 << nextNode);
