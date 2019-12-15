@@ -151,11 +151,14 @@ public class ApplicationManagerImpl implements ApplicationManager, UndoHandler {
         final Tour tour = projectDataWrapper.getProject().getTour();
         undoList.add(tour.deepClone());
         final Graph graph = projectDataWrapper.getProject().getGraph();
-        final Tour newTour = graphService.calculateTour(tour, graph);
-        updateInfo(newTour);
-        projectDataWrapper.modifyTour(newTour);
-        setTourCalculated();
-        mainProjectState = ProjectState.TOUR_CALCULATED;
+        if(tour.getBase().getId()!=0){
+            final Tour newTour = graphService.calculateTour(tour, graph);
+            updateInfo(newTour);
+            projectDataWrapper.modifyTour(newTour);
+            setTourCalculated();
+            mainProjectState = ProjectState.TOUR_CALCULATED;
+        }
+
 
     }
 
