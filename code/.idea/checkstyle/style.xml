@@ -50,7 +50,7 @@
 
     <!-- Checks that a package-info.java file exists for each package.     -->
     <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage -->
-    <module name="JavadocPackage"/>
+    <!--module name="JavadocPackage"/> -->
 
     <!-- Checks whether files end with a new line.                        -->
     <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
@@ -112,7 +112,7 @@
 
         <!-- Checks for imports                              -->
         <!-- See https://checkstyle.org/config_import.html -->
-        <module name="AvoidStarImport"/>
+        <!--module name="AvoidStarImport"/-->
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
         <module name="RedundantImport"/>
         <module name="UnusedImports">
@@ -122,7 +122,7 @@
         <!-- Checks for Size Violations.                    -->
         <!-- See https://checkstyle.org/config_sizes.html -->
         <module name="MethodLength"/>
-        <module name="ParameterNumber"/>
+        <!--<module name="ParameterNumber"/-->
 
         <!-- Checks for whitespace                               -->
         <!-- See https://checkstyle.org/config_whitespace.html -->
@@ -165,7 +165,7 @@
 
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/config_design.html -->
-        <module name="DesignForExtension"/>
+        <!--<module name="DesignForExtension"/-->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>

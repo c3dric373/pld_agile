@@ -1,17 +1,30 @@
 package view;
 
-import model.data.*;
+import lombok.Getter;
+import model.genData.*;
 
+@Getter
 public class ViewVisitor implements GenDataVisitor {
 
-    DashBoardController dashBoardController;
+    /**
+     * Opacity factor for polyline
+     */
+    private final static double OPACITY_FACTOR = 0.9;
+
+    /**
+     * The {@link DashBoardController} to notify about changes from the model.
+     */
+    private DashBoardController dashBoardController;
 
     @Override
     public void visit(final Tour tour) {
         dashBoardController.setTour(tour);
-        if (tour.getJourneyList() == null) {
-            System.out.println("---load tour wihtout journey list---");
-            dashBoardController.displayLoadedDeliveryProcess();
+        if(tour.getBase().getId() == 0){
+            dashBoardController.resetTour();
+        }
+        else if (tour.getJourneyList() == null) {
+            dashBoardController.displayTourWhenNotCalculated();
+
         } else {
             dashBoardController.clearAll();
             dashBoardController.setActionPoints(tour);
@@ -19,10 +32,9 @@ public class ViewVisitor implements GenDataVisitor {
         }
     }
 
-
     @Override
     public void visit(final Graph graph) {
-        dashBoardController.displayMap();
+        dashBoardController.displayMap(graph.getPoints().get(0));
     }
 
     @Override
@@ -36,21 +48,29 @@ public class ViewVisitor implements GenDataVisitor {
 
     @Override
     public void visit(final ActionPoint actionPoint) {
-        System.out.println("ViewVisitor action Point");
         dashBoardController.drawAndSaveNewActionPoint(actionPoint);
     }
 
     @Override
-    public void visit(ListJourneyFromDeliveryProcess listJourneyFromDeliveryProcess) {
-        dashBoardController.displayMap();
+    public void visit(final ListJourneyFromDeliveryProcess
+                              listJourneyFromDeliveryProcess) {
+        dashBoardController.displayMap(dashBoardController.
+                getSelectedActionPoint().getLocation());
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
-        //dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()),dashBoardController.pointToColour(listJourneyFromDeliveryProcess.getJourneyList().get(0).getPoints().get(0)),0.4);
-        dashBoardController.drawPolyline(dashBoardController.getMCVPathFormJourneyListe(listJourneyFromDeliveryProcess.getJourneyList()), "red", 0.4);
+        dashBoardController.drawPolyline(dashBoardController.
+                getMCVPathFormJourneyList(listJourneyFromDeliveryProcess.
+                        getJourneyList()), OPACITY_FACTOR,
+                ColorOption.CUSTOM_COLOR_FROM_ID);
     }
 
+    @Override
+    public void visit(final ErrorMessage error) {
+        dashBoardController.showAlert("error",
+                "An error has occured", error.getMessage());
+    }
 
-    public void addController(DashBoardController controller) {
+    void addController(final DashBoardController controller) {
         this.dashBoardController = controller;
     }
 }

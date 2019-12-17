@@ -1,6 +1,6 @@
 package view;
 
-import model.data.GenData;
+import model.genData.GenData;
 
 /**
  * Interface for the observer in the Observer-Pattern.
@@ -9,7 +9,8 @@ public interface Observer {
 
     /**
      * Method to update changes.
+     *
+     * @param genData data to be transmitted
      */
-    void update(final GenData genData);
-
+    void update(GenData genData);
 }

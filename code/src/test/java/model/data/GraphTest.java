@@ -1,11 +1,12 @@
 package model.data;
 
+import model.genData.Graph;
+import model.genData.Point;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

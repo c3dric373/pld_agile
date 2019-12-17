@@ -1,5 +1,7 @@
 package model.core;
 
+import controller.tsp.TSP;
+import controller.tsp.TSP3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

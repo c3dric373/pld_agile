@@ -1,17 +1,17 @@
 package model.data;
 
-import lombok.EqualsAndHashCode;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
-import org.junit.Test;
+import model.genData.ActionPoint;
+import model.genData.ActionType;
+import model.genData.DeliveryProcess;
+import model.genData.Point;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import view.DashBoardController;
+
+import java.sql.Time;
 
 import static org.junit.Assert.assertEquals;
-
-import javax.swing.*;
-import java.sql.Time;
-import java.util.*;
 
 
 public class DeliveryProcessTest {
@@ -36,6 +36,11 @@ public class DeliveryProcessTest {
 
         // Assert via annotation
 
+    }
+
+    @Test
+    public void test() {
+        System.out.println(DashBoardController.class.getResource("map_style.txt").getFile());
     }
 
     @Test

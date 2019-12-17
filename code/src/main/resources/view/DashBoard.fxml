@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
@@ -21,7 +22,7 @@
    <children>
       <SplitPane dividerPositions="0.4" prefHeight="530.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
-            <AnchorPane id="DeliveryPane" styleClass="background">
+            <AnchorPane id="DeliveryPane" prefHeight="587.0" prefWidth="481.0" styleClass="background">
                <children>
                   <TableView fx:id="actionPointTableView" maxHeight="400.0" maxWidth="225.0" minHeight="327.0" minWidth="225.0" prefHeight="332.0" prefWidth="225.0" AnchorPane.bottomAnchor="197.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="120.0">
                     <columns>
@@ -36,7 +37,7 @@
                   <Button fx:id="loadDeliveryDemand" layoutX="298.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleLoadTour" text="Load Delivery Demand" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="17.5" />
                   <ButtonBar layoutX="145.0" layoutY="469.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="350.0">
                     <buttons>
-                      <Button fx:id="modify" mnemonicParsing="false" onAction="#modifieDP" text="Modify" />
+                      <Button fx:id="modify" mnemonicParsing="false" onAction="#modifyDeliveryOrder" text="Modify" />
                         <Button fx:id="delete" mnemonicParsing="false" onAction="#deleteDp" text="Delete" />
                     </buttons>
                   </ButtonBar>
@@ -71,13 +72,14 @@
                          <Label fx:id="dpDDuration" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                      </children>
                   </GridPane>
-                  <Line endX="100.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />
+                  <Line endX="120.0" layoutX="281.0" layoutY="154.0" startX="-100.0" stroke="#ededed99" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="153.5" />
                   <GridPane layoutX="173.0" layoutY="50.0" prefHeight="60.0" prefWidth="368.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="153.0" minWidth="10.0" prefWidth="124.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="82.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="94.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="0.0" prefWidth="108.0" />
+                        <ColumnConstraints />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
@@ -118,12 +120,17 @@
                            </image>
                         </ImageView>
                         <Label id="depTime" fx:id="startTime" styleClass="label-bright" GridPane.columnIndex="1" />
-                        <Label fx:id="numberDeliveries" GridPane.columnIndex="1" styleClass="label-bright" GridPane.rowIndex="1" />
+                        <Label fx:id="numberDeliveries" styleClass="label-bright" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="arrivalTime" styleClass="label-bright" GridPane.columnIndex="3" />
                         <Button fx:id="calculateTour" defaultButton="true" mnemonicParsing="false" onAction="#calculateTour" prefHeight="22.0" prefWidth="183.0" text="Calculate Tour" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                         <Button fx:id="UNDO" cancelButton="true" mnemonicParsing="false" onAction="#undo" prefHeight="22.0" prefWidth="80.0" text="UNDO" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin></Button>
+
                      </children>
                   </GridPane>
-                  <GridPane layoutX="34.0" layoutY="215.0" prefHeight="110.0" prefWidth="421.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="20.0">
+                  <GridPane layoutX="34.0" layoutY="215.0" prefHeight="60.0" prefWidth="431.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="18.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="108.0" minWidth="30.0" prefWidth="91.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="0.0" prefWidth="47.0" />
@@ -136,13 +143,12 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" />
                       <RowConstraints />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Button fx:id="setPickUp" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" prefHeight="22.0" prefWidth="22.0" text="P" GridPane.columnIndex="3" />
                         <Button fx:id="setDelivery" contentDisplay="TOP" mnemonicParsing="false" onAction="#handelMouseClickOnPoint" prefHeight="22.0" prefWidth="22.0" text="D" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Label fx:id="labelPickUpCoordonates" GridPane.columnIndex="4" />
-                        <Label fx:id="labelDeliveryCoordonates" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label fx:id="labelPickUpCoordinates" GridPane.columnIndex="4" />
+                        <Label fx:id="labelDeliveryCoordinates" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                         <Button fx:id="clearNPUP" mnemonicParsing="false" onAction="#clearNewPickUpPoint" text="Clear" GridPane.columnIndex="5" />
                         <Label text="Pick-Up Point " />
                         <Label prefHeight="16.0" prefWidth="44.0" text="Time :" GridPane.columnIndex="1" />
@@ -160,8 +166,8 @@
                           </rowConstraints>
                            <children>
                               <Label text="h" GridPane.columnIndex="1" />
-                              <TextField promptText="hh" fx:id="inputDeliveryTimeH" styleClass="text-field" />
-                              <TextField promptText="mm" fx:id="inputDeliveryTimeM" styleClass="text-field" GridPane.columnIndex="2" />
+                              <TextField fx:id="inputDeliveryTimeH" promptText="hh" styleClass="text-field" />
+                              <TextField fx:id="inputDeliveryTimeM" promptText="mm" styleClass="text-field" GridPane.columnIndex="2" />
                            </children>
                         </GridPane>
                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -172,15 +178,22 @@
                            </columnConstraints>
                            <children>
                               <Label text="h" GridPane.columnIndex="1" />
-                              <TextField promptText="hh" fx:id="inputPickUpTimeH" styleClass="text-field" />
-                              <TextField promptText="mm" fx:id="inputPickUpTimeM" styleClass="text-field" GridPane.columnIndex="2" />
+                              <TextField fx:id="inputPickUpTimeH" promptText="hh" styleClass="text-field" />
+                              <TextField fx:id="inputPickUpTimeM" promptText="mm" styleClass="text-field" GridPane.columnIndex="2" />
                            </children>
+                           <rowConstraints>
+                              <RowConstraints />
+                           </rowConstraints>
                         </GridPane>
                      </children>
                   </GridPane>
                   <Line endX="320.0" layoutX="351.0" layoutY="164.0" startX="-100.0" stroke="#ededed99" AnchorPane.bottomAnchor="160.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0" />
                   <Label layoutX="31.0" layoutY="499.0" styleClass="label-bright" text="Add Delivery Process :" AnchorPane.bottomAnchor="170.0" AnchorPane.leftAnchor="30.0" />
                    <Button fx:id="addDeliveryProcess" mnemonicParsing="false" onAction="#addNewDeliveryProcess" prefHeight="22.0" prefWidth="183.0" text="Add Delivery Process" AnchorPane.bottomAnchor="170.0" AnchorPane.rightAnchor="20" />
+                  <Label fx:id="rectangle" layoutX="262.0" layoutY="152.0" opacity="0.5" styleClass="rectangle" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="160.0">
+                     <cursor>
+                        <Cursor fx:constant="NONE" />
+                     </cursor></Label>
                </children>
             </AnchorPane>
              <AnchorPane id="mapPane" fx:id="anchorMap" styleClass="background">
