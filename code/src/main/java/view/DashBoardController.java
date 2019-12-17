@@ -50,18 +50,58 @@ public class DashBoardController implements Initializable,
     /**
      * The style of our map.
      */
-    private static String mapStyle= "[{\"featureType\":\"administrative\"," +
-            "\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#e9e5dc\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.attraction\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.business\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.government\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.medical\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.park\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi.place_of_worship\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.school\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi.sports_complex\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100},{\"lightness\":99}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54},{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.fill\",\"stylers\":[{\"color\":\"#767676\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":43},{\"lightness\":-11},{\"color\":\"#89cada\"}]}]";
+    private static String mapStyle = "[{\"featureType\":\"administrative\"," +
+            "\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]}," +
+            "{\"featureType\":\"landscape.man_made\"," +
+            "\"elementType\":\"geometry.fill\"," +
+            "\"stylers\":[{\"color\":\"#e9e5dc\"}]}," +
+            "{\"featureType\":\"landscape.natural\"," +
+            "\"elementType\":\"geometry.fill\"," +
+            "\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#b8cb93\"}]}," +
+            "{\"featureType\":\"poi\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".attraction\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".business\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".government\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".medical\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".park\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".park\",\"elementType\":\"geometry.fill\"," +
+            "\"stylers\":[{\"color\":\"#ccdca1\"}]},{\"featureType\":\"poi" +
+            ".place_of_worship\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".school\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"poi" +
+            ".sports_complex\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]}," +
+            "{\"featureType\":\"road\",\"elementType\":\"geometry.fill\"," +
+            "\"stylers\":[{\"hue\":\"#ff0000\"},{\"saturation\":-100}," +
+            "{\"lightness\":99}]},{\"featureType\":\"road\"," +
+            "\"elementType\":\"geometry.stroke\"," +
+            "\"stylers\":[{\"color\":\"#808080\"},{\"lightness\":54}," +
+            "{\"visibility\":\"off\"}]},{\"featureType\":\"road\"," +
+            "\"elementType\":\"labels.text.fill\"," +
+            "\"stylers\":[{\"color\":\"#767676\"}]}," +
+            "{\"featureType\":\"road\",\"elementType\":\"labels.text" +
+            ".stroke\",\"stylers\":[{\"color\":\"#ffffff\"}]}," +
+            "{\"featureType\":\"transit\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"visibility\":\"off\"}]}," +
+            "{\"featureType\":\"water\",\"elementType\":\"all\"," +
+            "\"stylers\":[{\"saturation\":43},{\"lightness\":-11}," +
+            "{\"color\":\"#89cada\"}]}]";
 
-
-        /**
-         * The {@link Polyline} used to represent the calculated {@link Tour} on
-         * the map.
-         */
+    /**
+     * The {@link Polyline} used to represent the calculated {@link Tour} on
+     * the map.
+     */
     private Polyline poly;
 
     /**
-     *  Reference to the main application.
+     * Reference to the main application.
      */
     private UserInterface mainApp;
 
@@ -719,9 +759,9 @@ public class DashBoardController implements Initializable,
      * Draws a PolyLine on the map, following the path that is displayed in
      * the {@link MVCArray}.
      *
-     * @param mvcArray The path to follow to draw the line.
-     * @param opacity  opacity of the line.
-     * @param colorOption  The Color Option to apply to the line.
+     * @param mvcArray    The path to follow to draw the line.
+     * @param opacity     opacity of the line.
+     * @param colorOption The Color Option to apply to the line.
      */
     void drawPolyline(final MVCArray mvcArray, final double opacity,
                       final ColorOption colorOption) {
@@ -743,7 +783,8 @@ public class DashBoardController implements Initializable,
                     color = Utils.pointToColour(deliveryProcessLoaded.
                             getPickUP());
                 break;
-            default: break;
+            default:
+                break;
         }
         setRectangleColor(color);
         PolylineOptions polyOpts =

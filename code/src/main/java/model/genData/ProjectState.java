@@ -54,5 +54,5 @@ public enum ProjectState {
      * The user then have to modify the order of the actionPoints and has to
      * save when he is done.
      */
-    CHANGE_DELIVERY_ORDER;
+    CHANGE_DELIVERY_ORDER
 }

@@ -25,18 +25,18 @@ public interface ProjectData {
     void setTour(Tour newTour);
 
     /**
-     * Sets the graph of the project.
-     *
-     * @param graph the graph to be set.
-     */
-    void setGraph(Graph graph);
-
-    /**
      * Returns the graph of the project.
      *
      * @return The graph to be returned.
      */
     Graph getGraph();
+
+    /**
+     * Sets the graph of the project.
+     *
+     * @param graph the graph to be set.
+     */
+    void setGraph(Graph graph);
 
     /**
      * Sets the selected delivery process of the project.

@@ -43,7 +43,6 @@ public interface ProjectDataWrapper {
      */
     ProjectData getProject();
 
-
     /**
      * Return the nearest Point from the param.
      *
@@ -78,5 +77,5 @@ public interface ProjectDataWrapper {
      *
      * @param error error message
      */
-    void sendErrorMessage( ErrorMessage error);
+    void sendErrorMessage(ErrorMessage error);
 }

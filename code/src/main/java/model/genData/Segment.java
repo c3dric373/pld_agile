@@ -14,6 +14,14 @@ import org.apache.commons.lang.Validate;
 public class Segment {
 
     /**
+     * Smallest possible id.
+     */
+    static final int MIN_ID = 0;
+    /**
+     * Biggest not allowed length.
+     */
+    static final int MAX_NOT_ALLOWED_LENGTH = 0;
+    /**
      * Id of the origin Point on the map.
      */
     private long idOrigin;
@@ -29,16 +37,6 @@ public class Segment {
      * Name of the Segment.
      */
     private String name;
-
-    /**
-     * Smallest possible id.
-     */
-    static final int MIN_ID = 0;
-
-    /**
-     * Biggest not allowed length.
-     */
-    static final int MAX_NOT_ALLOWED_LENGTH = 0;
 
     /**
      * Instantiates a Segment.

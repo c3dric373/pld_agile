@@ -19,10 +19,9 @@ public class ViewVisitor implements GenDataVisitor {
     @Override
     public void visit(final Tour tour) {
         dashBoardController.setTour(tour);
-        if(tour.getBase().getId() == 0){
+        if (tour.getBase().getId() == 0) {
             dashBoardController.resetTour();
-        }
-        else if (tour.getJourneyList() == null) {
+        } else if (tour.getJourneyList() == null) {
             dashBoardController.displayTourWhenNotCalculated();
 
         } else {
@@ -59,15 +58,15 @@ public class ViewVisitor implements GenDataVisitor {
         dashBoardController.drawAllActionPoints();
         dashBoardController.drawFullTour();
         dashBoardController.drawPolyline(dashBoardController.
-                getMCVPathFormJourneyList(listJourneyFromDeliveryProcess.
-                        getJourneyList()), OPACITY_FACTOR,
+                        getMCVPathFormJourneyList(listJourneyFromDeliveryProcess.
+                                getJourneyList()), OPACITY_FACTOR,
                 ColorOption.CUSTOM_COLOR_FROM_ID);
     }
 
     @Override
     public void visit(final ErrorMessage error) {
         dashBoardController.showAlert("error",
-                "An error has occured", error.getMessage());
+                "An error has occurred", error.getMessage());
     }
 
     void addController(final DashBoardController controller) {

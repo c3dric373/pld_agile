@@ -41,13 +41,13 @@ public class ProjectDataImpl implements ProjectData {
     }
 
     @Override
-    public void setGraph(final Graph newGraph) {
-        graph = newGraph;
+    public Graph getGraph() {
+        return graph;
     }
 
     @Override
-    public Graph getGraph() {
-        return graph;
+    public void setGraph(final Graph newGraph) {
+        graph = newGraph;
     }
 
     @Override

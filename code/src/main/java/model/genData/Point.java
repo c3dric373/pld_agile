@@ -15,49 +15,41 @@ import java.util.List;
 public class Point implements GenData {
 
     /**
-     * Location of the point on the map.
-     */
-    private long id;
-
-    /**
-     * Latitude of Point.
-     */
-    private double latitude;
-
-    /**
-     * Longitude of Point.
-     */
-    private double longitude;
-
-    /**
-     * List of Adjacent Segments to point.
-     */
-    private List<Segment> segments;
-
-    /**
      * Smallest possible latitude.
      */
     static final int MIN_LATITUDE = -90;
-
     /**
      * Greatest possible latitude.
      */
     static final int MAX_LATITUDE = 90;
-
     /**
      * Smallest possible latitude.
      */
     static final int MIN_LONGITUDE = -180;
-
     /**
      * Greatest possible latitude.
      */
     static final int MAX_LONGITUDE = 180;
-
     /**
      * Smallest possible id.
      */
     static final int MIN_ID = 0;
+    /**
+     * Location of the point on the map.
+     */
+    private long id;
+    /**
+     * Latitude of Point.
+     */
+    private double latitude;
+    /**
+     * Longitude of Point.
+     */
+    private double longitude;
+    /**
+     * List of Adjacent Segments to point.
+     */
+    private List<Segment> segments;
 
     /**
      * Instantiates a Point.
